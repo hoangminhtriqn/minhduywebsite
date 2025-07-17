@@ -4,7 +4,7 @@ const isProduction = import.meta.env.PROD;
 
 // Base URL configuration
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-  (isDevelopment ? "http://localhost:3000/api" : "/api");
+  (isDevelopment ? "http://localhost:3000/api" : "https://minhduywebsite-backend.onrender.com/api");
 
 // API timeout
 export const API_TIMEOUT = 10000; // 10 seconds
