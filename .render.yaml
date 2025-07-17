@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: test-drive-booking-backend
+    env: node
+    plan: free
+    buildCommand: cd be && npm install
+    startCommand: cd be && npm run migrate && npm start
+    healthCheckPath: /api/users
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000

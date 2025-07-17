@@ -1,0 +1,452 @@
+// Global Theme Styles - Auto-apply theme variables to common elements
+// This file ensures all parts of the app respond to theme changes
+
+// Use theme variables
+@use './theme-variables' as *;
+
+// Import Google Fonts in your index.html:
+// <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+
+:root {
+  --font-family-base: 'Inconsolata', Arial, Helvetica, monospace;
+}
+
+html, body, #root, * {
+  font-family: var(--font-family-base) !important;
+  font-weight: 400;
+}
+
+// Apply theme to body and html
+html {
+  transition: all 0.3s ease;
+}
+
+body {
+  background-color: var(--theme-bg-primary, #ffffff) !important;
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  transition: all 0.3s ease !important;
+}
+
+// Global link styles
+a {
+  color: var(--theme-text-link, #{$color-primary});
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: var(--theme-text-link-hover, #{$color-primary-dark});
+  }
+}
+
+// Global button styles that don't have specific theme classes
+button:not([class*="ant-"]):not([class*="btn"]):not([class*="Button"]) {
+  background: var(--theme-primary, #{$color-primary});
+  color: var(--theme-text-white, #ffffff);
+  border: 1px solid var(--theme-primary, #{$color-primary});
+  border-radius: var(--theme-border-radius-sm, 4px);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: var(--theme-primary-dark, #{$color-primary-dark});
+    border-color: var(--theme-primary-dark, #{$color-primary-dark});
+    transform: translateY(-1px);
+  }
+}
+
+// Global input styles
+input:not([class*="ant-"]), 
+textarea:not([class*="ant-"]), 
+select:not([class*="ant-"]) {
+  background: var(--theme-bg-primary, #ffffff);
+  color: var(--theme-text-primary, #1c1c1c);
+  border: 1px solid var(--theme-border, #e0e0e0);
+  border-radius: var(--theme-border-radius-sm, 4px);
+  transition: all 0.3s ease;
+  
+  &:focus {
+    border-color: var(--theme-primary, #{$color-primary});
+    box-shadow: 0 0 0 2px var(--theme-primary, #{$color-primary})25;
+    outline: none;
+  }
+}
+
+// Global card/container styles
+.card:not([class*="ant-"]), 
+.container:not([class*="ant-"]),
+.box:not([class*="ant-"]) {
+  background: var(--theme-bg-primary, #ffffff);
+  border: 1px solid var(--theme-border, #e0e0e0);
+  border-radius: var(--theme-border-radius-base, 8px);
+  box-shadow: var(--theme-shadow-base, 0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+}
+
+// Header theme styles with maximum specificity
+html body div.header,
+html body header.header,
+html body .header,
+body .header,
+.header,
+div.header,
+header.header,
+#root .header,
+[class*="header"] {
+  background-color: #ffffff !important; /* White background */
+  border-bottom: 1px solid #e0e0e0 !important;
+  transition: all 0.3s ease !important;
+}
+
+html body .header__auth-link,
+html body .header__auth-button {
+  color: var(--theme-text-white, #ffffff) !important;
+  
+  &:hover {
+    color: var(--theme-primary, #{$color-primary}) !important;
+  }
+}
+
+html body .header__nav-link {
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  
+  &:hover {
+    color: var(--theme-primary, #{$color-primary}) !important;
+  }
+}
+
+html body .header__search-box {
+  background: var(--theme-bg-primary, #ffffff) !important;
+  border: 1px solid var(--theme-border, #e0e0e0) !important;
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  
+  &:focus {
+    border-color: var(--theme-primary, #{$color-primary}) !important;
+    box-shadow: 0 0 0 2px var(--theme-primary, #{$color-primary})25 !important;
+  }
+}
+
+html body .header__search-button {
+  color: var(--theme-text-secondary, #666666) !important;
+}
+
+html body .header__cart-link {
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  
+  &:hover {
+    color: var(--theme-primary, #{$color-primary}) !important;
+  }
+}
+
+html body .header__cart-count {
+  background: var(--theme-primary, #{$color-primary}) !important;
+  color: var(--theme-text-white, #ffffff) !important;
+}
+
+html body .header__mobile-menu {
+  background: var(--theme-bg-primary, #ffffff) !important;
+}
+
+html body .header__mobile-menu-link {
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  
+  &:hover {
+    color: var(--theme-primary, #{$color-primary}) !important;
+  }
+}
+
+html body .header__mobile-menu-button {
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  
+  &:hover {
+    color: var(--theme-primary, #{$color-primary}) !important;
+  }
+}
+
+// Additional header elements theme integration
+html body .header__nav-link,
+body .header__nav-link,
+.header__nav-link {
+  color: #1f2937 !important; /* Dark text */
+  
+  &:hover {
+    color: #059669 !important; /* Green primary color */
+  }
+}
+
+html body .header__auth-link,
+html body .header__auth-button,
+body .header__auth-link,
+body .header__auth-button,
+.header__auth-link,
+.header__auth-button {
+  color: #ffffff !important; /* White text */
+  
+  &:hover {
+    color: #059669 !important; /* Green primary color */
+  }
+}
+
+html body .header__cart-link,
+body .header__cart-link,
+.header__cart-link {
+  color: #1f2937 !important; /* Dark text */
+  
+  &:hover {
+    color: #059669 !important; /* Green primary color */
+  }
+}
+
+html body .header__cart-count,
+body .header__cart-count,
+.header__cart-count {
+  background: #059669 !important; /* Green primary background */
+  color: #ffffff !important;
+}
+
+// Footer styles are now handled by Footer.module.scss
+
+// Main layout styles
+.main-layout {
+  background-color: var(--theme-bg-primary, #ffffff) !important;
+  color: var(--theme-text-primary, #1c1c1c) !important;
+  transition: all 0.3s ease !important;
+}
+
+.main-content {
+  background-color: var(--theme-bg-primary, #ffffff) !important;
+  transition: all 0.3s ease !important;
+}
+
+// Override any hardcoded colors in existing components
+.hero-section {
+  .hero-content {
+    color: var(--theme-text-white, #ffffff) !important;
+  }
+  
+  .hero-title {
+    color: var(--theme-text-white, #ffffff) !important;
+  }
+  
+  .hero-subtitle {
+    color: var(--theme-text-white, #ffffff) !important;
+  }
+}
+
+// Product cards
+.product-card {
+  background: var(--theme-bg-primary, #ffffff) !important;
+  border: 1px solid var(--theme-border, #e0e0e0) !important;
+  transition: all 0.3s ease !important;
+  
+  &:hover {
+    box-shadow: var(--theme-shadow-lg, 0 10px 15px rgba(0, 0, 0, 0.1)) !important;
+  }
+}
+
+// Mobile menu overlay
+.mobile-menu-overlay {
+  background: var(--theme-bg-overlay, rgba(0, 0, 0, 0.5)) !important;
+  transition: all 0.3s ease !important;
+}
+
+// Additional header element overrides (cleaned up)
+header:not([class*="header__"]),
+.header:not([class*="header__"]) {
+  background-color: #ffffff !important; /* White background */
+}
+
+// Hide scrollbar globally
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
+}
+
+// Firefox scrollbar hiding
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+// Ensure theme transitions are smooth
+* {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+// Override Ant Design theme integration
+.ant-btn-primary {
+  background: var(--theme-primary, #{$color-primary}) !important;
+  border-color: var(--theme-primary, #{$color-primary}) !important;
+  
+  &:hover {
+    background: var(--theme-primary-dark, #{$color-primary-dark}) !important;
+    border-color: var(--theme-primary-dark, #{$color-primary-dark}) !important;
+  }
+}
+
+.ant-menu-item-selected {
+  background-color: var(--theme-primary, #{$color-primary}) !important;
+  color: var(--theme-text-white, #ffffff) !important;
+}
+
+.ant-input:focus {
+  border-color: var(--theme-primary, #{$color-primary}) !important;
+  box-shadow: 0 0 0 2px var(--theme-primary, #{$color-primary})25 !important;
+}
+
+// User Footer theme styles with maximum specificity
+html body footer.user-footer,
+html body .user-footer,
+body .user-footer,
+.user-footer,
+footer.user-footer,
+[class*="user-footer"],
+// Override main.scss footer styles
+html body .footer,
+body .footer,
+.footer,
+// Override CSS module classes
+html body [class*="_footer_"],
+body [class*="_footer_"],
+[class*="_footer_"] {
+  background-color: var(--theme-secondary, #374151) !important;
+  color: var(--theme-text-white, #ffffff) !important;
+  transition: all 0.3s ease !important;
+}
+
+// Even higher specificity override for user-footer
+html body footer.user-footer,
+html body footer[class*="user-footer"],
+html body footer[data-theme="footer"],
+html body .user-footer[data-theme="footer"],
+html body footer.user-footer[data-theme="footer"] {
+  background-color: var(--theme-secondary, #374151) !important;
+  color: var(--theme-text-white, #ffffff) !important;
+}
+
+// Maximum specificity override for user-footer
+html body footer.user-footer[data-theme="footer"],
+html body footer[data-theme="footer"].user-footer,
+html body footer[class*="user-footer"][data-theme="footer"],
+html body .user-footer[class*="user-footer"][data-theme="footer"] {
+  background-color: var(--theme-secondary, #374151) !important;
+  color: var(--theme-text-white, #ffffff) !important;
+}
+
+// Theme-specific overrides
+html body footer.user-footer[data-theme="footer"][data-theme-name="bmw"],
+html body footer.user-footer[data-theme="footer"][data-theme-name="sport"],
+html body footer.user-footer[data-theme="footer"][data-theme-name="luxury"] {
+  background-color: #1c1c1c !important; /* Different theme colors */
+  color: #ffffff !important;
+}
+
+// Simple and powerful footer override
+footer.user-footer {
+  background-color: #ff0000 !important; /* Test RED */
+  color: #ffffff !important;
+}
+
+// Even more specific
+html body footer.user-footer {
+  background-color: #00ff00 !important; /* Test GREEN */
+  color: #ffffff !important;
+}
+
+// Maximum specificity
+html body footer.user-footer[data-theme="footer"] {
+  background-color: var(--theme-secondary, #374151) !important;
+  color: var(--theme-text-white, #fff) !important;
+  transition: all 0.3s;
+}
+
+// Override ThemeWrapper ID selector
+#theme-wrapper-1ys1vdqu4 footer.user-footer,
+#theme-wrapper-1ys1vdqu4 footer.user-footer[data-theme="footer"],
+#theme-wrapper-1ys1vdqu4 .user-footer[data-theme="footer"] {
+  background-color: #ff0000 !important; /* Test RED */
+  color: #ffffff !important;
+}
+
+// Generic override for any theme wrapper
+[id^="theme-wrapper-"] footer.user-footer,
+[id^="theme-wrapper-"] footer.user-footer[data-theme="footer"],
+[id^="theme-wrapper-"] .user-footer[data-theme="footer"] {
+  background-color: #00ff00 !important; /* Test GREEN */
+  color: #ffffff !important;
+}
+
+// ===== Ant Design Popover - Global Custom Style =====
+.ant-popover {
+  z-index: $z-index-popover !important;
+
+  .ant-popover-inner {
+    background: #fff !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.08) !important;
+    border: none !important;
+    padding: 1.5rem !important;
+    min-width: 260px;
+    max-width: 340px;
+    transition: box-shadow 0.25s, background 0.25s;
+  }
+
+  .ant-popover-inner-content {
+    padding: 0 !important;
+  }
+
+  .ant-popover-arrow {
+    display: none !important;
+  }
+
+  .ant-popover-content {
+    animation: popoverFadeIn 0.22s cubic-bezier(0.4,0,0.2,1);
+  }
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97);}
+  to { opacity: 1; transform: translateY(0) scale(1);}
+}
+
+// ===== Popover Item Hover & Spacing =====
+.ant-popover-inner-content ul,
+.ant-popover-inner-content .popover-list,
+.ant-popover-inner-content .price-filter__popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ant-popover-inner-content li,
+.ant-popover-inner-content .popover-list > *,
+.ant-popover-inner-content .price-filter__popover-list > * {
+  border-radius: 8px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  background: transparent;
+
+  &:hover, &:focus {
+    background: rgba(0,102,177,0.08);
+    color: #0066b1;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,102,177,0.08);
+  }
+} 

@@ -1,0 +1,152 @@
+.favoritesPage {
+  min-height: 100vh;
+  background: var(--theme-bg-primary);
+  padding-bottom: 60px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header {
+  margin-bottom: 32px;
+  text-align: center;
+  
+  h4 {
+    color: var(--theme-text-primary);
+    margin: 0;
+    font-weight: 600;
+  }
+}
+
+.favoriteCard {
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid var(--theme-border-light);
+  background: var(--theme-bg-primary);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  :global(.ant-card-cover) {
+    position: relative;
+    overflow: hidden;
+  }
+
+  :global(.ant-card-body) {
+    padding: 20px;
+  }
+
+  :global(.ant-card-meta-title) {
+    margin-bottom: 12px;
+  }
+}
+
+.productImage {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.productActions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  
+  :global(.ant-btn) {
+    z-index: 11;
+    position: relative;
+  }
+}
+
+.productTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--theme-text-primary);
+  margin-bottom: 8px;
+}
+
+.productMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.productPrice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.productActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  
+  :global(.ant-btn) {
+    z-index: 1;
+    position: relative;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .favoriteCard {
+    :global(.ant-card-body) {
+      padding: 16px;
+    }
+  }
+
+  .productImage {
+    height: 180px;
+  }
+
+  .productTitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productImage {
+    height: 160px;
+  }
+
+  .productActions {
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    
+    :global(.ant-btn) {
+      z-index: 11;
+      position: relative;
+    }
+  }
+} 

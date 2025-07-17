@@ -1,0 +1,226 @@
+// Theme SCSS Variables using CSS Custom Properties
+// This file integrates CSS custom properties with SCSS variables
+// allowing for dynamic theming while maintaining SCSS functionality
+
+// ==========================================================================
+// COLOR SYSTEM - Using CSS Custom Properties with SCSS fallbacks
+// ==========================================================================
+
+// Primary Color Palette
+$color-primary: var(--theme-primary, #059669) !default;
+$color-primary-light: var(--theme-primary-light, #20a77c) !default;
+$color-primary-dark: var(--theme-primary-dark, #047857) !default;
+
+// Secondary Color Palette
+$color-secondary: var(--theme-secondary, #2c3e50) !default;
+$color-secondary-light: var(--theme-secondary-light, #34495e) !default;
+$color-secondary-dark: var(--theme-secondary-dark, #1a252f) !default;
+
+// Accent Color Palette
+$color-accent: var(--theme-accent, #e74c3c) !default;
+$color-accent-light: var(--theme-accent-light, #ec7063) !default;
+$color-accent-dark: var(--theme-accent-dark, #c0392b) !default;
+
+// Semantic Colors
+$color-success: var(--theme-success, #4caf50) !default;
+$color-warning: var(--theme-warning, #ff9800) !default;
+$color-error: var(--theme-error, #f44336) !default;
+$color-info: var(--theme-info, #2196f3) !default;
+
+// Text Colors
+$color-text-primary: var(--theme-text-primary, #1c1c1c) !default;
+$color-text-secondary: var(--theme-text-secondary, #333333) !default;
+$color-text-light: var(--theme-text-light, #666666) !default;
+$color-text-white: var(--theme-text-white, #ffffff) !default;
+$color-text-muted: var(--theme-text-muted, #999999) !default;
+$color-text-link: var(--theme-text-link, #059669) !default;
+$color-text-link-hover: var(--theme-text-link-hover, #047857) !default;
+
+// Background Colors
+$color-background-primary: var(--theme-bg-primary, #ffffff) !default;
+$color-background-secondary: var(--theme-bg-secondary, #f8f9fa) !default;
+$color-background-light: var(--theme-bg-light, #f5f5f5) !default;
+$color-background-dark: var(--theme-bg-dark, #2c3e50) !default;
+$color-background-paper: var(--theme-bg-paper, #ffffff) !default;
+$color-background-overlay: var(--theme-bg-overlay, rgba(0, 0, 0, 0.5)) !default;
+$color-background-gradient: var(--theme-bg-gradient, linear-gradient(135deg, #059669 0%, #2c3e50 100%)) !default;
+
+// Surface Colors
+$color-border: var(--theme-border, #e0e0e0) !default;
+$color-border-light: var(--theme-border-light, #f0f0f0) !default;
+$color-border-dark: var(--theme-border-dark, #cccccc) !default;
+$color-shadow: var(--theme-shadow, rgba(0, 0, 0, 0.1)) !default;
+$color-shadow-light: var(--theme-shadow-light, rgba(0, 0, 0, 0.05)) !default;
+$color-shadow-dark: var(--theme-shadow-dark, rgba(0, 0, 0, 0.2)) !default;
+$color-divider: var(--theme-divider, #e5e5e5) !default;
+
+// Legacy color variables for backward compatibility
+$color-text: $color-text-primary;
+$color-background: $color-background-primary;
+
+// Static color values for SASS functions (fallbacks)
+// These are used when SASS functions like color.adjust() are needed
+$static-primary: #059669;
+$static-primary-light: #20a77c;
+$static-primary-dark: #047857;
+$static-primary-darker: #065f46; // -10% lightness
+$static-secondary: #2c3e50;
+$static-secondary-light: #34495e; // +10% lightness
+$static-secondary-lighter: #46566e; // +20% lightness
+$static-accent: #e74c3c;
+$static-success: #4caf50;
+$static-warning: #ff9800;
+$static-error: #f44336;
+$static-info: #2196f3;
+
+// Hover state colors (for use with CSS custom properties)
+$color-primary-hover: var(--theme-primary-dark, #{$static-primary-darker});
+$color-secondary-hover: var(--theme-secondary-light, #{$static-secondary-light});
+$color-background-hover: var(--theme-bg-light, #f9f9f9);
+
+// ==========================================================================
+// TYPOGRAPHY SYSTEM
+// ==========================================================================
+
+$font-family-base: var(--theme-font-family, 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif) !default;
+
+// Font Sizes
+$font-size-xs: var(--theme-font-size-xs, 12px) !default;
+$font-size-sm: var(--theme-font-size-sm, 14px) !default;
+$font-size-base: var(--theme-font-size-base, 16px) !default;
+$font-size-lg: var(--theme-font-size-lg, 18px) !default;
+$font-size-xl: var(--theme-font-size-xl, 20px) !default;
+$font-size-2xl: var(--theme-font-size-2xl, 24px) !default;
+$font-size-3xl: var(--theme-font-size-3xl, 32px) !default;
+$font-size-4xl: var(--theme-font-size-4xl, 48px) !default;
+
+// Legacy font size variables
+$font-size-small: $font-size-sm;
+$font-size-large: $font-size-lg;
+$font-size-xlarge: $font-size-xl;
+$font-size-xxlarge: $font-size-2xl;
+
+// Font Weights
+$font-weight-light: var(--theme-font-weight-light, 300) !default;
+$font-weight-normal: var(--theme-font-weight-normal, 400) !default;
+$font-weight-medium: var(--theme-font-weight-medium, 500) !default;
+$font-weight-semibold: var(--theme-font-weight-semibold, 600) !default;
+$font-weight-bold: var(--theme-font-weight-bold, 700) !default;
+
+// Line Heights
+$line-height-tight: var(--theme-line-height-tight, 1.2) !default;
+$line-height-normal: var(--theme-line-height-normal, 1.5) !default;
+$line-height-relaxed: var(--theme-line-height-relaxed, 1.8) !default;
+
+// ==========================================================================
+// SPACING SYSTEM
+// ==========================================================================
+
+$spacing-xs: var(--theme-spacing-xs, 4px) !default;
+$spacing-sm: var(--theme-spacing-sm, 8px) !default;
+$spacing-base: var(--theme-spacing-base, 16px) !default;
+$spacing-lg: var(--theme-spacing-lg, 24px) !default;
+$spacing-xl: var(--theme-spacing-xl, 32px) !default;
+$spacing-2xl: var(--theme-spacing-2xl, 48px) !default;
+$spacing-3xl: var(--theme-spacing-3xl, 64px) !default;
+$spacing-4xl: var(--theme-spacing-4xl, 96px) !default;
+
+// Legacy spacing variables
+$spacing-md: $spacing-base;
+$spacing-xxl: $spacing-3xl;
+
+// ==========================================================================
+// BORDER RADIUS SYSTEM
+// ==========================================================================
+
+$border-radius-none: var(--theme-border-radius-none, 0) !default;
+$border-radius-sm: var(--theme-border-radius-sm, 4px) !default;
+$border-radius-base: var(--theme-border-radius-base, 8px) !default;
+$border-radius-lg: var(--theme-border-radius-lg, 12px) !default;
+$border-radius-xl: var(--theme-border-radius-xl, 16px) !default;
+$border-radius-full: var(--theme-border-radius-full, 9999px) !default;
+
+// Legacy border radius variables
+$border-radius: $border-radius-base;
+
+// ==========================================================================
+// SHADOW SYSTEM
+// ==========================================================================
+
+$shadow-sm: var(--theme-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1)) !default;
+$shadow-base: var(--theme-shadow-base, 0 4px 6px rgba(0, 0, 0, 0.1)) !default;
+$shadow-lg: var(--theme-shadow-lg, 0 10px 15px rgba(0, 0, 0, 0.1)) !default;
+$shadow-xl: var(--theme-shadow-xl, 0 20px 25px rgba(0, 0, 0, 0.15)) !default;
+
+// Legacy shadow variables
+$shadow: $shadow-base;
+
+// ==========================================================================
+// TRANSITION SYSTEM
+// ==========================================================================
+
+$transition-fast: var(--theme-transition-fast, all 0.15s ease-in-out) !default;
+$transition-base: var(--theme-transition-base, all 0.3s ease-in-out) !default;
+$transition-slow: var(--theme-transition-slow, all 0.5s ease-in-out) !default;
+
+// ==========================================================================
+// BREAKPOINT SYSTEM
+// ==========================================================================
+
+$breakpoint-sm: 576px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 992px !default;
+$breakpoint-xl: 1200px !default;
+$breakpoint-2xl: 1400px !default;
+
+// ==========================================================================
+// Z-INDEX SYSTEM
+// ==========================================================================
+
+$z-index-dropdown: 1000 !default;
+$z-index-sticky: 1020 !default;
+$z-index-fixed: 1030 !default;
+$z-index-modal-backdrop: 1040 !default;
+$z-index-modal: 1050 !default;
+$z-index-popover: 1060 !default;
+$z-index-tooltip: 1070 !default;
+
+// ==========================================================================
+// UTILITY MIXINS
+// ==========================================================================
+
+// Mixin for applying theme-aware colors
+@mixin theme-color($property, $color-key) {
+  #{$property}: var(--theme-#{$color-key}, #059669);
+}
+
+// Mixin for creating theme-aware gradients
+@mixin theme-gradient($direction: 135deg) {
+  background: var(--theme-bg-gradient, linear-gradient($direction, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+}
+
+// Mixin for theme-aware shadows
+@mixin theme-shadow($size: 'base') {
+  box-shadow: var(--theme-shadow-#{$size}, 0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+// Mixin for responsive typography
+@mixin responsive-font($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
+  font-size: $min-size;
+  
+  @media (min-width: $min-width) {
+    font-size: calc(#{$min-size} + (#{strip-unit($max-size)} - #{strip-unit($min-size)}) * ((100vw - #{$min-width}) / (#{strip-unit($max-width)} - #{strip-unit($min-width)})));
+  }
+  
+  @media (min-width: $max-width) {
+    font-size: $max-size;
+  }
+}
+
+// Helper function to strip units
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+  @return $number;
+} 

@@ -1,0 +1,186 @@
+const swaggerJsdoc = require('swagger-jsdoc');
+const path = require('path');
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Test Drive Booking API',
+      version: '1.0.0',
+      description: 'API documentation for Test Drive Booking System',
+      contact: {
+        name: 'API Support',
+        email: 'support@testdrive.com'
+      },
+      license: {
+        name: 'ISC',
+        url: 'https://opensource.org/licenses/ISC'
+      }
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server'
+      },
+      {
+        url: 'https://da22062025.onrender.com',
+        description: 'Production server (Render)'
+      }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      },
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'User ID'
+            },
+            username: {
+              type: 'string',
+              description: 'Username'
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'User email'
+            },
+            fullName: {
+              type: 'string',
+              description: 'Full name'
+            },
+            phone: {
+              type: 'string',
+              description: 'Phone number'
+            },
+            role: {
+              type: 'string',
+              description: 'User role'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Product: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'Product ID'
+            },
+            name: {
+              type: 'string',
+              description: 'Product name'
+            },
+            description: {
+              type: 'string',
+              description: 'Product description'
+            },
+            price: {
+              type: 'number',
+              description: 'Product price'
+            },
+            category: {
+              type: 'string',
+              description: 'Product category ID'
+            },
+            images: {
+              type: 'array',
+              items: {
+                type: 'string'
+              },
+              description: 'Product images'
+            },
+            specifications: {
+              type: 'object',
+              description: 'Product specifications'
+            }
+          }
+        },
+        Order: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'Order ID'
+            },
+            userId: {
+              type: 'string',
+              description: 'User ID'
+            },
+            totalAmount: {
+              type: 'number',
+              description: 'Total order amount'
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+              description: 'Order status'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Error: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: false
+            },
+            message: {
+              type: 'string',
+              description: 'Error message'
+            },
+            error: {
+              type: 'string',
+              description: 'Detailed error information (only in development)'
+            }
+          }
+        },
+        Success: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true
+            },
+            message: {
+              type: 'string',
+              description: 'Success message'
+            },
+            data: {
+              type: 'object',
+              description: 'Response data'
+            }
+          }
+        }
+      }
+    }
+  },
+  apis: [
+    path.join(__dirname, '../routes/*.js'),
+    path.join(__dirname, '../controllers/*.js'),
+    path.join(__dirname, '../models/*.js'),
+    path.join(__dirname, '../docs/*.js')
+  ]
+};
+
+const specs = swaggerJsdoc(options);
+
+module.exports = specs; 

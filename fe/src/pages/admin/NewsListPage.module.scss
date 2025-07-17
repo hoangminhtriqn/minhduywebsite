@@ -1,0 +1,133 @@
+.newsListPage {
+  padding: 24px;
+  background: var(--theme-bg-primary);
+  min-height: 100vh;
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .contentCard {
+    background: var(--theme-surface-primary);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--theme-border-color);
+
+    .toolbar {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--theme-border-color);
+    }
+  }
+
+  // Table styling
+  :global(.ant-table) {
+    .ant-table-thead > tr > th {
+      background: var(--theme-surface-secondary);
+      border-bottom: 1px solid var(--theme-border-color);
+      font-weight: 600;
+      color: var(--theme-text-primary);
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: 1px solid var(--theme-border-color);
+      color: var(--theme-text-primary);
+    }
+
+    .ant-table-tbody > tr:hover > td {
+      background: var(--theme-surface-hover);
+    }
+  }
+
+  // Button styling
+  :global(.ant-btn) {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &.ant-btn-primary {
+      background: var(--theme-primary-color);
+      border-color: var(--theme-primary-color);
+
+      &:hover {
+        background: var(--theme-primary-dark);
+        border-color: var(--theme-primary-dark);
+      }
+    }
+
+    &.ant-btn-dangerous {
+      &:hover {
+        background: var(--theme-danger-color);
+        border-color: var(--theme-danger-color);
+      }
+    }
+  }
+
+  // Input styling
+  :global(.ant-input) {
+    border-radius: 8px;
+    border: 1px solid var(--theme-border-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--theme-primary-color);
+    }
+
+    &:focus {
+      border-color: var(--theme-primary-color);
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+    }
+  }
+
+  // Tag styling
+  :global(.ant-tag) {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 4px 8px;
+  }
+
+  // Modal styling
+  :global(.ant-modal) {
+    .ant-modal-header {
+      border-bottom: 1px solid var(--theme-border-color);
+      padding: 20px 24px;
+    }
+
+    .ant-modal-body {
+      padding: 24px;
+    }
+
+    .ant-modal-title {
+      font-weight: 600;
+      color: var(--theme-text-primary);
+    }
+  }
+
+  // Image styling
+  :global(.ant-image) {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .contentCard {
+      .toolbar {
+        .ant-col {
+          margin-bottom: 12px;
+        }
+      }
+    }
+
+    :global(.ant-table) {
+      font-size: 14px;
+
+      .ant-table-thead > tr > th,
+      .ant-table-tbody > tr > td {
+        padding: 8px 12px;
+      }
+    }
+  }
+} 

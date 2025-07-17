@@ -1,0 +1,1104 @@
+// ============================================================================
+// RESPONSIVE UTILITIES - BMW WEBSITE
+// ============================================================================
+
+// Import variables
+@use 'variables' as *;
+
+// ============================================================================
+// RESPONSIVE BREAKPOINTS
+// ============================================================================
+
+// Mobile-first breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// ============================================================================
+// RESPONSIVE MIXINS
+// ============================================================================
+
+// Media Query Mixins
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: #{$breakpoint-sm - 1px}) { @content; }
+  } @else if $breakpoint == sm {
+    @media (min-width: #{$breakpoint-sm}) and (max-width: #{$breakpoint-md - 1px}) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: #{$breakpoint-md}) and (max-width: #{$breakpoint-lg - 1px}) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: #{$breakpoint-lg}) and (max-width: #{$breakpoint-xl - 1px}) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: #{$breakpoint-xl}) and (max-width: #{$breakpoint-xxl - 1px}) { @content; }
+  } @else if $breakpoint == xxl {
+    @media (min-width: #{$breakpoint-xxl}) { @content; }
+  }
+}
+
+// Min-width Media Queries
+@mixin min-width($breakpoint) {
+  @media (min-width: #{$breakpoint}) { @content; }
+}
+
+// Max-width Media Queries
+@mixin max-width($breakpoint) {
+  @media (max-width: #{$breakpoint - 1px}) { @content; }
+}
+
+// Orientation Mixins
+@mixin landscape {
+  @media (orientation: landscape) { @content; }
+}
+
+@mixin portrait {
+  @media (orientation: portrait) { @content; }
+}
+
+// Touch Device Detection
+@mixin touch-device {
+  @media (hover: none) and (pointer: coarse) { @content; }
+}
+
+@mixin non-touch-device {
+  @media (hover: hover) and (pointer: fine) { @content; }
+}
+
+// ============================================================================
+// RESPONSIVE CONTAINER SYSTEM
+// ============================================================================
+
+// Container Max Widths
+$container-xs: 100%;
+$container-sm: 540px;
+$container-md: 720px;
+$container-lg: 960px;
+$container-xl: 1140px;
+$container-xxl: 1320px;
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+
+  @include min-width($breakpoint-sm) {
+    max-width: $container-sm;
+  }
+
+  @include min-width($breakpoint-md) {
+    max-width: $container-md;
+  }
+
+  @include min-width($breakpoint-lg) {
+    max-width: $container-lg;
+  }
+
+  @include min-width($breakpoint-xl) {
+    max-width: $container-xl;
+  }
+
+  @include min-width($breakpoint-xxl) {
+    max-width: $container-xxl;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+}
+
+// ============================================================================
+// RESPONSIVE GRID SYSTEM
+// ============================================================================
+
+// Grid System Variables
+$grid-columns: 12;
+$grid-gutter: 1.5rem;
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(-#{$grid-gutter} / 2);
+  margin-left: calc(-#{$grid-gutter} / 2);
+}
+
+.col {
+  flex: 1 0 0%;
+  padding-right: calc(#{$grid-gutter} / 2);
+  padding-left: calc(#{$grid-gutter} / 2);
+}
+
+// Responsive Column Classes
+@for $i from 1 through $grid-columns {
+  .col-#{$i} {
+    flex: 0 0 calc(100% * #{$i} / #{$grid-columns});
+    max-width: calc(100% * #{$i} / #{$grid-columns});
+    padding-right: calc(#{$grid-gutter} / 2);
+    padding-left: calc(#{$grid-gutter} / 2);
+  }
+}
+
+// Responsive Breakpoint Classes
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    @for $i from 1 through $grid-columns {
+      .col-#{$breakpoint}-#{$i} {
+        flex: 0 0 calc(100% * #{$i} / #{$grid-columns});
+        max-width: calc(100% * #{$i} / #{$grid-columns});
+        padding-right: calc(#{$grid-gutter} / 2);
+        padding-left: calc(#{$grid-gutter} / 2);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE DISPLAY UTILITIES
+// ============================================================================
+
+// Display Utilities
+.d-none { display: none !important; }
+.d-inline { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-inline-flex { display: inline-flex !important; }
+.d-grid { display: grid !important; }
+
+// Responsive Display Classes
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .d-#{$breakpoint}-none { display: none !important; }
+    .d-#{$breakpoint}-inline { display: inline !important; }
+    .d-#{$breakpoint}-inline-block { display: inline-block !important; }
+    .d-#{$breakpoint}-block { display: block !important; }
+    .d-#{$breakpoint}-flex { display: flex !important; }
+    .d-#{$breakpoint}-inline-flex { display: inline-flex !important; }
+    .d-#{$breakpoint}-grid { display: grid !important; }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE SPACING UTILITIES
+// ============================================================================
+
+// Spacing Sizes
+$spacing-sizes: (
+  0: 0,
+  1: $spacing-xs,
+  2: $spacing-sm,
+  3: $spacing-md,
+  4: $spacing-lg,
+  5: $spacing-xl,
+  6: $spacing-2xl,
+  7: $spacing-3xl,
+  8: $spacing-4xl
+);
+
+// Margin and Padding Utilities
+@each $size, $value in $spacing-sizes {
+  .m-#{$size} { margin: #{$value} !important; }
+  .mt-#{$size} { margin-top: #{$value} !important; }
+  .mr-#{$size} { margin-right: #{$value} !important; }
+  .mb-#{$size} { margin-bottom: #{$value} !important; }
+  .ml-#{$size} { margin-left: #{$value} !important; }
+  .mx-#{$size} { 
+    margin-left: #{$value} !important; 
+    margin-right: #{$value} !important; 
+  }
+  .my-#{$size} { 
+    margin-top: #{$value} !important; 
+    margin-bottom: #{$value} !important; 
+  }
+
+  .p-#{$size} { padding: #{$value} !important; }
+  .pt-#{$size} { padding-top: #{$value} !important; }
+  .pr-#{$size} { padding-right: #{$value} !important; }
+  .pb-#{$size} { padding-bottom: #{$value} !important; }
+  .pl-#{$size} { padding-left: #{$value} !important; }
+  .px-#{$size} { 
+    padding-left: #{$value} !important; 
+    padding-right: #{$value} !important; 
+  }
+  .py-#{$size} { 
+    padding-top: #{$value} !important; 
+    padding-bottom: #{$value} !important; 
+  }
+}
+
+// Responsive Spacing Classes
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    @each $size, $spacing-value in $spacing-sizes {
+      .m-#{$breakpoint}-#{$size} { margin: #{$spacing-value} !important; }
+      .mt-#{$breakpoint}-#{$size} { margin-top: #{$spacing-value} !important; }
+      .mr-#{$breakpoint}-#{$size} { margin-right: #{$spacing-value} !important; }
+      .mb-#{$breakpoint}-#{$size} { margin-bottom: #{$spacing-value} !important; }
+      .ml-#{$breakpoint}-#{$size} { margin-left: #{$spacing-value} !important; }
+      .mx-#{$breakpoint}-#{$size} { 
+        margin-left: #{$spacing-value} !important; 
+        margin-right: #{$spacing-value} !important; 
+      }
+      .my-#{$breakpoint}-#{$size} { 
+        margin-top: #{$spacing-value} !important; 
+        margin-bottom: #{$spacing-value} !important; 
+      }
+
+      .p-#{$breakpoint}-#{$size} { padding: #{$spacing-value} !important; }
+      .pt-#{$breakpoint}-#{$size} { padding-top: #{$spacing-value} !important; }
+      .pr-#{$breakpoint}-#{$size} { padding-right: #{$spacing-value} !important; }
+      .pb-#{$breakpoint}-#{$size} { padding-bottom: #{$spacing-value} !important; }
+      .pl-#{$breakpoint}-#{$size} { padding-left: #{$spacing-value} !important; }
+      .px-#{$breakpoint}-#{$size} { 
+        padding-left: #{$spacing-value} !important; 
+        padding-right: #{$spacing-value} !important; 
+      }
+      .py-#{$breakpoint}-#{$size} { 
+        padding-top: #{$spacing-value} !important; 
+        padding-bottom: #{$spacing-value} !important; 
+      }
+    }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE TEXT UTILITIES
+// ============================================================================
+
+// Text Alignment
+.text-left { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+.text-justify { text-align: justify !important; }
+
+// Responsive Text Alignment
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .text-#{$breakpoint}-left { text-align: left !important; }
+    .text-#{$breakpoint}-center { text-align: center !important; }
+    .text-#{$breakpoint}-right { text-align: right !important; }
+    .text-#{$breakpoint}-justify { text-align: justify !important; }
+  }
+}
+
+// Font Size Utilities
+.fs-xs { font-size: $font-size-xs !important; }
+.fs-sm { font-size: $font-size-sm !important; }
+.fs-base { font-size: $font-size-base !important; }
+.fs-lg { font-size: $font-size-lg !important; }
+.fs-xl { font-size: $font-size-xl !important; }
+.fs-2xl { font-size: $font-size-2xl !important; }
+.fs-3xl { font-size: $font-size-3xl !important; }
+.fs-4xl { font-size: $font-size-4xl !important; }
+.fs-5xl { font-size: $font-size-5xl !important; }
+.fs-6xl { font-size: $font-size-6xl !important; }
+
+// Font Weight Utilities
+.fw-light { font-weight: $font-weight-light !important; }
+.fw-normal { font-weight: $font-weight-normal !important; }
+.fw-medium { font-weight: $font-weight-medium !important; }
+.fw-semibold { font-weight: $font-weight-semibold !important; }
+.fw-bold { font-weight: $font-weight-bold !important; }
+.fw-extrabold { font-weight: $font-weight-extrabold !important; }
+
+// ============================================================================
+// RESPONSIVE FLEX UTILITIES
+// ============================================================================
+
+// Flex Direction
+.flex-row { flex-direction: row !important; }
+.flex-row-reverse { flex-direction: row-reverse !important; }
+.flex-col { flex-direction: column !important; }
+.flex-col-reverse { flex-direction: column-reverse !important; }
+
+// Flex Wrap
+.flex-wrap { flex-wrap: wrap !important; }
+.flex-nowrap { flex-wrap: nowrap !important; }
+.flex-wrap-reverse { flex-wrap: wrap-reverse !important; }
+
+// Justify Content
+.justify-start { justify-content: flex-start !important; }
+.justify-end { justify-content: flex-end !important; }
+.justify-center { justify-content: center !important; }
+.justify-between { justify-content: space-between !important; }
+.justify-around { justify-content: space-around !important; }
+.justify-evenly { justify-content: space-evenly !important; }
+
+// Align Items
+.items-start { align-items: flex-start !important; }
+.items-end { align-items: flex-end !important; }
+.items-center { align-items: center !important; }
+.items-baseline { align-items: baseline !important; }
+.items-stretch { align-items: stretch !important; }
+
+// Align Self
+.self-auto { align-self: auto !important; }
+.self-start { align-self: flex-start !important; }
+.self-end { align-self: flex-end !important; }
+.self-center { align-self: center !important; }
+.self-baseline { align-self: baseline !important; }
+.self-stretch { align-self: stretch !important; }
+
+// ============================================================================
+// RESPONSIVE GRID UTILITIES
+// ============================================================================
+
+// Grid Template Columns
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+.grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+.grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+.grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+
+// Responsive Grid Columns
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .grid-cols-#{$breakpoint}-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE POSITION UTILITIES
+// ============================================================================
+
+// Position
+.position-static { position: static !important; }
+.position-relative { position: relative !important; }
+.position-absolute { position: absolute !important; }
+.position-fixed { position: fixed !important; }
+.position-sticky { position: sticky !important; }
+
+// Top, Right, Bottom, Left
+.top-0 { top: 0 !important; }
+.right-0 { right: 0 !important; }
+.bottom-0 { bottom: 0 !important; }
+.left-0 { left: 0 !important; }
+
+// ============================================================================
+// RESPONSIVE VISIBILITY UTILITIES
+// ============================================================================
+
+// Visibility
+.visible { visibility: visible !important; }
+.invisible { visibility: hidden !important; }
+
+// Responsive Visibility
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .visible-#{$breakpoint} { visibility: visible !important; }
+    .invisible-#{$breakpoint} { visibility: hidden !important; }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE OVERFLOW UTILITIES
+// ============================================================================
+
+.overflow-auto { overflow: auto !important; }
+.overflow-hidden { overflow: hidden !important; }
+.overflow-visible { overflow: visible !important; }
+.overflow-scroll { overflow: scroll !important; }
+
+.overflow-x-auto { overflow-x: auto !important; }
+.overflow-x-hidden { overflow-x: hidden !important; }
+.overflow-x-visible { overflow-x: visible !important; }
+.overflow-x-scroll { overflow-x: scroll !important; }
+
+.overflow-y-auto { overflow-y: auto !important; }
+.overflow-y-hidden { overflow-y: hidden !important; }
+.overflow-y-visible { overflow-y: visible !important; }
+.overflow-y-scroll { overflow-y: scroll !important; }
+
+// ============================================================================
+// RESPONSIVE BORDER UTILITIES
+// ============================================================================
+
+// Border Radius
+.rounded-none { border-radius: 0 !important; }
+.rounded-sm { border-radius: $border-radius-sm !important; }
+.rounded { border-radius: $border-radius-md !important; }
+.rounded-md { border-radius: $border-radius-md !important; }
+.rounded-lg { border-radius: $border-radius-lg !important; }
+.rounded-xl { border-radius: $border-radius-xl !important; }
+.rounded-2xl { border-radius: $border-radius-2xl !important; }
+.rounded-full { border-radius: $border-radius-full !important; }
+
+// ============================================================================
+// RESPONSIVE SHADOW UTILITIES
+// ============================================================================
+
+.shadow-none { box-shadow: none !important; }
+.shadow-sm { box-shadow: $shadow-sm !important; }
+.shadow { box-shadow: $shadow-md !important; }
+.shadow-md { box-shadow: $shadow-md !important; }
+.shadow-lg { box-shadow: $shadow-lg !important; }
+.shadow-xl { box-shadow: $shadow-xl !important; }
+.shadow-2xl { box-shadow: $shadow-2xl !important; }
+
+// ============================================================================
+// RESPONSIVE TRANSITION UTILITIES
+// ============================================================================
+
+.transition-none { transition: none !important; }
+.transition-all { transition: all $transition-normal !important; }
+.transition-colors { transition: color $transition-normal, background-color $transition-normal, border-color $transition-normal !important; }
+.transition-opacity { transition: opacity $transition-normal !important; }
+.transition-shadow { transition: box-shadow $transition-normal !important; }
+.transition-transform { transition: transform $transition-normal !important; }
+
+// ============================================================================
+// RESPONSIVE CURSOR UTILITIES
+// ============================================================================
+
+.cursor-auto { cursor: auto !important; }
+.cursor-default { cursor: default !important; }
+.cursor-pointer { cursor: pointer !important; }
+.cursor-wait { cursor: wait !important; }
+.cursor-text { cursor: text !important; }
+.cursor-move { cursor: move !important; }
+.cursor-help { cursor: help !important; }
+.cursor-not-allowed { cursor: not-allowed !important; }
+
+// ============================================================================
+// RESPONSIVE USER SELECT UTILITIES
+// ============================================================================
+
+.select-none { user-select: none !important; }
+.select-text { user-select: text !important; }
+.select-all { user-select: all !important; }
+.select-auto { user-select: auto !important; }
+
+// ============================================================================
+// RESPONSIVE POINTER EVENTS UTILITIES
+// ============================================================================
+
+.pointer-events-none { pointer-events: none !important; }
+.pointer-events-auto { pointer-events: auto !important; }
+
+// ============================================================================
+// RESPONSIVE RESIZE UTILITIES
+// ============================================================================
+
+.resize-none { resize: none !important; }
+.resize-y { resize: vertical !important; }
+.resize-x { resize: horizontal !important; }
+.resize { resize: both !important; }
+
+// ============================================================================
+// RESPONSIVE SCROLL BEHAVIOR UTILITIES
+// ============================================================================
+
+.scroll-auto { scroll-behavior: auto !important; }
+.scroll-smooth { scroll-behavior: smooth !important; }
+
+// ============================================================================
+// RESPONSIVE SCROLL SNAP UTILITIES
+// ============================================================================
+
+.snap-none { scroll-snap-type: none !important; }
+.snap-x { scroll-snap-type: x mandatory !important; }
+.snap-y { scroll-snap-type: y mandatory !important; }
+.snap-both { scroll-snap-type: both mandatory !important; }
+
+.snap-start { scroll-snap-align: start !important; }
+.snap-end { scroll-snap-align: end !important; }
+.snap-center { scroll-snap-align: center !important; }
+.snap-align-none { scroll-snap-align: none !important; }
+
+// ============================================================================
+// RESPONSIVE TOUCH ACTION UTILITIES
+// ============================================================================
+
+.touch-auto { touch-action: auto !important; }
+.touch-none { touch-action: none !important; }
+.touch-pan-x { touch-action: pan-x !important; }
+.touch-pan-left { touch-action: pan-left !important; }
+.touch-pan-right { touch-action: pan-right !important; }
+.touch-pan-y { touch-action: pan-y !important; }
+.touch-pan-up { touch-action: pan-up !important; }
+.touch-pan-down { touch-action: pan-down !important; }
+.touch-pinch-zoom { touch-action: pinch-zoom !important; }
+.touch-manipulation { touch-action: manipulation !important; }
+
+// ============================================================================
+// RESPONSIVE SCROLLBAR UTILITIES
+// ============================================================================
+
+.scrollbar-thin { scrollbar-width: thin !important; }
+.scrollbar-auto { scrollbar-width: auto !important; }
+.scrollbar-none { scrollbar-width: none !important; }
+
+// ============================================================================
+// RESPONSIVE PRINT UTILITIES
+// ============================================================================
+
+@media print {
+  .print-hidden { display: none !important; }
+  .print-block { display: block !important; }
+  .print-inline { display: inline !important; }
+  .print-inline-block { display: inline-block !important; }
+  .print-flex { display: flex !important; }
+  .print-grid { display: grid !important; }
+}
+
+// ============================================================================
+// RESPONSIVE REDUCED MOTION UTILITIES
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce\:transition-none { transition: none !important; }
+  .motion-reduce\:animate-none { animation: none !important; }
+  .motion-reduce\:transform-none { transform: none !important; }
+}
+
+// ============================================================================
+// RESPONSIVE DARK MODE UTILITIES
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .dark\:bg-black { background-color: #000000 !important; }
+  .dark\:text-white { color: #ffffff !important; }
+  .dark\:border-white { border-color: #ffffff !important; }
+}
+
+// ============================================================================
+// RESPONSIVE HIGH CONTRAST UTILITIES
+// ============================================================================
+
+@media (prefers-contrast: high) {
+  .contrast-high\:border-2 { border-width: 2px !important; }
+  .contrast-high\:text-black { color: #000000 !important; }
+  .contrast-high\:bg-white { background-color: #ffffff !important; }
+}
+
+// ============================================================================
+// RESPONSIVE REDUCED DATA UTILITIES
+// ============================================================================
+
+@media (prefers-reduced-data: reduce) {
+  .data-reduce\:hidden { display: none !important; }
+  .data-reduce\:bg-none { background: none !important; }
+  .data-reduce\:border-none { border: none !important; }
+}
+
+// ============================================================================
+// BMW SPECIFIC RESPONSIVE UTILITIES
+// ============================================================================
+
+// BMW Brand Colors
+.bmw-primary { color: $color-primary !important; }
+.bmw-primary-bg { background-color: $color-primary !important; }
+.bmw-secondary { color: $color-secondary !important; }
+.bmw-secondary-bg { background-color: $color-secondary !important; }
+
+// BMW Responsive Typography
+.bmw-title {
+  font-family: var(--font-family-base) !important;
+  font-weight: $font-weight-bold;
+  
+  @include max-width($breakpoint-md) {
+    font-size: $font-size-2xl;
+  }
+  
+  @include min-width($breakpoint-md) {
+    font-size: $font-size-3xl;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    font-size: $font-size-4xl;
+  }
+  
+  @include min-width($breakpoint-xxl) {
+    font-size: $font-size-5xl;
+  }
+}
+
+.bmw-subtitle {
+  font-family: var(--font-family-base) !important;
+  font-weight: $font-weight-semibold;
+  
+  @include max-width($breakpoint-md) {
+    font-size: $font-size-lg;
+  }
+  
+  @include min-width($breakpoint-md) {
+    font-size: $font-size-xl;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    font-size: $font-size-2xl;
+  }
+}
+
+.bmw-body {
+  font-family: var(--font-family-base) !important;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  
+  @include max-width($breakpoint-md) {
+    font-size: $font-size-sm;
+  }
+  
+  @include min-width($breakpoint-md) {
+    font-size: $font-size-base;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    font-size: $font-size-lg;
+  }
+}
+
+// BMW Responsive Spacing
+.bmw-section {
+  @include max-width($breakpoint-md) {
+    padding: $spacing-xl 0;
+  }
+  
+  @include min-width($breakpoint-md) {
+    padding: $spacing-2xl 0;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    padding: $spacing-3xl 0;
+  }
+  
+  @include min-width($breakpoint-xxl) {
+    padding: $spacing-4xl 0;
+  }
+}
+
+.bmw-container {
+  @extend .container;
+  
+  @include max-width($breakpoint-md) {
+    padding-left: $spacing-md;
+    padding-right: $spacing-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    padding-left: $spacing-lg;
+    padding-right: $spacing-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
+  }
+}
+
+// BMW Responsive Grid
+.bmw-grid {
+  display: grid;
+  gap: $spacing-lg;
+  
+  @include max-width($breakpoint-md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-xl;
+  }
+  
+  @include min-width($breakpoint-xxl) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-2xl;
+  }
+}
+
+// BMW Responsive Buttons
+.bmw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-base) !important;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  border-radius: $border-radius-lg;
+  transition: all $transition-normal;
+  cursor: pointer;
+  border: none;
+  
+  @include max-width($breakpoint-md) {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+    min-height: 40px;
+  }
+  
+  @include min-width($breakpoint-md) {
+    padding: $spacing-md $spacing-lg;
+    font-size: $font-size-base;
+    min-height: 48px;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    padding: $spacing-md $spacing-xl;
+    font-size: $font-size-lg;
+    min-height: 52px;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.bmw-btn-primary {
+  @extend .bmw-btn;
+  background-color: $color-primary;
+  color: $color-text-white;
+  
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+}
+
+.bmw-btn-secondary {
+  @extend .bmw-btn;
+  background-color: transparent;
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  
+  &:hover {
+    background-color: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+// BMW Responsive Cards
+.bmw-card {
+  background: $color-background-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+  transition: all $transition-normal;
+  
+  @include max-width($breakpoint-md) {
+    padding: $spacing-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    padding: $spacing-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    padding: $spacing-xl;
+  }
+  
+  &:hover {
+    box-shadow: $shadow-xl;
+    transform: translateY(-4px);
+  }
+}
+
+// BMW Responsive Images
+.bmw-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  
+  @include max-width($breakpoint-md) {
+    border-radius: $border-radius-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    border-radius: $border-radius-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    border-radius: $border-radius-xl;
+  }
+}
+
+// BMW Responsive Navigation
+.bmw-nav {
+  display: flex;
+  align-items: center;
+  
+  @include max-width($breakpoint-md) {
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+  
+  @include min-width($breakpoint-md) {
+    flex-direction: row;
+    gap: $spacing-lg;
+  }
+}
+
+.bmw-nav-link {
+  font-family: var(--font-family-base) !important;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  transition: all $transition-normal;
+  
+  @include max-width($breakpoint-md) {
+    font-size: $font-size-base;
+    padding: $spacing-sm;
+  }
+  
+  @include min-width($breakpoint-md) {
+    font-size: $font-size-lg;
+    padding: $spacing-md;
+  }
+  
+  &:hover {
+    color: $color-primary;
+    transform: translateY(-1px);
+  }
+}
+
+// BMW Responsive Forms
+.bmw-form {
+  @include max-width($breakpoint-md) {
+    padding: $spacing-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    padding: $spacing-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    padding: $spacing-xl;
+  }
+}
+
+.bmw-input {
+  width: 100%;
+  padding: $spacing-md;
+  border: 1px solid $color-border-light;
+  border-radius: $border-radius-md;
+  font-family: var(--font-family-base) !important;
+  font-size: $font-size-base;
+  transition: all $transition-normal;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  @include max-width($breakpoint-md) {
+    font-size: $font-size-sm;
+    padding: $spacing-sm;
+  }
+}
+
+// BMW Responsive Tables
+.bmw-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  @include max-width($breakpoint-md) {
+    font-size: $font-size-sm;
+  }
+  
+  @include min-width($breakpoint-md) {
+    font-size: $font-size-base;
+  }
+  
+  th, td {
+    padding: $spacing-md;
+    text-align: left;
+    border-bottom: 1px solid $color-border-light;
+    
+    @include max-width($breakpoint-md) {
+      padding: $spacing-sm;
+    }
+  }
+  
+  th {
+    font-weight: $font-weight-semibold;
+    background-color: $color-background-secondary;
+  }
+}
+
+// BMW Responsive Modals
+.bmw-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $z-index-modal;
+  
+  .bmw-modal-content {
+    background: $color-background-primary;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-2xl;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    
+    @include max-width($breakpoint-md) {
+      margin: $spacing-md;
+      padding: $spacing-lg;
+    }
+    
+    @include min-width($breakpoint-md) {
+      margin: $spacing-lg;
+      padding: $spacing-xl;
+    }
+    
+    @include min-width($breakpoint-lg) {
+      margin: $spacing-xl;
+      padding: $spacing-2xl;
+    }
+  }
+}
+
+// BMW Responsive Hero Section
+.bmw-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: $color-text-white;
+  
+  @include max-width($breakpoint-md) {
+    min-height: 60vh;
+    padding: $spacing-2xl $spacing-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    min-height: 70vh;
+    padding: $spacing-3xl $spacing-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    min-height: 80vh;
+    padding: $spacing-4xl $spacing-xl;
+  }
+  
+  .bmw-hero-content {
+    z-index: 2;
+    position: relative;
+    
+    @include max-width($breakpoint-md) {
+      max-width: 100%;
+    }
+    
+    @include min-width($breakpoint-md) {
+      max-width: 80%;
+    }
+    
+    @include min-width($breakpoint-lg) {
+      max-width: 70%;
+    }
+  }
+  
+  .bmw-hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+    z-index: 1;
+  }
+}
+
+// BMW Responsive Footer
+.bmw-footer {
+  background-color: $color-secondary;
+  color: $color-text-white;
+  
+  @include max-width($breakpoint-md) {
+    padding: $spacing-2xl $spacing-md;
+  }
+  
+  @include min-width($breakpoint-md) {
+    padding: $spacing-3xl $spacing-lg;
+  }
+  
+  @include min-width($breakpoint-lg) {
+    padding: $spacing-4xl $spacing-xl;
+  }
+  
+  .bmw-footer-content {
+    @extend .bmw-container;
+    
+    @include max-width($breakpoint-md) {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xl;
+    }
+    
+    @include min-width($breakpoint-md) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-2xl;
+    }
+    
+    @include min-width($breakpoint-lg) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: $spacing-3xl;
+    }
+  }
+} 

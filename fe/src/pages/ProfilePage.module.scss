@@ -1,0 +1,311 @@
+@use '../styles/theme-variables.scss' as theme;
+
+// CSS Reset for ProfilePage to prevent global style interference
+.profileWrapper {
+  * {
+    box-sizing: border-box;
+  }
+  
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+}
+
+.profileWrapper {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: theme.$color-background-secondary;
+  padding: 2rem 1rem;
+}
+
+.profileCard {
+  background: theme.$color-background-primary;
+  border-radius: theme.$border-radius-xl;
+  box-shadow: theme.$shadow-lg;
+  padding: 2.5rem 2rem 2rem 2rem;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: theme.$color-primary;
+  color: theme.$color-text-white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: theme.$shadow-base;
+}
+
+.fullName {
+  font-size: theme.$font-size-2xl;
+  font-weight: theme.$font-weight-semibold;
+  color: theme.$color-text-primary;
+  margin-bottom: 0.25rem;
+}
+
+.role {
+  font-size: theme.$font-size-base;
+  color: theme.$color-primary;
+  font-weight: theme.$font-weight-medium;
+  margin-bottom: 0.5rem;
+}
+
+.infoSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: theme.$color-background-light;
+  border-radius: theme.$border-radius-base;
+  padding: 0.7rem 1rem;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: theme.$color-primary;
+}
+
+.label {
+  font-size: theme.$font-size-base;
+  color: theme.$color-text-secondary;
+  min-width: 110px;
+  font-weight: theme.$font-weight-medium;
+}
+
+.value {
+  font-size: theme.$font-size-base;
+  color: theme.$color-text-primary;
+  font-weight: theme.$font-weight-medium;
+  word-break: break-all;
+}
+
+.editInput {
+  font-size: theme.$font-size-base;
+  color: theme.$color-text-primary;
+  font-weight: theme.$font-weight-medium;
+  background: transparent;
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 150px;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid theme.$color-primary;
+  border-radius: theme.$border-radius-sm;
+  
+  &:focus {
+    border-bottom-color: theme.$color-primary-dark;
+    background: rgba(theme.$color-primary, 0.05);
+  }
+  
+  &::placeholder {
+    color: theme.$color-text-muted;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.editButton, .saveButton, .cancelButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: theme.$border-radius-base;
+  font-size: theme.$font-size-base;
+  font-weight: theme.$font-weight-medium;
+  border: none;
+  cursor: pointer;
+  transition: theme.$transition-base;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.editButton {
+  background: theme.$color-primary !important;
+  color: theme.$color-text-white !important;
+  
+  &:hover:not(:disabled) {
+    background: theme.$color-primary-dark !important;
+  }
+}
+
+.saveButton {
+  background: theme.$color-success !important;
+  color: theme.$color-text-white !important;
+  
+  &:hover:not(:disabled) {
+    background: theme.$static-success !important;
+  }
+}
+
+.cancelButton {
+  background: theme.$color-text-muted !important;
+  color: theme.$color-text-white !important;
+  
+  &:hover:not(:disabled) {
+    background: theme.$color-text-light !important;
+  }
+}
+
+.loadingWrapper {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid theme.$color-border-light;
+  border-top: 5px solid theme.$color-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.notLoggedIn {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: theme.$color-text-secondary;
+  background: theme.$color-background-primary;
+  border-radius: theme.$border-radius-lg;
+  box-shadow: theme.$shadow-base;
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+@media (max-width: 600px) {
+  .profileCard {
+    padding: 1.2rem 0.5rem;
+  }
+  .infoSection {
+    gap: 0.7rem;
+  }
+  .notLoggedIn {
+    padding: 1.2rem 0.5rem;
+  }
+  .actionButtons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+// Ultimate theme override with maximum specificity
+html body .profileWrapper .profileCard .actionButtons .editButton,
+html body .profileWrapper .profileCard .actionButtons .saveButton,
+html body .profileWrapper .profileCard .actionButtons .cancelButton {
+  background: var(--theme-primary, theme.$color-primary) !important;
+  color: var(--theme-text-white, theme.$color-text-white) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px) !important;
+  }
+  
+  &:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+}
+
+html body .profileWrapper .profileCard .actionButtons .cancelButton {
+  background: var(--theme-text-muted, theme.$color-text-muted) !important;
+  color: var(--theme-text-white, theme.$color-text-white) !important;
+  
+  &:hover:not(:disabled) {
+    background: var(--theme-text-light, theme.$color-text-light) !important;
+  }
+}
+
+// Maximum specificity override for all global button styles
+html body .profileWrapper .profileCard .actionButtons button,
+html body .profileWrapper .profileCard .actionButtons .editButton,
+html body .profileWrapper .profileCard .actionButtons .saveButton,
+html body .profileWrapper .profileCard .actionButtons .cancelButton {
+  background: var(--theme-primary, theme.$color-primary) !important;
+  color: var(--theme-text-white, theme.$color-text-white) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: theme.$border-radius-base !important;
+  font-size: theme.$font-size-base !important;
+  font-weight: theme.$font-weight-medium !important;
+  cursor: pointer !important;
+  transition: theme.$transition-base !important;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px) !important;
+  }
+  
+  &:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+}
+
+html body .profileWrapper .profileCard .actionButtons .cancelButton {
+  background: var(--theme-text-muted, theme.$color-text-muted) !important;
+  color: var(--theme-text-white, theme.$color-text-white) !important;
+  
+  &:hover:not(:disabled) {
+    background: var(--theme-text-light, theme.$color-text-light) !important;
+  }
+} 

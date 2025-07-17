@@ -1,0 +1,2990 @@
+@use 'sass:color';
+@use './responsive-utilities' as *;
+@use './theme-variables' as *;
+@use './theme-global' as theme;
+@use './toast-custom.scss' as *;
+@use './_news.scss' as *;
+
+// Typography
+$font-family-base: 'Roboto', sans-serif;
+$font-size-base: 16px;
+$font-size-small: 14px;
+$font-size-large: 18px;
+$font-size-xlarge: 24px;
+$font-size-xxlarge: 32px;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Border Radius
+$border-radius-sm: 4px;
+$border-radius: 8px;
+$border-radius-lg: 12px;
+
+// Shadows
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+// Transitions
+$transition-base: all 0.3s ease;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+/* Reset CSS */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  position: relative;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+input, textarea, select {
+  font: inherit;
+}
+
+/* Remove default focus styles */
+:focus {
+  outline: none;
+}
+
+/* Remove default button styles */
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+// Định nghĩa các thuộc tính CSS tùy chỉnh (biến CSS) sau @use
+:root {
+  --bmw-blue: #0066b1;
+  --bmw-green: #0f5132;
+  --bmw-dark-green: #0a3622;
+  --bmw-light-gray: #f5f5f5;
+  --bmw-dark-gray: #333333;
+  --bmw-nav-green: #0f5132;
+}
+
+// Base styles
+body {
+  font-family: var(--font-family-base) !important;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: $color-text;
+  background-color: $color-background;
+  overflow-x: hidden;
+}
+
+// HOMEPAGE
+.homepage {
+  .hero-section {
+    position: relative;
+    height: 800px;
+    background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+    overflow: hidden;
+    padding: 0;
+
+    // Basic styles for slick-carousel wrapper
+    .slick-slider {
+      width: 100%;
+      height: 100%;
+    }
+
+    .slick-list, .slick-track, .slick-slide, .slick-slide > div {
+      height: 100%;
+    }
+
+    .hero-slide { // This is our custom div inside .slick-slide
+      width: 100%;
+      height: 100%;
+      display: flex; // Use flexbox for internal layout
+      align-items: center; // Vertically center content
+      justify-content: space-between; // Space between content and image
+      padding: 0 $spacing-xxl; // Add padding to the slide content area
+      position: relative; // Ensure positioning context for children
+      overflow: hidden;
+
+      @media (max-width: $breakpoint-md) {
+        flex-direction: column; // Stack content and image on medium screens down
+        justify-content: center; // Center content vertically when stacked
+        text-align: center; // Center text when stacked
+        padding: $spacing-xl $spacing-md; // Adjust padding for smaller screens
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: $color-background;
+      max-width: 600px;
+      flex-shrink: 0;
+      // Added text-shadow for better readability on various backgrounds
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+      // Animations controlled by slick-active
+      opacity: 0;
+      transform: translateY(30px); // Increased initial translation
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out; // Slower, smoother transition
+
+       @media (max-width: $breakpoint-md) {
+           max-width: 80%; // Adjust max-width for smaller screens
+           margin-bottom: $spacing-md; // Add space below content when stacked
+       }
+
+        @media (max-width: $breakpoint-sm) {
+           max-width: 95%; // Further adjust for very small screens
+       }
+    }
+
+    .hero-image {
+      position: relative; // Use relative positioning within flexbox
+      z-index: 1;
+      width: 60%; // Set initial width
+      height: auto;
+      object-fit: contain;
+      margin-right: -10%; // Pull image slightly to the right
+
+      // Animations controlled by slick-active
+      opacity: 0;
+      transform: translateX(30px); // Increased initial translation
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out; // Slower, smoother transition
+
+      @media (max-width: $breakpoint-md) {
+        width: 80%; // Make image wider on medium screens down
+        margin-right: 0; // Remove negative margin when stacked
+        margin-top: $spacing-md; // Add space above image when stacked
+      }
+
+      @media (max-width: $breakpoint-sm) {
+        width: 90%; // Make image wider on small screens down
+      }
+    }
+
+    // Styles for active slide content and image (override initial hidden state)
+    .slick-active .hero-content {
+        opacity: 1;
+        transform: translateY(0);
+         transition-delay: 0.2s; // Add a slight delay for content
+    }
+
+    .slick-active .hero-image {
+        opacity: 1;
+        transform: translateX(0);
+         transition-delay: 0.4s; // Add a longer delay for image
+    }
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: $spacing-sm; // Adjusted margin
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+      @media (max-width: $breakpoint-md) {
+         font-size: 3rem; // Adjust font size for medium screens
+      }
+       @media (max-width: $breakpoint-sm) {
+         font-size: 2.5rem; // Adjust font size for small screens
+      }
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: $spacing-md; // Adjusted margin
+      line-height: 1.4;
+
+       @media (max-width: $breakpoint-md) {
+         font-size: 1.2rem; // Adjust font size for medium screens
+      }
+       @media (max-width: $breakpoint-sm) {
+         font-size: 1rem; // Adjust font size for small screens
+      }
+    }
+
+    .hero-price {
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.15); // Slightly more opaque background
+      padding: $spacing-sm $spacing-lg; // Keep padding
+      border-radius: $border-radius-sm;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    // Styles for Navigation Arrows (customize if needed)
+    .slick-prev, .slick-next {
+        font-size: 0;
+        line-height: 0;
+        position: absolute;
+        top: 50%;
+        display: block;
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        transform: translate(0, -50%);
+        cursor: pointer;
+        color: transparent;
+        border: none;
+        outline: none;
+        background: rgba($color-background, 0.2); // Use background color variable
+        border-radius: 50%;
+        z-index: 10; // Ensure arrows are above content
+
+        &:hover, &:focus {
+            outline: none;
+            background: rgba($color-background, 0.3); // Use background color variable
+        }
+
+         &::before {
+            font-family: 'slick';
+            font-size: 20px; // Adjust size
+            line-height: 1;
+            opacity: .75;
+            color: $color-background; // Arrow color variable
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+         }
+    }
+
+    .slick-prev {
+        left: $spacing-xl;
+    }
+
+     .slick-next {
+        right: $spacing-xl;
+    }
+
+    // Styles for Dots Navigation (customize if needed)
+    .slick-dots {
+      position: absolute;
+      bottom: $spacing-xl; // Position dots
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-align: center;
+      z-index: 10; // Ensure dots are above content
+
+      li {
+        position: relative;
+        display: inline-block;
+        width: 12px; // Dot size
+        height: 12px; // Dot size
+        margin: 0 $spacing-sm; // Space between dots
+        padding: 0;
+        cursor: pointer;
+
+        button {
+            font-size: 0;
+            line-height: 0;
+            display: block;
+            width: 12px; // Button size matching dot
+            height: 12px; // Button size matching dot
+            cursor: pointer;
+            color: transparent;
+            border: 0;
+            outline: none;
+            background: transparent;
+
+            &::before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 12px; // Before element size matching dot
+                height: 12px; // Before element size matching dot
+                content: '•'; // Dot character
+                font-family: 'slick'; // May need to adjust font-family if using custom icons
+                font-size: 6px; // Size of the dot character itself
+                line-height: 12px; // Center the character vertically
+                text-align: center;
+                opacity: .25; // Inactive dot opacity
+                color: $color-background; // Inactive dot color variable
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+        }
+
+        &.slick-active button::before {
+            opacity: .75; // Active dot opacity
+            color: $color-background; // Active dot color variable
+        }
+      }
+    }
+
+    // Original .hero-nav and .hero-dots styles are no longer needed if using slick-carousel's defaults
+    // Remove if they conflict:
+    // .hero-nav, .hero-dots { display: none; }
+
+  }
+
+  .product-section {
+    padding: $spacing-xxl 0;
+    background-color: $color-background;
+
+    .product-section-title {
+      text-align: center; 
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: $spacing-xl;
+      text-transform: uppercase;
+      color: $color-text;
+    }
+
+    .product-tabs {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-xl;
+      margin-bottom: $spacing-lg;
+
+      .product-tab {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: $color-text;
+        padding: $spacing-sm $spacing-lg;
+        border: none;
+        background: none;
+        cursor: pointer;
+        transition: $transition-base;
+        position: relative;
+
+        &:hover {
+          color: $color-primary;
+        }
+
+        &--active {
+          color: $color-primary;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: $color-primary;
+          }
+        }
+      }
+    }
+
+    .product-number-tabs {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-md;
+      margin-bottom: $spacing-xl;
+
+      .product-number-tab {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: $color-text;
+        border: 1px solid $color-border;
+        background: none;
+        cursor: pointer;
+        transition: $transition-base;
+
+        &:hover {
+          border-color: $color-primary;
+          color: $color-primary;
+        }
+
+        &--active {
+          background-color: $color-primary;
+          color: $color-background;
+          border-color: $color-primary;
+        }
+      }
+    }
+
+    .product-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+    }
+
+    .product-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: $spacing-xl;
+
+      @media (max-width: $breakpoint-lg) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: $breakpoint-md) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .product-card {
+      background-color: $color-background;
+      border-radius: $border-radius;
+      overflow: hidden;
+      box-shadow: $shadow;
+      transition: $transition-base;
+      display: flex;
+      flex-direction: column;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-lg;
+      }
+
+      &__image {
+        position: relative;
+        width: 100%;
+        height: 200px; // Consistent image height
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      // Tags are not present in the new image, but keeping styles just in case needed later
+      &__tags {
+        position: absolute;
+        top: $spacing-sm;
+        right: $spacing-sm;
+        display: flex;
+        gap: $spacing-xs;
+        z-index: 2; // Ensure tags are above image
+      }
+
+      &__tag {
+        background-color: $color-primary; // Default tag color
+        color: $color-background;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-small;
+        font-weight: 500;
+
+        // Example colors based on your previous data/image
+        &--mới { background-color: #3498db; } // Blue
+        &--luxury { background-color: #a77737; } // Gold/Brown
+        &--bán-chạy { background-color: #f39c12; } // Orange
+        &--performance { background-color: #e74c3c; } // Red
+        &--electric { background-color: #2ecc71; } // Green
+      }
+
+      &__info {
+        padding: $spacing-md; // Consistent padding inside the info section
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        background-color: $color-background; // Ensure white background
+      }
+
+      &__title {
+        font-size: $font-size-large; // Adjusted font size for title
+        font-weight: 700; // Bold font weight
+        margin-bottom: $spacing-xs; // Reduced space below title
+        color: $color-text; // Dark text color
+      }
+
+      &__specs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-sm; // Space between specs
+        margin-bottom: $spacing-md; // Space below specs
+        font-size: $font-size-base; // Font size for specs
+        color: $color-text-light; // Lighter color for specs
+        align-items: center; // Vertically align items
+
+        .product-card__spec {
+           display: flex;
+           align-items: center;
+           gap: $spacing-xs; // Space between icon and text
+
+            i {
+              color: $color-text-light; // Icon color matches spec text
+              font-size: $font-size-base; // Icon size matches spec text
+            }
+        }
+      }
+
+      &__price {
+        font-size: $font-size-large; // Font size for price
+        font-weight: 700; // Bold font weight for price
+        color: $color-text; // Dark text color for price (matching image)
+        margin-top: $spacing-sm; // Space above price
+        margin-bottom: $spacing-md; // Space below price
+      }
+
+      &__actions {
+        display: flex;
+        gap: $spacing-sm; // Space between buttons
+        margin-top: auto; // Push actions to the bottom
+
+        a {
+          display: inline-block;
+          padding: $spacing-sm $spacing-md; // Padding for buttons
+          border-radius: $border-radius-sm; // Border radius for buttons
+          font-size: $font-size-base; // Font size for buttons
+          transition: $transition-base; // Transition for hover effects
+          text-align: center;
+          flex-grow: 1; // Allow buttons to grow to fill space
+          font-weight: 500; // Semi-bold font weight for button text
+
+          &.product-card__btn-detail {
+            background-color: #444; // Dark background for detail button (matching image)
+            color: $color-background; // White text color
+            border: 1px solid #444; // Border matching background
+
+            &:hover {
+              background-color: #333; // Slightly darker on hover
+              border-color: #333;
+            }
+          }
+
+          &.product-card__btn-test-drive {
+            background-color: $color-background; // White background for test drive button
+            color: $color-text; // Dark text color
+            border: 1px solid $color-border; // Border color
+
+            &:hover {
+               border-color: $color-text;
+               color: $color-text;
+            }
+          }
+        }
+      }
+    }
+
+    // Optional: Adjust grid gap for spacing between cards if needed
+    .product-row {
+       gap: $spacing-lg; // Adjust grid gap if necessary
+    }
+  }
+
+  .feature-section {
+    padding: $spacing-xxl 0;
+    background-color: $color-background-light;
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: $spacing-lg;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+
+      @media (max-width: $breakpoint-lg) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: $breakpoint-md) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-card {
+      position: relative;
+      border-radius: $border-radius;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: $transition-base;
+      }
+
+      &:hover img {
+        transform: scale(1.1);
+      }
+
+      .feature-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: $spacing-lg;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        color: $color-background;
+
+        .feature-title {
+          font-size: 1.2rem;
+          font-weight: 500;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .news-section {
+    padding: $spacing-xxl 0;
+    background-color: $color-background;
+
+    .news-item {
+      display: flex;
+      gap: $spacing-xl;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+
+      @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+      }
+
+      .news-image {
+        flex: 1;
+        height: 400px;
+        object-fit: cover;
+        border-radius: $border-radius;
+      }
+
+      .news-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        h3 {
+          font-size: 2rem;
+          font-weight: 700;
+          margin-bottom: $spacing-md;
+          color: $color-text;
+        }
+
+        p {
+          font-size: 1.1rem;
+          color: $color-text-light;
+          line-height: 1.6;
+          margin-bottom: $spacing-lg;
+        }
+
+        .news-btn-more {
+          display: inline-block;
+          padding: $spacing-md $spacing-xl;
+          background-color: $color-primary;
+          color: $color-background;
+          font-size: 1rem;
+          font-weight: 500;
+          border-radius: $border-radius;
+          transition: $transition-base;
+          text-align: center;
+          width: fit-content;
+
+          &:hover {
+            background-color: $color-primary-hover;
+          }
+        }
+      }
+    }
+  }
+}
+
+// NEWS SECTION
+.news {
+  &-item {
+    display: flex;
+    margin-bottom: 30px;
+  }
+
+  &-image {
+    width: 200px;
+    height: 120px;
+    object-fit: cover;
+    margin-right: 20px;
+    border-radius: 3px;
+  }
+
+  &-content {
+    h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+  }
+
+  &-btn-more {
+    display: inline-block;
+    border: 1px solid #333;
+    padding: 8px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #333;
+      color: white;
+    }
+  }
+}
+
+// FOOTER
+.footer {
+  background-color: $color-secondary;
+  color: $color-background-light;
+  padding: $spacing-xxl 0 $spacing-lg;
+  margin-top: auto;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-xl;
+    margin-bottom: $spacing-xl;
+
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__title {
+    font-size: $font-size-large;
+    font-weight: 600;
+    color: $color-background;
+    margin-bottom: $spacing-md;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__link {
+    color: $color-background-light;
+    transition: $transition-base;
+    font-size: $font-size-small;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &__contact-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    color: $color-background-light;
+    font-size: $font-size-small;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__social {
+    display: flex;
+    gap: $spacing-md;
+    margin-top: $spacing-md;
+  }
+
+  &__social-link {
+    color: $color-background-light;
+    font-size: $font-size-large;
+    transition: $transition-base;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba($color-background-light, 0.1);
+    padding-top: $spacing-lg;
+    text-align: center;
+    font-size: $font-size-small;
+    color: rgba($color-background-light, 0.7);
+  }
+}
+
+// RESPONSIVE
+@media (max-width: 992px) {
+  .hero-image {
+    max-width: 80%;
+  }
+
+  .news-item {
+    flex-direction: column;
+  }
+
+  .news-image {
+    width: 100%;
+    height: 200px;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  /* COMMENTED OUT TO AVOID CONFLICT WITH Header.tsx
+  .header__dropdown-menu {
+    position: static;
+    box-shadow: none;
+    padding: 10px 0;
+    display: none;
+  }
+
+  .header__nav-item:hover .header__dropdown-menu {
+    display: block;
+  }
+  */
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 500px;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-image {
+    position: relative;
+    max-width: 100%;
+    margin-top: 20px;
+  }
+
+  /* COMMENTED OUT TO AVOID CONFLICT WITH Header.tsx
+  .header__nav-link {
+    padding: 10px;
+  }
+  */
+
+  .hero-thumbnails {
+    margin-top: 20px;
+    padding: 0 20px;
+  }
+
+  .thumbnail {
+    height: 60px;
+  }
+
+  .product-container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+  }
+
+  .product-section-title {
+    font-size: 22px;
+  }
+
+  .feature-card {
+    height: 120px;
+  }
+
+  .feature-title {
+    font-size: 14px;
+  }
+}
+
+// Reset & Base Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Common Components
+.page-banner {
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  position: relative;
+  overflow: hidden;
+  padding: $spacing-xxl 0;
+  color: $color-background;
+  text-align: center;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+  }
+
+  &__title {
+    font-size: $font-size-xxlarge;
+    font-weight: 700;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__subtitle {
+    font-size: $font-size-large;
+    font-weight: 300;
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-block;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius;
+  font-weight: 500;
+  text-align: center;
+  transition: $transition-base;
+  cursor: pointer;
+  border: none;
+
+  &--primary {
+    background-color: $color-primary;
+    color: $color-background;
+
+    &:hover {
+      background-color: $color-primary-hover;
+    }
+  }
+
+  &--secondary {
+    background-color: $color-secondary;
+    color: $color-background;
+
+    &:hover {
+      background-color: $color-secondary-hover;
+    }
+  }
+
+  &--outline {
+    border: 2px solid $color-primary;
+    color: $color-primary;
+    background-color: transparent;
+
+    &:hover {
+      background-color: $color-primary;
+      color: $color-background;
+    }
+  }
+}
+
+// Form Elements
+.form-group {
+  margin-bottom: $spacing-md;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: $spacing-xs;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-base;
+  transition: $transition-base;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+  }
+}
+
+// Grid System
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 (-$spacing-md);
+}
+
+.col {
+  flex: 1;
+  padding: 0 $spacing-md;
+}
+
+// TEST DRIVE PAGE
+.test-drive-page {
+  .page-banner {
+    background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+    position: relative;
+    overflow: hidden;
+    padding: $spacing-xxl 0;
+    color: $color-background;
+    text-align: center;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+    }
+
+    &__title {
+      font-size: $font-size-xxlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-sm;
+    }
+
+    .breadcrumb {
+      justify-content: center;
+
+      .breadcrumb-item {
+        color: $color-background;
+
+        &.active {
+          color: $color-background;
+        }
+
+        a {
+          color: rgba($color-background, 0.8);
+          &:hover {
+            color: $color-background;
+          }
+        }
+      }
+    }
+  }
+
+  .test-drive-section {
+    padding: $spacing-xxl 0;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+    }
+
+    &__row {
+      display: flex;
+      gap: $spacing-xl;
+
+      @media (max-width: $breakpoint-lg) {
+        flex-direction: column;
+      }
+    }
+
+    &__col {
+      flex: 1;
+    }
+  }
+
+  .test-drive-info {
+    &__heading {
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-md;
+      color: $color-text;
+
+      @media (max-width: $breakpoint-sm) {
+        font-size: $font-size-large;
+      }
+    }
+
+    &__description {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      margin-bottom: $spacing-xl;
+      line-height: 1.6;
+    }
+
+    &__benefits-header {
+      margin-top: $spacing-xl;
+      margin-bottom: $spacing-xl;
+      text-align: center;
+    }
+
+    &__benefits-title {
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      color: $color-text;
+      margin-bottom: $spacing-sm;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-large;
+      }
+    }
+
+    &__benefits-subtitle {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      margin: 0;
+      font-weight: 400;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-small;
+      }
+    }
+
+    &__benefits {
+      margin-top: $spacing-lg;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: $spacing-lg;
+
+      @media (max-width: $breakpoint-md) {
+        gap: $spacing-md;
+      }
+    }
+
+    &__benefit-item {
+      background: white;
+      border-radius: 16px;
+      padding: $spacing-xl;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: flex-start;
+      gap: $spacing-md;
+      transition: $transition-base;
+
+      @media (max-width: $breakpoint-md) {
+        padding: $spacing-lg;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+    }
+
+    &__benefit-number {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+      z-index: 1;
+      border: 2px solid white;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+      }
+
+      @media (max-width: $breakpoint-md) {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+        top: 12px;
+        right: 12px;
+      }
+    }
+
+    &__benefit-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(13, 58, 118, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $color-primary;
+      font-size: 32px;
+      flex-shrink: 0;
+      margin-top: 10px;
+
+      @media (max-width: $breakpoint-md) {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+      }
+    }
+
+    &__benefit-content {
+      flex: 1;
+      margin-top: 10px;
+    }
+
+    &__benefit-title {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-bottom: $spacing-sm;
+      color: $color-text;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-base;
+      }
+    }
+
+    &__benefit-description {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      line-height: 1.6;
+      margin: 0;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-small;
+      }
+    }
+  }
+
+  .test-drive-form {
+    background-color: $color-background-light;
+    padding: $spacing-xl;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+
+    &__title {
+      text-align: center;
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-xl;
+      color: $color-text;
+    }
+
+    &__form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+
+    &__group {
+      margin-bottom: $spacing-sm;
+    }
+
+    &__label {
+      display: block;
+      font-size: $font-size-base;
+      font-weight: 500;
+      margin-bottom: $spacing-xs;
+      color: $color-text;
+    }
+
+    &__input,
+    &__select,
+    &__textarea {
+      width: 100%;
+      padding: $spacing-sm;
+      border: 1px solid $color-border;
+      border-radius: $border-radius-sm;
+      font-size: $font-size-base;
+      color: $color-text;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+      }
+    }
+
+    &__textarea {
+      resize: vertical;
+    }
+
+    &__check-input {
+      margin-right: $spacing-xs;
+    }
+
+    &__check-label {
+      font-size: $font-size-base;
+      color: $color-text-light;
+
+      a {
+        color: $color-primary;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &__btn-submit {
+      display: block;
+      width: 100%;
+      padding: $spacing-md $spacing-xl;
+      background-color: $color-primary;
+      color: $color-background;
+      font-size: $font-size-large;
+      font-weight: 500;
+      border-radius: $border-radius;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: $color-primary-hover;
+      }
+    }
+  }
+
+  .test-drive-process {
+    padding: $spacing-xxl 0;
+    background: #ffffff;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+    }
+
+    &__header {
+      text-align: center;
+      margin-bottom: $spacing-xxl;
+    }
+
+    &__title {
+      font-size: $font-size-xxlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-md;
+      color: $color-text;
+      
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-xlarge;
+      }
+    }
+
+    &__subtitle {
+      font-size: $font-size-large;
+      color: $color-text-light;
+      font-weight: 400;
+      
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-base;
+      }
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: $spacing-lg;
+      
+      @media (max-width: $breakpoint-lg) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      @media (max-width: $breakpoint-md) {
+        grid-template-columns: 1fr;
+        gap: $spacing-lg;
+      }
+    }
+
+    &__card {
+      background: white;
+      border-radius: 16px;
+      padding: $spacing-xl;
+      text-align: center;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      
+      @media (max-width: $breakpoint-md) {
+        padding: $spacing-lg;
+      }
+    }
+
+    &__card-number {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(13, 58, 118, 0.3);
+    }
+
+    &__card-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(13, 58, 118, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto $spacing-md;
+      color: $color-primary;
+      font-size: 32px;
+      
+      @media (max-width: $breakpoint-md) {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+      }
+    }
+
+    &__card-title {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-bottom: $spacing-md;
+      color: $color-text;
+      
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-base;
+      }
+    }
+
+    &__card-description {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      line-height: 1.6;
+      margin: 0;
+      
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-small;
+      }
+    }
+
+    @media (max-width: $breakpoint-md) {
+      padding: $spacing-xl 0;
+      
+      &__header {
+        margin-bottom: $spacing-xl;
+      }
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      padding: $spacing-lg 0;
+      
+      &__container {
+        padding: 0 $spacing-sm;
+      }
+      
+      &__header {
+        margin-bottom: $spacing-lg;
+      }
+    }
+  }
+}
+
+// PRODUCT LIST PAGE
+.product-list-page {
+  .page-banner {
+    background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+    position: relative;
+    overflow: hidden;
+    padding: $spacing-xxl 0;
+    color: $color-background;
+    text-align: center;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 $spacing-md;
+    }
+
+    &__title {
+      font-size: $font-size-xxlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-sm;
+    } 
+
+    &__subtitle {
+      font-size: $font-size-large;
+      font-weight: 300;
+    }
+  }
+
+  .price-filter {
+    margin-bottom: $spacing-xl;
+
+    &__row {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+
+      @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    &__col {
+      flex: 1;
+
+      @media (max-width: $breakpoint-md) {
+        width: 100%;
+      }
+    }
+
+    &__title {
+      font-size: $font-size-large;
+      font-weight: 700;
+      color: $color-text;
+
+      @media (max-width: $breakpoint-md) {
+        margin-bottom: $spacing-sm;
+      }
+    }
+
+    &__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+
+      @media (max-width: $breakpoint-md) {
+        justify-content: center;
+      }
+    }
+
+    &__btn {
+      padding: $spacing-sm $spacing-md;
+      border: 1px solid $color-border;
+      border-radius: $border-radius-sm;
+      color: $color-text;
+      font-size: $font-size-base;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: $color-primary;
+        color: $color-background;
+        border-color: $color-primary;
+      }
+
+      &--active {
+        background-color: $color-primary;
+        color: $color-background;
+        border-color: $color-primary;
+      }
+    }
+  }
+
+  .price-table-container {
+    overflow-x: auto;
+    margin-bottom: $spacing-xl;
+  }
+
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: $spacing-md;
+      border-bottom: 1px solid $color-border;
+      text-align: left;
+    }
+
+    th {
+      background-color: $color-background-light;
+      font-weight: 700;
+      color: $color-text;
+      text-transform: uppercase;
+      font-size: $font-size-base;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    &__row.hidden {
+      display: none;
+    }
+
+    &__model-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+
+    &__model-image {
+      width: 80px;
+      height: auto;
+      border-radius: $border-radius-sm;
+    }
+
+    &__model-name {
+      font-weight: 500;
+      color: $color-text;
+    }
+
+    &__discount {
+      display: inline-block;
+      background-color: $color-accent;
+      color: $color-text;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-sm;
+      font-size: $font-size-small;
+      font-weight: 500;
+    }
+
+    &__btn-detail {
+      display: inline-block;
+      padding: $spacing-sm $spacing-md;
+      border: 1px solid $color-primary;
+      border-radius: $border-radius-sm;
+      color: $color-primary;
+      font-size: $font-size-base;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: var(--theme-primary-dark, #{$static-primary-darker});
+        border-color: var(--theme-primary-dark, #{$static-primary-darker});
+      }
+    }
+  }
+
+  .price-notes {
+    margin-bottom: $spacing-xl;
+    p {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      margin-bottom: $spacing-xs;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      i {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .contact-cta {
+    background-color: $color-background-light;
+    padding: $spacing-xl;
+    border-radius: $border-radius;
+
+    &__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: $spacing-md;
+
+      @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    h3 {
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-sm;
+      color: $color-text;
+
+      @media (max-width: $breakpoint-sm) {
+        font-size: $font-size-large;
+      }
+    }
+
+    p {
+      font-size: $font-size-base;
+      color: $color-text-light;
+    }
+
+    &__button {
+      display: inline-block;
+      padding: $spacing-md $spacing-xl;
+      background-color: $color-primary;
+      color: $color-background;
+      font-size: $font-size-large;
+      font-weight: 500;
+      border-radius: $border-radius;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: var(--theme-primary-dark, #{$static-primary-darker});
+      }
+    }
+  }
+}
+
+// LOGIN PAGE (Admin style)
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $color-background-light;
+  padding: $spacing-xxl $spacing-md;
+
+  &__container {
+    max-width: 400px;
+    width: 100%;
+    padding: $spacing-md;
+  }
+
+  &__logo {
+    text-align: center;
+    margin-bottom: $spacing-xl;
+
+    img {
+      width: 80px;
+      height: 80px;
+    }
+
+    &-text {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-top: $spacing-xs;
+      color: $color-text;
+    }
+  }
+
+  &__card {
+    background-color: $color-background;
+    border-radius: $border-radius;
+    box-shadow: $shadow-lg;
+    padding: $spacing-xl;
+  }
+
+  &__card-title {
+    text-align: center;
+    margin-bottom: $spacing-lg;
+    color: $color-primary; // Using primary color for admin login title
+    font-weight: 700;
+    font-size: $font-size-large;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__form-group {
+    margin-bottom: $spacing-sm; // Adjusting margin for Bootstrap-like spacing
+  }
+
+  &__input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+
+    &-text {
+      padding: $spacing-sm;
+      background-color: transparent;
+      border: none;
+      color: $color-text-light;
+
+      i {
+        font-size: $font-size-base;
+      }
+    }
+  }
+
+  &__input {
+    flex-grow: 1;
+    padding: $spacing-sm;
+    border: none;
+    font-size: $font-size-base;
+    color: $color-text;
+
+    &:focus {
+      outline: none;
+      // Inherit border-color and box-shadow from input-group focus if needed, or add here
+    }
+  }
+
+  // Add focus styles for the input group container
+  &__input-group:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+  }
+
+  &__options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md; // Adjusting margin for Bootstrap-like spacing
+  }
+
+  &__form-check {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+
+    &-label {
+      font-size: $font-size-base;
+      color: $color-text;
+    }
+  }
+
+  &__forgot-password-link {
+    font-size: $font-size-base;
+    color: $color-primary;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__btn-login {
+    display: block;
+    width: 100%;
+    padding: $spacing-md 0; // Adjust padding
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: $color-background;
+    font-size: $font-size-large; // Adjust font size
+    font-weight: 500;
+    border-radius: $border-radius; // Using defined border radius
+    transition: $transition-base;
+    text-align: center; // Ensure text is centered
+
+    &:hover:not(:disabled) {
+      background-color: var(--theme-primary-dark, #{$static-primary-darker});
+      border-color: var(--theme-primary-dark, #{$static-primary-darker});
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__footer-text {
+    text-align: center;
+    margin-top: $spacing-md;
+    color: $color-text-light;
+    font-size: $font-size-base; // Adjust font size
+
+    small {
+      font-size: 100%; // Ensure small tag doesn't make text smaller
+    }
+  }
+}
+
+// NEWS PAGE - Styles moved to _news.scss
+
+// REGISTRATION PAGE
+.registration-page {
+  display: flex; /* Use flexbox for centering */
+  flex-direction: column; /* Stack logo, card, and text vertically */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  min-height: 100vh; /* Ensure it takes at least full viewport height */
+  background-color: $color-background-light;
+  padding: $spacing-xxl $spacing-md; /* Add padding for smaller screens */
+
+  .registration-logo {
+    text-align: center;
+    margin-bottom: $spacing-xl; /* Space below logo */
+
+    img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain; /* Ensure logo is contained */
+    }
+
+    &-text {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-top: $spacing-xs; /* Space above logo text */
+      color: $color-text;
+    }
+  }
+
+  .registration-card {
+    background-color: $color-background;
+    border-radius: $border-radius;
+    box-shadow: $shadow-lg;
+    padding: $spacing-xl; /* Consistent padding inside the card */
+    width: 100%; /* Ensure card takes full width within its container */
+    max-width: 400px; /* Match max-width of login card for consistency */
+    display: flex; // Use flexbox to center content vertically in the card
+    flex-direction: column;
+    align-items: center; // Center content horizontally
+  }
+
+  .registration-title {
+    text-align: center;
+    margin-bottom: $spacing-lg; // Adjusted margin
+    color: $color-primary; // Using primary color
+    font-weight: 700;
+    font-size: $font-size-large;
+  }
+
+  .registration-form {
+    width: 100%; // Form takes full width of card
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md; // Space between form groups
+
+    .form-group {
+      margin-bottom: 0; // Remove default margin-bottom
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid $color-border;
+      border-radius: $border-radius-sm;
+      overflow: hidden;
+      width: 100%;
+
+      &:focus-within {
+        border-color: $color-primary;
+        box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+      }
+
+      &-text {
+        padding: $spacing-sm; // Padding for icon container
+        background-color: transparent;
+        border: none;
+        color: $color-text-light;
+        flex-shrink: 0;
+
+        i {
+          font-size: $font-size-base;
+        }
+      }
+    }
+
+    .form-label {
+       // Visually hidden labels
+       position: absolute;
+       width: 1px;
+       height: 1px;
+       padding: 0;
+       margin: -1px;
+       overflow: hidden;
+       clip: rect(0, 0, 0, 0);
+       white-space: nowrap;
+       border: 0;
+    }
+
+    .form-input {
+      flex-grow: 1;
+      padding: $spacing-sm; // Consistent padding
+      border: none; // Remove border as it's on the input-group
+      font-size: $font-size-base;
+      color: $color-text;
+      width: 100%; // Ensure input takes full width within input-group
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .registration-button {
+    display: block;
+    width: 100%;
+    padding: $spacing-md 0; // Adjust padding
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: $color-background;
+    font-size: $font-size-large; // Adjust font size
+    font-weight: 500;
+    border-radius: $border-radius; // Using defined border radius
+    transition: $transition-base;
+    text-align: center; // Ensure text is centered
+
+    &:hover:not(:disabled) {
+      background-color: var(--theme-primary-dark, #{$static-primary-darker});
+      border-color: var(--theme-primary-dark, #{$static-primary-darker});
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .registration-login-text {
+    text-align: center;
+    margin-top: $spacing-md; // Space above the link
+    font-size: $font-size-base;
+    color: $color-text-light;
+
+    a {
+       color: $color-primary;
+       font-weight: 500;
+       text-decoration: none; // Remove default underline
+
+       &:hover {
+         text-decoration: underline; // Add underline on hover
+       }
+    }
+  }
+
+  .registration-footer-text {
+    text-align: center;
+    margin-top: $spacing-md; // Space above copyright text
+    color: $color-text-light;
+    font-size: $font-size-base; // Adjust font size
+
+    small {
+      font-size: 100%; // Ensure small tag doesn't make text smaller
+    }
+  }
+}
+
+// NAVBAR - COMMENTED OUT TO AVOID CONFLICT WITH Header.tsx
+/*
+.navbar {
+  background-color: $color-background;
+  box-shadow: $shadow;
+  position: relative;
+  z-index: 1000;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px; // Fixed height for navbar
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    &-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    &-text {
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      color: $color-primary;
+      margin-left: $spacing-sm;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    @media (max-width: $breakpoint-lg) {
+      display: none; // Hide on mobile
+    }
+  }
+
+  &__nav-link {
+    color: $color-text;
+    font-size: $font-size-base;
+    font-weight: 500;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    transition: $transition-base;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-primary;
+      background-color: rgba($color-primary, 0.05);
+    }
+
+    &--active {
+      color: $color-primary;
+      background-color: rgba($color-primary, 0.1);
+    }
+  }
+
+  &__auth {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-left: $spacing-md;
+
+    @media (max-width: $breakpoint-lg) {
+      display: none; // Hide on mobile
+    }
+  }
+
+  &__auth-link {
+    color: $color-text;
+    font-size: $font-size-base;
+    font-weight: 500;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    transition: $transition-base;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-primary;
+      background-color: rgba($color-primary, 0.05);
+    }
+  }
+
+  &__auth-button {
+    background: none;
+    border: none;
+    color: $color-text;
+    font-size: $font-size-base;
+    font-weight: 500;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+      color: $color-primary;
+      background-color: rgba($color-primary, 0.05);
+    }
+  }
+
+  &__mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-background;
+    z-index: 1001;
+    padding: $spacing-lg;
+    overflow-y: auto;
+
+    @media (max-width: $breakpoint-lg) {
+      display: block;
+    }
+
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-lg;
+    }
+
+    &-close {
+      font-size: $font-size-xlarge;
+      color: $color-text;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: $spacing-xs;
+    }
+
+    &-nav {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+
+    &-link {
+      color: $color-text;
+      font-size: $font-size-large;
+      font-weight: 500;
+      padding: $spacing-sm 0;
+      text-decoration: none;
+      transition: $transition-base;
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+
+    &-auth {
+      margin-top: $spacing-xl;
+      padding-top: $spacing-lg;
+      border-top: 1px solid $color-border;
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+  }
+
+  &__mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: $color-text;
+    font-size: $font-size-xlarge;
+    cursor: pointer;
+    padding: $spacing-xs;
+
+    @media (max-width: $breakpoint-lg) {
+      display: block;
+    }
+  }
+}
+*/
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 100px); // Adjust based on your header/footer height
+  background-color: #f0f0f0; // Light grey background
+
+  .login-card {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; // Adjust max-width as needed
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Center content horizontally
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1.5rem; // Space below title
+  }
+
+  .login-form {
+    width: 100%; // Form takes full width of card
+    .form-group {
+      margin-bottom: 1rem; // Space between form groups
+      display: flex; // Use flexbox for label and input alignment
+      align-items: center; // Align label and input vertically
+
+      .form-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #555;
+        margin-right: 1rem; // Space between label and input
+        min-width: 100px; // Give label a minimum width for alignment
+      }
+
+      .form-input {
+        display: block;
+        width: 100%; // Input takes remaining width
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+    }
+
+    .form-button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #007bff; // Primary blue color
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #0056b3; // Darker blue on hover
+      }
+
+      &.disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Global or common styles should go here if not page-specific
+
+// PRODUCT DETAIL PAGE
+.product-detail-page {
+   padding: $spacing-xxl 0;
+
+   &__container {
+     max-width: 1200px;
+     margin: 0 auto;
+     padding: 0 $spacing-md;
+     display: flex;
+     gap: $spacing-xl; // Space between image/thumbnails and info
+
+     @media (max-width: $breakpoint-lg) {
+        flex-direction: column; // Stack columns on large screens and down
+     }
+   }
+
+   &__image-section {
+     flex: 1; // Takes up available space
+     display: flex;
+     flex-direction: column;
+     gap: $spacing-md; // Space between main image and thumbnails
+
+     .main-image {
+       width: 100%;
+       height: auto; // Auto height to maintain aspect ratio
+       object-fit: cover;
+       border-radius: $border-radius;
+       box-shadow: $shadow;
+     }
+
+     .thumbnail-images {
+       display: flex;
+       gap: $spacing-sm; // Space between thumbnails
+       overflow-x: auto; // Allow horizontal scrolling for many thumbnails
+
+       .thumbnail {
+         width: 80px; // Fixed thumbnail width
+         height: 80px; // Fixed thumbnail height
+         object-fit: cover;
+         border-radius: $border-radius-sm;
+         cursor: pointer;
+         border: 2px solid transparent; // Add a border for active state or hover effect
+         transition: $transition-base;
+
+         &:hover {
+           border-color: $color-primary; // Highlight on hover
+         }
+
+         &--active {
+           border-color: $color-primary; // Highlight active thumbnail
+         }
+       }
+     }
+   }
+
+   &__info-section {
+     flex: 1; // Takes up available space
+     display: flex;
+     flex-direction: column;
+     gap: $spacing-md; // Space between info blocks
+
+     .product-name {
+       font-size: $font-size-xxlarge;
+       font-weight: 700;
+       color: $color-text;
+       margin-bottom: $spacing-sm; // Space below product name
+
+       @media (max-width: $breakpoint-md) {
+          font-size: $font-size-xlarge;
+       }
+     }
+
+     .product-price {
+       font-size: $font-size-xlarge;
+       font-weight: 700;
+       color: $color-primary; // BMW primary color for price
+       margin-bottom: $spacing-md; // Space below price
+     }
+
+     .product-description {
+       h2 {
+         font-size: $font-size-large;
+         font-weight: 600;
+         color: $color-text;
+         margin-bottom: $spacing-sm;
+       }
+       p {
+         font-size: $font-size-base;
+         color: $color-text-light;
+         line-height: 1.6;
+       }
+     }
+
+     .product-specifications {
+        h2 {
+          font-size: $font-size-large;
+          font-weight: 600;
+          color: $color-text;
+          margin-bottom: $spacing-sm;
+        }
+        ul {
+          list-style: none; // Remove default list style
+          padding: 0;
+          margin: 0;
+
+          li {
+             font-size: $font-size-base;
+             color: $color-text;
+             margin-bottom: $spacing-xs; // Space between specs
+             display: flex;
+             gap: $spacing-sm; // Space between key and value
+
+             strong {
+                font-weight: 500; // Semi-bold for spec key
+             }
+          }
+        }
+     }
+
+     .product-status {
+       h2 {
+          font-size: $font-size-large;
+          font-weight: 600;
+          color: $color-text;
+          margin-bottom: $spacing-sm;
+        }
+       p {
+          font-size: $font-size-base;
+          color: $color-text;
+          &.available { color: $color-primary; }
+          &.unavailable { color: $color-accent; }
+       }
+     }
+
+     .product-actions {
+        display: flex;
+        gap: $spacing-md; // Space between buttons
+        margin-top: $spacing-md; // Space above buttons
+
+        .add-to-cart-button,
+        .test-drive-button {
+           display: inline-block;
+           padding: $spacing-md $spacing-xl;
+           border-radius: $border-radius;
+           font-size: $font-size-large;
+           font-weight: 500;
+           transition: $transition-base;
+           text-align: center;
+           cursor: pointer;
+           border: none;
+
+           &.add-to-cart-button {
+             background-color: $color-primary;
+             color: $color-background;
+
+             &:hover {
+                background-color: var(--theme-primary-dark, #{$static-primary-darker});
+             }
+           }
+
+           &.test-drive-button {
+             background-color: $color-secondary;
+             color: $color-background;
+
+              &:hover {
+                background-color: var(--theme-secondary-light, #{$static-secondary-light});
+             }
+           }
+        }
+     }
+   }
+
+   // Style for product not found
+   .not-found-message {
+      text-align: center;
+      font-size: $font-size-large;
+      color: $color-text-light;
+      padding: $spacing-xxl 0;
+   }
+}
+
+// ADMIN LAYOUT
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+
+  .admin-sidebar {
+    width: 250px; // Adjust width as needed
+    background-color: $color-secondary; // Dark background
+    color: $color-background-light; // Light text
+    padding: $spacing-md;
+    flex-shrink: 0;
+
+    h2 {
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      margin-bottom: $spacing-lg;
+      color: $color-background; // White title
+    }
+
+    nav {
+      ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+          margin-bottom: $spacing-sm;
+        }
+      }
+    }
+
+    a {
+      display: block;
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius-sm;
+      color: $color-background-light;
+      text-decoration: none;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: rgba($color-primary, 0.2); // Subtle highlight
+        color: $color-primary; // Highlight text
+      }
+      // Add an active state style if using NavLink or similar
+      &.active {
+         background-color: $color-primary; // Primary color for active link
+         color: $color-background; // White text for active link
+      }
+    }
+  }
+
+  .admin-content {
+    flex-grow: 1;
+    padding: $spacing-lg;
+    background-color: $color-background-light; // Light background for content area
+  }
+}
+// ADMIN PRODUCT LIST PAGE
+.admin-product-list-page {
+  h1 {
+    font-size: $font-size-xxlarge;
+    font-weight: 700;
+    margin-bottom: $spacing-xl;
+    color: $color-text;
+  }
+
+  .add-product-link {
+    display: inline-block;
+    background-color: $color-primary;
+    color: $color-background;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    margin-bottom: $spacing-lg;
+    transition: $transition-base;
+
+    &:hover {
+      background-color: var(--theme-primary-dark, #{$static-primary-darker});
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: $shadow;
+    background-color: $color-background;
+    border-radius: $border-radius;
+    overflow: hidden; // Apply border-radius to table
+
+    th,
+    td {
+      padding: $spacing-md;
+      border-bottom: 1px solid $color-border;
+      text-align: left;
+
+      &:first-child { padding-left: $spacing-lg; }
+      &:last-child { padding-right: $spacing-lg; }
+    }
+
+    th {
+      background-color: $color-background-light;
+      font-weight: 600;
+      color: $color-text;
+      text-transform: uppercase;
+      font-size: $font-size-small;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: $border-radius-sm;
+    }
+
+    .actions {
+      display: flex;
+      gap: $spacing-sm;
+
+      a,
+      button {
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        transition: $transition-base;
+        font-size: $font-size-small;
+        text-decoration: none; // Remove underline for links
+
+        &.edit-link {
+          color: $color-primary;
+          border: 1px solid $color-primary;
+          &:hover { background-color: $color-primary; color: $color-background; }
+        }
+
+        &.delete-button {
+          color: #e74c3c; // Red for delete
+          border: 1px solid #e74c3c;
+           &:hover { background-color: #e74c3c; color: $color-background; }
+        }
+      }
+    }
+  }
+}
+
+// ADMIN ADD/EDIT PRODUCT PAGES
+.admin-add-product-page,
+.admin-edit-product-page {
+   h1 {
+     font-size: $font-size-xxlarge;
+     font-weight: 700;
+     margin-bottom: $spacing-xl;
+     color: $color-text;
+   }
+
+   form {
+     background-color: $color-background;
+     padding: $spacing-xl;
+     border-radius: $border-radius;
+     box-shadow: $shadow;
+     max-width: 800px; // Limit form width for better readability
+     margin: 0 auto; // Center the form
+
+     .form-group {
+        margin-bottom: $spacing-md; // Use a custom class for form groups
+     }
+
+     label {
+       display: block;
+       font-size: $font-size-base;
+       font-weight: 600; // Slightly bolder labels
+       color: $color-text;
+       margin-bottom: $spacing-xs;
+     }
+
+     input[type="text"],
+     input[type="number"],
+     input[type="file"],
+     select,
+     textarea {
+       width: 100%;
+       padding: $spacing-sm;
+       border: 1px solid $color-border;
+       border-radius: $border-radius-sm;
+       font-size: $font-size-base;
+       color: $color-text;
+       transition: $transition-base;
+
+       &:focus {
+         outline: none;
+         border-color: $color-primary;
+         box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+       }
+     }
+
+     textarea {
+       resize: vertical; // Allow vertical resizing
+       min-height: 100px; // Minimum height for textarea
+     }
+
+     .specifications-section {
+        margin-bottom: $spacing-md;
+
+        h3 {
+           font-size: $font-size-large;
+           font-weight: 600;
+           color: $color-text;
+           margin-bottom: $spacing-md;
+        }
+
+        .spec-item {
+           display: grid;
+           grid-template-columns: repeat(2, 1fr) auto; // Key, Value, Remove Button
+           gap: $spacing-sm;
+           align-items: center;
+           margin-bottom: $spacing-sm;
+
+           input[type="text"] {
+             font-size: $font-size-small; // Smaller font for spec inputs
+           }
+
+           button {
+             padding: $spacing-xs $spacing-sm; // Smaller padding for remove button
+             background-color: #e74c3c;
+             color: $color-background;
+             border: none;
+             border-radius: $border-radius-sm;
+             cursor: pointer;
+             transition: $transition-base;
+
+             &:hover { background-color: #c0392b; }
+           }
+        }
+
+         .add-spec-button {
+            display: inline-block;
+            background-color: $color-secondary;
+            color: $color-background;
+            padding: $spacing-xs $spacing-sm;
+            border-radius: $border-radius-sm;
+            margin-top: $spacing-sm;
+            transition: $transition-base;
+
+            &:hover { background-color: var(--theme-secondary-light, #{$static-secondary-light}); }
+         }
+     }
+
+     .image-preview {
+       display: flex;
+       flex-wrap: wrap;
+       gap: $spacing-sm;
+       margin-top: $spacing-sm;
+       margin-bottom: $spacing-md; // Space below previews
+
+       .image-container {
+          position: relative;
+
+          img {
+             width: 80px;
+             height: 80px;
+             object-fit: cover;
+             border-radius: $border-radius-sm;
+             border: 1px solid $color-border; // Optional border
+          }
+
+          .remove-image-button {
+             position: absolute;
+             top: -5px;
+             right: -5px;
+             background-color: #e74c3c;
+             color: $color-background;
+             border-radius: 50%;
+             width: 20px; // Small button size
+             height: 20px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             font-size: $font-size-small; // Small font size for 'x'
+             cursor: pointer;
+             transition: $transition-base;
+             line-height: 1; // Adjust line height to center 'x'
+
+             &:hover { background-color: #c0392b; }
+          }
+       }
+     }
+
+     .form-actions {
+        display: flex;
+        justify-content: flex-end; // Align buttons to the right
+        gap: $spacing-md;
+        margin-top: $spacing-xl; // Space above action buttons
+
+        .submit-button,
+        .cancel-link {
+           display: inline-block;
+           padding: $spacing-md $spacing-xl;
+           border-radius: $border-radius;
+           font-size: $font-size-large;
+           font-weight: 500;
+           transition: $transition-base;
+           text-align: center;
+           cursor: pointer;
+           border: none;
+
+           &.submit-button {
+             background-color: $color-primary;
+             color: $color-background;
+
+             &:hover {
+                background-color: var(--theme-primary-dark, #{$static-primary-darker});
+             }
+             &:disabled { opacity: 0.5; cursor: not-allowed; }
+           }
+
+           &.cancel-link {
+              background-color: $color-background-light;
+              color: $color-text;
+              border: 1px solid $color-border;
+
+              &:hover {
+                background-color: $color-border;
+              }
+           }
+        }
+     }
+   }
+}
+
+// PRICE LIST DETAIL PAGE
+.price-list-detail-page {
+  padding: $spacing-xxl 0;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+  }
+
+  .price-list-detail-section {
+    padding: $spacing-xl 0;
+
+    &__container {
+       max-width: 800px;
+       margin: 0 auto;
+       padding: 0 $spacing-md;
+    }
+
+    // Styles for content within the detail section (e.g., tables, lists)
+
+    &__models {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-lg;
+      margin-bottom: $spacing-xl;
+    }
+
+    &__model-item {
+      display: flex;
+      gap: $spacing-md;
+      border: 1px solid $color-border;
+      border-radius: $border-radius;
+      padding: $spacing-md;
+      background-color: $color-background;
+      box-shadow: $shadow;
+
+      @media (max-width: $breakpoint-sm) {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    &__model-image {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: $border-radius-sm;
+      flex-shrink: 0;
+
+      @media (max-width: $breakpoint-sm) {
+        width: 100%;
+        height: auto;
+        margin-bottom: $spacing-md;
+      }
+    }
+
+    &__model-info {
+      flex-grow: 1;
+
+      h3 {
+        font-size: $font-size-large;
+        font-weight: 700;
+        margin-bottom: $spacing-xs;
+        color: $color-text;
+      }
+
+      p {
+        font-size: $font-size-base;
+        color: $color-primary; // Use primary color for price
+        font-weight: 600;
+        margin-bottom: $spacing-sm;
+      }
+
+      ul {
+        list-style: disc;
+        margin-left: $spacing-md;
+
+        li {
+          font-size: $font-size-base;
+          color: $color-text-light;
+          margin-bottom: $spacing-xs;
+        }
+      }
+    }
+
+    &__notes {
+      margin-top: $spacing-xl;
+      padding-top: $spacing-md;
+      border-top: 1px solid $color-border;
+
+      h4 {
+        font-size: $font-size-large;
+        font-weight: 700;
+        margin-bottom: $spacing-md;
+        color: $color-text;
+      }
+
+      ul {
+        list-style: disc;
+        margin-left: $spacing-md;
+
+        li {
+          font-size: $font-size-base;
+          color: $color-text-light;
+          margin-bottom: $spacing-xs;
+        }
+      }
+    }
+  }
+}
+
+// GLOBAL THEME-AWARE ADMIN COMPONENTS
+// Note: Sidebar trigger is now moved to header, no additional styling needed
+
+// Ensure ScrollToTop works properly
+#root {
+  position: relative;
+  min-height: 100vh;
+}

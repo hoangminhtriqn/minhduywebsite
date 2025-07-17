@@ -1,0 +1,721 @@
+// Theme Variables
+$color-primary: #0066B1;
+$color-primary-light: #3385D6;
+$color-primary-dark: #004C8A;
+$color-secondary: #1a1a1a;
+$color-accent: #FF6B35;
+$color-success: #28A745;
+$color-warning: #FFC107;
+$color-danger: #DC3545;
+$color-info: #17A2B8;
+
+// Text Colors
+$color-text-primary: #1a1a1a;
+$color-text-secondary: #666666;
+$color-text-muted: #999999;
+$color-text-white: #ffffff;
+
+// Background Colors
+$color-background-primary: #ffffff;
+$color-background-secondary: #f8f9fa;
+$color-background-dark: #1a1a1a;
+$color-background-light: #f5f5f5;
+
+// Border Colors
+$color-border-light: rgba(0, 0, 0, 0.1);
+$color-border-medium: rgba(0, 0, 0, 0.2);
+$color-border-dark: rgba(0, 0, 0, 0.3);
+
+// Typography
+$font-family-primary: var(--font-family-base);
+$font-family-secondary: var(--font-family-base);
+$font-family-mono: monospace;
+
+// Font Sizes
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+$font-size-5xl: 3rem;      // 48px
+$font-size-6xl: 3.75rem;   // 60px
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+// Line Heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// Spacing
+$spacing-xs: 0.25rem;   // 4px
+$spacing-sm: 0.5rem;    // 8px
+$spacing-md: 1rem;      // 16px
+$spacing-lg: 1.5rem;    // 24px
+$spacing-xl: 2rem;      // 32px
+$spacing-2xl: 3rem;     // 48px
+$spacing-3xl: 4rem;     // 64px
+$spacing-4xl: 6rem;     // 96px
+
+// Border Radius
+$border-radius-sm: 0.25rem;   // 4px
+$border-radius-md: 0.375rem;  // 6px
+$border-radius-lg: 0.5rem;    // 8px
+$border-radius-xl: 0.75rem;   // 12px
+$border-radius-2xl: 1rem;     // 16px
+$border-radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+$transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+// Z-Index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// ============================================================================
+// RESPONSIVE BREAKPOINTS & UTILITIES
+// ============================================================================
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Container Max Widths
+$container-xs: 100%;
+$container-sm: 540px;
+$container-md: 720px;
+$container-lg: 960px;
+$container-xl: 1140px;
+$container-xxl: 1320px;
+
+// Grid System
+$grid-columns: 12;
+$grid-gutter: 1.5rem;
+
+// ============================================================================
+// RESPONSIVE MIXINS
+// ============================================================================
+
+// Media Query Mixins
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: #{$breakpoint-sm - 1px}) { @content; }
+  } @else if $breakpoint == sm {
+    @media (min-width: #{$breakpoint-sm}) and (max-width: #{$breakpoint-md - 1px}) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: #{$breakpoint-md}) and (max-width: #{$breakpoint-lg - 1px}) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: #{$breakpoint-lg}) and (max-width: #{$breakpoint-xl - 1px}) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: #{$breakpoint-xl}) and (max-width: #{$breakpoint-xxl - 1px}) { @content; }
+  } @else if $breakpoint == xxl {
+    @media (min-width: #{$breakpoint-xxl}) { @content; }
+  }
+}
+
+// Min-width Media Queries
+@mixin min-width($breakpoint) {
+  @media (min-width: #{$breakpoint}) { @content; }
+}
+
+// Max-width Media Queries
+@mixin max-width($breakpoint) {
+  @media (max-width: #{$breakpoint - 1px}) { @content; }
+}
+
+// Orientation Mixins
+@mixin landscape {
+  @media (orientation: landscape) { @content; }
+}
+
+@mixin portrait {
+  @media (orientation: portrait) { @content; }
+}
+
+// Touch Device Detection
+@mixin touch-device {
+  @media (hover: none) and (pointer: coarse) { @content; }
+}
+
+@mixin non-touch-device {
+  @media (hover: hover) and (pointer: fine) { @content; }
+}
+
+// ============================================================================
+// RESPONSIVE UTILITY CLASSES
+// ============================================================================
+
+// Container Utilities
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+
+  @include min-width($breakpoint-sm) {
+    max-width: $container-sm;
+  }
+
+  @include min-width($breakpoint-md) {
+    max-width: $container-md;
+  }
+
+  @include min-width($breakpoint-lg) {
+    max-width: $container-lg;
+  }
+
+  @include min-width($breakpoint-xl) {
+    max-width: $container-xl;
+  }
+
+  @include min-width($breakpoint-xxl) {
+    max-width: $container-xxl;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+}
+
+// Grid System
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(-#{$grid-gutter} / 2);
+  margin-left: calc(-#{$grid-gutter} / 2);
+}
+
+.col {
+  flex: 1 0 0%;
+  padding-right: calc(#{$grid-gutter} / 2);
+  padding-left: calc(#{$grid-gutter} / 2);
+}
+
+// Responsive Column Classes
+@for $i from 1 through $grid-columns {
+  .col-#{$i} {
+    flex: 0 0 calc(#{$i} / #{$grid-columns} * 100%);
+    max-width: calc(#{$i} / #{$grid-columns} * 100%);
+    padding-right: calc(#{$grid-gutter} / 2);
+    padding-left: calc(#{$grid-gutter} / 2);
+  }
+}
+
+// Responsive Breakpoint Classes
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    @for $i from 1 through $grid-columns {
+      .col-#{$breakpoint}-#{$i} {
+        flex: 0 0 calc(#{$i} / #{$grid-columns} * 100%);
+        max-width: calc(#{$i} / #{$grid-columns} * 100%);
+        padding-right: calc(#{$grid-gutter} / 2);
+        padding-left: calc(#{$grid-gutter} / 2);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE DISPLAY UTILITIES
+// ============================================================================
+
+// Display Utilities
+.d-none { display: none !important; }
+.d-inline { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-inline-flex { display: inline-flex !important; }
+.d-grid { display: grid !important; }
+
+// Responsive Display Classes
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .d-#{$breakpoint}-none { display: none !important; }
+    .d-#{$breakpoint}-inline { display: inline !important; }
+    .d-#{$breakpoint}-inline-block { display: inline-block !important; }
+    .d-#{$breakpoint}-block { display: block !important; }
+    .d-#{$breakpoint}-flex { display: flex !important; }
+    .d-#{$breakpoint}-inline-flex { display: inline-flex !important; }
+    .d-#{$breakpoint}-grid { display: grid !important; }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE SPACING UTILITIES
+// ============================================================================
+
+// Margin and Padding Utilities
+$spacing-sizes: (
+  0: 0,
+  1: $spacing-xs,
+  2: $spacing-sm,
+  3: $spacing-md,
+  4: $spacing-lg,
+  5: $spacing-xl,
+  6: $spacing-2xl,
+  7: $spacing-3xl,
+  8: $spacing-4xl
+);
+
+@each $size, $value in $spacing-sizes {
+  .m-#{$size} { margin: #{$value} !important; }
+  .mt-#{$size} { margin-top: #{$value} !important; }
+  .mr-#{$size} { margin-right: #{$value} !important; }
+  .mb-#{$size} { margin-bottom: #{$value} !important; }
+  .ml-#{$size} { margin-left: #{$value} !important; }
+  .mx-#{$size} { 
+    margin-left: #{$value} !important; 
+    margin-right: #{$value} !important; 
+  }
+  .my-#{$size} { 
+    margin-top: #{$value} !important; 
+    margin-bottom: #{$value} !important; 
+  }
+
+  .p-#{$size} { padding: #{$value} !important; }
+  .pt-#{$size} { padding-top: #{$value} !important; }
+  .pr-#{$size} { padding-right: #{$value} !important; }
+  .pb-#{$size} { padding-bottom: #{$value} !important; }
+  .pl-#{$size} { padding-left: #{$value} !important; }
+  .px-#{$size} { 
+    padding-left: #{$value} !important; 
+    padding-right: #{$value} !important; 
+  }
+  .py-#{$size} { 
+    padding-top: #{$value} !important; 
+    padding-bottom: #{$value} !important; 
+  }
+}
+
+// Responsive Spacing Classes
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    @each $size, $spacing-value in $spacing-sizes {
+      .m-#{$breakpoint}-#{$size} { margin: #{$spacing-value} !important; }
+      .mt-#{$breakpoint}-#{$size} { margin-top: #{$spacing-value} !important; }
+      .mr-#{$breakpoint}-#{$size} { margin-right: #{$spacing-value} !important; }
+      .mb-#{$breakpoint}-#{$size} { margin-bottom: #{$spacing-value} !important; }
+      .ml-#{$breakpoint}-#{$size} { margin-left: #{$spacing-value} !important; }
+      .mx-#{$breakpoint}-#{$size} { 
+        margin-left: #{$spacing-value} !important; 
+        margin-right: #{$spacing-value} !important; 
+      }
+      .my-#{$breakpoint}-#{$size} { 
+        margin-top: #{$spacing-value} !important; 
+        margin-bottom: #{$spacing-value} !important; 
+      }
+
+      .p-#{$breakpoint}-#{$size} { padding: #{$spacing-value} !important; }
+      .pt-#{$breakpoint}-#{$size} { padding-top: #{$spacing-value} !important; }
+      .pr-#{$breakpoint}-#{$size} { padding-right: #{$spacing-value} !important; }
+      .pb-#{$breakpoint}-#{$size} { padding-bottom: #{$spacing-value} !important; }
+      .pl-#{$breakpoint}-#{$size} { padding-left: #{$spacing-value} !important; }
+      .px-#{$breakpoint}-#{$size} { 
+        padding-left: #{$spacing-value} !important; 
+        padding-right: #{$spacing-value} !important; 
+      }
+      .py-#{$breakpoint}-#{$size} { 
+        padding-top: #{$spacing-value} !important; 
+        padding-bottom: #{$spacing-value} !important; 
+      }
+    }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE TEXT UTILITIES
+// ============================================================================
+
+// Text Alignment
+.text-left { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+.text-justify { text-align: justify !important; }
+
+// Responsive Text Alignment
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .text-#{$breakpoint}-left { text-align: left !important; }
+    .text-#{$breakpoint}-center { text-align: center !important; }
+    .text-#{$breakpoint}-right { text-align: right !important; }
+    .text-#{$breakpoint}-justify { text-align: justify !important; }
+  }
+}
+
+// Font Size Utilities
+.fs-xs { font-size: $font-size-xs !important; }
+.fs-sm { font-size: $font-size-sm !important; }
+.fs-base { font-size: $font-size-base !important; }
+.fs-lg { font-size: $font-size-lg !important; }
+.fs-xl { font-size: $font-size-xl !important; }
+.fs-2xl { font-size: $font-size-2xl !important; }
+.fs-3xl { font-size: $font-size-3xl !important; }
+.fs-4xl { font-size: $font-size-4xl !important; }
+.fs-5xl { font-size: $font-size-5xl !important; }
+.fs-6xl { font-size: $font-size-6xl !important; }
+
+// Font Weight Utilities
+.fw-light { font-weight: $font-weight-light !important; }
+.fw-normal { font-weight: $font-weight-normal !important; }
+.fw-medium { font-weight: $font-weight-medium !important; }
+.fw-semibold { font-weight: $font-weight-semibold !important; }
+.fw-bold { font-weight: $font-weight-bold !important; }
+.fw-extrabold { font-weight: $font-weight-extrabold !important; }
+
+// ============================================================================
+// RESPONSIVE FLEX UTILITIES
+// ============================================================================
+
+// Flex Direction
+.flex-row { flex-direction: row !important; }
+.flex-row-reverse { flex-direction: row-reverse !important; }
+.flex-col { flex-direction: column !important; }
+.flex-col-reverse { flex-direction: column-reverse !important; }
+
+// Flex Wrap
+.flex-wrap { flex-wrap: wrap !important; }
+.flex-nowrap { flex-wrap: nowrap !important; }
+.flex-wrap-reverse { flex-wrap: wrap-reverse !important; }
+
+// Justify Content
+.justify-start { justify-content: flex-start !important; }
+.justify-end { justify-content: flex-end !important; }
+.justify-center { justify-content: center !important; }
+.justify-between { justify-content: space-between !important; }
+.justify-around { justify-content: space-around !important; }
+.justify-evenly { justify-content: space-evenly !important; }
+
+// Align Items
+.items-start { align-items: flex-start !important; }
+.items-end { align-items: flex-end !important; }
+.items-center { align-items: center !important; }
+.items-baseline { align-items: baseline !important; }
+.items-stretch { align-items: stretch !important; }
+
+// Align Self
+.self-auto { align-self: auto !important; }
+.self-start { align-self: flex-start !important; }
+.self-end { align-self: flex-end !important; }
+.self-center { align-self: center !important; }
+.self-baseline { align-self: baseline !important; }
+.self-stretch { align-self: stretch !important; }
+
+// ============================================================================
+// RESPONSIVE GRID UTILITIES
+// ============================================================================
+
+// Grid Template Columns
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+.grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+.grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+.grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+
+// Responsive Grid Columns
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .grid-cols-#{$breakpoint}-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+    .grid-cols-#{$breakpoint}-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE POSITION UTILITIES
+// ============================================================================
+
+// Position
+.position-static { position: static !important; }
+.position-relative { position: relative !important; }
+.position-absolute { position: absolute !important; }
+.position-fixed { position: fixed !important; }
+.position-sticky { position: sticky !important; }
+
+// Top, Right, Bottom, Left
+.top-0 { top: 0 !important; }
+.right-0 { right: 0 !important; }
+.bottom-0 { bottom: 0 !important; }
+.left-0 { left: 0 !important; }
+
+// ============================================================================
+// RESPONSIVE VISIBILITY UTILITIES
+// ============================================================================
+
+// Visibility
+.visible { visibility: visible !important; }
+.invisible { visibility: hidden !important; }
+
+// Responsive Visibility
+@each $breakpoint, $value in (
+  sm: $breakpoint-sm,
+  md: $breakpoint-md,
+  lg: $breakpoint-lg,
+  xl: $breakpoint-xl,
+  xxl: $breakpoint-xxl
+) {
+  @include min-width($value) {
+    .visible-#{$breakpoint} { visibility: visible !important; }
+    .invisible-#{$breakpoint} { visibility: hidden !important; }
+  }
+}
+
+// ============================================================================
+// RESPONSIVE OVERFLOW UTILITIES
+// ============================================================================
+
+.overflow-auto { overflow: auto !important; }
+.overflow-hidden { overflow: hidden !important; }
+.overflow-visible { overflow: visible !important; }
+.overflow-scroll { overflow: scroll !important; }
+
+.overflow-x-auto { overflow-x: auto !important; }
+.overflow-x-hidden { overflow-x: hidden !important; }
+.overflow-x-visible { overflow-x: visible !important; }
+.overflow-x-scroll { overflow-x: scroll !important; }
+
+.overflow-y-auto { overflow-y: auto !important; }
+.overflow-y-hidden { overflow-y: hidden !important; }
+.overflow-y-visible { overflow-y: visible !important; }
+.overflow-y-scroll { overflow-y: scroll !important; }
+
+// ============================================================================
+// RESPONSIVE BORDER UTILITIES
+// ============================================================================
+
+// Border Radius
+.rounded-none { border-radius: 0 !important; }
+.rounded-sm { border-radius: $border-radius-sm !important; }
+.rounded { border-radius: $border-radius-md !important; }
+.rounded-md { border-radius: $border-radius-md !important; }
+.rounded-lg { border-radius: $border-radius-lg !important; }
+.rounded-xl { border-radius: $border-radius-xl !important; }
+.rounded-2xl { border-radius: $border-radius-2xl !important; }
+.rounded-full { border-radius: $border-radius-full !important; }
+
+// ============================================================================
+// RESPONSIVE SHADOW UTILITIES
+// ============================================================================
+
+.shadow-none { box-shadow: none !important; }
+.shadow-sm { box-shadow: $shadow-sm !important; }
+.shadow { box-shadow: $shadow-md !important; }
+.shadow-md { box-shadow: $shadow-md !important; }
+.shadow-lg { box-shadow: $shadow-lg !important; }
+.shadow-xl { box-shadow: $shadow-xl !important; }
+.shadow-2xl { box-shadow: $shadow-2xl !important; }
+
+// ============================================================================
+// RESPONSIVE TRANSITION UTILITIES
+// ============================================================================
+
+.transition-none { transition: none !important; }
+.transition-all { transition: all $transition-normal !important; }
+.transition-colors { transition: color $transition-normal, background-color $transition-normal, border-color $transition-normal !important; }
+.transition-opacity { transition: opacity $transition-normal !important; }
+.transition-shadow { transition: box-shadow $transition-normal !important; }
+.transition-transform { transition: transform $transition-normal !important; }
+
+// ============================================================================
+// RESPONSIVE CURSOR UTILITIES
+// ============================================================================
+
+.cursor-auto { cursor: auto !important; }
+.cursor-default { cursor: default !important; }
+.cursor-pointer { cursor: pointer !important; }
+.cursor-wait { cursor: wait !important; }
+.cursor-text { cursor: text !important; }
+.cursor-move { cursor: move !important; }
+.cursor-help { cursor: help !important; }
+.cursor-not-allowed { cursor: not-allowed !important; }
+
+// ============================================================================
+// RESPONSIVE USER SELECT UTILITIES
+// ============================================================================
+
+.select-none { user-select: none !important; }
+.select-text { user-select: text !important; }
+.select-all { user-select: all !important; }
+.select-auto { user-select: auto !important; }
+
+// ============================================================================
+// RESPONSIVE POINTER EVENTS UTILITIES
+// ============================================================================
+
+.pointer-events-none { pointer-events: none !important; }
+.pointer-events-auto { pointer-events: auto !important; }
+
+// ============================================================================
+// RESPONSIVE RESIZE UTILITIES
+// ============================================================================
+
+.resize-none { resize: none !important; }
+.resize-y { resize: vertical !important; }
+.resize-x { resize: horizontal !important; }
+.resize { resize: both !important; }
+
+// ============================================================================
+// RESPONSIVE SCROLL BEHAVIOR UTILITIES
+// ============================================================================
+
+.scroll-auto { scroll-behavior: auto !important; }
+.scroll-smooth { scroll-behavior: smooth !important; }
+
+// ============================================================================
+// RESPONSIVE SCROLL SNAP UTILITIES
+// ============================================================================
+
+.snap-none { scroll-snap-type: none !important; }
+.snap-x { scroll-snap-type: x mandatory !important; }
+.snap-y { scroll-snap-type: y mandatory !important; }
+.snap-both { scroll-snap-type: both mandatory !important; }
+
+.snap-start { scroll-snap-align: start !important; }
+.snap-end { scroll-snap-align: end !important; }
+.snap-center { scroll-snap-align: center !important; }
+.snap-align-none { scroll-snap-align: none !important; }
+
+// ============================================================================
+// RESPONSIVE TOUCH ACTION UTILITIES
+// ============================================================================
+
+.touch-auto { touch-action: auto !important; }
+.touch-none { touch-action: none !important; }
+.touch-pan-x { touch-action: pan-x !important; }
+.touch-pan-left { touch-action: pan-left !important; }
+.touch-pan-right { touch-action: pan-right !important; }
+.touch-pan-y { touch-action: pan-y !important; }
+.touch-pan-up { touch-action: pan-up !important; }
+.touch-pan-down { touch-action: pan-down !important; }
+.touch-pinch-zoom { touch-action: pinch-zoom !important; }
+.touch-manipulation { touch-action: manipulation !important; }
+
+// ============================================================================
+// RESPONSIVE SCROLLBAR UTILITIES
+// ============================================================================
+
+.scrollbar-thin { scrollbar-width: thin !important; }
+.scrollbar-auto { scrollbar-width: auto !important; }
+.scrollbar-none { scrollbar-width: none !important; }
+
+// ============================================================================
+// RESPONSIVE PRINT UTILITIES
+// ============================================================================
+
+@media print {
+  .print-hidden { display: none !important; }
+  .print-block { display: block !important; }
+  .print-inline { display: inline !important; }
+  .print-inline-block { display: inline-block !important; }
+  .print-flex { display: flex !important; }
+  .print-grid { display: grid !important; }
+}
+
+// ============================================================================
+// RESPONSIVE REDUCED MOTION UTILITIES
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce\:transition-none { transition: none !important; }
+  .motion-reduce\:animate-none { animation: none !important; }
+  .motion-reduce\:transform-none { transform: none !important; }
+}
+
+// ============================================================================
+// RESPONSIVE DARK MODE UTILITIES
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .dark\:bg-black { background-color: #000000 !important; }
+  .dark\:text-white { color: #ffffff !important; }
+  .dark\:border-white { border-color: #ffffff !important; }
+}
+
+// ============================================================================
+// RESPONSIVE HIGH CONTRAST UTILITIES
+// ============================================================================
+
+@media (prefers-contrast: high) {
+  .contrast-high\:border-2 { border-width: 2px !important; }
+  .contrast-high\:text-black { color: #000000 !important; }
+  .contrast-high\:bg-white { background-color: #ffffff !important; }
+}
+
+// ============================================================================
+// RESPONSIVE REDUCED DATA UTILITIES
+// ============================================================================
+
+@media (prefers-reduced-data: reduce) {
+  .data-reduce\:hidden { display: none !important; }
+  .data-reduce\:bg-none { background: none !important; }
+  .data-reduce\:border-none { border: none !important; }
+} 

@@ -1,0 +1,284 @@
+// Use theme variables
+@use '../styles/theme-variables' as *;
+
+.homePage {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #333333;
+  transition: all 0.3s ease;
+}
+
+/* Product Section Styles */
+.productSection {
+  padding: 4rem 2rem;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.productSectionTitle {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #333333;
+}
+
+.productTabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.productTab {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #666666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.productTabActive {
+  color: #0284c7;
+  border-bottom-color: #0284c7;
+}
+
+.productNumberTabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.productNumberTab {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #dddddd;
+  border-radius: 50%;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #666666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.productNumberTabActive {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  color: white;
+}
+
+.productContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.productRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.productCard {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.productImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.productTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 1rem;
+  color: #333333;
+}
+
+.productFuel {
+  padding: 0 1rem;
+  color: #666666;
+}
+
+.productPrice {
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0284c7;
+}
+
+/* Feature Section Styles */
+.featureSection {
+  padding: 4rem 2rem;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.featureRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  position: relative;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.featureCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover img {
+  transform: scale(1.1);
+}
+
+.featureOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+}
+
+.featureTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* News Section Styles */
+.newsSection {
+  padding: 4rem 2rem;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.newsItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.newsImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.newsContent {
+  padding: 2rem;
+}
+
+.newsContent h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333333;
+}
+
+.newsContent p {
+  color: #666666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.newsBtnMore {
+  padding: 0.75rem 1.5rem;
+  background-color: #0284c7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.newsBtnMore:hover {
+  background-color: #0369a1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .productSection,
+  .featureSection,
+  .newsSection {
+    padding: 2rem 1rem;
+  }
+
+  .newsItem {
+    grid-template-columns: 1fr;
+  }
+
+  .newsImage {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productTabs {
+    flex-wrap: wrap;
+  }
+
+  .productTab {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .productNumberTab {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+}
+
+// Global styles
+:global {
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-base) !important;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+} 

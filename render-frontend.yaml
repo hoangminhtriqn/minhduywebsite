@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: test-drive-booking-frontend
+    env: static
+    plan: free
+    buildCommand: cd fe && npm install && npm run build
+    staticPublishPath: ./fe/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://da22062025.onrender.com/api

@@ -1,0 +1,23 @@
+{
+  "name": "test-drive-booking-system",
+  "version": "1.0.0",
+  "description": "Test Drive Booking System - Full Stack Application",
+  "scripts": {
+    "install-backend": "cd be && npm install",
+    "start": "cd be && npm start",
+    "start-backend": "cd be && npm start",
+    "dev-backend": "cd be && npm run dev",
+    "build-frontend": "cd fe && npm install && npm run build",
+    "postinstall": "cd be && npm install"
+  },
+  "keywords": [
+    "test-drive",
+    "booking",
+    "bmw",
+    "nodejs",
+    "react",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC"
+} 

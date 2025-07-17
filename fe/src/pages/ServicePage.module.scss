@@ -1,0 +1,614 @@
+@use 'sass:color';
+@use '../styles/theme-variables' as *;
+// SERVICE PAGE STYLES
+.service-page {
+  // Styles for the main container
+  
+  .service-overview__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: $spacing-xxl $spacing-md; // Add padding around the overview section
+  }
+
+  .service-overview__row {
+    display: flex;
+    gap: $spacing-xl;
+    align-items: center;
+
+    @media (max-width: $breakpoint-lg) {
+      flex-direction: column;
+    }
+  }
+
+  .service-overview__col {
+    flex: 1;
+  }
+
+  .service-overview__image {
+     width: 100%;
+     height: auto;
+     object-fit: cover;
+     border-radius: $border-radius;
+     box-shadow: $shadow;
+  }
+
+  .service-overview__heading {
+    font-size: $font-size-xxlarge;
+    font-weight: 700;
+    margin-bottom: $spacing-md;
+    color: $color-text;
+
+    @media (max-width: $breakpoint-sm) {
+      font-size: $font-size-xlarge;
+    }
+  }
+
+  .service-overview__description {
+    font-size: $font-size-base;
+    color: $color-text-light;
+    margin-bottom: $spacing-lg;
+    line-height: 1.6;
+  }
+
+  .service-overview__highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+  }
+
+  .service-overview__highlight-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-base;
+    color: $color-text;
+
+    svg {
+      color: $color-primary;
+      font-size: $font-size-large;
+    }
+  }
+
+  .service-overview__cta {
+    margin-top: $spacing-xl;
+    text-align: center;
+  }
+
+  .service-overview__btn {
+    display: inline-block;
+    padding: $spacing-md $spacing-xl;
+    background-color: $color-primary;
+    color: $color-background;
+    font-size: $font-size-large;
+    font-weight: 500;
+    border-radius: $border-radius;
+    transition: $transition-base;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-primary-hover;
+      transform: translateY(-2px);
+    }
+  }
+
+  // Service Categories Section
+   .service-categories__row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: $spacing-lg;
+      max-width: 1200px;
+      margin: $spacing-xl auto; // Add some margin top/bottom
+      padding: 0 $spacing-md;
+   }
+
+  .service-card {
+    background-color: $color-background;
+    border-radius: $border-radius;
+    padding: $spacing-xl;
+    box-shadow: $shadow;
+    transition: $transition-base;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &.featured {
+      border: 2px solid $color-primary;
+
+      .service-card__badge {
+        position: absolute;
+        top: $spacing-md;
+        right: $spacing-md;
+        background-color: $color-primary;
+        color: $color-background;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-small;
+        font-weight: 500;
+      }
+    }
+
+    &__icon {
+      font-size: $font-size-xxlarge;
+      color: $color-primary;
+      margin-bottom: $spacing-md;
+    }
+
+    &__title {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-bottom: $spacing-sm;
+      color: $color-text;
+    }
+
+    &__description {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      margin-bottom: $spacing-md;
+      line-height: 1.6;
+      flex-grow: 1; // Allow description to take available space
+    }
+
+    // Features list can be styled globally if it's a common pattern
+    // or specifically here if needed
+
+    &__btn {
+      display: block;
+      width: 100%;
+      padding: $spacing-md 0;
+      background-color: $color-primary;
+      color: $color-background;
+      font-size: $font-size-base;
+      font-weight: 500;
+      border-radius: $border-radius;
+      text-align: center;
+      transition: $transition-base;
+      margin-top: $spacing-md; // Add space above button
+
+      &:hover {
+        background-color: $color-primary-hover;
+      }
+    }
+  }
+
+  // Service Packages Section
+  .service-packages__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $spacing-lg;
+     max-width: 1200px;
+     margin: $spacing-xl auto; // Add some margin top/bottom
+     padding: 0 $spacing-md;
+  }
+
+  .package-card {
+    background-color: $color-background;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: $transition-base;
+    position: relative;
+
+    &.featured {
+      border: 2px solid $color-primary;
+
+      .package-card__badge {
+        position: absolute;
+        top: $spacing-md;
+        right: $spacing-md;
+        background-color: $color-primary;
+        color: $color-background;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-small;
+        font-weight: 500;
+      }
+    }
+
+    &__header {
+      background-color: $color-background-light;
+      padding: $spacing-md;
+      text-align: center;
+    }
+
+    &__title {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-bottom: $spacing-xs;
+      color: $color-text;
+    }
+
+    &__price {
+      font-size: $font-size-xlarge;
+      font-weight: 700;
+      color: $color-primary;
+    }
+
+    &__body {
+      padding: $spacing-md;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: $spacing-xl;
+      flex-grow: 1;
+
+      li {
+        font-size: $font-size-base;
+        color: $color-text;
+        margin-bottom: $spacing-sm;
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+
+        svg, i {
+          color: $color-primary;
+        }
+
+        &--unavailable {
+          color: $color-text-light;
+          text-decoration: line-through;
+
+          svg, i {
+            color: $color-border;
+          }
+        }
+      }
+    }
+
+    &__btn {
+      display: block;
+      width: 100%;
+      padding: $spacing-md 0;
+      background-color: $color-primary;
+      color: $color-background;
+      font-size: $font-size-base;
+      font-weight: 500;
+      border-radius: $border-radius;
+      text-align: center;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: $color-primary-hover;
+      }
+    }
+  }
+
+  // Service Locations Section
+   .service-locations__row {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+     gap: $spacing-lg;
+     max-width: 1200px;
+     margin: $spacing-xl auto; // Add some margin top/bottom
+     padding: 0 $spacing-md;
+   }
+
+  .location-card {
+    background-color: $color-background;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    overflow: hidden;
+    transition: $transition-base;
+    display: flex;
+    flex-direction: column;
+
+    &__info {
+      padding: $spacing-md;
+      flex-grow: 1; // Allow info to take space
+    }
+
+    &__name {
+      font-size: $font-size-large;
+      font-weight: 700;
+      margin-bottom: $spacing-sm;
+      color: $color-text;
+    }
+
+    &__address,
+    &__phone,
+    &__hours {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      margin-bottom: $spacing-xs;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      svg {
+        color: $color-primary;
+      }
+    }
+
+    &__btn {
+      display: inline-block;
+      margin-top: $spacing-md;
+      padding: $spacing-sm $spacing-md;
+      border: 2px solid $color-primary;
+      border-radius: $border-radius-sm;
+      color: $color-primary;
+      font-size: $font-size-base;
+      font-weight: 500;
+      text-decoration: none;
+      transition: $transition-base;
+      text-align: center;
+      background-color: transparent;
+      cursor: pointer;
+      min-width: 120px;
+
+      &:hover {
+        background-color: $color-primary;
+        color: $color-background;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba($color-primary, 0.3);
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.25);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba($color-primary, 0.3);
+      }
+    }
+  }
+}
+
+// SERVICE BOOKING FORM SECTION
+.booking-form-section {
+  padding: $spacing-xxl 0;
+  background-color: $color-background-light;
+
+  &__container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+  }
+}
+
+.booking-form {
+  background-color: $color-background;
+  padding: $spacing-xl;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+
+  &__title {
+    text-align: center;
+    font-size: $font-size-xlarge;
+    font-weight: 700;
+    margin-bottom: $spacing-sm;
+    color: $color-text;
+  }
+
+  &__subtitle {
+    text-align: center;
+    font-size: $font-size-base;
+    color: $color-text-light;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+
+    @media (max-width: $breakpoint-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__row {
+    display: contents; /* Allows children to be placed directly in the grid */
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__full-width {
+    grid-column: 1 / -1;
+  }
+
+  &__label {
+    display: block;
+    font-size: $font-size-base;
+    font-weight: 500;
+    margin-bottom: $spacing-xs;
+    color: $color-text;
+  }
+
+  &__input,
+  &__select,
+  &__textarea {
+    width: 100%;
+    padding: $spacing-sm;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-base;
+    color: $color-text;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+  }
+
+  &__actions {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: $spacing-md;
+  }
+
+  &__btn-submit {
+    display: inline-block;
+    padding: $spacing-md $spacing-xl;
+    background-color: $color-primary;
+    color: $color-background;
+    font-size: $font-size-large;
+    font-weight: 500;
+    border-radius: $border-radius;
+    transition: $transition-base;
+
+    &:hover {
+      background-color: $color-primary-hover;
+    }
+  }
+
+  &__btn-cancel {
+    display: inline-block;
+    padding: $spacing-md $spacing-xl;
+    background-color: transparent;
+    color: $color-text;
+    font-size: $font-size-large;
+    font-weight: 500;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
+    transition: $transition-base;
+    margin-right: $spacing-md;
+
+    &:hover {
+      background-color: $color-background-light;
+      border-color: $color-text-light;
+    }
+  }
+} 
+
+
+
+// MODAL STYLES
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+  animation: fadeIn 0.3s ease-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+.modal {
+  background-color: $color-background;
+  border-radius: $border-radius;
+  box-shadow: $shadow-lg;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease-out;
+
+  @keyframes slideIn {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    max-width: 95%;
+    margin: $spacing-md;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-lg $spacing-xl;
+  border-bottom: 1px solid $color-border;
+  background-color: $color-background-light;
+  border-radius: $border-radius $border-radius 0 0;
+}
+
+.modal-title {
+  font-size: $font-size-xlarge;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: $font-size-large;
+  color: $color-text-light;
+  cursor: pointer;
+  padding: $spacing-sm;
+  border-radius: 50%;
+  transition: $transition-base;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid transparent;
+
+  &:hover {
+    background-color: $color-background-light;
+    color: $color-text;
+    border-color: $color-border;
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $color-background-light;
+    color: $color-text;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.25);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: $transition-base;
+  }
+}
+
+.modal-body {
+  padding: $spacing-xl;
+}
+
+.modal-subtitle {
+  font-size: $font-size-base;
+  color: $color-text-light;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
