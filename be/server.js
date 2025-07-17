@@ -22,18 +22,12 @@ const corsOptions = {
       'http://localhost:5173',
       'http://localhost:3000', 
       'http://localhost:3001',
-      'https://da-22062025.vercel.app',
-      'https://da22062025.vercel.app',
-      'https://da22062025-git-master-freeyoutube-sivicode.vercel.app',
-      'https://da22062025-freeyoutube-sivicode.vercel.app',
-      'https://vercel.app',
-      'https://*.vercel.app',
-      'https://da22062025-1.onrender.com',
+      'https://da22062025.onrender.com',
       'https://*.onrender.com'
     ];
     
     // Check if origin is allowed
-    if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('vercel.app')) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
