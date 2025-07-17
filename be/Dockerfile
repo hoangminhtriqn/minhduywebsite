@@ -5,9 +5,10 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+COPY yarn.lock ./
 
-# Cài đặt dependencies
-RUN npm ci --omit=dev
+# Cài đặt dependencies với yarn
+RUN yarn install --frozen-lockfile
 
 # Copy toàn bộ source code
 COPY . .
@@ -16,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Start command
-CMD ["npm", "start"] 
+CMD ["yarn", "start"] 

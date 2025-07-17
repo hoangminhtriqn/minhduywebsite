@@ -17,5 +17,4 @@ build
 .vscode
 .idea
 fe/
-doc/
-yarn.lock 
+doc/ 
