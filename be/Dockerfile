@@ -3,15 +3,11 @@ FROM node:18-alpine
 # Tạo thư mục làm việc
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY yarn.lock ./
+# Copy toàn bộ source code trước
+COPY . .
 
 # Cài đặt dependencies với yarn
 RUN yarn install --frozen-lockfile
-
-# Copy toàn bộ source code
-COPY . .
 
 # Expose port
 EXPOSE 3000
