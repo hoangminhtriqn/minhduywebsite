@@ -22,9 +22,10 @@ const corsOptions = {
       'http://localhost:5173',
       'http://localhost:3000', 
       'http://localhost:3001',
-      'https://da22062025.onrender.com',
-      'https://*.onrender.com'
-    ];
+      process.env.FRONTEND_URL,
+      'https://*.onrender.com',
+      'https://minhduywebsite.onrender.com'
+    ].filter(Boolean); // Remove undefined values
     
     // Check if origin is allowed
     if (allowedOrigins.indexOf(origin) !== -1) {
