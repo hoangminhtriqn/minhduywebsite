@@ -548,82 +548,150 @@ async function migrate() {
       console.log('✅ Đã xóa dữ liệu cũ');
     }
 
+    // Kiểm tra xem dữ liệu đã tồn tại chưa
+    const existingRoles = await Role.countDocuments();
+    const existingUsers = await User.countDocuments();
+    const existingProducts = await Product.countDocuments();
+    
+    if (existingRoles > 0 && existingUsers > 0 && existingProducts > 0 && !forceReset) {
+      console.log('✅ Dữ liệu đã tồn tại, bỏ qua migration');
+      console.log(`📊 Dữ liệu hiện có: ${existingRoles} roles, ${existingUsers} users, ${existingProducts} products`);
+      return;
+    }
+
     console.log('👥 Tạo roles...');
-    // Create roles
-    const createdRoles = await Role.insertMany(sampleRoles);
+    // Create roles only if they don't exist
+    let createdRoles = [];
+    if (existingRoles === 0) {
+      createdRoles = await Role.insertMany(sampleRoles);
+      console.log('✅ Đã tạo roles');
+    } else {
+      createdRoles = await Role.find({});
+      console.log('✅ Roles đã tồn tại');
+    }
+    
     const adminRole = createdRoles.find(role => role.Role_Name === 'admin');
     const userRole = createdRoles.find(role => role.Role_Name === 'user');
-    console.log('✅ Đã tạo roles');
 
     console.log('👤 Tạo admin user...');
-    // Create admin user
-    const adminUser = new User({
-      UserName: 'admin',
-      Password: 'admin123',
-      Email: 'admin@bmw.com',
-      Phone: '0123456789',
-      FullName: 'Administrator',
-      Address: 'Hà Nội, Việt Nam',
-      Role: 'admin',
-      Status: 'active'
-    });
-    await adminUser.save();
-    console.log('✅ Đã tạo admin user');
+    // Create admin user only if it doesn't exist
+    let adminUser = await User.findOne({ UserName: 'admin' });
+    if (!adminUser) {
+      adminUser = new User({
+        UserName: 'admin',
+        Password: 'admin123',
+        Email: 'admin@bmw.com',
+        Phone: '0123456789',
+        FullName: 'Administrator',
+        Address: 'Hà Nội, Việt Nam',
+        Role: 'admin',
+        Status: 'active'
+      });
+      await adminUser.save();
+      console.log('✅ Đã tạo admin user');
+    } else {
+      console.log('✅ Admin user đã tồn tại');
+    }
 
     console.log('🔗 Tạo role-user relationship...');
-    // Create role-user relationship for admin
-    await RoleUser.create({
-      UserID: adminUser._id,
-      RoleID: adminRole._id,
-      Status: 'active'
-    });
-    console.log('✅ Đã tạo role-user relationship');
+    // Create role-user relationship for admin only if it doesn't exist
+    const existingRoleUser = await RoleUser.findOne({ UserID: adminUser._id, RoleID: adminRole._id });
+    if (!existingRoleUser) {
+      await RoleUser.create({
+        UserID: adminUser._id,
+        RoleID: adminRole._id,
+        Status: 'active'
+      });
+      console.log('✅ Đã tạo role-user relationship');
+    } else {
+      console.log('✅ Role-user relationship đã tồn tại');
+    }
 
     console.log('📂 Tạo product categories...');
-    // Create product categories
-    const createdProductCategories = await ProductCategory.insertMany(sampleProductCategories);
-    console.log('✅ Đã tạo product categories');
+    // Create product categories only if they don't exist
+    let createdProductCategories = [];
+    const existingProductCategories = await ProductCategory.countDocuments();
+    if (existingProductCategories === 0) {
+      createdProductCategories = await ProductCategory.insertMany(sampleProductCategories);
+      console.log('✅ Đã tạo product categories');
+    } else {
+      createdProductCategories = await ProductCategory.find({});
+      console.log('✅ Product categories đã tồn tại');
+    }
 
     console.log('📁 Tạo general categories...');
-    // Create general categories
-    const createdCategories = await Category.insertMany(sampleCategories);
-    console.log('✅ Đã tạo general categories');
+    // Create general categories only if they don't exist
+    let createdCategories = [];
+    const existingCategories = await Category.countDocuments();
+    if (existingCategories === 0) {
+      createdCategories = await Category.insertMany(sampleCategories);
+      console.log('✅ Đã tạo general categories');
+    } else {
+      createdCategories = await Category.find({});
+      console.log('✅ General categories đã tồn tại');
+    }
 
     console.log('🚗 Tạo products...');
-    // Create products with category references
-    const productsWithCategories = sampleProducts.map((product, index) => {
-      const categoryIndex = index % createdProductCategories.length;
-      return {
-        ...product,
-        CategoryID: createdProductCategories[categoryIndex]._id
-      };
-    });
-    await Product.insertMany(productsWithCategories);
-    console.log('✅ Đã tạo products');
-
-    // Lấy lại danh sách sản phẩm từ DB (có _id thực tế)
-    const dbProducts = await Product.find({});
+    // Create products only if they don't exist
+    let dbProducts = [];
+    if (existingProducts === 0) {
+      const productsWithCategories = sampleProducts.map((product, index) => {
+        const categoryIndex = index % createdProductCategories.length;
+        return {
+          ...product,
+          CategoryID: createdProductCategories[categoryIndex]._id
+        };
+      });
+      await Product.insertMany(productsWithCategories);
+      console.log('✅ Đã tạo products');
+    } else {
+      console.log('✅ Products đã tồn tại');
+    }
+    
+    // Lấy lại danh sách sản phẩm từ DB
+    dbProducts = await Product.find({});
 
     console.log('🔧 Tạo services...');
-    // Create services
-    await Service.insertMany(sampleServices);
-    console.log('✅ Đã tạo services');
+    // Create services only if they don't exist
+    const existingServices = await Service.countDocuments();
+    if (existingServices === 0) {
+      await Service.insertMany(sampleServices);
+      console.log('✅ Đã tạo services');
+    } else {
+      console.log('✅ Services đã tồn tại');
+    }
 
     console.log('📰 Tạo news events...');
-    // Create news events
-    await NewsEvent.insertMany(sampleNewsEvents);
-    console.log('✅ Đã tạo news events');
+    // Create news events only if they don't exist
+    const existingNewsEvents = await NewsEvent.countDocuments();
+    if (existingNewsEvents === 0) {
+      await NewsEvent.insertMany(sampleNewsEvents);
+      console.log('✅ Đã tạo news events');
+    } else {
+      console.log('✅ News events đã tồn tại');
+    }
 
     console.log('👥 Tạo users...');
-    // Create users
-    const createdUsers = await User.insertMany(sampleUsers);
-    console.log('✅ Đã tạo users');
+    // Create users only if they don't exist
+    let createdUsers = [];
+    if (existingUsers === 0) {
+      createdUsers = await User.insertMany(sampleUsers);
+      console.log('✅ Đã tạo users');
+    } else {
+      createdUsers = await User.find({ UserName: { $ne: 'admin' } });
+      console.log('✅ Users đã tồn tại');
+    }
 
     console.log('📋 Tạo test drive orders...');
-    // Create test drive orders
-    const testDriveOrders = generateSampleTestDriveOrders(createdUsers, dbProducts);
-    await OrderTestDrive.insertMany(testDriveOrders);
-    console.log('✅ Đã tạo test drive orders');
+    // Create test drive orders only if they don't exist
+    const existingOrders = await OrderTestDrive.countDocuments();
+    if (existingOrders === 0) {
+      const testDriveOrders = generateSampleTestDriveOrders(createdUsers, dbProducts);
+      await OrderTestDrive.insertMany(testDriveOrders);
+      console.log('✅ Đã tạo test drive orders');
+    } else {
+      console.log('✅ Test drive orders đã tồn tại');
+    }
 
     console.log('🎉 Migration hoàn thành thành công!');
     console.log('📊 Dữ liệu đã được tạo:');
@@ -634,7 +702,7 @@ async function migrate() {
     console.log(`   - ${sampleServices.length} services`);
     console.log(`   - ${sampleNewsEvents.length} news events`);
     console.log(`   - ${createdUsers.length} users`);
-    console.log(`   - ${testDriveOrders.length} test drive orders`);
+    console.log(`   - ${existingOrders === 0 ? 'test drive orders' : 'orders already exist'}`);
 
   } catch (error) {
     console.error('❌ Lỗi trong quá trình migration:', error.message);

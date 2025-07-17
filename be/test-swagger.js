@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://minhduywebsite-backend.onrender.com',
+        url: 'https://minhduywebsite.onrender.com',
         description: 'Production server'
       }
     ]
