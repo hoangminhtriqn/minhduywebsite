@@ -1,11 +1,9 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
-import { fixupConfigRules } from "@eslint/js";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginReactRefresh from "eslint-plugin-react-refresh";
 import tsEslint from "typescript-eslint";
-
 
 export default [
   {
@@ -33,5 +31,5 @@ export default [
   },
   pluginJs.configs.recommended,
   ...tsEslint.configs.recommended,
-  fixupConfigRules(pluginReactConfig),
+  pluginReactConfig,
 ]; 

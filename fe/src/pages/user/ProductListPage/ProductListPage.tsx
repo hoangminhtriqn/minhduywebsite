@@ -25,14 +25,14 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../api/config";
-import { Product } from "../api/types";
-import PageBanner from "../components/PageBanner";
-import { PaginationWrapper, usePagination } from "../components/pagination";
-import { useAuth } from "../contexts/AuthContext";
-import { useFavorites } from "../contexts/FavoritesContext";
-import useScrollToTop from "../hooks/useScrollToTop";
-import { ROUTERS } from "../utils/constant";
+import { API_BASE_URL } from "@/api/config";
+import { Product } from "@/api/types";
+import PageBanner from "@/components/PageBanner";
+import { PaginationWrapper, usePagination } from "@/components/pagination";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import useScrollToTop from "@/hooks/useScrollToTop";
+import { ROUTERS } from "@/utils/constant";
 import styles from "./ProductListPage.module.scss";
 
 const { Text } = Typography;

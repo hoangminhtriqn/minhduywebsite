@@ -15,16 +15,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE_URL } from "../api/config";
-import { Product } from "../api/types"; // Import Product type
-import PageBanner from "../components/PageBanner";
-import { useAuth } from "../contexts/AuthContext";
-import { useFavorites } from "../contexts/FavoritesContext";
-import useScrollToTop from "../hooks/useScrollToTop";
-import { ROUTERS } from "../utils/constant";
-import { formatCurrency } from "../utils/format";
-import "./ProductDetailPage.scss";
-import { HeartOutlined } from "@ant-design/icons";
+import { API_BASE_URL } from "@/api/config";
+import { Product } from "@/api/types"; // Import Product type
+import PageBanner from "@/components/PageBanner";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import useScrollToTop from "@/hooks/useScrollToTop";
+import { ROUTERS } from "@/utils/constant";
+import { formatCurrency } from "@/utils/format";
+import styles from "./ProductDetailPage.scss";
+import { HeartOutlined, HeartFilled, EyeOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
 

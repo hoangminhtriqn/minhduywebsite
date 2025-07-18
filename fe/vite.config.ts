@@ -5,6 +5,11 @@ import path from 'path'; // Import path module
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
   server: { // Add server configuration
     proxy: {
       '/api': {

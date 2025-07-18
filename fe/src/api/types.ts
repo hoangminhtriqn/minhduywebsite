@@ -53,6 +53,17 @@ export interface Category {
   updatedAt: string;
 }
 
+export interface Service {
+  _id: string;
+  Service_Name: string;
+  Description: string;
+  Price: number;
+  Image: string;
+  Status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CartItem {
   _id: string;
   ProductID: {

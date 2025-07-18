@@ -9,16 +9,26 @@ import {
   Form,
   Input,
   Select,
+  Typography,
+  Card,
 } from "antd";
 // Import Option from antd
 // import { Option } from 'antd/es/select';
 // import { Option } from 'antd';
 // Import Option via Select
 const { Option } = Select;
-import { EditOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  LockOutlined,
+  UnlockOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
-import CustomPagination from "../../components/CustomPagination";
-import Breadcrumb from "../../components/admin/Breadcrumb";
+import CustomPagination from "@/components/CustomPagination";
+import Breadcrumb from "@/components/admin/Breadcrumb";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   _id: string;

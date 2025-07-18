@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getNewsEventById, NewsEvent } from "../api/services/newsEvents";
-import PageBanner from "../components/PageBanner";
+import { getNewsEventById, NewsEvent } from "@/api/services/newsEvents";
+import PageBanner from "@/components/PageBanner";
 
 const NewsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,14 +66,21 @@ const NewsDetailPage: React.FC = () => {
           alt={news.Title}
         />
         <div style={{ color: "#666", marginBottom: 12 }}>
-          Ngày đăng: {formatDate(news.PublishDate || news.createdAt)} | Trạng thái:{" "}
-          {news.Status === "published" ? "Đã xuất bản" : 
-           news.Status === "draft" ? "Bản nháp" :
-           news.Status === "active" ? "Hoạt động" :
-           news.Status === "inactive" ? "Không hoạt động" :
-           news.Status === "archived" ? "Đã lưu trữ" : "Bản nháp"}
+          Ngày đăng: {formatDate(news.PublishDate || news.createdAt)} | Trạng
+          thái:{" "}
+          {news.Status === "published"
+            ? "Đã xuất bản"
+            : news.Status === "draft"
+              ? "Bản nháp"
+              : news.Status === "active"
+                ? "Hoạt động"
+                : news.Status === "inactive"
+                  ? "Không hoạt động"
+                  : news.Status === "archived"
+                    ? "Đã lưu trữ"
+                    : "Bản nháp"}
         </div>
-        <div 
+        <div
           style={{ fontSize: 18, lineHeight: 1.7 }}
           dangerouslySetInnerHTML={{ __html: news.Content }}
         />

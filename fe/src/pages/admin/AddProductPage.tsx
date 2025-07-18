@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CreateProductData, Category } from "../../api/types";
-import { productService } from "../../api/services/product";
+import { CreateProductData, Category } from "@/api/types";
+import { productService } from "@/api/services/product";
 import { toast } from "react-toastify";
 
 const AdminAddProductPage: React.FC = () => {

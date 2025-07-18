@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Product } from "../../api/types";
-import { formatCurrency } from "../../utils/format";
+import { Product } from "@/api/types";
+import { formatCurrency } from "@/utils/format";
 import { FaTachometerAlt, FaGasPump, FaCog } from "react-icons/fa";
-import { ROUTERS } from "../../utils/constant";
-import { useFavorites } from "../../contexts/FavoritesContext";
-import { useAuth } from "../../contexts/AuthContext";
-import { useTheme } from "../../contexts/ThemeContext";
+import { ROUTERS } from "@/utils/constant";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { notification, Button, Space, Tooltip, Typography } from "antd";
 import { HeartOutlined, EyeOutlined } from "@ant-design/icons";
 

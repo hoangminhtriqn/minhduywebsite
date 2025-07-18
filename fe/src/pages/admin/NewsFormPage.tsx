@@ -29,14 +29,15 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
-import Breadcrumb from "../../components/admin/Breadcrumb";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 import {
   getNewsEventById,
   createNewsEvent,
   updateNewsEvent,
   NewsEvent,
-} from "../../api/services/newsEvents";
+} from "@/api/services/newsEvents";
 import styles from "./NewsFormPage.module.scss";
+import { API_BASE_URL } from "@/api/config";
 
 const { Title, Text } = Typography;
 const { Option } = Select;

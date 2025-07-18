@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { productService } from "../api/services/product";
-import { formatCurrency } from "../utils/format";
+import { productService } from "@/api/services/product";
+import { formatCurrency } from "@/utils/format";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { Product } from "../api/types";
+import { Product } from "@/api/types";
 import {
   Typography,
   Spin,
@@ -13,8 +13,12 @@ import {
   Space,
   Descriptions,
   Card,
+  notification,
 } from "antd";
-import { ROUTERS } from "../utils/constant";
+import { ROUTERS } from "@/utils/constant";
+import { HeartOutlined, HeartFilled, EyeOutlined } from "@ant-design/icons";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 const { Title, Paragraph, Text } = Typography;
 

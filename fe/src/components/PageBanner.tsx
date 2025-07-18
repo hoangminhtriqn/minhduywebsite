@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "antd";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import styles from "./PageBanner.module.scss";
 
 const { Title, Text } = Typography;

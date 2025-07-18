@@ -5,13 +5,14 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Theme, ThemeContextType } from "../types/theme";
+import { ConfigProvider, theme } from "antd";
+import { Theme, ThemeContextType } from "@/types/theme";
 import {
   themeConfig,
   defaultTheme,
   getTheme,
   createCustomTheme,
-} from "../styles/themes";
+} from "@/styles/themes";
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

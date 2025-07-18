@@ -2,6 +2,7 @@
 $color-primary: #0066B1;
 $color-primary-light: #3385D6;
 $color-primary-dark: #004C8A;
+$color-primary-hover: #004C8A; // alias for primary-dark
 $color-secondary: #1a1a1a;
 $color-accent: #FF6B35;
 $color-success: #28A745;
@@ -14,17 +15,21 @@ $color-text-primary: #1a1a1a;
 $color-text-secondary: #666666;
 $color-text-muted: #999999;
 $color-text-white: #ffffff;
+$color-text: #1a1a1a; // alias for text-primary
+$color-text-light: #666666; // alias for text-secondary
 
 // Background Colors
 $color-background-primary: #ffffff;
 $color-background-secondary: #f8f9fa;
 $color-background-dark: #1a1a1a;
 $color-background-light: #f5f5f5;
+$color-background: #ffffff; // alias for background-primary
 
 // Border Colors
 $color-border-light: rgba(0, 0, 0, 0.1);
 $color-border-medium: rgba(0, 0, 0, 0.2);
 $color-border-dark: rgba(0, 0, 0, 0.3);
+$color-border: rgba(0, 0, 0, 0.2); // alias for border-medium
 
 // Typography
 $font-family-primary: var(--font-family-base);
@@ -42,6 +47,10 @@ $font-size-3xl: 1.875rem;  // 30px
 $font-size-4xl: 2.25rem;   // 36px
 $font-size-5xl: 3rem;      // 48px
 $font-size-6xl: 3.75rem;   // 60px
+$font-size-small: 0.875rem; // 14px (alias)
+$font-size-large: 1.125rem; // 18px (alias)
+$font-size-xlarge: 1.5rem; // 24px (alias)
+$font-size-xxlarge: 2.25rem; // 36px (alias)
 
 // Font Weights
 $font-weight-light: 300;
@@ -65,6 +74,7 @@ $spacing-xl: 2rem;      // 32px
 $spacing-2xl: 3rem;     // 48px
 $spacing-3xl: 4rem;     // 64px
 $spacing-4xl: 6rem;     // 96px
+$spacing-xxl: 3rem;     // 48px (alias for spacing-2xl)
 
 // Border Radius
 $border-radius-sm: 0.25rem;   // 4px
@@ -73,6 +83,7 @@ $border-radius-lg: 0.5rem;    // 8px
 $border-radius-xl: 0.75rem;   // 12px
 $border-radius-2xl: 1rem;     // 16px
 $border-radius-full: 9999px;
+$border-radius: 0.375rem; // alias for border-radius-md
 
 // Shadows
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -80,12 +91,14 @@ $shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06
 $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 $shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); // alias for shadow-md
 
 // Transitions
 $transition-fast: 0.15s ease;
 $transition-normal: 0.3s ease;
 $transition-slow: 0.5s ease;
 $transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+$transition-base: 0.3s ease; // alias for transition-normal
 
 // Z-Index
 $z-index-dropdown: 1000;

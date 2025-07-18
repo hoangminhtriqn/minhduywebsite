@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ROUTERS } from "../utils/constant";
+import { ROUTERS } from "@/utils/constant";
 import {
   UserOutlined,
   MailOutlined,

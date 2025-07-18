@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
-import { setOrders, setLoading, setError } from '../store/slices/orderSlice';
-import { orderService } from '../api/services/order';
-import { formatDateTime } from '../utils/format';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store";
+import { setOrders, setLoading, setError } from "@/store/slices/orderSlice";
+import { orderService } from "@/api/services/order";
+import { formatDateTime } from "@/utils/format";
+import { Order } from "@/api/types";
 
 const OrdersPage: React.FC = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const { orders, loading, error } = useSelector((state: RootState) => state.order);
+  const { orders, loading, error } = useSelector(
+    (state: RootState) => state.order
+  );
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -18,7 +21,7 @@ const OrdersPage: React.FC = () => {
           const userOrders = await orderService.getUserOrders(user._id);
           dispatch(setOrders(Array.isArray(userOrders) ? userOrders : []));
         } catch (error) {
-          dispatch(setError('Có lỗi xảy ra khi tải danh sách đơn hàng'));
+          dispatch(setError("Có lỗi xảy ra khi tải danh sách đơn hàng"));
         } finally {
           dispatch(setLoading(false));
         }
@@ -63,29 +66,29 @@ const OrdersPage: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'confirmed':
-        return 'bg-blue-100 text-blue-800';
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "confirmed":
+        return "bg-blue-100 text-blue-800";
+      case "completed":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'Chờ xác nhận';
-      case 'confirmed':
-        return 'Đã xác nhận';
-      case 'completed':
-        return 'Hoàn thành';
-      case 'cancelled':
-        return 'Đã hủy';
+      case "pending":
+        return "Chờ xác nhận";
+      case "confirmed":
+        return "Đã xác nhận";
+      case "completed":
+        return "Hoàn thành";
+      case "cancelled":
+        return "Đã hủy";
       default:
         return status;
     }
@@ -93,10 +96,12 @@ const OrdersPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Đơn hàng của tôi</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-8">
+        Đơn hàng của tôi
+      </h1>
 
       <div className="space-y-6">
-        {orders.map((order) => (
+        {orders.map((order: Order) => (
           <div
             key={order._id}
             className="bg-white rounded-lg shadow-md overflow-hidden"
@@ -158,4 +163,4 @@ const OrdersPage: React.FC = () => {
   );
 };
 
-export default OrdersPage; 
+export default OrdersPage;

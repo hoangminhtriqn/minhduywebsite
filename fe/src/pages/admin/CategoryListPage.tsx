@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Space, Modal, Form, Input, message } from "antd";
+import {
+  Table,
+  Button,
+  Space,
+  Modal,
+  Form,
+  Input,
+  message,
+  Typography,
+  Card,
+} from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
-import CustomPagination from "../../components/CustomPagination";
-import Breadcrumb from "../../components/admin/Breadcrumb";
+import CustomPagination from "@/components/CustomPagination";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 
 interface Category {
   _id: string;

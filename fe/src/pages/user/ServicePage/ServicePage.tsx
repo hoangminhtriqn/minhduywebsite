@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaCheckCircle,
   FaTools,
@@ -9,14 +9,24 @@ import {
   FaClock,
   FaTimes,
 } from "react-icons/fa";
-import { ToolOutlined } from "@ant-design/icons";
-import PageBanner from "../components/PageBanner";
-import useScrollToTop from "../hooks/useScrollToTop";
+import {
+  ToolOutlined,
+  EyeOutlined,
+  PhoneOutlined,
+  CalendarOutlined,
+} from "@ant-design/icons";
+import { Row, Col, Card, Typography, Spin, Empty, Button } from "antd";
+import { useNavigate } from "react-router-dom";
+import PageBanner from "@/components/PageBanner";
+import useScrollToTop from "@/hooks/useScrollToTop";
 import styles from "./ServicePage.module.scss";
 import axios from "axios";
 import { message } from "antd";
-import { API_BASE_URL } from "../api/config";
+import { API_BASE_URL } from "@/api/config";
 import moment from "moment"; // Import moment for potential date handling if needed
+import { Service } from "@/api/types";
+import { ROUTERS } from "@/utils/constant";
+import { formatCurrency } from "@/utils/format";
 
 const ServicePage: React.FC = () => {
   // Use scroll to top hook

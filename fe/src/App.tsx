@@ -3,46 +3,48 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { Provider } from "react-redux";
-import { store } from "./store";
-import { AuthProvider } from "./contexts/AuthContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { FavoritesProvider } from "./contexts/FavoritesContext";
-import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
-import AdminLayout from "./components/admin/AdminLayout";
-import MainLayout from "./components/layout/MainLayout";
-import ScrollToTop from "./components/ScrollToTop";
+import { store } from "@/store";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import PublicRoute from "@/components/PublicRoute";
+import AdminLayout from "@/components/admin/AdminLayout";
+import MainLayout from "@/components/layout/MainLayout";
+import ScrollToTop from "@/components/ScrollToTop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Admin Pages
-import DashboardPage from "./pages/admin/DashboardPage";
-import AdminProductListPage from "./pages/admin/ProductListPage";
-import ProductFormPage from "./pages/admin/ProductFormPage";
-import OrderDetailPage from "./pages/admin/OrderDetailPage";
-import UserListPage from "./pages/admin/UserListPage";
-import CategoryListPage from "./pages/admin/CategoryListPage";
-import ServiceListPage from "./pages/admin/ServiceListPage";
-import TestDriveBookingListPage from "./pages/admin/TestDriveBookingListPage";
-import NewsListPage from "./pages/admin/NewsListPage";
-import NewsFormPage from "./pages/admin/NewsFormPage";
+import DashboardPage from "@/pages/admin/DashboardPage";
+import AdminProductListPage from "@/pages/admin/ProductListPage";
+import ProductFormPage from "@/pages/admin/ProductFormPage";
+import OrderDetailPage from "@/pages/admin/OrderDetailPage";
+import UserListPage from "@/pages/admin/UserListPage";
+import CategoryListPage from "@/pages/admin/CategoryListPage";
+import ServiceListPage from "@/pages/admin/ServiceListPage";
+import TestDriveBookingListPage from "@/pages/admin/TestDriveBookingListPage";
+import NewsListPage from "@/pages/admin/NewsListPage";
+import NewsFormPage from "@/pages/admin/NewsFormPage";
 
 // Public Pages
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import ProductDetailPage from "./pages/ProductDetailPage";
-import PublicProductListPage from "./pages/ProductListPage";
-import FavoritesPage from "./pages/FavoritesPage";
-import ProfilePage from "./pages/ProfilePage";
-import PriceListPage from "./pages/PriceListPage";
-import ServicePage from "./pages/ServicePage";
-import TestDrivePage from "./pages/TestDrivePage";
-import NewsPage from "./pages/NewsPage";
-import PriceListDetailPage from "./pages/PriceListDetailPage";
-import NewsDetailPage from "./pages/NewsDetailPage";
+import {
+  HomePage,
+  LoginPage,
+  RegisterPage,
+  ProductDetailPage,
+  ProductListPage as PublicProductListPage,
+  FavoritesPage,
+  ProfilePage,
+  PriceListPage,
+  ServicePage,
+  TestDrivePage,
+  NewsPage,
+  PriceListDetailPage,
+  NewsDetailPage,
+} from "@/pages/user";
 import "./styles/main.scss";
-import { ROUTERS } from "./utils/constant";
+import { ROUTERS } from "@/utils/constant";
 
 const App: React.FC = () => {
   return (

@@ -1,4 +1,4 @@
-@use '../styles/theme-variables.scss' as theme;
+@use '../../../styles/variables' as *;
 
 // CSS Reset for ProfilePage to prevent global style interference
 .profileWrapper {
@@ -24,14 +24,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: theme.$color-background-secondary;
+  background: $color-background-secondary;
   padding: 2rem 1rem;
 }
 
 .profileCard {
-  background: theme.$color-background-primary;
-  border-radius: theme.$border-radius-xl;
-  box-shadow: theme.$shadow-lg;
+  background: $color-background-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
   padding: 2.5rem 2rem 2rem 2rem;
   max-width: 420px;
   width: 100%;
@@ -51,28 +51,28 @@
   width: 84px;
   height: 84px;
   border-radius: 50%;
-  background: theme.$color-primary;
-  color: theme.$color-text-white;
+  background: $color-primary;
+  color: $color-text-white;
   font-size: 2.5rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  box-shadow: theme.$shadow-base;
+  box-shadow: $shadow-md;
 }
 
 .fullName {
-  font-size: theme.$font-size-2xl;
-  font-weight: theme.$font-weight-semibold;
-  color: theme.$color-text-primary;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
   margin-bottom: 0.25rem;
 }
 
 .role {
-  font-size: theme.$font-size-base;
-  color: theme.$color-primary;
-  font-weight: theme.$font-weight-medium;
+  font-size: $font-size-base;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
   margin-bottom: 0.5rem;
 }
 
@@ -87,8 +87,8 @@
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  background: theme.$color-background-light;
-  border-radius: theme.$border-radius-base;
+  background: $color-background-light;
+  border-radius: $border-radius-md;
   padding: 0.7rem 1rem;
 }
 
@@ -96,43 +96,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: theme.$color-primary;
+  color: $color-primary;
 }
 
 .label {
-  font-size: theme.$font-size-base;
-  color: theme.$color-text-secondary;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
   min-width: 110px;
-  font-weight: theme.$font-weight-medium;
+  font-weight: $font-weight-medium;
 }
 
 .value {
-  font-size: theme.$font-size-base;
-  color: theme.$color-text-primary;
-  font-weight: theme.$font-weight-medium;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
   word-break: break-all;
 }
 
 .editInput {
-  font-size: theme.$font-size-base;
-  color: theme.$color-text-primary;
-  font-weight: theme.$font-weight-medium;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
   background: transparent;
   border: none;
   outline: none;
   flex: 1;
   min-width: 150px;
   padding: 0.5rem 0.75rem;
-  border-bottom: 2px solid theme.$color-primary;
-  border-radius: theme.$border-radius-sm;
+  border-bottom: 2px solid $color-primary;
+  border-radius: $border-radius-sm;
   
   &:focus {
-    border-bottom-color: theme.$color-primary-dark;
-    background: rgba(theme.$color-primary, 0.05);
+    border-bottom-color: $color-primary-dark;
+    background: rgba($color-primary, 0.05);
   }
   
   &::placeholder {
-    color: theme.$color-text-muted;
+    color: $color-text-muted;
   }
 }
 
@@ -146,12 +146,12 @@
 
 .editButton, .saveButton, .cancelButton {
   padding: 0.75rem 1.5rem;
-  border-radius: theme.$border-radius-base;
-  font-size: theme.$font-size-base;
-  font-weight: theme.$font-weight-medium;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
   border: none;
   cursor: pointer;
-  transition: theme.$transition-base;
+  transition: $transition-normal;
   
   &:hover:not(:disabled) {
     transform: translateY(-1px);
@@ -165,29 +165,29 @@
 }
 
 .editButton {
-  background: theme.$color-primary !important;
-  color: theme.$color-text-white !important;
+  background: $color-primary !important;
+  color: $color-text-white !important;
   
   &:hover:not(:disabled) {
-    background: theme.$color-primary-dark !important;
+    background: $color-primary-dark !important;
   }
 }
 
 .saveButton {
-  background: theme.$color-success !important;
-  color: theme.$color-text-white !important;
+  background: $color-success !important;
+  color: $color-text-white !important;
   
   &:hover:not(:disabled) {
-    background: theme.$static-success !important;
+    background: $color-success !important;
   }
 }
 
 .cancelButton {
-  background: theme.$color-text-muted !important;
-  color: theme.$color-text-white !important;
+  background: $color-text-muted !important;
+  color: $color-text-white !important;
   
   &:hover:not(:disabled) {
-    background: theme.$color-text-light !important;
+    background: $color-text-secondary !important;
   }
 }
 
@@ -201,8 +201,8 @@
 .spinner {
   width: 48px;
   height: 48px;
-  border: 5px solid theme.$color-border-light;
-  border-top: 5px solid theme.$color-primary;
+  border: 5px solid $color-border-light;
+  border-top: 5px solid $color-primary;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -218,10 +218,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: theme.$color-text-secondary;
-  background: theme.$color-background-primary;
-  border-radius: theme.$border-radius-lg;
-  box-shadow: theme.$shadow-base;
+  color: $color-text-secondary;
+  background: $color-background-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
   padding: 2.5rem 2rem;
   max-width: 400px;
   margin: 2rem auto;
@@ -247,8 +247,8 @@
 html body .profileWrapper .profileCard .actionButtons .editButton,
 html body .profileWrapper .profileCard .actionButtons .saveButton,
 html body .profileWrapper .profileCard .actionButtons .cancelButton {
-  background: var(--theme-primary, theme.$color-primary) !important;
-  color: var(--theme-text-white, theme.$color-text-white) !important;
+  background: var(--theme-primary, $color-primary) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
@@ -265,11 +265,11 @@ html body .profileWrapper .profileCard .actionButtons .cancelButton {
 }
 
 html body .profileWrapper .profileCard .actionButtons .cancelButton {
-  background: var(--theme-text-muted, theme.$color-text-muted) !important;
-  color: var(--theme-text-white, theme.$color-text-white) !important;
+  background: var(--theme-text-muted, $color-text-muted) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   
   &:hover:not(:disabled) {
-    background: var(--theme-text-light, theme.$color-text-light) !important;
+    background: var(--theme-text-light, $color-text-secondary) !important;
   }
 }
 
@@ -278,17 +278,17 @@ html body .profileWrapper .profileCard .actionButtons button,
 html body .profileWrapper .profileCard .actionButtons .editButton,
 html body .profileWrapper .profileCard .actionButtons .saveButton,
 html body .profileWrapper .profileCard .actionButtons .cancelButton {
-  background: var(--theme-primary, theme.$color-primary) !important;
-  color: var(--theme-text-white, theme.$color-text-white) !important;
+  background: var(--theme-primary, $color-primary) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
   padding: 0.75rem 1.5rem !important;
-  border-radius: theme.$border-radius-base !important;
-  font-size: theme.$font-size-base !important;
-  font-weight: theme.$font-weight-medium !important;
+  border-radius: $border-radius-md !important;
+  font-size: $font-size-base !important;
+  font-weight: $font-weight-medium !important;
   cursor: pointer !important;
-  transition: theme.$transition-base !important;
+  transition: $transition-normal !important;
   
   &:hover:not(:disabled) {
     transform: translateY(-1px) !important;
@@ -302,10 +302,10 @@ html body .profileWrapper .profileCard .actionButtons .cancelButton {
 }
 
 html body .profileWrapper .profileCard .actionButtons .cancelButton {
-  background: var(--theme-text-muted, theme.$color-text-muted) !important;
-  color: var(--theme-text-white, theme.$color-text-white) !important;
+  background: var(--theme-text-muted, $color-text-muted) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   
   &:hover:not(:disabled) {
-    background: var(--theme-text-light, theme.$color-text-light) !important;
+    background: var(--theme-text-light, $color-text-secondary) !important;
   }
 } 

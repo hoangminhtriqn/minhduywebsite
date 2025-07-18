@@ -19,11 +19,11 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { api } from "../../api";
+import { api } from "@/api";
 import dayjs from "dayjs";
 import styles from "./TestDriveBookingListPage.module.scss";
-import CustomPagination from "../../components/CustomPagination";
-import Breadcrumb from "../../components/admin/Breadcrumb";
+import CustomPagination from "@/components/CustomPagination";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 
 interface UserInfo {
   _id: string;

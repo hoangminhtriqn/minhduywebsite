@@ -17,13 +17,13 @@ import {
   DeleteOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { useAuth } from "../contexts/AuthContext";
-import { useFavorites } from "../contexts/FavoritesContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import { useNavigate } from "react-router-dom";
-import PageBanner from "../components/PageBanner";
-import useScrollToTop from "../hooks/useScrollToTop";
+import PageBanner from "@/components/PageBanner";
+import useScrollToTop from "@/hooks/useScrollToTop";
 import styles from "./FavoritesPage.module.scss";
-import { ROUTERS } from "../utils/constant";
+import { ROUTERS } from "@/utils/constant";
 
 const { Title, Text } = Typography;
 

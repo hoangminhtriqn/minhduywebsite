@@ -15,9 +15,10 @@ import {
   FaCalendarAlt,
 } from "react-icons/fa";
 import axios from "axios";
-import { API_BASE_URL } from "../../api/config";
+import { API_BASE_URL } from "@/api/config";
 import styles from "./Footer.module.scss";
-import { ROUTERS } from "../../utils/constant";
+import { ROUTERS } from "@/utils/constant";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Category {
   _id: string;
@@ -27,6 +28,7 @@ interface Category {
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const [categories, setCategories] = useState<Category[]>([]);
+  const { theme } = useTheme();
 
   // Fetch categories from API
   const fetchCategories = async () => {
@@ -65,8 +67,34 @@ const Footer: React.FC = () => {
 
   const randomCategories = getRandomCategories();
 
+  // Theme-based styles
+  const footerStyle = {
+    background: `linear-gradient(135deg, ${theme.colors.palette.primaryDark} 0%, ${theme.colors.palette.primary} 50%, ${theme.colors.palette.primaryLight} 100%)`,
+    color: theme.colors.text.white,
+  };
+
+  const linkStyle = {
+    color: theme.colors.text.white,
+  };
+
+  const iconStyle = {
+    color: theme.colors.text.white,
+  };
+
+  const contactItemStyle = {
+    backgroundColor: `rgba(0, 0, 0, 0.2)`,
+    borderColor: `rgba(255, 255, 255, 0.2)`,
+    color: theme.colors.text.white,
+  };
+
+  const socialLinkStyle = {
+    backgroundColor: `rgba(255, 255, 255, 0.15)`,
+    borderColor: `rgba(255, 255, 255, 0.2)`,
+    color: theme.colors.text.white,
+  };
+
   return (
-    <div className={styles.bmwFooterContainer}>
+    <div className={styles.bmwFooterContainer} style={footerStyle}>
       <div className={styles.footerContainer}>
         <div className={styles.footerContent}>
           {/* Company Information */}
@@ -85,6 +113,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerSocialLink}
+                style={socialLinkStyle}
                 aria-label="Facebook"
               >
                 <FaFacebook />
@@ -94,6 +123,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerSocialLink}
+                style={socialLinkStyle}
                 aria-label="YouTube"
               >
                 <FaYoutube />
@@ -103,6 +133,7 @@ const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.footerSocialLink}
+                style={socialLinkStyle}
                 aria-label="Instagram"
               >
                 <FaInstagram />
@@ -114,24 +145,44 @@ const Footer: React.FC = () => {
           <div className={styles.footerColumn}>
             <h4 className={styles.footerTitle}>TÌM HIỂU VỀ BMW</h4>
             <div className={styles.footerList}>
-              <Link to="/bang-gia" className={styles.footerLink}>
-                <FaCar className={styles.linkIcon} />
+              <Link
+                to="/bang-gia"
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCar className={styles.linkIcon} style={iconStyle} />
                 Tất cả dòng xe
               </Link>
-              <Link to={createCategoryLink("m")} className={styles.footerLink}>
-                <FaCar className={styles.linkIcon} />
+              <Link
+                to={createCategoryLink("m")}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCar className={styles.linkIcon} style={iconStyle} />
                 BMW M Series
               </Link>
-              <Link to={createCategoryLink("i")} className={styles.footerLink}>
-                <FaCar className={styles.linkIcon} />
+              <Link
+                to={createCategoryLink("i")}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCar className={styles.linkIcon} style={iconStyle} />
                 BMW i Series
               </Link>
-              <Link to="/dich-vu" className={styles.footerLink}>
-                <FaTools className={styles.linkIcon} />
+              <Link
+                to="/dich-vu"
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaTools className={styles.linkIcon} style={iconStyle} />
                 Dịch vụ BMW
               </Link>
-              <Link to="/tin-tuc" className={styles.footerLink}>
-                <FaCar className={styles.linkIcon} />
+              <Link
+                to="/tin-tuc"
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCar className={styles.linkIcon} style={iconStyle} />
                 Tin tức & Sự kiện
               </Link>
             </div>
@@ -147,12 +198,17 @@ const Footer: React.FC = () => {
                   key={category._id}
                   to={createCategoryLink(category.Category_Name)}
                   className={styles.footerLink}
+                  style={linkStyle}
                 >
                   {category.Category_Name}
                 </Link>
               ))}
               {categories.length > 5 && (
-                <Link to="/bang-gia" className={styles.footerLink}>
+                <Link
+                  to="/bang-gia"
+                  className={styles.footerLink}
+                  style={linkStyle}
+                >
                   Xem tất cả →
                 </Link>
               )}
@@ -163,28 +219,52 @@ const Footer: React.FC = () => {
           <div className={styles.footerColumn}>
             <h4 className={styles.footerTitle}>DỊCH VỤ & TIỆN ÍCH</h4>
             <div className={styles.footerList}>
-              <Link to={ROUTERS.USER.SERVICE} className={styles.footerLink}>
-                <FaTools className={styles.linkIcon} />
+              <Link
+                to={ROUTERS.USER.SERVICE}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaTools className={styles.linkIcon} style={iconStyle} />
                 Bảo hành & Bảo dưỡng
               </Link>
-              <Link to={ROUTERS.USER.SERVICE} className={styles.footerLink}>
-                <FaShieldAlt className={styles.linkIcon} />
+              <Link
+                to={ROUTERS.USER.SERVICE}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaShieldAlt className={styles.linkIcon} style={iconStyle} />
                 Sửa chữa & Phụ tùng
               </Link>
-              <Link to={ROUTERS.USER.PRICE_LIST} className={styles.footerLink}>
-                <FaCalculator className={styles.linkIcon} />
+              <Link
+                to={ROUTERS.USER.PRICE_LIST}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCalculator className={styles.linkIcon} style={iconStyle} />
                 Bảng giá chi tiết
               </Link>
-              <Link to={ROUTERS.USER.TEST_DRIVE} className={styles.footerLink}>
-                <FaCalendarAlt className={styles.linkIcon} />
+              <Link
+                to={ROUTERS.USER.TEST_DRIVE}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCalendarAlt className={styles.linkIcon} style={iconStyle} />
                 Đặt lịch hẹn
               </Link>
-              <Link to={ROUTERS.USER.TEST_DRIVE} className={styles.footerLink}>
-                <FaCar className={styles.linkIcon} />
+              <Link
+                to={ROUTERS.USER.TEST_DRIVE}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCar className={styles.linkIcon} style={iconStyle} />
                 Đặt lịch lái thử
               </Link>
-              <Link to={ROUTERS.USER.TEST_DRIVE} className={styles.footerLink}>
-                <FaCalculator className={styles.linkIcon} />
+              <Link
+                to={ROUTERS.USER.TEST_DRIVE}
+                className={styles.footerLink}
+                style={linkStyle}
+              >
+                <FaCalculator className={styles.linkIcon} style={iconStyle} />
                 Tính toán trả góp
               </Link>
             </div>
@@ -195,22 +275,22 @@ const Footer: React.FC = () => {
         <div className={styles.footerContactSection}>
           <h4 className={styles.footerTitle}>LIÊN HỆ VỚI CHÚNG TÔI</h4>
           <div className={styles.contactGrid}>
-            <div className={styles.footerContactItem}>
-              <FaPhone className={styles.footerIcon} />
+            <div className={styles.footerContactItem} style={contactItemStyle}>
+              <FaPhone className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Hotline:</span>
                 <span className={styles.contactValue}>1800 8123</span>
               </div>
             </div>
-            <div className={styles.footerContactItem}>
-              <FaEnvelope className={styles.footerIcon} />
+            <div className={styles.footerContactItem} style={contactItemStyle}>
+              <FaEnvelope className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Email:</span>
                 <span className={styles.contactValue}>sivicode@gmail.com</span>
               </div>
             </div>
-            <div className={styles.footerContactItem}>
-              <FaMapMarkerAlt className={styles.footerIcon} />
+            <div className={styles.footerContactItem} style={contactItemStyle}>
+              <FaMapMarkerAlt className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Địa chỉ:</span>
                 <span className={styles.contactValue}>
@@ -218,8 +298,8 @@ const Footer: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div className={styles.footerContactItem}>
-              <FaClock className={styles.footerIcon} />
+            <div className={styles.footerContactItem} style={contactItemStyle}>
+              <FaClock className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Giờ làm việc:</span>
                 <span className={styles.contactValue}>
@@ -237,15 +317,23 @@ const Footer: React.FC = () => {
               © {currentYear}SiVi CAR - Sản phẩm thuộc về SiVi CODE
             </p>
             <div className={styles.footerLegal}>
-              <Link to="/privacy" className={styles.legalLink}>
+              <Link
+                to="/privacy"
+                className={styles.legalLink}
+                style={linkStyle}
+              >
                 Chính Sách Bảo Mật
               </Link>
               <span className={styles.separator}>|</span>
-              <Link to="/terms" className={styles.legalLink}>
+              <Link to="/terms" className={styles.legalLink} style={linkStyle}>
                 Điều Khoản Sử Dụng
               </Link>
               <span className={styles.separator}>|</span>
-              <Link to="/sitemap" className={styles.legalLink}>
+              <Link
+                to="/sitemap"
+                className={styles.legalLink}
+                style={linkStyle}
+              >
                 Sitemap
               </Link>
             </div>

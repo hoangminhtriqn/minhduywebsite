@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../contexts/AuthContext"; // Import useAuth
-import { ROUTERS } from "../utils/constant";
+import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
+import { ROUTERS } from "@/utils/constant";
 import styles from "./LoginPage.module.scss"; // Import SCSS module
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 

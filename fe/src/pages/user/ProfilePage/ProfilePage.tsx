@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { authService } from "../api/services/auth";
+import { useAuth } from "@/contexts/AuthContext";
+import { authService } from "@/api/services/auth";
 import { toast } from "react-toastify";
 import styles from "./ProfilePage.module.scss";
+import { Form, Input, Button, Card, Typography } from "antd";
 
 const getInitials = (name?: string) => {
   if (!name) return "";

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Spin, message, Button } from "antd";
+import { Row, Col, Typography, Spin, message, Button } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { API_BASE_URL } from "../../api/config";
-import { Product } from "../../api/types";
-import ProductCard from "../product/ProductCard";
+import { API_BASE_URL } from "@/api/config";
+import { Product } from "@/api/types";
+import ProductCard from "@/components/product/ProductCard";
 import styles from "./FeaturedModels.module.scss";
 
 const FeaturedModels: React.FC = () => {

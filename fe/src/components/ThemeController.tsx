@@ -17,7 +17,7 @@ import {
   Typography,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const { Text, Paragraph } = Typography;
 
@@ -77,6 +77,8 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
             height: "50px",
             fontSize: "18px",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            backgroundColor: theme.colors.palette.primary,
+            borderColor: theme.colors.palette.primary,
           }}
         />
       </Tooltip>
@@ -84,7 +86,7 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
       <Drawer
         title={
           <Space>
-            <BgColorsOutlined />
+            <BgColorsOutlined style={{ color: theme.colors.palette.primary }} />
             <span>Tùy Chỉnh Giao Diện</span>
           </Space>
         }
@@ -92,18 +94,33 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
         closable={false}
+        styles={{
+          header: {
+            backgroundColor: theme.colors.background.primary,
+            borderBottom: `1px solid ${theme.colors.surface.borderLight}`,
+          },
+          body: {
+            backgroundColor: theme.colors.background.primary,
+          },
+        }}
       >
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
           {/* Current Theme Info */}
 
-          <Divider>Màu Tùy Chỉnh</Divider>
+          <Divider style={{ color: theme.colors.text.secondary }}>
+            Màu Tùy Chỉnh
+          </Divider>
 
           {/* Custom Color Picker */}
           <Space direction="vertical" size="middle" style={{ width: "100%" }}>
             <div>
               <Paragraph
                 type="secondary"
-                style={{ fontSize: "12px", margin: "4px 0" }}
+                style={{
+                  fontSize: "12px",
+                  margin: "4px 0",
+                  color: theme.colors.text.secondary,
+                }}
               >
                 Chọn bất kỳ màu nào để tạo giao diện cá nhân hóa
               </Paragraph>
@@ -125,7 +142,13 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
 
             {/* Preset Color Grid */}
             <div>
-              <Text type="secondary" style={{ fontSize: "12px" }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "12px",
+                  color: theme.colors.text.secondary,
+                }}
+              >
                 Màu Nhanh:
               </Text>
               <div
@@ -148,8 +171,8 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
                         cursor: "pointer",
                         border:
                           customColor === color
-                            ? "3px solid #1890ff"
-                            : "2px solid #f0f0f0",
+                            ? `3px solid ${theme.colors.palette.primary}`
+                            : `2px solid ${theme.colors.surface.borderLight}`,
                         transition: "all 0.2s ease",
                         display: "flex",
                         alignItems: "center",
@@ -168,10 +191,20 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
             </div>
           </Space>
 
-          <Divider>Xem Trước Giao Diện</Divider>
+          <Divider style={{ color: theme.colors.text.secondary }}>
+            Xem Trước Giao Diện
+          </Divider>
 
           {/* Theme Preview */}
-          <Card size="small">
+          <Card
+            size="small"
+            styles={{
+              body: {
+                backgroundColor: theme.colors.background.secondary,
+                border: `1px solid ${theme.colors.surface.borderLight}`,
+              },
+            }}
+          >
             <Space direction="vertical" size="small" style={{ width: "100%" }}>
               <div
                 style={{
@@ -217,7 +250,7 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
             </Space>
           </Card>
 
-          <Divider />
+          <Divider style={{ color: theme.colors.text.secondary }} />
 
           {/* Reset Button */}
           <Button
@@ -225,14 +258,32 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
             onClick={handleResetTheme}
             block
             size="large"
-            style={{ marginTop: "16px" }}
+            style={{
+              marginTop: "16px",
+              backgroundColor: theme.colors.palette.primary,
+              borderColor: theme.colors.palette.primary,
+              color: theme.colors.text.white,
+            }}
           >
             Khôi Phục Giao Diện Mặc Định
           </Button>
 
           {/* Theme Info */}
-          <Card size="small" style={{ backgroundColor: "#f9f9f9" }}>
-            <Text style={{ fontSize: "11px", color: "#666" }}>
+          <Card
+            size="small"
+            styles={{
+              body: {
+                backgroundColor: theme.colors.background.light,
+                border: `1px solid ${theme.colors.surface.borderLight}`,
+              },
+            }}
+          >
+            <Text
+              style={{
+                fontSize: "11px",
+                color: theme.colors.text.secondary,
+              }}
+            >
               💡 <strong>Mẹo:</strong> Cài đặt giao diện của bạn sẽ được lưu và
               tự động áp dụng khi bạn quay lại trang web.
             </Text>

@@ -1,35 +1,19 @@
+import React, { useState, useEffect } from "react";
+import { Table, Button, Space, Modal, message, Typography, Card, Row, Col, Input, Image, Tag, Tooltip } from "antd";
 import {
-  DeleteOutlined,
   EditOutlined,
+  DeleteOutlined,
   PlusOutlined,
-  SearchOutlined,
   EyeOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Col,
-  Input,
-  Modal,
-  Popconfirm,
-  Row,
-  Space,
-  Spin,
-  Table,
-  Tag,
-  Typography,
-  notification,
-  Image,
-  Tooltip,
-} from "antd";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Breadcrumb from "../../components/admin/Breadcrumb";
 import {
   getAllNewsEvents,
   deleteNewsEvent,
   NewsEvent,
-} from "../../api/services/newsEvents";
+} from "@/api/services/newsEvents";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 import styles from "./NewsListPage.module.scss";
 
 const { Title } = Typography;
@@ -50,10 +34,7 @@ const NewsListPage: React.FC = () => {
       setNews(response.data || []);
     } catch (error) {
       console.error("Error fetching news:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể tải danh sách tin tức.",
-      });
+      message.error("Không thể tải danh sách tin tức.");
     } finally {
       setLoading(false);
     }
@@ -66,17 +47,11 @@ const NewsListPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       await deleteNewsEvent(id);
-      notification.success({
-        message: "Thành công",
-        description: "Xóa tin tức thành công.",
-      });
+      message.success("Xóa tin tức thành công.");
       fetchNews();
     } catch (error) {
       console.error("Error deleting news:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể xóa tin tức.",
-      });
+      message.error("Không thể xóa tin tức.");
     }
   };
 

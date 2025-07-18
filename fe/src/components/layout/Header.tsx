@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import { useTheme } from "../../contexts/ThemeContext";
-import { useFavorites } from "../../contexts/FavoritesContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import {
   MenuOutlined,
   CloseOutlined,
@@ -18,7 +18,8 @@ import {
   LoginOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { ROUTERS } from "../../utils/constant";
+import { Button, Dropdown, Space, Avatar, Badge } from "antd";
+import { ROUTERS } from "@/utils/constant";
 
 // Hàm chuyển hex sang rgba
 function hexToRgba(hex: string, alpha: number) {

@@ -1,0 +1,17 @@
+// User Pages
+export { default as FavoritesPage } from './FavoritesPage/FavoritesPage';
+export { default as HomePage } from './HomePage/HomePage';
+export { default as LoginPage } from './LoginPage/LoginPage';
+export { default as NewsDetailPage } from './NewsDetailPage/NewsDetailPage';
+export { default as NewsPage } from './NewsPage/NewsPage';
+export { default as OrdersPage } from './OrdersPage/OrdersPage';
+export { default as PriceListDetailPage } from './PriceListDetailPage/PriceListDetailPage';
+export { default as PriceListPage } from './PriceListPage/PriceListPage';
+export { default as ProductDetail } from './ProductDetail/ProductDetail';
+export { default as ProductDetailPage } from './ProductDetailPage/ProductDetailPage';
+export { default as ProductListPage } from './ProductListPage/ProductListPage';
+export { default as ProfilePage } from './ProfilePage/ProfilePage';
+export { default as RegisterPage } from './RegisterPage/RegisterPage';
+export { default as RegistrationPage } from './RegistrationPage/RegistrationPage';
+export { default as ServicePage } from './ServicePage/ServicePage';
+export { default as TestDrivePage } from './TestDrivePage/TestDrivePage'; 

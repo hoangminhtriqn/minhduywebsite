@@ -37,8 +37,8 @@ import axios from "axios";
 import moment, { Moment } from "moment";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE_URL } from "../../api/config";
-import Breadcrumb from "../../components/admin/Breadcrumb";
+import { API_BASE_URL } from "@/api/config";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 import styles from "./ProductFormPage.module.scss";
 
 // Custom VND icon component

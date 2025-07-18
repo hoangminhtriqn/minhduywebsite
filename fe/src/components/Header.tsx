@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store";
-import { logout } from "../store/slices/authSlice";
-import { authService } from "../api/services/auth";
+import { RootState } from "@/store";
+import { logout } from "@/store/slices/authSlice";
+import { authService } from "@/api/services/auth";
+import { Button, Dropdown, Space, Avatar } from "antd";
 import styles from "./Header.module.css"; // Import CSS module
-import { ROUTERS } from "../utils/constant";
+import { ROUTERS } from "@/utils/constant";
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

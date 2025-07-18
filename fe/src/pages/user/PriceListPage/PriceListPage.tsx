@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../api/config";
-import { Product, Category } from "../api/types";
-import { PaginationWrapper, usePagination } from "../components/pagination";
+import { API_BASE_URL } from "@/api/config";
+import { Product, Category } from "@/api/types";
+import { PaginationWrapper, usePagination } from "@/components/pagination";
 import {
   Spin,
   notification,
@@ -13,19 +13,30 @@ import {
   Tag,
   Popover,
   Checkbox,
+  Row,
+  Col,
+  Card,
+  Typography,
+  Empty,
 } from "antd";
-import { formatCurrency } from "../utils/format";
+import { formatCurrency } from "@/utils/format";
 import {
   DownOutlined,
   UpOutlined,
   CloseOutlined,
   PlusOutlined,
   InfoCircleOutlined,
+  EyeOutlined,
+  HeartOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
-import { productService } from "../api/services/product";
-import PageBanner from "../components/PageBanner";
-import "../styles/_price-list.scss";
+import { productService } from "@/api/services/product";
+import PageBanner from "@/components/PageBanner";
+import styles from "./PriceListPage.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { ROUTERS } from "@/utils/constant";
 
 const { Option } = Select;
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Skeleton, Layout } from "antd";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import HomePageSkeleton from "./HomePageSkeleton";
 
 const { Header, Content, Footer } = Layout;

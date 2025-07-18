@@ -1,8 +1,8 @@
 import React from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
-import ThemeController from "../ThemeController";
+import ThemeController from "@/components/ThemeController";
 
 interface MainLayoutProps {
   children: React.ReactNode;

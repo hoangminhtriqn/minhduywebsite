@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getAllNewsEvents, NewsEvent } from "../api/services/newsEvents";
-import PageBanner from "../components/PageBanner";
-import { usePagination } from "../hooks/usePagination";
-import PaginationWrapper from "../components/PaginationWrapper";
+import { getAllNewsEvents, NewsEvent } from "@/api/services/newsEvents";
+import PageBanner from "@/components/PageBanner";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationWrapper from "@/components/PaginationWrapper";
 import { useNavigate } from "react-router-dom";
-import { ROUTERS } from "../utils/constant";
+import { ROUTERS } from "@/utils/constant";
+import { Card, Row, Col, Typography, Spin, Empty } from "antd";
 
 const NewsPage: React.FC = () => {
   const [newsEvents, setNewsEvents] = useState<NewsEvent[]>([]);

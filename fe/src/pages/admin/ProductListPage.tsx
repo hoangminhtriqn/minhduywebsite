@@ -1,7 +1,10 @@
+import React, { useState, useEffect } from "react";
 import {
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
+  PlusOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -18,11 +21,10 @@ import {
   notification,
 } from "antd";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../api/config";
-import CustomPagination from "../../components/CustomPagination";
-import Breadcrumb from "../../components/admin/Breadcrumb";
+import { API_BASE_URL } from "@/api/config";
+import CustomPagination from "@/components/CustomPagination";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 import styles from "./ProductListPage.module.scss";
 
 const { Title } = Typography;
