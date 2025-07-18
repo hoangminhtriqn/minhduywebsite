@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getNewsEventById, NewsEvent } from "@/api/services/newsEvents";
+import { getNewsEventById, NewsEvent } from "@/api/services/user/newsEvents";
 import PageBanner from "@/components/PageBanner";
 
 const NewsDetailPage: React.FC = () => {

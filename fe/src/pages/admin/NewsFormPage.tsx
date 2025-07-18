@@ -35,7 +35,7 @@ import {
   createNewsEvent,
   updateNewsEvent,
   NewsEvent,
-} from "@/api/services/newsEvents";
+} from "@/api/services/user/newsEvents";
 import styles from "./NewsFormPage.module.scss";
 import { API_BASE_URL } from "@/api/config";
 
@@ -150,7 +150,6 @@ const NewsFormPage: React.FC = () => {
 
   // Handle image upload
   const handleImageUpload = async (file: File) => {
-    console.log("handleImageUpload called with:", file.name);
     setImageUploading(true);
     try {
       const uploadedFile = await uploadFileToCloudinary(file);
@@ -169,7 +168,7 @@ const NewsFormPage: React.FC = () => {
       });
     } finally {
       setImageUploading(false);
-      console.log("Image upload finished");
+
     }
   };
 

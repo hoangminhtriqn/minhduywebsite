@@ -75,6 +75,7 @@ const businessRoutes = require('./routes/business');
 const serviceRequestsRouter = require('./routes/serviceRequests');
 const testDriveOrdersRouter = require('./routes/testDriveOrders');
 const filesRouter = require('./routes/files');
+const settingsRouter = require('./routes/settings');
 
 // Mount API routes FIRST (before Swagger)
 app.use('/api/users', userRoutes); // User management routes
@@ -83,7 +84,7 @@ app.use('/api/vai-tro', roleRoutes); // Example mount for roleRoutes
 app.use('/api/nguoi-dung', roleUserRoutes); // Example mount for roleUserRoutes
 
 // Mount category routes
-app.use('/api/danh-muc', categoryRoutes);
+app.use('/api/categories', categoryRoutes);
 app.use('/api/xe', productRoutes);
 
 // Mount favorites routes
@@ -95,6 +96,7 @@ app.use('/api', businessRoutes);
 app.use('/api/service-requests', serviceRequestsRouter);
 app.use('/api/test-drive-orders', testDriveOrdersRouter);
 app.use('/api/files', filesRouter);
+app.use('/api/settings', settingsRouter);
 
 // Swagger Documentation - Mount AFTER API routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {

@@ -1,5 +1,5 @@
-import { api } from '../index';
-import { Order, CartItem } from '../types';
+import { api } from '@/api';
+import { Order, CartItem } from '@/api/types';
 
 export const orderService = {
   getOrders: async (params?: { page?: number; limit?: number }) => {

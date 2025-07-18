@@ -13,9 +13,10 @@ import {
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BASE_URL } from "@/api/config";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Product } from "@/api/types"; // Import Product type
 import PageBanner from "@/components/PageBanner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -237,13 +238,13 @@ const ProductDetailPage: React.FC = () => {
                     onClick={handlePrevImage}
                     className="product-detail__gallery-nav product-detail__gallery-nav--prev"
                   >
-                    <FaChevronLeft />
+                    <LeftOutlined />
                   </button>
                   <button
                     onClick={handleNextImage}
                     className="product-detail__gallery-nav product-detail__gallery-nav--next"
                   >
-                    <FaChevronRight />
+                    <RightOutlined />
                   </button>
                 </>
               )}

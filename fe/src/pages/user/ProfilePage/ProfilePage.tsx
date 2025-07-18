@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { authService } from "@/api/services/auth";
+import { authService } from "@/api/services/user/auth";
 import { toast } from "react-toastify";
 import styles from "./ProfilePage.module.scss";
 import { Form, Input, Button, Card, Typography } from "antd";

@@ -164,7 +164,7 @@ const ProductFormPage: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/danh-muc`);
+      const response = await axios.get(`${API_BASE_URL}/categories`);
       setCategories(response.data.categories);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -217,7 +217,6 @@ const ProductFormPage: React.FC = () => {
   const uploadMainImageToCloudinary = async (
     file: File
   ): Promise<UploadedFile> => {
-    console.log("Starting main image upload:", file.name);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -234,7 +233,7 @@ const ProductFormPage: React.FC = () => {
       );
 
       const result = response.data.data;
-      console.log("Main image upload success:", result.url);
+
       return {
         uid: result.public_id,
         name: result.original_filename,
@@ -252,7 +251,6 @@ const ProductFormPage: React.FC = () => {
   const uploadListImageToCloudinary = async (
     file: File
   ): Promise<UploadedFile> => {
-    console.log("Starting list image upload:", file.name);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -269,7 +267,7 @@ const ProductFormPage: React.FC = () => {
       );
 
       const result = response.data.data;
-      console.log("List image upload success:", result.url);
+
       return {
         uid: result.public_id,
         name: result.original_filename,
@@ -285,7 +283,7 @@ const ProductFormPage: React.FC = () => {
 
   // Handle main image upload
   const handleMainImageUpload = async (file: File) => {
-    console.log("handleMainImageUpload called with:", file.name);
+    
     setMainImageUploading(true);
     try {
       const uploadedFile = await uploadMainImageToCloudinary(file);
@@ -303,13 +301,13 @@ const ProductFormPage: React.FC = () => {
       });
     } finally {
       setMainImageUploading(false);
-      console.log("Main image upload finished");
+
     }
   };
 
   // Handle list images upload
   const handleListImagesUpload = async (files: File[]) => {
-    console.log("handleListImagesUpload called with:", files.length, "files");
+    
     setListImagesUploading(true);
     try {
       const uploadPromises = files.map((file) =>
@@ -336,7 +334,7 @@ const ProductFormPage: React.FC = () => {
       });
     } finally {
       setListImagesUploading(false);
-      console.log("List images upload finished");
+
     }
   };
 

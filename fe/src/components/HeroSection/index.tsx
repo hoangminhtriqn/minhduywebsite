@@ -1,155 +1,51 @@
-import React, { useState, useEffect } from "react";
+import {
+  Category,
+  getCategoriesHierarchy,
+} from "@/api/services/user/categories";
 import { Collapse } from "antd";
-import { MenuOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 
 const HeroSection: React.FC = () => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isHoveringMegaMenu, setIsHoveringMegaMenu] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // BMW categories and services
-  const categories = [
-    {
-      id: "bmw-series",
-      name: "Dòng Xe BMW",
-      icon: "🚗",
-      subCategories: [
-        "BMW 1 Series",
-        "BMW 2 Series",
-        "BMW 3 Series",
-        "BMW 4 Series",
-        "BMW 5 Series",
-        "BMW 6 Series",
-        "BMW 7 Series",
-        "BMW 8 Series",
-        "BMW X Series",
-        "BMW Z Series",
-        "BMW M Series",
-        "BMW i Series",
-      ],
-    },
-    {
-      id: "bmw-suv",
-      name: "BMW SUV",
-      icon: "🚙",
-      subCategories: [
-        "BMW X1",
-        "BMW X2",
-        "BMW X3",
-        "BMW X4",
-        "BMW X5",
-        "BMW X6",
-        "BMW X7",
-        "BMW XM",
-        "BMW iX",
-      ],
-    },
-    {
-      id: "bmw-sedan",
-      name: "BMW Sedan",
-      icon: "🏎️",
-      subCategories: [
-        "BMW 1 Series Sedan",
-        "BMW 2 Series Gran Coupe",
-        "BMW 3 Series",
-        "BMW 4 Series Gran Coupe",
-        "BMW 5 Series",
-        "BMW 6 Series Gran Turismo",
-        "BMW 7 Series",
-        "BMW 8 Series Gran Coupe",
-      ],
-    },
-    {
-      id: "bmw-service",
-      name: "Dịch Vụ BMW",
-      icon: "🔧",
-      subCategories: [
-        "Bảo hành BMW",
-        "Bảo dưỡng BMW",
-        "Sửa chữa BMW",
-        "Phụ tùng BMW chính hãng",
-        "Dịch vụ cứu hộ BMW",
-        "Kiểm tra định kỳ",
-        "Thay dầu nhớt",
-        "Thay lốp BMW",
-      ],
-    },
-    {
-      id: "bmw-parts",
-      name: "Phụ Tùng BMW",
-      icon: "⚙️",
-      subCategories: [
-        "Phụ tùng động cơ",
-        "Phụ tùng phanh",
-        "Phụ tùng gầm",
-        "Phụ tùng điện",
-        "Phụ tùng nội thất",
-        "Phụ tùng ngoại thất",
-        "Dầu nhớt BMW",
-        "Phụ tùng thay thế",
-      ],
-    },
-    {
-      id: "bmw-finance",
-      name: "Tài Chính BMW",
-      icon: "💰",
-      subCategories: [
-        "Vay mua xe BMW",
-        "Thuê xe BMW",
-        "Bảo hiểm xe BMW",
-        "Tính toán trả góp",
-        "Ưu đãi tài chính",
-        "Hỗ trợ vay ngân hàng",
-        "Bảo hiểm toàn diện",
-      ],
-    },
-    {
-      id: "bmw-test-drive",
-      name: "Test Drive BMW",
-      icon: "🎯",
-      subCategories: [
-        "Đặt lịch test drive",
-        "BMW 3 Series test drive",
-        "BMW 5 Series test drive",
-        "BMW X3 test drive",
-        "BMW X5 test drive",
-        "BMW i Series test drive",
-        "Test drive tại Đà Nẵng",
-      ],
-    },
-    {
-      id: "bmw-support",
-      name: "Hỗ Trợ Khách Hàng",
-      icon: "📞",
-      subCategories: [
-        "Tư vấn mua xe",
-        "Hỗ trợ kỹ thuật",
-        "Đặt lịch hẹn",
-        "Liên hệ khẩn cấp",
-        "FAQ - Câu hỏi thường gặp",
-        "Hướng dẫn sử dụng",
-        "Bảo hành online",
-      ],
-    },
-  ];
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const categoriesData = await getCategoriesHierarchy();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const carouselImages = [
-    { 
-      src: "/images/bmw-3840x2160.jpg", 
-      alt: "Minh Duy BMW Đà Nẵng - Showroom BMW chính hãng tại Đà Nẵng" 
+    {
+      src: "/images/bmw-3840x2160.jpg",
+      alt: "Minh Duy Technology - Công ty công nghệ thiết bị vi tính hàng đầu",
     },
-    { 
-      src: "/images/bmw-x5m.jpg", 
-      alt: "BMW X5M - Xe BMW cao cấp tại Minh Duy Đà Nẵng" 
+    {
+      src: "/images/bmw-x5m.jpg",
+      alt: "Laptop Gaming - Thiết bị công nghệ cao cấp tại Minh Duy",
     },
-    { 
-      src: "/images/bmw-service-center.jpg", 
-      alt: "Trung tâm dịch vụ BMW Minh Duy Đà Nẵng - Bảo hành sửa chữa BMW" 
+    {
+      src: "/images/bmw-service-center.jpg",
+      alt: "Trung tâm dịch vụ công nghệ Minh Duy - Sửa chữa bảo hành thiết bị",
     },
-    { 
-      src: "/images/bmw-service-hanoi.jpg", 
-      alt: "Dịch vụ BMW tại Minh Duy Đà Nẵng - Đại lý BMW uy tín" 
+    {
+      src: "/images/bmw-service-hanoi.jpg",
+      alt: "Dịch vụ công nghệ tại Minh Duy - Đại lý thiết bị vi tính uy tín",
     },
   ];
 
@@ -218,6 +114,32 @@ const HeroSection: React.FC = () => {
       </ul>
     ),
   }));
+
+  if (loading) {
+    return (
+      <section className={styles.heroSection}>
+        <div className={styles.container}>
+          <div className={styles.sidebarContainer}>
+            <div className={styles.sidebar}>
+              <div className={styles.sidebarHeader}>
+                <p>DANH MỤC SẢN PHẨM</p>
+              </div>
+              <div className={styles.loadingSpinner}>
+                <p>Đang tải danh mục...</p>
+              </div>
+            </div>
+          </div>
+          <div className={styles.carouselSection}>
+            <div className={styles.carousel}>
+              <div className={styles.loadingSpinner}>
+                <p>Đang tải...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={styles.heroSection}>

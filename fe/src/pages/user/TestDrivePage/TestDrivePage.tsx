@@ -12,15 +12,17 @@ import {
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "@/api/config";
 import useScrollToTop from "@/hooks/useScrollToTop";
-import {
-  FaCar,
-  FaComments,
-  FaEdit,
-  FaPhone,
-  FaRoute,
-  FaUserTie,
-} from "react-icons/fa";
+import axios from "axios";
+
 import { Link } from "react-router-dom";
+import {
+  CarOutlined,
+  CommentOutlined,
+  EditOutlined,
+  PhoneOutlined,
+  EnvironmentOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const TestDrivePage = () => {
   // Use scroll to top hook
@@ -191,7 +193,7 @@ const TestDrivePage = () => {
                   <div className="test-drive-info__benefit-item">
                     <div className="test-drive-info__benefit-number">1</div>
                     <div className="test-drive-info__benefit-icon">
-                      <FaCar />
+                      <CarOutlined />
                     </div>
                     <div className="test-drive-info__benefit-content">
                       <h3 className="test-drive-info__benefit-title">
@@ -207,7 +209,7 @@ const TestDrivePage = () => {
                   <div className="test-drive-info__benefit-item">
                     <div className="test-drive-info__benefit-number">2</div>
                     <div className="test-drive-info__benefit-icon">
-                      <FaUserTie />
+                      <UserOutlined />
                     </div>
                     <div className="test-drive-info__benefit-content">
                       <h3 className="test-drive-info__benefit-title">
@@ -223,7 +225,7 @@ const TestDrivePage = () => {
                   <div className="test-drive-info__benefit-item">
                     <div className="test-drive-info__benefit-number">3</div>
                     <div className="test-drive-info__benefit-icon">
-                      <FaRoute />
+                      <EnvironmentOutlined />
                     </div>
                     <div className="test-drive-info__benefit-content">
                       <h3 className="test-drive-info__benefit-title">
@@ -449,7 +451,7 @@ const TestDrivePage = () => {
             <div className="test-drive-process__card">
               <div className="test-drive-process__card-number">1</div>
               <div className="test-drive-process__card-icon">
-                <FaEdit />
+                <EditOutlined />
               </div>
               <h3 className="test-drive-process__card-title">Đăng ký online</h3>
               <p className="test-drive-process__card-description">
@@ -460,7 +462,7 @@ const TestDrivePage = () => {
             <div className="test-drive-process__card">
               <div className="test-drive-process__card-number">2</div>
               <div className="test-drive-process__card-icon">
-                <FaPhone />
+                <PhoneOutlined />
               </div>
               <h3 className="test-drive-process__card-title">
                 Xác nhận lịch hẹn
@@ -473,7 +475,7 @@ const TestDrivePage = () => {
             <div className="test-drive-process__card">
               <div className="test-drive-process__card-number">3</div>
               <div className="test-drive-process__card-icon">
-                <FaCar />
+                <CarOutlined />
               </div>
               <h3 className="test-drive-process__card-title">
                 Trải nghiệm lái thử
@@ -486,7 +488,7 @@ const TestDrivePage = () => {
             <div className="test-drive-process__card">
               <div className="test-drive-process__card-number">4</div>
               <div className="test-drive-process__card-icon">
-                <FaComments />
+                <CommentOutlined />
               </div>
               <h3 className="test-drive-process__card-title">Tư vấn mua xe</h3>
               <p className="test-drive-process__card-description">

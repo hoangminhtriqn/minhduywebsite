@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllNewsEvents, NewsEvent } from "@/api/services/newsEvents";
+import { getAllNewsEvents, NewsEvent } from "@/api/services/user/newsEvents";
 import PageBanner from "@/components/PageBanner";
 import { usePagination } from "@/hooks/usePagination";
 import PaginationWrapper from "@/components/PaginationWrapper";

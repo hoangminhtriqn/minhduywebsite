@@ -12,7 +12,7 @@ import {
   getAllNewsEvents,
   deleteNewsEvent,
   NewsEvent,
-} from "@/api/services/newsEvents";
+} from "@/api/services/user/newsEvents";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import styles from "./NewsListPage.module.scss";
 

@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaCheckCircle,
-  FaTools,
-  FaCarCrash,
-  FaTachometerAlt,
-  FaMapMarkerAlt,
-  FaPhone,
-  FaClock,
-  FaTimes,
-} from "react-icons/fa";
+
 import {
   ToolOutlined,
   EyeOutlined,
   PhoneOutlined,
   CalendarOutlined,
+  CheckCircleOutlined,
+  CarOutlined,
+  DashboardOutlined,
+  EnvironmentOutlined,
+  ClockCircleOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { Row, Col, Card, Typography, Spin, Empty, Button } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -266,7 +263,7 @@ const ServicePage: React.FC = () => {
         <div className={styles["service-categories__row"]}>
           <div className={styles["service-card"]}>
             <div className={styles["service-card__icon"]}>
-              <FaTools />
+              <ToolOutlined />
             </div>
             <h3 className={styles["service-card__title"]}>Bảo Dưỡng Định Kỳ</h3>
             <p className={styles["service-card__description"]}>
@@ -278,7 +275,7 @@ const ServicePage: React.FC = () => {
           <div className={`${styles["service-card"]} ${styles.featured}`}>
             <div className={styles["service-card__badge"]}>Phổ biến</div>
             <div className={styles["service-card__icon"]}>
-              <FaCarCrash />
+              <CarOutlined />
             </div>
             <h3 className={styles["service-card__title"]}>
               Sửa Chữa & Đồng Sơn
@@ -291,7 +288,7 @@ const ServicePage: React.FC = () => {
 
           <div className={styles["service-card"]}>
             <div className={styles["service-card__icon"]}>
-              <FaTachometerAlt />
+              <DashboardOutlined />
             </div>
             <h3 className={styles["service-card__title"]}>
               Nâng Cấp Hiệu Suất
@@ -432,15 +429,15 @@ const ServicePage: React.FC = () => {
                 BMW Service Hà Nội
               </h3>
               <p className={styles["location-card__address"]}>
-                <FaMapMarkerAlt />
+                <EnvironmentOutlined />
                 Số 132 Lê Duẩn, Đống Đa, Hà Nội
               </p>
               <p className={styles["location-card__phone"]}>
-                <FaPhone />
+                <PhoneOutlined />
                 024.3333.7777
               </p>
               <p className={styles["location-card__hours"]}>
-                <FaClock />
+                <ClockCircleOutlined />
                 Thứ 2 - Thứ 7: 8:00 - 17:30
               </p>
             </div>
@@ -456,15 +453,15 @@ const ServicePage: React.FC = () => {
                 BMW Service Hồ Chí Minh
               </h3>
               <p className={styles["location-card__address"]}>
-                <FaMapMarkerAlt />
+                <EnvironmentOutlined />
                 Số 245 Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh
               </p>
               <p className={styles["location-card__phone"]}>
-                <FaPhone />
+                <PhoneOutlined />
                 028.3333.7777
               </p>
               <p className={styles["location-card__hours"]}>
-                <FaClock />
+                <ClockCircleOutlined />
                 Thứ 2 - Thứ 7: 8:00 - 17:30
               </p>
             </div>
@@ -486,7 +483,7 @@ const ServicePage: React.FC = () => {
                 onClick={closeModal}
                 aria-label="Đóng"
               >
-                <FaTimes />
+                <CloseOutlined />
               </button>
             </div>
             <div className={styles["modal-body"]}>

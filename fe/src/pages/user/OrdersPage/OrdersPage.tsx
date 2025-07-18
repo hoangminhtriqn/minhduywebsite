@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setOrders, setLoading, setError } from "@/store/slices/orderSlice";
-import { orderService } from "@/api/services/order";
+import { orderService } from "@/api/services/user/order";
 import { formatDateTime } from "@/utils/format";
 import { Order } from "@/api/types";
 

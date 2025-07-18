@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
   Product_Name: {
     type: String,
-    required: [true, 'Tên sản phẩm là bắt buộc'],
+    required: [true, 'Tên thiết bị là bắt buộc'],
     trim: true
   },
   CategoryID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ProductCategory',
-    required: [true, 'Danh mục sản phẩm là bắt buộc']
+    ref: 'Category',
+    required: [true, 'Danh mục thiết bị là bắt buộc']
   },
   Description: {
     type: String,
@@ -17,45 +17,36 @@ const productSchema = new mongoose.Schema({
   },
   Price: {
     type: Number,
-    required: [true, 'Giá xe là bắt buộc'],
-    min: [0, 'Giá xe không được âm']
+    required: [true, 'Giá thuê thiết bị là bắt buộc'],
+    min: [0, 'Giá thuê không được âm']
   },
   Main_Image: {
     type: String,
-    required: [true, 'Hình ảnh chính là bắt buộc'],
-    // Bỏ validation Cloudinary URL
-    // validate: {
-    //   validator: function(v) {
-    //     return v.startsWith('https://res.cloudinary.com/');
-    //   },
-    //   message: 'URL hình ảnh không hợp lệ'
-    // }
+    required: [true, 'Hình ảnh chính là bắt buộc']
   },
   List_Image: [{
-    type: String,
-    // Bỏ validation Cloudinary URL
-    // validate: {
-    //   validator: function(v) {
-    //     return v.startsWith('https://res.cloudinary.com/');
-    //   },
-    //   message: 'URL hình ảnh không hợp lệ'
-    // }
+    type: String
   }],
   Specifications: {
     type: Map,
     of: String
   },
-  TestDriveStartDate: {
+  RentalStartDate: {
     type: Date,
-    required: [true, 'Ngày bắt đầu chạy thử là bắt buộc']
+    required: [true, 'Ngày bắt đầu cho thuê là bắt buộc']
   },
-  TestDriveEndDate: {
+  RentalEndDate: {
     type: Date,
-    required: [true, 'Ngày kết thúc chạy thử là bắt buộc']
+    required: [true, 'Ngày kết thúc cho thuê là bắt buộc']
+  },
+  Stock: {
+    type: Number,
+    default: 1,
+    min: [0, 'Số lượng không được âm']
   },
   Status: {
     type: String,
-    enum: ['active', 'expired'],
+    enum: ['active', 'inactive', 'out_of_stock'],
     default: 'active'
   }
 }, {
@@ -67,7 +58,7 @@ productSchema.index({ Product_Name: 'text', Description: 'text' });
 
 // Virtual populate cho danh mục
 productSchema.virtual('category', {
-  ref: 'ProductCategory',
+  ref: 'Category',
   localField: 'CategoryID',
   foreignField: '_id',
   justOne: true

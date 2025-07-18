@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product, Category, CreateProductData, UpdateProductData } from '../types';
+import { Product, Category, CreateProductData, UpdateProductData } from '@/api/types';
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL || '/api'; // Assuming backend API base path is /api
 

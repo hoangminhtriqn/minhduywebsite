@@ -30,7 +30,7 @@ import {
   HeartOutlined,
   HeartFilled,
 } from "@ant-design/icons";
-import { productService } from "@/api/services/product";
+import { productService } from "@/api/services/user/product";
 import PageBanner from "@/components/PageBanner";
 import styles from "./PriceListPage.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -102,7 +102,7 @@ const PriceListPage: React.FC = () => {
   // Fetch categories from API
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/danh-muc`);
+      const response = await axios.get(`${API_BASE_URL}/categories`);
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error("Error fetching categories:", error);

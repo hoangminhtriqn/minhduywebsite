@@ -1,22 +1,58 @@
-const ProductCategory = require('../models/ProductCategory');
+const Category = require('../models/Category');
 const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/responseHandler');
-const Category = require('../models/ProductCategory');
 const Product = require('../models/Product');
 
-// Lấy danh sách danh mục
-const getCategories = async (req, res) => {
+// Lấy danh sách categories với cấu trúc phân cấp (cho frontend)
+const getCategoriesHierarchy = async (req, res) => {
   try {
-    const categories = await ProductCategory.find();
-    successResponse(res, categories);
+    // Lấy group categories (cấp cha) - chỉ lấy những category có status 'active'
+    const groupCategories = await Category.find({ 
+      ParentID: null,
+      Status: 'active'
+    })
+      .populate({
+        path: 'subcategories',
+        select: 'Name Description Status Order',
+        match: { Status: 'active' } // Chỉ lấy subcategories có status 'active'
+      })
+      .sort({ Order: 1 });
+
+    // Format dữ liệu cho frontend
+    const formattedCategories = groupCategories.map(group => ({
+      id: group._id,
+      name: group.Name,
+      icon: group.Icon || '📁',
+      subCategories: group.subcategories.map(sub => sub.Name)
+    }));
+
+    successResponse(res, formattedCategories);
   } catch (error) {
     errorResponse(res, 'Lỗi lấy danh sách danh mục', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
+// Lấy danh sách tất cả categories (cho admin) - không phân trang, không search
+const getAllCategories = async (req, res) => {
+  try {
+    // Lấy tất cả categories không phân trang
+    const categories = await Category.find({})
+      .populate('ParentID', 'Name')
+      .sort({ Order: 1 });
+
+    res.json({
+      categories,
+      total: categories.length
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Lấy thông tin danh mục theo ID
 const getCategoryById = async (req, res) => {
   try {
-    const category = await ProductCategory.findById(req.params.categoryId);
+    const category = await Category.findById(req.params.id)
+      .populate('ParentID', 'Name');
     if (!category) {
       return errorResponse(res, 'Không tìm thấy danh mục', HTTP_STATUS.NOT_FOUND);
     }
@@ -29,17 +65,21 @@ const getCategoryById = async (req, res) => {
 // Tạo danh mục mới
 const createCategory = async (req, res) => {
   try {
-    const { Category_Name, Description } = req.body;
+    const { Name, Description, ParentID, Order, Status, Icon } = req.body;
 
     // Kiểm tra danh mục đã tồn tại
-    const existingCategory = await ProductCategory.findOne({ Category_Name });
+    const existingCategory = await Category.findOne({ Name });
     if (existingCategory) {
       return errorResponse(res, 'Tên danh mục đã tồn tại', HTTP_STATUS.BAD_REQUEST);
     }
 
-    const category = new ProductCategory({
-      Category_Name,
-      Description
+    const category = new Category({
+      Name,
+      Description,
+      ParentID,
+      Order: Order || 0,
+      Status: Status || 'active',
+      Icon: Icon || null
     });
 
     await category.save();
@@ -52,24 +92,28 @@ const createCategory = async (req, res) => {
 // Cập nhật danh mục
 const updateCategory = async (req, res) => {
   try {
-    const { Category_Name, Description } = req.body;
-    const category = await ProductCategory.findById(req.params.categoryId);
+    const { Name, Description, ParentID, Order, Status, Icon } = req.body;
+    const category = await Category.findById(req.params.id);
 
     if (!category) {
       return errorResponse(res, 'Không tìm thấy danh mục', HTTP_STATUS.NOT_FOUND);
     }
 
     // Kiểm tra tên danh mục mới có bị trùng không
-    if (Category_Name && Category_Name !== category.Category_Name) {
-      const existingCategory = await ProductCategory.findOne({ Category_Name });
+    if (Name && Name !== category.Name) {
+      const existingCategory = await Category.findOne({ Name });
       if (existingCategory) {
         return errorResponse(res, 'Tên danh mục đã tồn tại', HTTP_STATUS.BAD_REQUEST);
       }
     }
 
     // Cập nhật thông tin
-    if (Category_Name) category.Category_Name = Category_Name;
+    if (Name) category.Name = Name;
     if (Description) category.Description = Description;
+    if (ParentID !== undefined) category.ParentID = ParentID;
+    if (Order !== undefined) category.Order = Order;
+    if (Status) category.Status = Status;
+    if (Icon !== undefined) category.Icon = Icon;
 
     await category.save();
     successResponse(res, category, 'Cập nhật danh mục thành công');
@@ -81,51 +125,13 @@ const updateCategory = async (req, res) => {
 // Xóa danh mục
 const deleteCategory = async (req, res) => {
   try {
-    const category = await ProductCategory.findByIdAndDelete(req.params.categoryId);
+    const category = await Category.findByIdAndDelete(req.params.id);
     if (!category) {
       return errorResponse(res, 'Không tìm thấy danh mục', HTTP_STATUS.NOT_FOUND);
     }
     successResponse(res, null, 'Xóa danh mục thành công');
   } catch (error) {
     errorResponse(res, 'Lỗi xóa danh mục', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
-  }
-};
-
-// Get all categories with pagination and search
-const getAllCategories = async (req, res) => {
-  try {
-    const { page = 1, limit = 10, search = '' } = req.query;
-    const query = {};
-
-    // Search by category name
-    if (search) {
-      query.Category_Name = { $regex: search, $options: 'i' };
-    }
-
-    // Calculate skip
-    const skip = (page - 1) * limit;
-
-    // Execute query
-    const [categories, total] = await Promise.all([
-      Category.find(query)
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(Number(limit)),
-      Category.countDocuments(query)
-    ]);
-
-    // Trả về format nhất quán với frontend expectation
-    res.json({
-      categories,
-      pagination: {
-        total,
-        page: Number(page),
-        limit: Number(limit),
-        totalPages: Math.ceil(total / limit)
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
   }
 };
 
@@ -136,11 +142,11 @@ const getProductsByCategory = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [products, total] = await Promise.all([
-      Product.find({ CategoryID: req.params.categoryId })
+      Product.find({ CategoryID: req.params.id })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(Number(limit)),
-      Product.countDocuments({ CategoryID: req.params.categoryId })
+      Product.countDocuments({ CategoryID: req.params.id })
     ]);
 
     res.json({
@@ -157,12 +163,52 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
+// API cập nhật icon riêng biệt
+const updateCategoryIcon = async (req, res) => {
+  try {
+    const { icon } = req.body;
+    const category = await Category.findById(req.params.id);
+    if (!category) {
+      return errorResponse(res, 'Không tìm thấy danh mục', HTTP_STATUS.NOT_FOUND);
+    }
+    category.Icon = icon;
+    await category.save();
+    successResponse(res, category, 'Cập nhật icon thành công');
+  } catch (error) {
+    errorResponse(res, 'Lỗi cập nhật icon', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
+// API cập nhật đầy đủ thông tin
+const updateCategoryFull = async (req, res) => {
+  try {
+    const { Name, Description, ParentID, Order, Status, Icon } = req.body;
+    const category = await Category.findById(req.params.id);
+    if (!category) {
+      return errorResponse(res, 'Không tìm thấy danh mục', HTTP_STATUS.NOT_FOUND);
+    }
+    if (Name) category.Name = Name;
+    if (Description) category.Description = Description;
+    if (ParentID !== undefined) category.ParentID = ParentID;
+    if (Order !== undefined) category.Order = Order;
+    if (Status) category.Status = Status;
+    if (Icon) category.Icon = Icon;
+    await category.save();
+    successResponse(res, category, 'Cập nhật danh mục thành công');
+  } catch (error) {
+    errorResponse(res, 'Lỗi cập nhật danh mục', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
 module.exports = {
-  getCategories,
+  getCategoriesHierarchy,
+  getCategories: getCategoriesHierarchy, // Alias for backward compatibility
   getCategoryById,
   createCategory,
   updateCategory,
   deleteCategory,
   getAllCategories,
-  getProductsByCategory
+  getProductsByCategory,
+  updateCategoryIcon,
+  updateCategoryFull,
 }; 

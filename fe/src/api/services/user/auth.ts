@@ -1,5 +1,5 @@
-import { LoginCredentials, RegisterData, User } from '../types';
-import { api } from "../index";
+import { LoginCredentials, RegisterData, User } from '@/api/types';
+import { api } from "@/api";
 
 // Retry function for network issues
 const retryRequest = async (requestFn: () => Promise<any>, maxRetries = 3) => {

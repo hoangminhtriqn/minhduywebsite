@@ -26,6 +26,7 @@ import ServiceListPage from "@/pages/admin/ServiceListPage";
 import TestDriveBookingListPage from "@/pages/admin/TestDriveBookingListPage";
 import NewsListPage from "@/pages/admin/NewsListPage";
 import NewsFormPage from "@/pages/admin/NewsFormPage";
+import SettingsPage from "@/pages/admin/SettingsPage";
 
 // Public Pages
 import {
@@ -60,7 +61,12 @@ const App: React.FC = () => {
                 },
               }}
             >
-              <Router>
+              <Router
+                future={{
+                  v7_startTransition: true,
+                  v7_relativeSplatPath: true,
+                }}
+              >
                 <ScrollToTop />
                 <Routes>
                   {/* Public Routes */}
@@ -302,6 +308,16 @@ const App: React.FC = () => {
                       <ProtectedRoute requireAdmin>
                         <AdminLayout>
                           <NewsFormPage />
+                        </AdminLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/settings"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <AdminLayout>
+                          <SettingsPage />
                         </AdminLayout>
                       </ProtectedRoute>
                     }

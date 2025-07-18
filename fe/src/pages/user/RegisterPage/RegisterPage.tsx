@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
-import { authService } from "@/api/services/auth";
+import { authService } from "@/api/services/user/auth";
 import { toast } from "react-toastify";
 import styles from "./RegisterPage.module.scss";
 import { RegisterData } from "@/api/types";

@@ -122,7 +122,7 @@ const bmwTheme: Theme = {
 // SiVi Theme (Your Brand)
 const siviTheme: Theme = {
   ...bmwTheme,
-  name: 'SiVi CAR',
+  name: 'Minh Duy',
   colors: {
     ...bmwTheme.colors,
     palette: {

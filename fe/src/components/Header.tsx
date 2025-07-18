@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
+
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { logout } from "@/store/slices/authSlice";
-import { authService } from "@/api/services/auth";
+import { authService } from "@/api/services/user/auth";
 import { Button, Dropdown, Space, Avatar } from "antd";
+import { MenuOutlined, CloseOutlined, SearchOutlined } from "@ant-design/icons";
 import styles from "./Header.module.css"; // Import CSS module
 import { ROUTERS } from "@/utils/constant";
 
@@ -71,7 +72,7 @@ const Header: React.FC = () => {
         <div className={styles.headerActions}>
           {/* Search Toggle Button (Visible on Desktop/Tablet) */}
           <button onClick={toggleSearch} className={styles.headerSearchToggle}>
-            <FaSearch />
+            <SearchOutlined />
           </button>
 
           {/* Search Input (Visible when toggled) */}
@@ -82,7 +83,7 @@ const Header: React.FC = () => {
                 placeholder="Tìm kiếm thiết bị..."
                 className={styles.headerSearchBox}
               />
-              <FaSearch className={styles.headerSearchButton} />
+              <SearchOutlined className={styles.headerSearchButton} />
             </div>
           )}
 
@@ -120,7 +121,7 @@ const Header: React.FC = () => {
             onClick={toggleMobileMenu}
             className={styles.headerMobileMenuButton}
           >
-            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+            {isMobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
           </button>
         </div>
       </div>
@@ -134,7 +135,7 @@ const Header: React.FC = () => {
               onClick={toggleMobileMenu}
               className={styles.headerMobileMenuCloseButton}
             >
-              <FaTimes />
+              <CloseOutlined />
             </button>
           </div>
           <nav className={styles.headerMobileMenuNav}>

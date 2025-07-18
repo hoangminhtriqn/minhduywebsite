@@ -110,7 +110,7 @@ const ProductListPage: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/danh-muc`);
+      const response = await axios.get(`${API_BASE_URL}/categories`);
       setCategories(response.data.categories);
     } catch (error) {
       console.error("Error fetching categories:", error);

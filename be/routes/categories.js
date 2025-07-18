@@ -6,7 +6,9 @@ const {
   createCategory, 
   updateCategory, 
   deleteCategory,
-  getCategoryTree 
+  getCategoryTree,
+  updateCategoryIcon,
+  updateCategoryFull
 } = require('../controllers/categoriesController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const { upload } = require('../config/cloudinary');
@@ -19,6 +21,8 @@ router.get('/:id', getCategoryById);
 // Protected routes (Admin only)
 router.post('/', protect, authorize('admin'), upload.single('Image'), createCategory);
 router.put('/:id', protect, authorize('admin'), upload.single('Image'), updateCategory);
+router.put('/:id/icon', protect, authorize('admin'), updateCategoryIcon);
+router.put('/:id/full', protect, authorize('admin'), updateCategoryFull);
 router.delete('/:id', protect, authorize('admin'), deleteCategory);
 
 module.exports = router; 

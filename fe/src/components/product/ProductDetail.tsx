@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { productService } from "@/api/services/product";
+import { productService } from "@/api/services/user/product";
 import { formatCurrency } from "@/utils/format";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
 import { Product } from "@/api/types";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import {
   Typography,
   Spin,
@@ -97,13 +98,13 @@ const ProductDetail: React.FC = () => {
                     onClick={handlePrevImage}
                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 z-10"
                   >
-                    <FaChevronLeft />
+                    <LeftOutlined />
                   </button>
                   <button
                     onClick={handleNextImage}
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 z-10"
                   >
-                    <FaChevronRight />
+                    <RightOutlined />
                   </button>
                 </>
               )}

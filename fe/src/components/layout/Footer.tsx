@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaFacebook,
-  FaYoutube,
-  FaInstagram,
-  FaPhone,
-  FaEnvelope,
-  FaMapMarkerAlt,
-  FaClock,
-  FaCar,
-  FaTools,
-  FaShieldAlt,
-  FaCalculator,
-  FaCalendarAlt,
-} from "react-icons/fa";
+
 import axios from "axios";
 import { API_BASE_URL } from "@/api/config";
 import styles from "./Footer.module.scss";
 import { ROUTERS } from "@/utils/constant";
 import { useTheme } from "@/contexts/ThemeContext";
+import { FacebookOutlined, YoutubeOutlined, InstagramOutlined, PhoneOutlined, MailOutlined, EnvironmentOutlined, ClockCircleOutlined, CarOutlined, ToolOutlined, SafetyCertificateOutlined, CalculatorOutlined, CalendarOutlined } from "@ant-design/icons";
 
 interface Category {
   _id: string;
-  Category_Name: string;
+  Name: string;
+  Description?: string;
+  ParentID?: {
+    _id: string;
+    Name: string;
+    id: string;
+  } | null;
+  Status?: string;
+  Order?: number;
+  id: string;
 }
 
 const Footer: React.FC = () => {
@@ -33,10 +30,11 @@ const Footer: React.FC = () => {
   // Fetch categories from API
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/danh-muc`);
+      const response = await axios.get(`${API_BASE_URL}/categories`);
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error("Error fetching categories for footer:", error);
+      setCategories([]);
     }
   };
 
@@ -46,6 +44,11 @@ const Footer: React.FC = () => {
 
   // Create URL with category filter for PriceListPage
   const createCategoryLink = (categoryName: string) => {
+    // Handle undefined or null categoryName
+    if (!categoryName) {
+      return `/bang-gia`;
+    }
+
     // For special filters
     if (categoryName === "m" || categoryName === "i") {
       return `/bang-gia?filter=${categoryName}`;
@@ -56,12 +59,17 @@ const Footer: React.FC = () => {
     return `/bang-gia?filter=${encodeURIComponent(filterKey)}`;
   };
 
-  // Get 5 random categories
+  // Get 5 random parent categories
   const getRandomCategories = () => {
     if (categories.length === 0) return [];
 
+    // Chỉ lấy parent categories (ParentID = null)
+    const parentCategories = categories.filter(cat => !cat.ParentID);
+    
+    if (parentCategories.length === 0) return [];
+
     // Shuffle array and take first 5
-    const shuffled = [...categories].sort(() => 0.5 - Math.random());
+    const shuffled = [...parentCategories].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 5);
   };
 
@@ -116,7 +124,7 @@ const Footer: React.FC = () => {
                 style={socialLinkStyle}
                 aria-label="Facebook"
               >
-                <FaFacebook />
+                <FacebookOutlined />
               </a>
               <a
                 href="https://youtube.com"
@@ -126,7 +134,7 @@ const Footer: React.FC = () => {
                 style={socialLinkStyle}
                 aria-label="YouTube"
               >
-                <FaYoutube />
+                <YoutubeOutlined />
               </a>
               <a
                 href="https://instagram.com"
@@ -136,7 +144,7 @@ const Footer: React.FC = () => {
                 style={socialLinkStyle}
                 aria-label="Instagram"
               >
-                <FaInstagram />
+                <InstagramOutlined />
               </a>
             </div>
           </div>
@@ -150,7 +158,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Tất cả thiết bị
               </Link>
               <Link
@@ -158,7 +166,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Thiết bị văn phòng
               </Link>
               <Link
@@ -166,7 +174,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Hệ thống công nghệ
               </Link>
               <Link
@@ -174,7 +182,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Dịch vụ Minh Duy
               </Link>
               <Link
@@ -182,7 +190,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Tin tức & Sự kiện
               </Link>
             </div>
@@ -196,11 +204,11 @@ const Footer: React.FC = () => {
               {randomCategories.map((category) => (
                 <Link
                   key={category._id}
-                  to={createCategoryLink(category.Category_Name)}
+                  to={createCategoryLink(category.Name)}
                   className={styles.footerLink}
                   style={linkStyle}
                 >
-                  {category.Category_Name}
+                  {category.Name}
                 </Link>
               ))}
               {categories.length > 5 && (
@@ -224,7 +232,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Bảo hành & Bảo trì
               </Link>
               <Link
@@ -232,7 +240,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaShieldAlt className={styles.linkIcon} style={iconStyle} />
+                <SafetyCertificateOutlined className={styles.linkIcon} style={iconStyle} />
                 Sửa chữa & Phụ tùng
               </Link>
               <Link
@@ -240,7 +248,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCalculator className={styles.linkIcon} style={iconStyle} />
+                <CalculatorOutlined className={styles.linkIcon} style={iconStyle} />
                 Bảng giá chi tiết
               </Link>
               <Link
@@ -248,7 +256,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCalendarAlt className={styles.linkIcon} style={iconStyle} />
+                <CalendarOutlined className={styles.linkIcon} style={iconStyle} />
                 Đặt lịch hẹn
               </Link>
               <Link
@@ -256,7 +264,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaTools className={styles.linkIcon} style={iconStyle} />
+                <ToolOutlined className={styles.linkIcon} style={iconStyle} />
                 Tư vấn kỹ thuật
               </Link>
               <Link
@@ -264,7 +272,7 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCalculator className={styles.linkIcon} style={iconStyle} />
+                <CalculatorOutlined className={styles.linkIcon} style={iconStyle} />
                 Tính toán chi phí
               </Link>
             </div>
@@ -276,21 +284,21 @@ const Footer: React.FC = () => {
           <h4 className={styles.footerTitle}>LIÊN HỆ VỚI CHÚNG TÔI</h4>
           <div className={styles.contactGrid}>
             <div className={styles.footerContactItem} style={contactItemStyle}>
-              <FaPhone className={styles.footerIcon} style={iconStyle} />
+              <PhoneOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Hotline:</span>
                 <span className={styles.contactValue}>1800 8123</span>
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
-              <FaEnvelope className={styles.footerIcon} style={iconStyle} />
+              <MailOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Email:</span>
                 <span className={styles.contactValue}>minhduy@gmail.com</span>
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
-              <FaMapMarkerAlt className={styles.footerIcon} style={iconStyle} />
+              <EnvironmentOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Địa chỉ:</span>
                 <span className={styles.contactValue}>
@@ -299,7 +307,7 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
-              <FaClock className={styles.footerIcon} style={iconStyle} />
+              <ClockCircleOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Giờ làm việc:</span>
                 <span className={styles.contactValue}>

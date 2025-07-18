@@ -11,7 +11,7 @@ const Product = require('./models/Product');
 const Category = require('./models/Category');
 const Service = require('./models/Service');
 const NewsEvent = require('./models/NewsEvent');
-const OrderTestDrive = require('./models/OrderTestDrive');
+const DeviceRental = require('./models/OrderTestDrive');
 
 // Sample data
 const sampleRoles = [
@@ -35,74 +35,75 @@ const sampleRoles = [
   }
 ];
 
-const sampleProductCategories = [
+// Group Categories (Cấp cha)
+const sampleGroupCategories = [
   {
-    Category_Name: 'BMW Series 1',
-    Description: 'Dòng xe nhỏ gọn, tiết kiệm nhiên liệu',
-    Status: 'active'
-  },
-  {
-    Category_Name: 'BMW Series 3',
-    Description: 'Dòng xe sedan cỡ trung, thể thao',
-    Status: 'active'
-  },
-  {
-    Category_Name: 'BMW Series 5',
-    Description: 'Dòng xe sedan hạng sang, cao cấp',
-    Status: 'active'
-  },
-  {
-    Category_Name: 'BMW Series 7',
-    Description: 'Dòng xe sedan flagship, xa xỉ',
-    Status: 'active'
-  },
-  {
-    Category_Name: 'BMW X Series',
-    Description: 'Dòng xe SUV/SAV đa dụng',
-    Status: 'active'
-  },
-  {
-    Category_Name: 'BMW M Series',
-    Description: 'Dòng xe hiệu suất cao, thể thao',
-    Status: 'active'
-  },
-  {
-    Category_Name: 'BMW i Series',
-    Description: 'Dòng xe điện, thân thiện môi trường',
-    Status: 'active'
-  }
-];
-
-const sampleCategories = [
-  {
-    Name: 'Xe mới',
-    Description: 'Các mẫu xe mới nhất từ BMW',
-    Image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop',
+    Name: 'Laptop & Máy Tính Xách Tay',
+    Description: 'Các loại laptop và máy tính xách tay',
+    Icon: '💻',
+    Image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
     Status: 'active',
     Order: 1
   },
   {
-    Name: 'Xe đã qua sử dụng',
-    Description: 'Xe đã qua sử dụng chất lượng cao',
-    Image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
+    Name: 'Máy Tính Để Bàn',
+    Description: 'PC gaming, văn phòng, đồ họa',
+    Icon: '🖥️',
+    Image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
     Status: 'active',
     Order: 2
   },
   {
-    Name: 'Dịch vụ',
-    Description: 'Dịch vụ bảo hành và bảo dưỡng',
-    Image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
+    Name: 'Phụ Kiện Máy Tính',
+    Description: 'Bàn phím, chuột, tai nghe, loa',
+    Icon: '⌨️',
+    Image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop',
     Status: 'active',
     Order: 3
   },
   {
-    Name: 'Tin tức',
-    Description: 'Tin tức và sự kiện mới nhất',
-    Image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop',
+    Name: 'Thiết Bị Ngoại Vi',
+    Description: 'Máy in, máy scan, màn hình, máy chiếu',
+    Icon: '🖨️',
+    Image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
     Status: 'active',
     Order: 4
+  },
+  {
+    Name: 'Thiết Bị Mạng',
+    Description: 'Router, switch, modem, access point',
+    Icon: '🌐',
+    Image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+    Status: 'active',
+    Order: 5
+  },
+  {
+    Name: 'Lưu Trữ & Backup',
+    Description: 'Ổ cứng, USB, thẻ nhớ, NAS',
+    Icon: '💾',
+    Image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+    Status: 'active',
+    Order: 6
+  },
+  {
+    Name: 'Phần Mềm & Bản Quyền',
+    Description: 'Windows, Office, antivirus, design software',
+    Icon: '🛡️',
+    Image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+    Status: 'active',
+    Order: 7
+  },
+  {
+    Name: 'Dịch Vụ Công Nghệ',
+    Description: 'Sửa chữa, bảo hành, nâng cấp, tư vấn',
+    Icon: '🔧',
+    Image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+    Status: 'active',
+    Order: 8
   }
 ];
+
+
 
 // Sample users data
 const sampleUsers = [
@@ -211,57 +212,57 @@ const sampleUsers = [
 // Sample products data
 function generateSampleProducts() {
   const products = [];
-  const carNames = [
-    'BMW 1 Series 118i',
-    'BMW 2 Series 220i',
-    'BMW 3 Series 320i',
-    'BMW 4 Series 420i',
-    'BMW 5 Series 520i',
-    'BMW 6 Series 640i',
-    'BMW 7 Series 730i',
-    'BMW X1 xDrive20i',
-    'BMW X3 xDrive30i',
-    'BMW X5 xDrive40i',
-    'BMW X6 xDrive40i',
-    'BMW X7 xDrive40i',
-    'BMW M3 Competition',
-    'BMW M5 Competition',
-    'BMW M8 Competition',
-    'BMW i4 eDrive40',
-    'BMW iX xDrive50',
-    'BMW i7 xDrive60',
-    'BMW Z4 sDrive30i',
-    'BMW 8 Series 840i'
+  const deviceNames = [
+    'Laptop Dell Inspiron 15 3000',
+    'Laptop HP Pavilion 14',
+    'Laptop Lenovo ThinkPad E14',
+    'Laptop Asus VivoBook 15',
+    'Laptop Acer Aspire 5',
+    'MacBook Air M1',
+    'MacBook Pro M2',
+    'Laptop MSI Gaming GF63',
+    'Laptop Razer Blade 15',
+    'PC Gaming Dell Alienware',
+    'PC HP Pavilion Desktop',
+    'PC Lenovo ThinkCentre',
+    'PC Asus ROG Strix',
+    'PC Acer Aspire TC',
+    'PC Mini Intel NUC',
+    'PC All-in-One Dell',
+    'Bàn Phím Cơ Logitech G Pro',
+    'Chuột Gaming Razer DeathAdder',
+    'Tai Nghe Gaming HyperX Cloud',
+    'Loa Máy Tính Creative Pebble'
   ];
 
   const descriptions = [
-    'Sedan cỡ nhỏ, tiết kiệm nhiên liệu, phù hợp cho gia đình trẻ',
-    'Coupe thể thao, thiết kế hiện đại, hiệu suất cao',
-    'Sedan cỡ trung, cân bằng hoàn hảo giữa thể thao và tiện nghi',
-    'Coupe 4 cửa, thiết kế độc đáo, hiệu suất vượt trội',
-    'Sedan hạng sang, không gian rộng rãi, trang bị cao cấp',
-    'Gran Coupe 4 cửa, thiết kế độc đáo, hiệu suất cao',
-    'Sedan flagship, xa xỉ tối đa, công nghệ tiên tiến',
-    'SUV cỡ nhỏ, đa dụng, phù hợp cho thành phố',
-    'SUV cỡ trung, cân bằng hoàn hảo giữa thể thao và thực dụng',
-    'SUV cỡ lớn, không gian rộng rãi, hiệu suất cao',
-    'SAC (Sports Activity Coupe), thiết kế độc đáo, hiệu suất cao',
-    'SUV flagship, xa xỉ tối đa, không gian 7 chỗ',
-    'Sedan hiệu suất cao, động cơ mạnh mẽ, xử lý thể thao',
-    'Sedan hiệu suất cực cao, động cơ V8, xử lý đỉnh cao',
-    'Coupe hiệu suất cực cao, thiết kế độc đáo, hiệu suất tối đa',
-    'Sedan điện, thân thiện môi trường, công nghệ tiên tiến',
-    'SUV điện, không gian rộng rãi, tầm hoạt động xa',
-    'Sedan điện flagship, xa xỉ tối đa, công nghệ tương lai',
-    'Roadster 2 chỗ, thiết kế thể thao, trải nghiệm lái thuần túy',
-    'Coupe hạng sang, thiết kế độc đáo, hiệu suất cao'
+    'Laptop Dell Inspiron 15 3000 - Laptop văn phòng hiệu suất cao, màn hình 15.6 inch, Intel Core i5, RAM 8GB, SSD 256GB',
+    'Laptop HP Pavilion 14 - Laptop mỏng nhẹ, thiết kế hiện đại, màn hình 14 inch, AMD Ryzen 5, RAM 8GB, SSD 512GB',
+    'Laptop Lenovo ThinkPad E14 - Laptop doanh nghiệp bền bỉ, màn hình 14 inch, Intel Core i7, RAM 16GB, SSD 512GB',
+    'Laptop Asus VivoBook 15 - Laptop đa nhiệm, màn hình 15.6 inch, Intel Core i5, RAM 8GB, HDD 1TB',
+    'Laptop Acer Aspire 5 - Laptop giá rẻ hiệu suất tốt, màn hình 15.6 inch, AMD Ryzen 3, RAM 4GB, HDD 500GB',
+    'MacBook Air M1 - Laptop Apple cao cấp, chip M1, màn hình 13.3 inch Retina, RAM 8GB, SSD 256GB',
+    'MacBook Pro M2 - Laptop Apple chuyên nghiệp, chip M2, màn hình 13.3 inch Retina, RAM 16GB, SSD 512GB',
+    'Laptop MSI Gaming GF63 - Laptop gaming hiệu suất cao, màn hình 15.6 inch, Intel Core i7, RAM 16GB, RTX 3060',
+    'Laptop Razer Blade 15 - Laptop gaming cao cấp, màn hình 15.6 inch 144Hz, Intel Core i9, RAM 32GB, RTX 3080',
+    'PC Gaming Dell Alienware - Máy tính gaming cao cấp, Intel Core i9, RAM 32GB, RTX 4080, SSD 2TB',
+    'PC HP Pavilion Desktop - Máy tính văn phòng, Intel Core i5, RAM 8GB, HDD 1TB, Windows 11',
+    'PC Lenovo ThinkCentre - Máy tính doanh nghiệp, Intel Core i7, RAM 16GB, SSD 512GB, bảo mật cao',
+    'PC Asus ROG Strix - Máy tính gaming ASUS, AMD Ryzen 9, RAM 32GB, RTX 4070, RGB lighting',
+    'PC Acer Aspire TC - Máy tính gia đình, Intel Core i3, RAM 4GB, HDD 500GB, giá rẻ',
+    'PC Mini Intel NUC - Máy tính mini công suất cao, Intel Core i7, RAM 16GB, SSD 512GB, tiết kiệm không gian',
+    'PC All-in-One Dell - Máy tính all-in-one, màn hình 24 inch, Intel Core i5, RAM 8GB, tích hợp webcam',
+    'Bàn Phím Cơ Logitech G Pro - Bàn phím cơ gaming, switch Cherry MX Blue, RGB backlight, có dây',
+    'Chuột Gaming Razer DeathAdder - Chuột gaming chuyên nghiệp, 16,000 DPI, 7 nút có thể lập trình',
+    'Tai Nghe Gaming HyperX Cloud - Tai nghe gaming chất lượng cao, âm thanh surround 7.1, microphone detachable',
+    'Loa Máy Tính Creative Pebble - Loa máy tính 2.0, công suất 4.4W, thiết kế hiện đại, âm thanh rõ ràng'
   ];
 
   const prices = [
-    1200000000, 1500000000, 1800000000, 2200000000, 2800000000,
-    3500000000, 4500000000, 1600000000, 2200000000, 3200000000,
-    3800000000, 5200000000, 4200000000, 5800000000, 7200000000,
-    2800000000, 3800000000, 5800000000, 3200000000, 4800000000
+    15000000, 18000000, 22000000, 16000000, 12000000,
+    25000000, 35000000, 28000000, 45000000, 35000000,
+    12000000, 20000000, 25000000, 18000000, 8000000,
+    15000000, 2500000, 1500000, 2000000, 800000
   ];
 
   const images = [
@@ -287,29 +288,29 @@ function generateSampleProducts() {
     'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop'
   ];
 
-  for (let i = 0; i < carNames.length; i++) {
+  for (let i = 0; i < deviceNames.length; i++) {
     const now = new Date();
-    const startDate = new Date(now.getTime() + (i * 7) * 24 * 60 * 60 * 1000); // Mỗi xe cách nhau 7 ngày
+    const startDate = new Date(now.getTime() + (i * 7) * 24 * 60 * 60 * 1000); // Mỗi thiết bị cách nhau 7 ngày
     const endDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000); // Kéo dài 30 ngày
     
     products.push({
-      Product_Name: carNames[i],
+      Product_Name: deviceNames[i],
       Description: descriptions[i],
       Price: prices[i],
       Main_Image: images[i],
       Images: [images[i]],
-      TestDriveStartDate: startDate,
-      TestDriveEndDate: endDate,
+      RentalStartDate: startDate,
+      RentalEndDate: endDate,
+      Stock: Math.floor(Math.random() * 10) + 1,
       Specifications: {
-        Engine: '2.0L Turbo',
-        Power: '184 hp',
-        Transmission: '8-speed Automatic',
-        FuelType: 'Gasoline',
-        Seats: '5',
-        Doors: '4'
+        Processor: 'Intel Core i5',
+        RAM: '8GB DDR4',
+        Storage: '256GB SSD',
+        Display: '15.6 inch FHD',
+        Graphics: 'Integrated',
+        OS: 'Windows 11'
       },
-      Status: 'active',
-      Stock: Math.floor(Math.random() * 10) + 1
+      Status: 'active'
     });
   }
 
@@ -321,37 +322,37 @@ const sampleProducts = generateSampleProducts();
 // Sample services data
 const sampleServices = [
   {
-    Name: 'Bảo dưỡng định kỳ',
-    Description: 'Dịch vụ bảo dưỡng định kỳ theo tiêu chuẩn BMW',
-    Price: 2000000,
+    Name: 'Sửa chữa máy tính',
+    Description: 'Dịch vụ sửa chữa máy tính, laptop, PC chuyên nghiệp',
+    Price: 500000,
     Status: 'available',
     ImageUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop'
   },
   {
-    Name: 'Thay dầu động cơ',
-    Description: 'Thay dầu động cơ và lọc dầu chính hãng BMW',
-    Price: 1500000,
+    Name: 'Nâng cấp RAM',
+    Description: 'Dịch vụ nâng cấp RAM cho laptop và máy tính để bàn',
+    Price: 300000,
     Status: 'available',
     ImageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop'
   },
   {
-    Name: 'Kiểm tra hệ thống điện',
-    Description: 'Kiểm tra toàn bộ hệ thống điện và điện tử',
-    Price: 1000000,
+    Name: 'Thay ổ cứng SSD',
+    Description: 'Dịch vụ thay ổ cứng HDD sang SSD tăng tốc độ',
+    Price: 800000,
     Status: 'available',
     ImageUrl: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop'
   },
   {
-    Name: 'Thay phanh',
-    Description: 'Thay phanh trước và sau, kiểm tra hệ thống phanh',
-    Price: 3000000,
+    Name: 'Cài đặt phần mềm',
+    Description: 'Dịch vụ cài đặt Windows, Office và các phần mềm khác',
+    Price: 200000,
     Status: 'available',
     ImageUrl: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop'
   },
   {
-    Name: 'Sửa chữa điều hòa',
-    Description: 'Kiểm tra và sửa chữa hệ thống điều hòa không khí',
-    Price: 2500000,
+    Name: 'Khôi phục dữ liệu',
+    Description: 'Dịch vụ khôi phục dữ liệu từ ổ cứng bị hỏng',
+    Price: 1000000,
     Status: 'available',
     ImageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop'
   }
@@ -360,95 +361,95 @@ const sampleServices = [
 // Sample news events data
 const sampleNewsEvents = [
   {
-    Title: 'BMW ra mắt dòng xe điện mới',
-    Content: 'BMW vừa giới thiệu dòng xe điện hoàn toàn mới với công nghệ tiên tiến và thiết kế hiện đại.',
+    Title: 'Minh Duy Technology ra mắt dịch vụ thuê thiết bị công nghệ',
+    Content: 'Minh Duy Technology vừa giới thiệu dịch vụ thuê thiết bị công nghệ với đầy đủ laptop, PC, phụ kiện và dịch vụ hỗ trợ.',
     PublishDate: new Date('2024-06-01'),
     ImageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW tổ chức sự kiện lái thử xe',
-    Content: 'Sự kiện lái thử xe BMW dành cho khách hàng với nhiều mẫu xe mới nhất từ BMW.',
+    Title: 'Minh Duy tổ chức sự kiện trải nghiệm thiết bị công nghệ',
+    Content: 'Sự kiện trải nghiệm thiết bị công nghệ dành cho khách hàng với nhiều mẫu laptop, PC mới nhất.',
     PublishDate: new Date('2024-06-15'),
     ImageUrl: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW khai trương showroom mới tại Hà Nội',
-    Content: 'Showroom BMW mới tại Hà Nội với diện tích 2000m2, trưng bày đầy đủ các dòng xe BMW.',
+    Title: 'Minh Duy khai trương showroom công nghệ mới tại Đà Nẵng',
+    Content: 'Showroom công nghệ Minh Duy mới tại Đà Nẵng với diện tích 500m2, trưng bày đầy đủ các thiết bị công nghệ.',
     PublishDate: new Date('2024-07-01'),
     ImageUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW giới thiệu công nghệ lái tự động',
-    Content: 'BMW vừa giới thiệu công nghệ lái tự động mới nhất với khả năng xử lý phức tạp.',
+    Title: 'Minh Duy giới thiệu dịch vụ IT Support 24/7',
+    Content: 'Minh Duy vừa giới thiệu dịch vụ IT Support 24/7 với khả năng hỗ trợ kỹ thuật mọi lúc.',
     PublishDate: new Date('2024-07-15'),
     ImageUrl: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW tổ chức chương trình ưu đãi đặc biệt',
-    Content: 'Chương trình ưu đãi đặc biệt dành cho khách hàng mua xe BMW trong tháng 8.',
+    Title: 'Minh Duy tổ chức chương trình ưu đãi thuê thiết bị',
+    Content: 'Chương trình ưu đãi đặc biệt dành cho khách hàng thuê thiết bị công nghệ trong tháng 8.',
     PublishDate: new Date('2024-08-01'),
     ImageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW ra mắt phiên bản giới hạn',
-    Content: 'BMW vừa ra mắt phiên bản giới hạn với số lượng chỉ 100 chiếc tại Việt Nam.',
+    Title: 'Minh Duy ra mắt dịch vụ Cloud Storage',
+    Content: 'Minh Duy vừa ra mắt dịch vụ Cloud Storage với dung lượng lưu trữ không giới hạn.',
     PublishDate: new Date('2024-08-15'),
     ImageUrl: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW tổ chức workshop chăm sóc xe',
-    Content: 'Workshop chăm sóc xe BMW miễn phí dành cho khách hàng với các chuyên gia kỹ thuật.',
+    Title: 'Minh Duy tổ chức workshop bảo trì máy tính',
+    Content: 'Workshop bảo trì máy tính miễn phí dành cho khách hàng với các chuyên gia kỹ thuật.',
     PublishDate: new Date('2024-09-01'),
     ImageUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW giới thiệu ứng dụng di động mới',
-    Content: 'Ứng dụng BMW Connected mới với nhiều tính năng tiện ích cho chủ xe BMW.',
+    Title: 'Minh Duy giới thiệu ứng dụng quản lý thiết bị',
+    Content: 'Ứng dụng Minh Duy Device Manager mới với nhiều tính năng quản lý thiết bị thuê.',
     PublishDate: new Date('2024-09-15'),
     ImageUrl: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW tổ chức sự kiện gia đình',
-    Content: 'Ngày hội gia đình BMW với nhiều hoạt động vui chơi, giải trí và lái thử xe dành cho khách hàng và người thân.',
+    Title: 'Minh Duy tổ chức sự kiện công nghệ gia đình',
+    Content: 'Ngày hội công nghệ gia đình với nhiều hoạt động trải nghiệm thiết bị dành cho khách hàng và người thân.',
     PublishDate: new Date('2024-08-10'),
     ImageUrl: 'https://images.unsplash.com/photo-1466027018945-1834b6cc8c8a?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW khai trương trung tâm dịch vụ mới tại Cần Thơ',
-    Content: 'Trung tâm dịch vụ BMW tại Cần Thơ cung cấp đầy đủ các dịch vụ bảo dưỡng, sửa chữa và phụ tùng chính hãng.',
+    Title: 'Minh Duy khai trương trung tâm dịch vụ mới tại Hà Nội',
+    Content: 'Trung tâm dịch vụ Minh Duy tại Hà Nội cung cấp đầy đủ các dịch vụ sửa chữa, bảo hành và hỗ trợ kỹ thuật.',
     PublishDate: new Date('2024-08-20'),
     ImageUrl: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW ra mắt phiên bản giới hạn BMW X5',
-    Content: 'BMW X5 phiên bản giới hạn với màu sơn độc quyền và trang bị cao cấp vừa được giới thiệu tại Việt Nam.',
+    Title: 'Minh Duy ra mắt dịch vụ thuê MacBook cao cấp',
+    Content: 'Dịch vụ thuê MacBook cao cấp với đầy đủ phiên bản M1, M2 vừa được giới thiệu tại Việt Nam.',
     PublishDate: new Date('2024-09-01'),
     ImageUrl: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=800&h=600&fit=crop',
     Status: 'published'
   },
   {
-    Title: 'BMW tổ chức workshop chăm sóc xe miễn phí',
-    Content: 'Khách hàng BMW được tham gia workshop chăm sóc xe miễn phí với các chuyên gia kỹ thuật hàng đầu.',
+    Title: 'Minh Duy tổ chức workshop bảo mật dữ liệu miễn phí',
+    Content: 'Khách hàng Minh Duy được tham gia workshop bảo mật dữ liệu miễn phí với các chuyên gia bảo mật hàng đầu.',
     PublishDate: new Date('2024-09-10'),
     ImageUrl: 'https://images.unsplash.com/photo-1465447142348-e9952c393450?w=800&h=600&fit=crop',
     Status: 'published'
   }
 ];
 
-// Function to generate sample test drive orders
-function generateSampleTestDriveOrders(users, products) {
+// Function to generate sample device rental orders
+function generateSampleDeviceRentals(users, products) {
   const orders = [];
-  const statuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+  const statuses = ['pending', 'confirmed', 'delivered', 'returned', 'cancelled'];
   const addresses = [
     '123 Nguyễn Huệ, Quận 1, TP.HCM',
     '456 Lê Lợi, Quận 3, TP.HCM',
@@ -467,12 +468,12 @@ function generateSampleTestDriveOrders(users, products) {
   let totalOrders = 0;
   const maxTotalOrders = 200;
 
-  // Sinh số lượng đơn cho từng xe: phân phối ngẫu nhiên, có xe nhiều, có xe ít
+  // Sinh số lượng đơn cho từng thiết bị: phân phối ngẫu nhiên, có thiết bị nhiều, có thiết bị ít
   const productOrderCounts = products.map((_, idx) => {
-    // Tăng xác suất xe đầu danh sách nhiều đơn, xe cuối ít đơn
+    // Tăng xác suất thiết bị đầu danh sách nhiều đơn, thiết bị cuối ít đơn
     let base = Math.floor(Math.random() * 10) + 2; // 2-11
-    if (idx % 7 === 0) base += Math.floor(Math.random() * 8); // Một số xe nổi bật
-    if (idx % 13 === 0) base += Math.floor(Math.random() * 5); // Một số xe rất nổi bật
+    if (idx % 7 === 0) base += Math.floor(Math.random() * 8); // Một số thiết bị nổi bật
+    if (idx % 13 === 0) base += Math.floor(Math.random() * 5); // Một số thiết bị rất nổi bật
     return Math.min(base, 20);
   });
 
@@ -488,11 +489,13 @@ function generateSampleTestDriveOrders(users, products) {
       // Random date within last 30 days
       const daysAgo = Math.floor(Math.random() * 30);
       const orderDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-      // Random test drive date (future date)
-      const testDriveDays = Math.floor(Math.random() * 14) + 1;
-      const testDriveDate = new Date(now.getTime() + testDriveDays * 24 * 60 * 60 * 1000);
+      // Random rental dates (future dates)
+      const rentalStartDays = Math.floor(Math.random() * 7) + 1;
+      const rentalEndDays = rentalStartDays + Math.floor(Math.random() * 30) + 7; // 7-37 days
+      const rentalStartDate = new Date(now.getTime() + rentalStartDays * 24 * 60 * 60 * 1000);
+      const rentalEndDate = new Date(now.getTime() + rentalEndDays * 24 * 60 * 60 * 1000);
       // Random amount based on product price
-      const baseAmount = product.Price || 2000000000;
+      const baseAmount = product.Price || 20000000;
       const amountVariation = Math.random() * 0.3 - 0.15;
       const finalAmount = Math.round(baseAmount * (1 + amountVariation));
       // Random ngày tạo đơn (trong 30 ngày gần nhất)
@@ -501,11 +504,13 @@ function generateSampleTestDriveOrders(users, products) {
         UserID: user._id,
         ProductID: product._id,
         Order_Date: orderDate,
-        Test_Drive_Date: testDriveDate,
+        Rental_Start_Date: rentalStartDate,
+        Rental_End_Date: rentalEndDate,
         Address: address,
         Status: status,
         Total_Amount: finalAmount,
-        Notes: `Đơn lái thử ${product.Product_Name} cho ${user.FullName}`,
+        Quantity: Math.floor(Math.random() * 3) + 1, // 1-3 items
+        Notes: `Đơn thuê ${product.Product_Name} cho ${user.FullName}`,
         ImageUrl: product.Main_Image || null,
         createdAt
       });
@@ -544,7 +549,7 @@ async function migrate() {
       await Category.deleteMany({});
       await Service.deleteMany({});
       await NewsEvent.deleteMany({});
-      await OrderTestDrive.deleteMany({});
+      await DeviceRental.deleteMany({});
       console.log('✅ Đã xóa dữ liệu cũ');
     }
 
@@ -607,39 +612,64 @@ async function migrate() {
       console.log('✅ Role-user relationship đã tồn tại');
     }
 
-    console.log('📂 Tạo product categories...');
-    // Create product categories only if they don't exist
-    let createdProductCategories = [];
-    const existingProductCategories = await ProductCategory.countDocuments();
-    if (existingProductCategories === 0) {
-      createdProductCategories = await ProductCategory.insertMany(sampleProductCategories);
-      console.log('✅ Đã tạo product categories');
+    console.log('📂 Tạo group categories...');
+    // Create group categories only if they don't exist
+    let createdGroupCategories = [];
+    const existingGroupCategories = await Category.countDocuments({ ParentID: null });
+    if (existingGroupCategories === 0) {
+      createdGroupCategories = await Category.insertMany(sampleGroupCategories);
+      console.log('✅ Đã tạo group categories');
     } else {
-      createdProductCategories = await ProductCategory.find({});
-      console.log('✅ Product categories đã tồn tại');
+      createdGroupCategories = await Category.find({ ParentID: null });
+      console.log('✅ Group categories đã tồn tại');
     }
 
-    console.log('📁 Tạo general categories...');
-    // Create general categories only if they don't exist
-    let createdCategories = [];
-    const existingCategories = await Category.countDocuments();
-    if (existingCategories === 0) {
-      createdCategories = await Category.insertMany(sampleCategories);
-      console.log('✅ Đã tạo general categories');
+    console.log('📁 Tạo sub categories...');
+    // Create sub categories with proper ParentID mapping
+    let createdSubCategories = [];
+    const existingSubCategories = await Category.countDocuments({ ParentID: { $ne: null } });
+    // Force tạo lại sub-categories nếu có --force flag
+    if (existingSubCategories === 0 || forceReset) {
+      // Tạo sub-categories cho mỗi group - đảm bảo mỗi group có 10-15 sub-categories
+      const subCategoriesWithParent = [];
+      
+      createdGroupCategories.forEach((group, groupIndex) => {
+        // Mỗi group sẽ có ngẫu nhiên từ 10-15 sub-categories
+        const numSub = Math.floor(Math.random() * 6) + 10; // 10-15
+        
+        for (let i = 0; i < numSub; i++) {
+          subCategoriesWithParent.push({
+            Name: `${group.Name} - Sub ${i + 1}`,
+            Description: `Sub-category ${i + 1} của ${group.Name}`,
+            ParentID: group._id,
+            Status: 'active',
+            Order: i + 1
+          });
+        }
+      });
+
+      // Xóa sub-categories cũ nếu force reset
+      if (forceReset && existingSubCategories > 0) {
+        await Category.deleteMany({ ParentID: { $ne: null } });
+        console.log('🗑️ Đã xóa sub-categories cũ');
+      }
+      
+      createdSubCategories = await Category.insertMany(subCategoriesWithParent);
+      console.log('✅ Đã tạo sub categories');
     } else {
-      createdCategories = await Category.find({});
-      console.log('✅ General categories đã tồn tại');
+      createdSubCategories = await Category.find({ ParentID: { $ne: null } });
+      console.log('✅ Sub categories đã tồn tại');
     }
 
-    console.log('🚗 Tạo products...');
+    console.log('💻 Tạo products...');
     // Create products only if they don't exist
     let dbProducts = [];
     if (existingProducts === 0) {
       const productsWithCategories = sampleProducts.map((product, index) => {
-        const categoryIndex = index % createdProductCategories.length;
+        const categoryIndex = index % createdSubCategories.length;
         return {
           ...product,
-          CategoryID: createdProductCategories[categoryIndex]._id
+          CategoryID: createdSubCategories[categoryIndex]._id
         };
       });
       await Product.insertMany(productsWithCategories);
@@ -682,27 +712,27 @@ async function migrate() {
       console.log('✅ Users đã tồn tại');
     }
 
-    console.log('📋 Tạo test drive orders...');
-    // Create test drive orders only if they don't exist
-    const existingOrders = await OrderTestDrive.countDocuments();
+    console.log('📋 Tạo device rental orders...');
+    // Create device rental orders only if they don't exist
+    const existingOrders = await DeviceRental.countDocuments();
     if (existingOrders === 0) {
-      const testDriveOrders = generateSampleTestDriveOrders(createdUsers, dbProducts);
-      await OrderTestDrive.insertMany(testDriveOrders);
-      console.log('✅ Đã tạo test drive orders');
+      const deviceRentalOrders = generateSampleDeviceRentals(createdUsers, dbProducts);
+      await DeviceRental.insertMany(deviceRentalOrders);
+      console.log('✅ Đã tạo device rental orders');
     } else {
-      console.log('✅ Test drive orders đã tồn tại');
+      console.log('✅ Device rental orders đã tồn tại');
     }
 
     console.log('🎉 Migration hoàn thành thành công!');
     console.log('📊 Dữ liệu đã được tạo:');
     console.log(`   - ${createdRoles.length} roles`);
-    console.log(`   - ${createdProductCategories.length} product categories`);
-    console.log(`   - ${createdCategories.length} general categories`);
+    console.log(`   - ${createdGroupCategories.length} group categories`);
+    console.log(`   - ${createdSubCategories.length} sub categories`);
     console.log(`   - ${dbProducts.length} products`);
     console.log(`   - ${sampleServices.length} services`);
     console.log(`   - ${sampleNewsEvents.length} news events`);
     console.log(`   - ${createdUsers.length} users`);
-    console.log(`   - ${existingOrders === 0 ? 'test drive orders' : 'orders already exist'}`);
+    console.log(`   - ${existingOrders === 0 ? 'device rental orders' : 'orders already exist'}`);
 
   } catch (error) {
     console.error('❌ Lỗi trong quá trình migration:', error.message);

@@ -16,7 +16,7 @@ import {
   CarryOutOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
-import { FaCar } from "react-icons/fa";
+
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { ROUTERS } from "@/utils/constant";
@@ -92,6 +92,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (path.startsWith("/admin/categories")) return "categories";
     if (path.startsWith("/admin/services")) return "services";
     if (path.startsWith("/admin/news")) return "news";
+    if (path.startsWith("/admin/settings")) return "settings";
     if (path.startsWith("/admin/test-drive-bookings"))
       return "test-drive-bookings";
     return "dashboard"; // Default to dashboard
@@ -111,7 +112,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     },
     {
       key: "products",
-      icon: <FaCar />,
+      icon: <CarOutlined />,
       label: <Link to={ROUTERS.ADMIN.PRODUCTS}>Xe thử</Link>,
     },
     {
@@ -133,6 +134,11 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: "news",
       icon: <FileTextOutlined />,
       label: <Link to={ROUTERS.ADMIN.NEWS}>Tin tức</Link>,
+    },
+    {
+      key: "settings",
+      icon: <SettingOutlined />,
+      label: <Link to="/admin/settings">Cài đặt</Link>,
     },
   ];
 
@@ -167,7 +173,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             onClick={() => navigate(ROUTERS.USER.HOME)}
           >
             <img src="/images/logo.png" alt="Logo" className={styles.logoImg} />
-            {!collapsed && <span className={styles.logoText}>SiVi CAR</span>}
+            {!collapsed && <span className={styles.logoText}>Minh Duy</span>}
           </div>
           <Menu
             mode="inline"
@@ -231,7 +237,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Content className={styles.adminContent}>{children}</Content>
         <Footer className={styles.adminFooter}>
           <div className={styles.footerContent}>
-            © {new Date().getFullYear()} - Sản phẩm thuộc về SiVi CODE
+            © {new Date().getFullYear()} - Sản phẩm thuộc về Minh Duy - Đà Nẵng
           </div>
         </Footer>
       </Layout>

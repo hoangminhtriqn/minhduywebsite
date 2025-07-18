@@ -20,6 +20,7 @@ const reviewsRouter = require('./routes/reviews');
 const statisticsRouter = require('./routes/statistics');
 const testDriveOrdersRouter = require('./routes/testDriveOrders');
 const filesRouter = require('./routes/files');
+const settingsRouter = require('./routes/settings');
 
 // Middleware
 app.use(cors());
@@ -28,6 +29,7 @@ app.use(express.json());
 // Routes
 app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/xe', productsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/services', servicesRouter);
 app.use('/api/service-requests', serviceRequestsRouter);
@@ -40,6 +42,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/statistics', statisticsRouter);
 app.use('/api/test-drive-orders', testDriveOrdersRouter);
 app.use('/api/files', filesRouter);
+app.use('/api/settings', settingsRouter);
 
 // Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

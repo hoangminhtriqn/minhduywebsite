@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { notification } from "antd";
 import { useAuth } from "@/contexts/AuthContext";
-import { favoritesService, FavoriteItem } from "@/api/services/favorites";
+import { favoritesService, FavoriteItem } from "@/api/services/user/favorites";
 
 interface FavoritesContextType {
   favorites: FavoriteItem[];

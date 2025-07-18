@@ -21,7 +21,7 @@ export const API_ENDPOINTS = {
   PRODUCT_DETAIL: '/xe',
   
   // Categories
-  CATEGORIES: '/danh-muc',
+  CATEGORIES: '/categories',
   
   // Favorites
   FAVORITES: '/yeu-thich',

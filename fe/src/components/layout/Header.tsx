@@ -480,7 +480,7 @@ const Header: React.FC = () => {
                 onMouseLeave={handleNavLinkLeave}
                 data-theme="nav-link"
               >
-                Xe thử
+                Sản phẩm
               </Link>
               <Link
                 to={ROUTERS.USER.SERVICE}
@@ -520,7 +520,7 @@ const Header: React.FC = () => {
                 onMouseLeave={handleNavLinkLeave}
                 data-theme="nav-link"
               >
-                {isTablet ? "Lái thử" : "Đăng ký lái thử"}
+                {isTablet ? "Đặt lịch" : "Đặt lịch sửa chữa"}
               </Link>
             </nav>
 
