@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://minduywebsite.com/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /cars/
+Allow: /news/
+Allow: /service/
+Allow: /test-drive/
+Allow: /price-list/
+
+# Crawl delay (optional)
+Crawl-delay: 1 

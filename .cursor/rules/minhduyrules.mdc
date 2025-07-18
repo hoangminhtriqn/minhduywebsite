@@ -1,0 +1,25 @@
+---
+alwaysApply: false
+---
+# Cursor Rules for Import Paths
+
+## Import Path Rules
+
+- Always use `@/` imports instead of relative paths like `../../` or `../`
+- When importing from src directory, use `@/` prefix
+- Examples:
+  - ✅ `import Component from '@/components/Component'`
+  - ❌ `import Component from '../../components/Component'`
+  - ✅ `import { api } from '@/api/services'`
+  - ❌ `import { api } from '../../../api/services'`
+
+## File Organization
+
+- Keep all imports using `@/` prefix for better maintainability
+- This matches the path mapping in tsconfig.json: `"@/*": ["*"]`
+
+## Code Generation
+
+- When generating new components or files, always use `@/` imports
+- When refactoring existing code, convert relative imports to `@/` imports
+- Maintain consistency across the entire codebase

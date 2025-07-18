@@ -33,6 +33,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { ROUTERS } from "@/utils/constant";
+import { PageSEO } from "@/components/SEO";
 import styles from "./ProductListPage.module.scss";
 
 const { Text } = Typography;
@@ -825,12 +826,16 @@ const ProductListPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.productListPage}>
-      {/* Header */}
-      <PageBanner
-        title="Danh sách xe đang có"
-        subtitle="Khám phá các dòng xe từ hệ thống"
-      />
+    <>
+      {/* SEO for Product List Page */}
+      <PageSEO pageKey="products" />
+      
+      <div className={styles.productListPage}>
+        {/* Header */}
+        <PageBanner
+          title="Danh sách xe đang có"
+          subtitle="Khám phá các dòng xe từ hệ thống"
+        />
 
       <div className={styles.container}>
         <Row gutter={[24, 24]}>
@@ -1164,6 +1169,7 @@ const ProductListPage: React.FC = () => {
         </Drawer>
       </div>
     </div>
+    </>
   );
 };
 
