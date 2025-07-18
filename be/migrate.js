@@ -533,8 +533,39 @@ async function migrate() {
     }
 
     console.log('📡 Kết nối MongoDB...');
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Kết nối MongoDB thành công');
+    
+    // Retry logic cho kết nối MongoDB
+    let connected = false;
+    const maxRetries = 5;
+    const retryDelay = 5000;
+    
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        await mongoose.connect(process.env.MONGO_URI, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          serverSelectionTimeoutMS: 10000,
+          socketTimeoutMS: 45000,
+        });
+        console.log('✅ Kết nối MongoDB thành công');
+        connected = true;
+        break;
+      } catch (error) {
+        console.error(`❌ Lỗi kết nối MongoDB lần ${i + 1}/${maxRetries}:`, error.message);
+        if (i === maxRetries - 1) {
+          console.error('❌ Không thể kết nối MongoDB sau nhiều lần thử');
+          console.error('🔍 Chi tiết lỗi:', error);
+          return;
+        }
+        console.log(`⏳ Chờ ${retryDelay/1000}s trước khi thử lại...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      }
+    }
+    
+    if (!connected) {
+      console.error('❌ Không thể kết nối MongoDB');
+      return;
+    }
 
     const forceReset = process.argv.includes('--force');
     

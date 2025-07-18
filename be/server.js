@@ -52,14 +52,31 @@ app.use((req, res, next) => {
   next();
 });
 
-// Kết nối MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('✅ Kết nối MongoDB thành công');
-  })
-  .catch((err) => {
-    console.error('❌ Lỗi kết nối MongoDB:', err);
-  });
+// Hàm kết nối MongoDB với retry logic
+const connectDB = async (retries = 5, delay = 5000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      console.log(`🔄 Thử kết nối MongoDB lần ${i + 1}/${retries}...`);
+      await mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+      });
+      console.log('✅ Kết nối MongoDB thành công');
+      return true;
+    } catch (err) {
+      console.error(`❌ Lỗi kết nối MongoDB lần ${i + 1}:`, err.message);
+      if (i === retries - 1) {
+        console.error('❌ Không thể kết nối MongoDB sau nhiều lần thử');
+        return false;
+      }
+      console.log(`⏳ Chờ ${delay/1000}s trước khi thử lại...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  return false;
+};
 
 // Import routes
 const categoryRoutes = require('./routes/categories');
@@ -109,7 +126,8 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     success: true, 
     message: 'API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   });
 });
 
@@ -132,11 +150,29 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Khởi động server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server đang chạy trên port ${PORT}`);
-  console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-}); 
+// Khởi động server với kết nối database
+const startServer = async () => {
+  try {
+    // Kết nối database trước
+    const dbConnected = await connectDB();
+    if (!dbConnected) {
+      console.error('❌ Không thể kết nối database, thoát ứng dụng');
+      process.exit(1);
+    }
+
+    // Khởi động server
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server đang chạy trên port ${PORT}`);
+      console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
+      console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+    });
+  } catch (error) {
+    console.error('❌ Lỗi khởi động server:', error);
+    process.exit(1);
+  }
+};
+
+// Khởi động ứng dụng
+startServer(); 
