@@ -6,8 +6,8 @@ const isProduction = import.meta.env.PROD;
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
   (isDevelopment ? "http://localhost:3000/api" : "https://minhduywebsite-backend.onrender.com/api");
 
-// API timeout
-export const API_TIMEOUT = 10000; // 10 seconds
+// API timeout - increased for Render server
+export const API_TIMEOUT = isDevelopment ? 10000 : 30000; // 30 seconds for production
 
 // API endpoints
 export const API_ENDPOINTS = {
