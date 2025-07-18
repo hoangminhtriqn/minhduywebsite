@@ -41,8 +41,8 @@ const Header: React.FC = () => {
         <div className={styles.headerLogo}>
           <Link to="/">
             <img
-              src="/images/bmw-logo.png"
-              alt="BMW Logo"
+              src="/images/logo.png"
+              alt="Minh Duy Logo"
               className={styles.headerLogoImage}
             />
           </Link>
@@ -51,7 +51,7 @@ const Header: React.FC = () => {
         {/* Desktop Navigation */}
         <nav className={styles.headerNavDesktop}>
           <Link to={ROUTERS.USER.CARS} className={styles.headerNavLink}>
-            Xe
+            Thiết bị
           </Link>
           <Link to={ROUTERS.USER.PRICE_LIST} className={styles.headerNavLink}>
             Bảng giá
@@ -60,7 +60,7 @@ const Header: React.FC = () => {
             Dịch vụ
           </Link>
           <Link to={ROUTERS.USER.TEST_DRIVE} className={styles.headerNavLink}>
-            Lái thử
+            Tư vấn
           </Link>
           <Link to={ROUTERS.USER.NEWS} className={styles.headerNavLink}>
             Tin tức
@@ -79,7 +79,7 @@ const Header: React.FC = () => {
             <div className={styles.headerSearchInputContainer}>
               <input
                 type="text"
-                placeholder="Tìm kiếm..."
+                placeholder="Tìm kiếm thiết bị..."
                 className={styles.headerSearchBox}
               />
               <FaSearch className={styles.headerSearchButton} />
@@ -143,7 +143,7 @@ const Header: React.FC = () => {
               className={styles.headerMobileNavLink}
               onClick={toggleMobileMenu}
             >
-              Xe
+              Thiết bị
             </Link>
             <Link
               to={ROUTERS.USER.PRICE_LIST}
@@ -164,7 +164,7 @@ const Header: React.FC = () => {
               className={styles.headerMobileNavLink}
               onClick={toggleMobileMenu}
             >
-              Lái thử
+              Tư vấn
             </Link>
             <Link
               to={ROUTERS.USER.NEWS}

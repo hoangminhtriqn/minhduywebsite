@@ -1,0 +1,493 @@
+// Responsive breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+.heroSection {
+  width: 100%;
+  min-height: 500px;
+  background: var(--background-color);
+  position: relative;
+}
+
+.container {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  min-height: 500px;
+  padding: 0 20px;
+}
+
+// Sidebar Container Styles
+.sidebarContainer {
+  position: relative;
+  display: flex;
+  z-index: 10;
+}
+
+// Sidebar Styles
+.sidebar {
+  width: 350px;
+  background: var(--background-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+.sidebarHeader {
+  background: var(--primary-color);
+  color: #ffffff;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  
+  p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.categoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categoryItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+
+  &:hover {
+    background: var(--hover-color);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.categoryIcon {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+.categoryName {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.arrow {
+  color: var(--text-color-secondary);
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.categoryItem:hover .arrow {
+  transform: translateX(3px);
+}
+
+// Mobile Collapse Styles
+.mobileCollapse {
+  display: none;
+  padding: 0 20px 20px;
+}
+
+.collapseHeader {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.collapseIcon {
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.collapseTitle {
+  font-weight: 500;
+}
+
+.collapseList {
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.collapseItem {
+  padding: 8px 0 8px 20px;
+  font-size: 13px;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  position: relative;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+
+  &::before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    color: var(--text-color-secondary);
+    font-size: 12px;
+  }
+}
+
+// Mega Menu Styles
+.megaMenu {
+  position: absolute;
+  left: 350px;
+  top: 0;
+  background: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 2000;
+  min-width: 600px;
+  max-width: 800px;
+  min-height: 500px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.megaMenuContent {
+  padding: 25px;
+  min-height: 500px;
+  background: white;
+}
+
+.megaMenuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.megaMenuItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  font-size: 14px;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+
+  &:hover {
+    color: var(--primary-color);
+    background: var(--hover-color);
+  }
+
+  &::before {
+    content: "•";
+    margin-right: 8px;
+    color: var(--text-color-secondary);
+    font-size: 12px;
+  }
+}
+
+// Carousel Styles
+.carouselSection {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel {
+  width: 100%;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.carouselSlide {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+
+  &.active {
+    opacity: 1;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Carousel Navigation
+.carouselNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 5;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+// Carousel Dots
+.carouselDots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.carouselDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &.active {
+    background: white;
+    transform: scale(1.2);
+  }
+}
+
+// Mobile Responsive
+@media (max-width: 768px) {
+  .heroSection {
+    min-height: auto;
+    height: auto;
+  }
+
+  .container {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  // Hide desktop category list on mobile
+  .categoryList {
+    display: none;
+  }
+
+  // Show mobile collapse on mobile
+  .mobileCollapse {
+    display: block;
+  }
+
+  // Remove duplicate borders from Ant Design Collapse
+  .mobileCollapse {
+    :global(.ant-collapse) {
+      border: none !important;
+      background: transparent !important;
+    }
+
+    :global(.ant-collapse-item) {
+      border: none !important;
+      border-bottom: none !important;
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+    }
+
+    :global(.ant-collapse-item:last-child) {
+      border-bottom: none !important;
+    }
+
+    :global(.ant-collapse-header) {
+      border: none !important;
+      border-bottom: none !important;
+      padding: 12px 0 !important;
+    }
+
+    :global(.ant-collapse-content) {
+      border: none !important;
+      border-top: none !important;
+    }
+
+    :global(.ant-collapse-content-box) {
+      padding: 0 0 10px 0 !important;
+    }
+  }
+
+  // Hide desktop mega menu on mobile
+  .megaMenu {
+    display: none !important;
+  }
+
+  .carouselSection {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .carousel {
+    height: 300px;
+  }
+
+  .carouselNav {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .carouselDots {
+    bottom: 15px;
+  }
+
+  .carouselDot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+// Desktop - Hide mobile collapse
+@media (min-width: 769px) {
+  .mobileCollapse {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .heroSection {
+    height: calc(100vh - 200px);
+  }
+
+  .container {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e9ecef;
+    height: auto;
+  }
+
+  .categoryList {
+    max-height: 300px;
+    height: auto;
+  }
+
+  .carouselSection {
+    height: calc(100vh - 500px); // Adjusted for sidebar height
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    height: auto;
+    min-height: auto;
+  }
+
+  .container {
+    max-width: 100%;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .sidebarHeader {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+
+  .categoryItem {
+    padding: 10px 15px;
+  }
+
+  .categoryName {
+    font-size: 13px;
+  }
+
+  .carouselSection {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .carouselOverlay {
+    padding: 30px 20px 20px;
+  }
+
+  .carouselTitle {
+    font-size: 24px;
+  }
+
+  .carouselSubtitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .carouselSection {
+    height: 250px;
+    min-height: 250px;
+  }
+
+  .carouselOverlay {
+    padding: 20px 15px 15px;
+  }
+
+  .carouselTitle {
+    font-size: 20px;
+  }
+
+  .carouselSubtitle {
+    font-size: 13px;
+  }
+} 

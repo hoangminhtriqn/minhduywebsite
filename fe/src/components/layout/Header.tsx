@@ -189,7 +189,7 @@ const Header: React.FC = () => {
   };
 
   const logoStyle: React.CSSProperties = {
-    height: "50px",
+    height: isMobile ? "30px" : "50px",
     width: "auto",
     flexShrink: 0,
     display: "block",

@@ -99,12 +99,12 @@ const Footer: React.FC = () => {
         <div className={styles.footerContent}>
           {/* Company Information */}
           <div className={styles.footerColumn}>
-            <h3 className={styles.footerMainTitle}>SiVi CAR</h3>
+            <h3 className={styles.footerMainTitle}>MINH DUY</h3>
             <p className={styles.footerDescription}>
-              Đại lý BMW chính hãng hàng đầu tại Việt Nam, chuyên cung cấp xe
-              BMW mới 100% với dịch vụ bảo hành, bảo dưỡng chính hãng. Trải
-              nghiệm đẳng cấp Đức với đội ngũ tư vấn chuyên nghiệp và giá cả
-              cạnh tranh.
+              Công ty thiết bị công nghệ hàng đầu tại Việt Nam, chuyên cung cấp
+              thiết bị công nghệ chất lượng cao với dịch vụ bảo hành, bảo trì
+              chuyên nghiệp. Trải nghiệm công nghệ tiên tiến với đội ngũ tư vấn
+              chuyên nghiệp và giá cả cạnh tranh.
             </p>
 
             <div className={styles.footerSocial}>
@@ -141,33 +141,33 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* BMW Models */}
+          {/* Technology Equipment */}
           <div className={styles.footerColumn}>
-            <h4 className={styles.footerTitle}>TÌM HIỂU VỀ BMW</h4>
+            <h4 className={styles.footerTitle}>TÌM HIỂU VỀ MINH DUY</h4>
             <div className={styles.footerList}>
               <Link
                 to="/bang-gia"
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCar className={styles.linkIcon} style={iconStyle} />
-                Tất cả dòng xe
+                <FaTools className={styles.linkIcon} style={iconStyle} />
+                Tất cả thiết bị
               </Link>
               <Link
                 to={createCategoryLink("m")}
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCar className={styles.linkIcon} style={iconStyle} />
-                BMW M Series
+                <FaTools className={styles.linkIcon} style={iconStyle} />
+                Thiết bị văn phòng
               </Link>
               <Link
                 to={createCategoryLink("i")}
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCar className={styles.linkIcon} style={iconStyle} />
-                BMW i Series
+                <FaTools className={styles.linkIcon} style={iconStyle} />
+                Hệ thống công nghệ
               </Link>
               <Link
                 to="/dich-vu"
@@ -175,14 +175,14 @@ const Footer: React.FC = () => {
                 style={linkStyle}
               >
                 <FaTools className={styles.linkIcon} style={iconStyle} />
-                Dịch vụ BMW
+                Dịch vụ Minh Duy
               </Link>
               <Link
                 to="/tin-tuc"
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCar className={styles.linkIcon} style={iconStyle} />
+                <FaTools className={styles.linkIcon} style={iconStyle} />
                 Tin tức & Sự kiện
               </Link>
             </div>
@@ -190,7 +190,7 @@ const Footer: React.FC = () => {
 
           {/* Products Column - Dynamic from API */}
           <div className={styles.footerColumn}>
-            <h4 className={styles.footerTitle}>DÒNG XE</h4>
+            <h4 className={styles.footerTitle}>THIẾT BỊ</h4>
             <div className={styles.footerList}>
               {/* Random categories from API */}
               {randomCategories.map((category) => (
@@ -225,7 +225,7 @@ const Footer: React.FC = () => {
                 style={linkStyle}
               >
                 <FaTools className={styles.linkIcon} style={iconStyle} />
-                Bảo hành & Bảo dưỡng
+                Bảo hành & Bảo trì
               </Link>
               <Link
                 to={ROUTERS.USER.SERVICE}
@@ -256,8 +256,8 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <FaCar className={styles.linkIcon} style={iconStyle} />
-                Đặt lịch lái thử
+                <FaTools className={styles.linkIcon} style={iconStyle} />
+                Tư vấn kỹ thuật
               </Link>
               <Link
                 to={ROUTERS.USER.TEST_DRIVE}
@@ -265,7 +265,7 @@ const Footer: React.FC = () => {
                 style={linkStyle}
               >
                 <FaCalculator className={styles.linkIcon} style={iconStyle} />
-                Tính toán trả góp
+                Tính toán chi phí
               </Link>
             </div>
           </div>
@@ -286,7 +286,7 @@ const Footer: React.FC = () => {
               <FaEnvelope className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Email:</span>
-                <span className={styles.contactValue}>sivicode@gmail.com</span>
+                <span className={styles.contactValue}>minhduy@gmail.com</span>
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
@@ -314,7 +314,7 @@ const Footer: React.FC = () => {
         <div className={styles.footerBottom}>
           <div className={styles.footerBottomContent}>
             <p className={styles.copyright}>
-              © {currentYear}SiVi CAR - Sản phẩm thuộc về SiVi CODE
+              © {currentYear} MINH DUY - Công ty thiết bị công nghệ
             </p>
             <div className={styles.footerLegal}>
               <Link

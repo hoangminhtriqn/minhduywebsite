@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import HeroSection from "@/components/HeroSection/HeroSection";
+import HeroSection from "@/components/HeroSection";
 import FeaturedModels from "@/components/FeaturedModels/FeaturedModels";
 import BrandExperience from "@/components/BrandExperience/BrandExperience";
 import styles from "./HomePage.module.scss";

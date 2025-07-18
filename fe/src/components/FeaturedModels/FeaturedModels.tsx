@@ -53,12 +53,12 @@ const FeaturedModels: React.FC = () => {
       }
     } catch (err) {
       console.error("Error fetching products:", err);
-      const errorMsg = "Không thể tải danh sách xe.";
+      const errorMsg = "Không thể tải danh sách thiết bị.";
       if (!append) {
         setError(errorMsg);
         message.error(errorMsg);
       } else {
-        message.error("Không thể tải thêm xe.");
+        message.error("Không thể tải thêm thiết bị.");
       }
     } finally {
       loadingState(false);
@@ -81,7 +81,7 @@ const FeaturedModels: React.FC = () => {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
         <Spin indicator={antIcon} />
-        <p>Đang tải xe...</p>
+        <p>Đang tải thiết bị...</p>
       </div>
     );
   }
@@ -99,9 +99,9 @@ const FeaturedModels: React.FC = () => {
     <section className={styles.featuredModels}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Danh sách lái thử</h2>
+          <h2 className={styles.title}>Sản phẩm nổi bật</h2>
           <p className={styles.subtitle}>
-            Khám phá bộ sưu tập xe BMW đẳng cấp với công nghệ hiện đại
+            Khám phá bộ sưu tập thiết bị công nghệ chất lượng cao
           </p>
         </div>
 
@@ -127,7 +127,7 @@ const FeaturedModels: React.FC = () => {
             >
               {loadingMore
                 ? "Đang tải..."
-                : `Tải thêm (${totalProducts - products.length} xe còn lại)`}
+                : `Tải thêm (${totalProducts - products.length} thiết bị còn lại)`}
             </Button>
           </div>
         )}

@@ -38,8 +38,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     navigate(`${ROUTERS.USER.CARS}/${product._id}`);
   };
 
-  const handleRegisterTestDrive = () => {
-    navigate("/dat-hen-lai-thu");
+  const handleContactConsultation = () => {
+    navigate("/lien-he");
   };
 
   const isFavorite = favorites.some((fav) => fav.ProductID._id === product._id);
@@ -205,7 +205,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     justifyContent: "center",
   };
 
-  const testDriveButtonStyle: React.CSSProperties = {
+  const consultationButtonStyle: React.CSSProperties = {
     flex: 1,
     background: unavailable ? "#cccccc" : "#0066B1",
     border: "none",
@@ -246,14 +246,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.currentTarget.style.color = "#0066B1";
   };
 
-  const handleTestDriveHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleConsultationHover = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!unavailable) {
       e.currentTarget.style.background = "#005599";
       e.currentTarget.style.transform = "translateY(-1px)";
     }
   };
 
-  const handleTestDriveLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleConsultationLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.background = unavailable ? "#cccccc" : "#0066B1";
     e.currentTarget.style.transform = "translateY(0)";
   };
@@ -423,13 +423,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Xem chi tiết
           </Link>
           <button
-            style={testDriveButtonStyle}
-            onClick={handleRegisterTestDrive}
+            style={consultationButtonStyle}
+            onClick={handleContactConsultation}
             disabled={unavailable}
-            onMouseEnter={handleTestDriveHover}
-            onMouseLeave={handleTestDriveLeave}
+            onMouseEnter={handleConsultationHover}
+            onMouseLeave={handleConsultationLeave}
           >
-            Đăng Ký Lái Thử
+            Tư vấn
           </button>
         </div>
       </div>
