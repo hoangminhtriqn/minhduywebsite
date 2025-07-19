@@ -67,18 +67,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     try {
-      console.log("🔍 Attempting login with:", { email, password });
-      console.log(
-        "🌐 API Base URL:",
-        import.meta.env.VITE_API_BASE_URL || "default"
-      );
-
       const response = await apiClient.post("/users/login", {
         UserName: email,
         Password: password,
       });
-
-      console.log("📤 Login response:", response.data);
 
       if (!response.data.success) {
         throw new Error(response.data.message || "Login failed");
@@ -89,7 +81,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         !response.data.data.token ||
         !response.data.data.user
       ) {
-        console.error("❌ Invalid response structure:", response.data);
         throw new Error("Invalid response structure from server");
       }
 
@@ -99,16 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("userId", user._id);
       setUser(user);
       toast.success("Đăng nhập thành công!");
-
-      console.log("✅ Login successful for user:", user.UserName);
     } catch (error: any) {
-      console.error("❌ Login failed:", error);
-      console.error("🔍 Error details:", {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-      });
-
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
       setUser(null);

@@ -43,29 +43,17 @@ const login = async (req, res) => {
   try {
     const { UserName, Password } = req.body;
 
-    console.log('🔍 Login attempt for user:', UserName);
-    console.log('🔧 Environment variables:', {
-      JWT_SECRET: process.env.JWT_SECRET ? 'SET' : 'NOT SET',
-      JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || 'NOT SET'
-    });
-
     // Tìm user
     const user = await User.findOne({ UserName });
     if (!user) {
-      console.log('❌ User not found:', UserName);
       return errorResponse(res, 'Tên đăng nhập không tồn tại', HTTP_STATUS.UNAUTHORIZED);
     }
-
-    console.log('✅ User found:', user.UserName);
 
     // Kiểm tra mật khẩu
     const isMatch = await user.comparePassword(Password);
     if (!isMatch) {
-      console.log('❌ Password mismatch for user:', UserName);
       return errorResponse(res, 'Mật khẩu không đúng', HTTP_STATUS.UNAUTHORIZED);
     }
-
-    console.log('✅ Password verified for user:', UserName);
 
     // Tạo token
     const token = jwt.sign(
@@ -74,14 +62,9 @@ const login = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
     );
 
-    console.log('✅ Token created successfully');
-
     const responseData = { user, token };
-    console.log('📤 Sending response:', JSON.stringify(responseData, null, 2));
-
     successResponse(res, responseData, 'Đăng nhập thành công');
   } catch (error) {
-    console.error('❌ Login error:', error);
     errorResponse(res, 'Lỗi đăng nhập', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
   }
 };
