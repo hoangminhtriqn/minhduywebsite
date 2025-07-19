@@ -12,6 +12,7 @@ import PublicRoute from "@/components/PublicRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import MainLayout from "@/components/layout/MainLayout";
 import ScrollToTop from "@/components/ScrollToTop";
+import FaviconManager from "@/components/FaviconManager";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -68,6 +69,7 @@ const App: React.FC = () => {
                     v7_relativeSplatPath: true,
                   }}
                 >
+                  <FaviconManager />
                   <ScrollToTop />
                   <Routes>
                     {/* Public Routes */}
