@@ -212,112 +212,331 @@ const sampleUsers = [
 // Sample products data
 function generateSampleProducts() {
   const products = [];
-  const deviceNames = [
-    'Laptop Dell Inspiron 15 3000',
-    'Laptop HP Pavilion 14',
-    'Laptop Lenovo ThinkPad E14',
-    'Laptop Asus VivoBook 15',
-    'Laptop Acer Aspire 5',
-    'MacBook Air M1',
-    'MacBook Pro M2',
-    'Laptop MSI Gaming GF63',
-    'Laptop Razer Blade 15',
-    'PC Gaming Dell Alienware',
-    'PC HP Pavilion Desktop',
-    'PC Lenovo ThinkCentre',
-    'PC Asus ROG Strix',
-    'PC Acer Aspire TC',
-    'PC Mini Intel NUC',
-    'PC All-in-One Dell',
-    'Bàn Phím Cơ Logitech G Pro',
-    'Chuột Gaming Razer DeathAdder',
-    'Tai Nghe Gaming HyperX Cloud',
-    'Loa Máy Tính Creative Pebble'
-  ];
-
-  const descriptions = [
-    'Laptop Dell Inspiron 15 3000 - Laptop văn phòng hiệu suất cao, màn hình 15.6 inch, Intel Core i5, RAM 8GB, SSD 256GB',
-    'Laptop HP Pavilion 14 - Laptop mỏng nhẹ, thiết kế hiện đại, màn hình 14 inch, AMD Ryzen 5, RAM 8GB, SSD 512GB',
-    'Laptop Lenovo ThinkPad E14 - Laptop doanh nghiệp bền bỉ, màn hình 14 inch, Intel Core i7, RAM 16GB, SSD 512GB',
-    'Laptop Asus VivoBook 15 - Laptop đa nhiệm, màn hình 15.6 inch, Intel Core i5, RAM 8GB, HDD 1TB',
-    'Laptop Acer Aspire 5 - Laptop giá rẻ hiệu suất tốt, màn hình 15.6 inch, AMD Ryzen 3, RAM 4GB, HDD 500GB',
-    'MacBook Air M1 - Laptop Apple cao cấp, chip M1, màn hình 13.3 inch Retina, RAM 8GB, SSD 256GB',
-    'MacBook Pro M2 - Laptop Apple chuyên nghiệp, chip M2, màn hình 13.3 inch Retina, RAM 16GB, SSD 512GB',
-    'Laptop MSI Gaming GF63 - Laptop gaming hiệu suất cao, màn hình 15.6 inch, Intel Core i7, RAM 16GB, RTX 3060',
-    'Laptop Razer Blade 15 - Laptop gaming cao cấp, màn hình 15.6 inch 144Hz, Intel Core i9, RAM 32GB, RTX 3080',
-    'PC Gaming Dell Alienware - Máy tính gaming cao cấp, Intel Core i9, RAM 32GB, RTX 4080, SSD 2TB',
-    'PC HP Pavilion Desktop - Máy tính văn phòng, Intel Core i5, RAM 8GB, HDD 1TB, Windows 11',
-    'PC Lenovo ThinkCentre - Máy tính doanh nghiệp, Intel Core i7, RAM 16GB, SSD 512GB, bảo mật cao',
-    'PC Asus ROG Strix - Máy tính gaming ASUS, AMD Ryzen 9, RAM 32GB, RTX 4070, RGB lighting',
-    'PC Acer Aspire TC - Máy tính gia đình, Intel Core i3, RAM 4GB, HDD 500GB, giá rẻ',
-    'PC Mini Intel NUC - Máy tính mini công suất cao, Intel Core i7, RAM 16GB, SSD 512GB, tiết kiệm không gian',
-    'PC All-in-One Dell - Máy tính all-in-one, màn hình 24 inch, Intel Core i5, RAM 8GB, tích hợp webcam',
-    'Bàn Phím Cơ Logitech G Pro - Bàn phím cơ gaming, switch Cherry MX Blue, RGB backlight, có dây',
-    'Chuột Gaming Razer DeathAdder - Chuột gaming chuyên nghiệp, 16,000 DPI, 7 nút có thể lập trình',
-    'Tai Nghe Gaming HyperX Cloud - Tai nghe gaming chất lượng cao, âm thanh surround 7.1, microphone detachable',
-    'Loa Máy Tính Creative Pebble - Loa máy tính 2.0, công suất 4.4W, thiết kế hiện đại, âm thanh rõ ràng'
-  ];
-
-  const prices = [
-    15000000, 18000000, 22000000, 16000000, 12000000,
-    25000000, 35000000, 28000000, 45000000, 35000000,
-    12000000, 20000000, 25000000, 18000000, 8000000,
-    15000000, 2500000, 1500000, 2000000, 800000
-  ];
-
-  const images = [
-    // Laptop images - Dell, HP, Lenovo, Asus, Acer
-    'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop', // Dell Inspiron
-    'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop', // HP Pavilion
-    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop', // Lenovo ThinkPad
-    'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', // Asus VivoBook
-    'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', // Acer Aspire
-    // MacBook images
-    'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=800&h=600&fit=crop', // MacBook Air
-    'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=800&h=600&fit=crop', // MacBook Pro
-    // Gaming Laptop images
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // MSI Gaming
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Razer Blade
-    // Desktop PC images - Gaming & Office
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Dell Alienware
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // HP Pavilion Desktop
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Lenovo ThinkCentre
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Asus ROG
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Acer Aspire TC
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Intel NUC
-    'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', // Dell All-in-One
-    // Accessories images - Keyboard, Mouse, Headset, Speakers
-    'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop', // Logitech Keyboard
-    'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop', // Razer Mouse
-    'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop', // HyperX Headset
-    'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop'  // Creative Speakers
-  ];
-
-  for (let i = 0; i < deviceNames.length; i++) {
-    const now = new Date();
-    const startDate = new Date(now.getTime() + (i * 7) * 24 * 60 * 60 * 1000); // Mỗi thiết bị cách nhau 7 ngày
-    const endDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000); // Kéo dài 30 ngày
-    
-    products.push({
-      Product_Name: deviceNames[i],
-      Description: descriptions[i],
-      Price: prices[i],
-      Main_Image: images[i],
-      Images: [images[i]],
-      RentalStartDate: startDate,
-      RentalEndDate: endDate,
-      Stock: Math.floor(Math.random() * 10) + 1,
-      Specifications: {
-        Processor: 'Intel Core i5',
-        RAM: '8GB DDR4',
-        Storage: '256GB SSD',
-        Display: '15.6 inch FHD',
-        Graphics: 'Integrated',
-        OS: 'Windows 11'
+  
+  // Định nghĩa sản phẩm theo từng nhóm thể loại
+  const productsByCategory = {
+    'Laptop & Máy Tính Xách Tay': [
+      {
+        name: 'Laptop Dell Inspiron 15 3000',
+        description: 'Laptop văn phòng hiệu suất cao, màn hình 15.6 inch, Intel Core i5, RAM 8GB, SSD 256GB',
+        price: 15000000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i5', RAM: '8GB DDR4', Storage: '256GB SSD', Display: '15.6 inch FHD' }
       },
-      Status: 'active'
+      {
+        name: 'Laptop HP Pavilion 14',
+        description: 'Laptop mỏng nhẹ, thiết kế hiện đại, màn hình 14 inch, AMD Ryzen 5, RAM 8GB, SSD 512GB',
+        price: 18000000,
+        image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
+        specs: { Processor: 'AMD Ryzen 5', RAM: '8GB DDR4', Storage: '512GB SSD', Display: '14 inch FHD' }
+      },
+      {
+        name: 'Laptop Lenovo ThinkPad E14',
+        description: 'Laptop doanh nghiệp bền bỉ, màn hình 14 inch, Intel Core i7, RAM 16GB, SSD 512GB',
+        price: 22000000,
+        image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i7', RAM: '16GB DDR4', Storage: '512GB SSD', Display: '14 inch FHD' }
+      },
+      {
+        name: 'MacBook Air M1',
+        description: 'Laptop Apple cao cấp, chip M1, màn hình 13.3 inch Retina, RAM 8GB, SSD 256GB',
+        price: 25000000,
+        image: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=800&h=600&fit=crop',
+        specs: { Processor: 'Apple M1', RAM: '8GB Unified', Storage: '256GB SSD', Display: '13.3 inch Retina' }
+      },
+      {
+        name: 'Laptop MSI Gaming GF63',
+        description: 'Laptop gaming hiệu suất cao, màn hình 15.6 inch, Intel Core i7, RAM 16GB, RTX 3060',
+        price: 28000000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i7', RAM: '16GB DDR4', Storage: '512GB SSD', Display: '15.6 inch FHD', Graphics: 'RTX 3060' }
+      }
+    ],
+    'Máy Tính Để Bàn': [
+      {
+        name: 'PC Gaming Dell Alienware',
+        description: 'Máy tính gaming cao cấp, Intel Core i9, RAM 32GB, RTX 4080, SSD 2TB',
+        price: 35000000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i9', RAM: '32GB DDR5', Storage: '2TB SSD', Graphics: 'RTX 4080' }
+      },
+      {
+        name: 'PC HP Pavilion Desktop',
+        description: 'Máy tính văn phòng, Intel Core i5, RAM 8GB, HDD 1TB, Windows 11',
+        price: 12000000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i5', RAM: '8GB DDR4', Storage: '1TB HDD', OS: 'Windows 11' }
+      },
+      {
+        name: 'PC Lenovo ThinkCentre',
+        description: 'Máy tính doanh nghiệp, Intel Core i7, RAM 16GB, SSD 512GB, bảo mật cao',
+        price: 20000000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i7', RAM: '16GB DDR4', Storage: '512GB SSD', Security: 'TPM 2.0' }
+      },
+      {
+        name: 'PC Asus ROG Strix',
+        description: 'Máy tính gaming ASUS, AMD Ryzen 9, RAM 32GB, RTX 4070, RGB lighting',
+        price: 25000000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Processor: 'AMD Ryzen 9', RAM: '32GB DDR5', Storage: '1TB SSD', Graphics: 'RTX 4070' }
+      },
+      {
+        name: 'PC All-in-One Dell',
+        description: 'Máy tính all-in-one, màn hình 24 inch, Intel Core i5, RAM 8GB, tích hợp webcam',
+        price: 15000000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Processor: 'Intel Core i5', RAM: '8GB DDR4', Storage: '256GB SSD', Display: '24 inch FHD' }
+      }
+    ],
+    'Phụ Kiện Máy Tính': [
+      {
+        name: 'Bàn Phím Cơ Logitech G Pro',
+        description: 'Bàn phím cơ gaming, switch Cherry MX Blue, RGB backlight, có dây',
+        price: 2500000,
+        image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&h=600&fit=crop',
+        specs: { Switch: 'Cherry MX Blue', Backlight: 'RGB', Connection: 'USB-C', Layout: 'Full-size' }
+      },
+      {
+        name: 'Chuột Gaming Razer DeathAdder',
+        description: 'Chuột gaming chuyên nghiệp, 16,000 DPI, 7 nút có thể lập trình',
+        price: 1500000,
+        image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop',
+        specs: { DPI: '16,000', Buttons: '7 Programmable', Sensor: 'Optical', Weight: '82g' }
+      },
+      {
+        name: 'Tai Nghe Gaming HyperX Cloud',
+        description: 'Tai nghe gaming chất lượng cao, âm thanh surround 7.1, microphone detachable',
+        price: 2000000,
+        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop',
+        specs: { Audio: '7.1 Surround', Microphone: 'Detachable', Connection: '3.5mm/USB', Weight: '320g' }
+      },
+      {
+        name: 'Loa Máy Tính Creative Pebble',
+        description: 'Loa máy tính 2.0, công suất 4.4W, thiết kế hiện đại, âm thanh rõ ràng',
+        price: 800000,
+        image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&h=600&fit=crop',
+        specs: { Power: '4.4W', Configuration: '2.0', Connection: 'USB/3.5mm', Design: 'Modern' }
+      },
+      {
+        name: 'Webcam Logitech C920',
+        description: 'Webcam HD 1080p, autofocus, stereo microphone, tương thích đa nền tảng',
+        price: 1200000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Resolution: '1080p', Focus: 'Autofocus', Audio: 'Stereo', Compatibility: 'Multi-platform' }
+      }
+    ],
+    'Thiết Bị Ngoại Vi': [
+      {
+        name: 'Máy In HP LaserJet Pro',
+        description: 'Máy in laser đơn sắc, tốc độ 30 trang/phút, kết nối WiFi, bộ nhớ 128MB',
+        price: 3500000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Type: 'Laser', Speed: '30 ppm', Connection: 'WiFi/USB', Memory: '128MB' }
+      },
+      {
+        name: 'Màn Hình Dell 24" FHD',
+        description: 'Màn hình 24 inch Full HD, IPS panel, 60Hz, VESA mount, thiết kế mỏng',
+        price: 4500000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Size: '24 inch', Resolution: '1920x1080', Panel: 'IPS', Refresh: '60Hz' }
+      },
+      {
+        name: 'Máy Scan Canon CanoScan',
+        description: 'Máy quét tài liệu, độ phân giải 4800dpi, A4 size, USB connection',
+        price: 2800000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Resolution: '4800dpi', Size: 'A4', Connection: 'USB', Type: 'Flatbed' }
+      },
+      {
+        name: 'Máy Chiếu Epson Home Cinema',
+        description: 'Máy chiếu Full HD, độ sáng 3000 lumens, kết nối HDMI, âm thanh tích hợp',
+        price: 8500000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Resolution: '1920x1080', Brightness: '3000 lumens', Connection: 'HDMI', Audio: 'Built-in' }
+      },
+      {
+        name: 'Bàn Vẽ Wacom Intuos',
+        description: 'Bàn vẽ đồ họa, độ nhạy 4096 levels, kích thước A4, USB connection',
+        price: 3200000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Pressure: '4096 levels', Size: 'A4', Connection: 'USB', Compatibility: 'Windows/Mac' }
+      }
+    ],
+    'Thiết Bị Mạng': [
+      {
+        name: 'Router WiFi TP-Link Archer',
+        description: 'Router WiFi 6, tốc độ 3000Mbps, 4 anten, bảo mật WPA3, dual-band',
+        price: 1800000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Standard: 'WiFi 6', Speed: '3000Mbps', Antennas: '4', Security: 'WPA3' }
+      },
+      {
+        name: 'Switch Cisco 8-Port',
+        description: 'Switch mạng 8 cổng Gigabit, unmanaged, plug-and-play, LED indicators',
+        price: 1200000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Ports: '8 Gigabit', Type: 'Unmanaged', Speed: '1Gbps', Power: 'PoE' }
+      },
+      {
+        name: 'Modem VNPT Fiber',
+        description: 'Modem cáp quang VNPT, WiFi 5, 4 cổng LAN, hỗ trợ IPv6',
+        price: 800000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Type: 'Fiber', WiFi: 'WiFi 5', LAN: '4 ports', Protocol: 'IPv6' }
+      },
+      {
+        name: 'Access Point Ubiquiti UniFi',
+        description: 'Access Point WiFi 6, 4x4 MIMO, PoE powered, cloud management',
+        price: 2500000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Standard: 'WiFi 6', MIMO: '4x4', Power: 'PoE', Management: 'Cloud' }
+      },
+      {
+        name: 'Cáp Mạng Cat6 100m',
+        description: 'Cáp mạng Cat6, 100m, shielded, tương thích Gigabit Ethernet',
+        price: 350000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Category: 'Cat6', Length: '100m', Shielding: 'Shielded', Speed: '1Gbps' }
+      }
+    ],
+    'Lưu Trữ & Backup': [
+      {
+        name: 'Ổ Cứng SSD Samsung 1TB',
+        description: 'Ổ cứng SSD Samsung 1TB, tốc độ đọc 3500MB/s, SATA III, 5 năm bảo hành',
+        price: 1800000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Capacity: '1TB', Interface: 'SATA III', Speed: '3500MB/s', Warranty: '5 years' }
+      },
+      {
+        name: 'USB Kingston 64GB',
+        description: 'USB 3.0 Kingston 64GB, tốc độ đọc 100MB/s, thiết kế nhỏ gọn',
+        price: 250000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Capacity: '64GB', Interface: 'USB 3.0', Speed: '100MB/s', Size: 'Compact' }
+      },
+      {
+        name: 'Thẻ Nhớ SanDisk 128GB',
+        description: 'Thẻ nhớ microSD SanDisk 128GB, Class 10, UHS-I, tương thích đa thiết bị',
+        price: 180000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Capacity: '128GB', Class: 'Class 10', Standard: 'UHS-I', Compatibility: 'Multi-device' }
+      },
+      {
+        name: 'NAS Synology 2-Bay',
+        description: 'NAS Synology 2-bay, RAID support, 2GB RAM, dual Gigabit LAN',
+        price: 4500000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Bays: '2', RAID: 'Supported', RAM: '2GB', LAN: 'Dual Gigabit' }
+      },
+      {
+        name: 'Ổ Cứng Ngoài WD 2TB',
+        description: 'Ổ cứng ngoài Western Digital 2TB, USB 3.0, thiết kế portable',
+        price: 1200000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Capacity: '2TB', Interface: 'USB 3.0', Type: 'Portable', Brand: 'Western Digital' }
+      }
+    ],
+    'Phần Mềm & Bản Quyền': [
+      {
+        name: 'Windows 11 Pro',
+        description: 'Windows 11 Pro bản quyền, hỗ trợ 64-bit, không giới hạn thiết bị',
+        price: 2500000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Version: 'Windows 11 Pro', Architecture: '64-bit', License: 'Perpetual', Support: 'Unlimited' }
+      },
+      {
+        name: 'Microsoft Office 365',
+        description: 'Microsoft Office 365 Personal, 1TB OneDrive, 5 thiết bị, 1 năm',
+        price: 1200000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Plan: 'Personal', Storage: '1TB OneDrive', Devices: '5', Duration: '1 year' }
+      },
+      {
+        name: 'Adobe Creative Cloud',
+        description: 'Adobe Creative Cloud All Apps, Photoshop, Illustrator, Premiere Pro',
+        price: 1800000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Apps: 'All Apps', Storage: '100GB', Duration: '1 year', Updates: 'Included' }
+      },
+      {
+        name: 'Kaspersky Internet Security',
+        description: 'Kaspersky Internet Security 3 thiết bị, bảo vệ real-time, 1 năm',
+        price: 800000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Devices: '3', Protection: 'Real-time', Duration: '1 year', Features: 'Full suite' }
+      },
+      {
+        name: 'AutoCAD 2024',
+        description: 'AutoCAD 2024 bản quyền, thiết kế 2D/3D, hỗ trợ kỹ thuật',
+        price: 3500000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Version: '2024', Type: '2D/3D CAD', License: 'Perpetual', Support: 'Technical' }
+      }
+    ],
+    'Dịch Vụ Công Nghệ': [
+      {
+        name: 'Dịch Vụ Sửa Chữa Máy Tính',
+        description: 'Dịch vụ sửa chữa máy tính, laptop, PC chuyên nghiệp tại nhà',
+        price: 500000,
+        image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        specs: { Service: 'Repair', Location: 'On-site', Warranty: '3 months', Response: '24h' }
+      },
+      {
+        name: 'Dịch Vụ Nâng Cấp RAM',
+        description: 'Dịch vụ nâng cấp RAM cho laptop và máy tính để bàn, bảo hành chính hãng',
+        price: 300000,
+        image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop',
+        specs: { Service: 'RAM Upgrade', Warranty: 'Genuine', Compatibility: 'Checked', Installation: 'Included' }
+      },
+      {
+        name: 'Dịch Vụ Thay Ổ Cứng SSD',
+        description: 'Dịch vụ thay ổ cứng HDD sang SSD tăng tốc độ, clone dữ liệu',
+        price: 800000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Service: 'SSD Upgrade', Data: 'Cloned', Warranty: '1 year', Speed: 'Improved' }
+      },
+      {
+        name: 'Dịch Vụ Cài Đặt Phần Mềm',
+        description: 'Dịch vụ cài đặt Windows, Office và các phần mềm khác, tư vấn miễn phí',
+        price: 200000,
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        specs: { Service: 'Software Installation', Consultation: 'Free', Support: 'Remote', Duration: '1 day' }
+      },
+      {
+        name: 'Dịch Vụ Khôi Phục Dữ Liệu',
+        description: 'Dịch vụ khôi phục dữ liệu từ ổ cứng bị hỏng, tỷ lệ thành công cao',
+        price: 1000000,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+        specs: { Service: 'Data Recovery', Success: 'High rate', Equipment: 'Professional', Report: 'Detailed' }
+      }
+    ]
+  };
+
+  // Tạo sản phẩm cho từng nhóm thể loại
+  Object.keys(productsByCategory).forEach((categoryName, categoryIndex) => {
+    const categoryProducts = productsByCategory[categoryName];
+    
+    categoryProducts.forEach((product, productIndex) => {
+      const now = new Date();
+      const startDate = new Date(now.getTime() + (categoryIndex * 7 + productIndex * 2) * 24 * 60 * 60 * 1000);
+      const endDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+      
+      products.push({
+        Product_Name: product.name,
+        Description: product.description,
+        Price: product.price,
+        Main_Image: product.image,
+        Images: [product.image],
+        RentalStartDate: startDate,
+        RentalEndDate: endDate,
+        Stock: Math.floor(Math.random() * 10) + 1,
+        Specifications: product.specs,
+        Status: 'active',
+        CategoryName: categoryName // Thêm tên category để mapping sau này
+      });
     });
-  }
+  });
 
   return products;
 }
@@ -666,22 +885,120 @@ async function migrate() {
     const existingSubCategories = await Category.countDocuments({ ParentID: { $ne: null } });
     // Force tạo lại sub-categories nếu có --force flag
     if (existingSubCategories === 0 || forceReset) {
-      // Tạo sub-categories cho mỗi group - đảm bảo mỗi group có 10-15 sub-categories
+      // Định nghĩa sub-categories cho từng nhóm thể loại
+      const subCategoriesByGroup = {
+        'Laptop & Máy Tính Xách Tay': [
+          'Laptop Văn Phòng',
+          'Laptop Gaming',
+          'Laptop Đồ Họa',
+          'MacBook',
+          'Laptop 2-in-1',
+          'Laptop Mỏng Nhẹ',
+          'Laptop Doanh Nghiệp',
+          'Laptop Sinh Viên',
+          'Laptop Cao Cấp',
+          'Laptop Giá Rẻ'
+        ],
+        'Máy Tính Để Bàn': [
+          'PC Gaming',
+          'PC Văn Phòng',
+          'PC Đồ Họa',
+          'PC All-in-One',
+          'PC Mini',
+          'PC Workstation',
+          'PC Server',
+          'PC Home Theater',
+          'PC Budget',
+          'PC High-End'
+        ],
+        'Phụ Kiện Máy Tính': [
+          'Bàn Phím',
+          'Chuột',
+          'Tai Nghe',
+          'Loa',
+          'Webcam',
+          'Microphone',
+          'Mousepad',
+          'Headset Stand',
+          'Cable Management',
+          'Gaming Gear'
+        ],
+        'Thiết Bị Ngoại Vi': [
+          'Máy In',
+          'Màn Hình',
+          'Máy Scan',
+          'Máy Chiếu',
+          'Bàn Vẽ',
+          'Máy Fax',
+          'Máy Photocopy',
+          'Máy Đọc Thẻ',
+          'Máy Đếm Tiền',
+          'Thiết Bị Văn Phòng'
+        ],
+        'Thiết Bị Mạng': [
+          'Router WiFi',
+          'Switch',
+          'Modem',
+          'Access Point',
+          'Cáp Mạng',
+          'Card Mạng',
+          'Repeater',
+          'Powerline',
+          'Mesh WiFi',
+          'Network Storage'
+        ],
+        'Lưu Trữ & Backup': [
+          'Ổ Cứng SSD',
+          'Ổ Cứng HDD',
+          'USB Flash',
+          'Thẻ Nhớ',
+          'NAS',
+          'Ổ Cứng Ngoài',
+          'Cloud Storage',
+          'Tape Backup',
+          'RAID Controller',
+          'Storage Enclosure'
+        ],
+        'Phần Mềm & Bản Quyền': [
+          'Hệ Điều Hành',
+          'Office Suite',
+          'Phần Mềm Đồ Họa',
+          'Antivirus',
+          'CAD Software',
+          'Video Editing',
+          'Audio Software',
+          'Development Tools',
+          'Business Software',
+          'Educational Software'
+        ],
+        'Dịch Vụ Công Nghệ': [
+          'Sửa Chữa',
+          'Nâng Cấp',
+          'Cài Đặt',
+          'Bảo Trì',
+          'Tư Vấn',
+          'Khôi Phục Dữ Liệu',
+          'Bảo Mật',
+          'Remote Support',
+          'On-site Service',
+          'Training'
+        ]
+      };
+
       const subCategoriesWithParent = [];
       
-      createdGroupCategories.forEach((group, groupIndex) => {
-        // Mỗi group sẽ có ngẫu nhiên từ 10-15 sub-categories
-        const numSub = Math.floor(Math.random() * 6) + 10; // 10-15
+      createdGroupCategories.forEach((group) => {
+        const subCategories = subCategoriesByGroup[group.Name] || [];
         
-        for (let i = 0; i < numSub; i++) {
+        subCategories.forEach((subName, index) => {
           subCategoriesWithParent.push({
-            Name: `${group.Name} - Sub ${i + 1}`,
-            Description: `Sub-category ${i + 1} của ${group.Name}`,
+            Name: subName,
+            Description: `Sub-category ${subName} thuộc ${group.Name}`,
             ParentID: group._id,
             Status: 'active',
-            Order: i + 1
+            Order: index + 1
           });
-        }
+        });
       });
 
       // Xóa sub-categories cũ nếu force reset
@@ -701,13 +1018,74 @@ async function migrate() {
     // Create products only if they don't exist
     let dbProducts = [];
     if (existingProducts === 0) {
-      const productsWithCategories = sampleProducts.map((product, index) => {
-        const categoryIndex = index % createdSubCategories.length;
-        return {
-          ...product,
-          CategoryID: createdSubCategories[categoryIndex]._id
-        };
+      // Mapping sản phẩm với sub-categories phù hợp
+      const productsWithCategories = [];
+      
+      // Lấy danh sách sub-categories theo nhóm
+      const subCategoriesByGroupName = {};
+      createdSubCategories.forEach(subCat => {
+        const parentGroup = createdGroupCategories.find(group => group._id.toString() === subCat.ParentID.toString());
+        if (parentGroup) {
+          if (!subCategoriesByGroupName[parentGroup.Name]) {
+            subCategoriesByGroupName[parentGroup.Name] = [];
+          }
+          subCategoriesByGroupName[parentGroup.Name].push(subCat);
+        }
       });
+
+      sampleProducts.forEach((product) => {
+        const groupName = product.CategoryName;
+        const availableSubCategories = subCategoriesByGroupName[groupName] || [];
+        
+        if (availableSubCategories.length > 0) {
+          // Chọn sub-category phù hợp dựa trên tên sản phẩm
+          let selectedSubCategory = availableSubCategories[0]; // Default
+          
+          // Logic mapping dựa trên tên sản phẩm
+          const productName = product.Product_Name.toLowerCase();
+          
+          if (productName.includes('gaming') || productName.includes('msi') || productName.includes('razer')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Gaming')) || availableSubCategories[0];
+          } else if (productName.includes('macbook') || productName.includes('apple')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('MacBook')) || availableSubCategories[0];
+          } else if (productName.includes('office') || productName.includes('business')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Văn Phòng') || sub.Name.includes('Doanh Nghiệp')) || availableSubCategories[0];
+          } else if (productName.includes('keyboard') || productName.includes('bàn phím')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Bàn Phím')) || availableSubCategories[0];
+          } else if (productName.includes('mouse') || productName.includes('chuột')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Chuột')) || availableSubCategories[0];
+          } else if (productName.includes('headset') || productName.includes('tai nghe')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Tai Nghe')) || availableSubCategories[0];
+          } else if (productName.includes('speaker') || productName.includes('loa')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Loa')) || availableSubCategories[0];
+          } else if (productName.includes('printer') || productName.includes('máy in')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Máy In')) || availableSubCategories[0];
+          } else if (productName.includes('monitor') || productName.includes('màn hình')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Màn Hình')) || availableSubCategories[0];
+          } else if (productName.includes('router') || productName.includes('wifi')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Router')) || availableSubCategories[0];
+          } else if (productName.includes('ssd') || productName.includes('ổ cứng')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('SSD') || sub.Name.includes('Ổ Cứng')) || availableSubCategories[0];
+          } else if (productName.includes('windows') || productName.includes('office')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Hệ Điều Hành') || sub.Name.includes('Office')) || availableSubCategories[0];
+          } else if (productName.includes('service') || productName.includes('dịch vụ')) {
+            selectedSubCategory = availableSubCategories.find(sub => sub.Name.includes('Sửa Chữa') || sub.Name.includes('Dịch Vụ')) || availableSubCategories[0];
+          }
+
+          productsWithCategories.push({
+            ...product,
+            CategoryID: selectedSubCategory._id
+          });
+        } else {
+          // Fallback nếu không tìm thấy sub-category phù hợp
+          const randomSubCategory = createdSubCategories[Math.floor(Math.random() * createdSubCategories.length)];
+          productsWithCategories.push({
+            ...product,
+            CategoryID: randomSubCategory._id
+          });
+        }
+      });
+
       await Product.insertMany(productsWithCategories);
       console.log('✅ Đã tạo products');
     } else {
