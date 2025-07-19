@@ -56,8 +56,12 @@ const Footer: React.FC = () => {
       text: "Báo giá",
     },
     {
-      path: "/tin-tuc",
+      path: ROUTERS.USER.NEWS,
       text: "Tin tức & Sự kiện",
+    },
+    {
+      path: ROUTERS.USER.FAVORITES,
+      text: "Yêu thích",
     },
   ];
 

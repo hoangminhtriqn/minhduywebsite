@@ -162,6 +162,108 @@
     --card-bg-gradient: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
   }
   
+  &--indigo {
+    --card-color-primary: #6366f1;
+    --card-color-secondary: #4f46e5;
+    --card-bg-gradient: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+  }
+  
+  &--pink {
+    --card-color-primary: #ec4899;
+    --card-color-secondary: #db2777;
+    --card-bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  }
+  
+  &--yellow {
+    --card-color-primary: #eab308;
+    --card-color-secondary: #ca8a04;
+    --card-bg-gradient: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+  }
+  
+  &--cyan {
+    --card-color-primary: #06b6d4;
+    --card-color-secondary: #0891b2;
+    --card-bg-gradient: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+  }
+  
+  &--lime {
+    --card-color-primary: #84cc16;
+    --card-color-secondary: #65a30d;
+    --card-bg-gradient: linear-gradient(135deg, #f7fee7 0%, #ecfccb 100%);
+  }
+  
+  &--amber {
+    --card-color-primary: #f59e0b;
+    --card-color-secondary: #d97706;
+    --card-bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  }
+  
+  &--emerald {
+    --card-color-primary: #10b981;
+    --card-color-secondary: #059669;
+    --card-bg-gradient: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  }
+  
+  &--violet {
+    --card-color-primary: #8b5cf6;
+    --card-color-secondary: #7c3aed;
+    --card-bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  }
+  
+  &--rose {
+    --card-color-primary: #f43f5e;
+    --card-color-secondary: #e11d48;
+    --card-bg-gradient: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+  }
+  
+  &--sky {
+    --card-color-primary: #0ea5e9;
+    --card-color-secondary: #0284c7;
+    --card-bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  }
+  
+  &--slate {
+    --card-color-primary: #64748b;
+    --card-color-secondary: #475569;
+    --card-bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+  
+  &--zinc {
+    --card-color-primary: #71717a;
+    --card-color-secondary: #52525b;
+    --card-bg-gradient: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
+  }
+  
+  &--neutral {
+    --card-color-primary: #737373;
+    --card-color-secondary: #525252;
+    --card-bg-gradient: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  }
+  
+  &--stone {
+    --card-color-primary: #78716c;
+    --card-color-secondary: #57534e;
+    --card-bg-gradient: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%);
+  }
+  
+  &--gray {
+    --card-color-primary: #6b7280;
+    --card-color-secondary: #4b5563;
+    --card-bg-gradient: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  }
+  
+  &--cool-gray {
+    --card-color-primary: #6b7280;
+    --card-color-secondary: #4b5563;
+    --card-bg-gradient: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  }
+  
+  &--warm-gray {
+    --card-color-primary: #78716c;
+    --card-color-secondary: #57534e;
+    --card-bg-gradient: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%);
+  }
+  
   &__header {
     margin-bottom: 1.5rem;
     position: relative;

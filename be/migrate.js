@@ -12,6 +12,7 @@ const Category = require('./models/Category');
 const Service = require('./models/Service');
 const NewsEvent = require('./models/NewsEvent');
 const DeviceRental = require('./models/OrderTestDrive');
+const Pricing = require('./models/Pricing');
 
 // Sample data
 const sampleRoles = [
@@ -604,50 +605,171 @@ const sampleServices = [
   }
 ];
 
+
+
+// Sample pricing data
+const samplePricing = [
+  {
+    title: 'Lắp đặt Camera Giám Sát',
+    category: 'An Ninh',
+    description: 'Hệ thống camera giám sát chuyên nghiệp với công nghệ HD/4K, hỗ trợ xem từ xa qua điện thoại.',
+    features: [
+      'Camera HD/4K chất lượng cao',
+      'Hệ thống lưu trữ NAS/Cloud',
+      'Xem từ xa qua mobile app',
+      'Phát hiện chuyển động thông minh',
+      'Bảo hành 2 năm',
+      'Hỗ trợ kỹ thuật 24/7'
+    ],
+    documents: [
+      { name: 'Báo giá Camera Giám Sát', type: 'pdf', size: '1.8MB', url: '#' },
+      { name: 'Catalog Camera 2024', type: 'word', size: '1.2MB', url: '#' },
+      { name: 'Bảng giá chi tiết', type: 'excel', size: '2.1MB', url: '#' }
+    ],
+    color: 'indigo',
+    order: 1
+  },
+  {
+    title: 'Lắp đặt Server & Network',
+    category: 'Hạ Tầng',
+    description: 'Thiết kế và lắp đặt hệ thống server, mạng LAN/WAN cho doanh nghiệp vừa và nhỏ.',
+    features: [
+      'Server Dell/HP chính hãng',
+      'Switch Cisco/Huawei',
+      'Hệ thống backup tự động',
+      'Bảo mật firewall',
+      'Bảo hành 3 năm',
+      'Tư vấn kỹ thuật miễn phí'
+    ],
+    documents: [
+      { name: 'Báo giá Server & Network', type: 'pdf', size: '2.5MB', url: '#' },
+      { name: 'Thông số kỹ thuật', type: 'word', size: '1.8MB', url: '#' }
+    ],
+    color: 'emerald',
+    order: 2
+  },
+  {
+    title: 'Phần Mềm Quản Lý',
+    category: 'Software',
+    description: 'Phát triển phần mềm quản lý theo yêu cầu, tích hợp với hệ thống hiện có.',
+    features: [
+      'Phát triển theo yêu cầu',
+      'Giao diện responsive',
+      'Tích hợp API',
+      'Bảo mật dữ liệu',
+      'Hỗ trợ đào tạo',
+      'Bảo trì dài hạn'
+    ],
+    documents: [
+      { name: 'Báo giá Phần Mềm', type: 'pdf', size: '2.2MB', url: '#' },
+      { name: 'Demo sản phẩm', type: 'word', size: '1.5MB', url: '#' },
+      { name: 'Timeline dự án', type: 'excel', size: '1.8MB', url: '#' }
+    ],
+    color: 'violet',
+    order: 3
+  },
+  {
+    title: 'Bảo Trì Hệ Thống',
+    category: 'Dịch Vụ',
+    description: 'Dịch vụ bảo trì, bảo dưỡng hệ thống IT định kỳ, đảm bảo hoạt động ổn định.',
+    features: [
+      'Kiểm tra định kỳ hàng tháng',
+      'Cập nhật bảo mật',
+      'Sao lưu dữ liệu',
+      'Thay thế linh kiện',
+      'Báo cáo chi tiết',
+      'Hỗ trợ khẩn cấp'
+    ],
+    documents: [
+      { name: 'Báo giá Bảo Trì', type: 'pdf', size: '1.6MB', url: '#' },
+      { name: 'Quy trình bảo trì', type: 'word', size: '1.1MB', url: '#' },
+      { name: 'Lịch bảo trì', type: 'excel', size: '1.3MB', url: '#' }
+    ],
+    color: 'amber',
+    order: 4
+  },
+  {
+    title: 'Thiết Kế Website',
+    category: 'Web',
+    description: 'Thiết kế website chuyên nghiệp, responsive, tối ưu SEO và tốc độ tải trang.',
+    features: [
+      'Thiết kế responsive',
+      'Tối ưu SEO',
+      'Tích hợp CMS',
+      'Bảo mật SSL',
+      'Tốc độ tải nhanh',
+      'Hỗ trợ đa ngôn ngữ'
+    ],
+    documents: [
+      { name: 'Báo giá Website', type: 'pdf', size: '1.9MB', url: '#' },
+      { name: 'Portfolio mẫu', type: 'word', size: '2.3MB', url: '#' }
+    ],
+    color: 'sky',
+    order: 5
+  },
+  {
+    title: 'Cloud & Backup',
+    category: 'Cloud',
+    description: 'Giải pháp lưu trữ đám mây và sao lưu dữ liệu an toàn, tiết kiệm chi phí.',
+    features: [
+      'Lưu trữ đám mây AWS/Azure',
+      'Sao lưu tự động',
+      'Khôi phục dữ liệu',
+      'Bảo mật mã hóa',
+      'Quản lý truy cập',
+      'Monitoring 24/7'
+    ],
+    documents: [
+      { name: 'Báo giá Cloud', type: 'pdf', size: '2.0MB', url: '#' },
+      { name: 'So sánh dịch vụ', type: 'word', size: '1.7MB', url: '#' },
+      { name: 'Chi phí vận hành', type: 'excel', size: '2.4MB', url: '#' }
+    ],
+    color: 'rose',
+    order: 6
+  },
+  {
+    title: 'Tư Vấn IT',
+    category: 'Tư Vấn',
+    description: 'Dịch vụ tư vấn công nghệ thông tin, đánh giá và đề xuất giải pháp tối ưu.',
+    features: [
+      'Đánh giá hiện trạng',
+      'Đề xuất giải pháp',
+      'Lập kế hoạch triển khai',
+      'Tính toán ROI',
+      'Hỗ trợ lựa chọn công nghệ',
+      'Theo dõi dự án'
+    ],
+    documents: [
+      { name: 'Báo giá Tư Vấn', type: 'pdf', size: '1.5MB', url: '#' },
+      { name: 'Quy trình tư vấn', type: 'word', size: '1.0MB', url: '#' },
+      { name: 'Case study', type: 'excel', size: '1.9MB', url: '#' }
+    ],
+    color: 'lime',
+    order: 7
+  },
+  {
+    title: 'Bảo Mật Hệ Thống',
+    category: 'Bảo Mật',
+    description: 'Giải pháp bảo mật toàn diện cho hệ thống IT, bảo vệ dữ liệu khỏi các mối đe dọa.',
+    features: [
+      'Firewall chuyên nghiệp',
+      'Antivirus doanh nghiệp',
+      'Phát hiện xâm nhập',
+      'Mã hóa dữ liệu',
+      'Kiểm tra bảo mật',
+      'Đào tạo nhân viên'
+    ],
+    documents: [
+      { name: 'Báo giá Bảo Mật', type: 'pdf', size: '2.1MB', url: '#' },
+      { name: 'Quy trình bảo mật', type: 'word', size: '1.4MB', url: '#' }
+    ],
+    color: 'cyan',
+    order: 8
+  }
+];
+
 // Sample news events data
 const sampleNewsEvents = [
-  {
-    Title: 'Minh Duy Technology ra mắt dịch vụ thuê thiết bị công nghệ',
-    Content: 'Minh Duy Technology vừa giới thiệu dịch vụ thuê thiết bị công nghệ với đầy đủ laptop, PC, phụ kiện và dịch vụ hỗ trợ.',
-    PublishDate: new Date('2024-06-01'),
-    ImageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
-    Status: 'published'
-  },
-  {
-    Title: 'Minh Duy tổ chức sự kiện trải nghiệm thiết bị công nghệ',
-    Content: 'Sự kiện trải nghiệm thiết bị công nghệ dành cho khách hàng với nhiều mẫu laptop, PC mới nhất.',
-    PublishDate: new Date('2024-06-15'),
-    ImageUrl: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
-    Status: 'published'
-  },
-  {
-    Title: 'Minh Duy khai trương showroom công nghệ mới tại Đà Nẵng',
-    Content: 'Showroom công nghệ Minh Duy mới tại Đà Nẵng với diện tích 500m2, trưng bày đầy đủ các thiết bị công nghệ.',
-    PublishDate: new Date('2024-07-01'),
-    ImageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop',
-    Status: 'published'
-  },
-  {
-    Title: 'Minh Duy giới thiệu dịch vụ IT Support 24/7',
-    Content: 'Minh Duy vừa giới thiệu dịch vụ IT Support 24/7 với khả năng hỗ trợ kỹ thuật mọi lúc.',
-    PublishDate: new Date('2024-07-15'),
-    ImageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
-    Status: 'published'
-  },
-  {
-    Title: 'Minh Duy tổ chức chương trình ưu đãi thuê thiết bị',
-    Content: 'Chương trình ưu đãi đặc biệt dành cho khách hàng thuê thiết bị công nghệ trong tháng 8.',
-    PublishDate: new Date('2024-08-01'),
-    ImageUrl: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
-    Status: 'published'
-  },
-  {
-    Title: 'Minh Duy ra mắt dịch vụ Cloud Storage',
-    Content: 'Minh Duy vừa ra mắt dịch vụ Cloud Storage với dung lượng lưu trữ không giới hạn.',
-    PublishDate: new Date('2024-08-15'),
-    ImageUrl: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
-    Status: 'published'
-  },
   {
     Title: 'Minh Duy tổ chức workshop bảo trì máy tính',
     Content: 'Workshop bảo trì máy tính miễn phí dành cho khách hàng với các chuyên gia kỹ thuật.',
@@ -1161,6 +1283,16 @@ async function migrate() {
       console.log('✅ Device rental orders đã tồn tại');
     }
 
+    console.log('💰 Tạo pricing data...');
+    // Create pricing data only if they don't exist
+    const existingPricing = await Pricing.countDocuments();
+    if (existingPricing === 0) {
+      await Pricing.insertMany(samplePricing);
+      console.log('✅ Đã tạo pricing data');
+    } else {
+      console.log('✅ Pricing data đã tồn tại');
+    }
+
     console.log('🎉 Migration hoàn thành thành công!');
     console.log('📊 Dữ liệu đã được tạo:');
     console.log(`   - ${createdRoles.length} roles`);
@@ -1171,6 +1303,7 @@ async function migrate() {
     console.log(`   - ${sampleNewsEvents.length} news events`);
     console.log(`   - ${createdUsers.length} users`);
     console.log(`   - ${existingOrders === 0 ? 'device rental orders' : 'orders already exist'}`);
+    console.log(`   - ${existingPricing === 0 ? samplePricing.length : existingPricing} pricing items`);
 
   } catch (error) {
     console.error('❌ Lỗi trong quá trình migration:', error.message);
