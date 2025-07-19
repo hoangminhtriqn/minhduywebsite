@@ -103,8 +103,6 @@ const sampleGroupCategories = [
   }
 ];
 
-
-
 // Sample users data
 const sampleUsers = [
   {
@@ -209,7 +207,7 @@ const sampleUsers = [
   }
 ];
 
-// Sample products data
+// Sample products data with diverse images
 function generateSampleProducts() {
   const products = [];
   const deviceNames = [
@@ -265,6 +263,7 @@ function generateSampleProducts() {
     15000000, 2500000, 1500000, 2000000, 800000
   ];
 
+  // Diverse computer equipment images
   const images = [
     // Laptop images - Dell, HP, Lenovo, Asus, Acer
     'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop', // Dell Inspiron
@@ -324,7 +323,7 @@ function generateSampleProducts() {
 
 const sampleProducts = generateSampleProducts();
 
-// Sample services data
+// Sample services data with computer-related images
 const sampleServices = [
   {
     Name: 'Sửa chữa máy tính',
@@ -363,7 +362,7 @@ const sampleServices = [
   }
 ];
 
-// Sample news events data
+// Sample news events data with computer-related images
 const sampleNewsEvents = [
   {
     Title: 'Minh Duy Technology ra mắt dịch vụ thuê thiết bị công nghệ',
@@ -528,7 +527,7 @@ function generateSampleDeviceRentals(users, products) {
 // Migration function
 async function migrate() {
   try {
-    console.log('🚀 Bắt đầu migration...');
+    console.log('🚀 Bắt đầu migration với hình ảnh mới...');
     
     // Kiểm tra environment variables
     if (!process.env.MONGO_URI) {
@@ -697,7 +696,7 @@ async function migrate() {
       console.log('✅ Sub categories đã tồn tại');
     }
 
-    console.log('💻 Tạo products...');
+    console.log('💻 Tạo products với hình ảnh mới...');
     // Create products only if they don't exist
     let dbProducts = [];
     if (existingProducts === 0) {
@@ -709,7 +708,7 @@ async function migrate() {
         };
       });
       await Product.insertMany(productsWithCategories);
-      console.log('✅ Đã tạo products');
+      console.log('✅ Đã tạo products với hình ảnh mới');
     } else {
       console.log('✅ Products đã tồn tại');
     }
@@ -759,12 +758,12 @@ async function migrate() {
       console.log('✅ Device rental orders đã tồn tại');
     }
 
-    console.log('🎉 Migration hoàn thành thành công!');
+    console.log('🎉 Migration hoàn thành thành công với hình ảnh mới!');
     console.log('📊 Dữ liệu đã được tạo:');
     console.log(`   - ${createdRoles.length} roles`);
     console.log(`   - ${createdGroupCategories.length} group categories`);
     console.log(`   - ${createdSubCategories.length} sub categories`);
-    console.log(`   - ${dbProducts.length} products`);
+    console.log(`   - ${dbProducts.length} products với hình ảnh máy tính`);
     console.log(`   - ${sampleServices.length} services`);
     console.log(`   - ${sampleNewsEvents.length} news events`);
     console.log(`   - ${createdUsers.length} users`);

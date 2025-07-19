@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Typography, Spin, message, Button } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
 import { API_BASE_URL } from "@/api/config";
 import { Product } from "@/api/types";
 import ProductCard from "@/components/product/ProductCard";
-import styles from "./FeaturedModels.module.scss";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Row, Spin, message } from "antd";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import styles from "./style.module.scss";
 
 const FeaturedModels: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -99,9 +99,9 @@ const FeaturedModels: React.FC = () => {
     <section className={styles.featuredModels}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Sản phẩm nổi bật</h2>
+          <h2 className={styles.title}>Mặt hàng đang kinh doanh</h2>
           <p className={styles.subtitle}>
-            Khám phá bộ sưu tập thiết bị công nghệ chất lượng cao
+            Tham khảo các sản phẩm đang kinh doanh của chúng tôi
           </p>
         </div>
 

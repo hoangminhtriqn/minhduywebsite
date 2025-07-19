@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { Product } from "@/api/types";
 import { formatCurrency } from "@/utils/format";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { ROUTERS } from "@/utils/constant";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { notification, Button, Space, Tooltip, Typography } from "antd";
-import { HeartOutlined, EyeOutlined, DashboardOutlined, ThunderboltOutlined, SettingOutlined } from "@ant-design/icons";
+import { ROUTERS } from "@/utils/constant";
+import { EyeOutlined, HeartOutlined } from "@ant-design/icons";
+import { Button, notification, Space, Tooltip, Typography } from "antd";
 
 interface ProductCardProps {
   product: Product;
@@ -26,7 +26,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   // Responsive breakpoints
   const isMobile = windowWidth <= 768;
   const isTablet = windowWidth > 768 && windowWidth <= 1024;
-  const isDesktop = windowWidth > 1024;
 
   React.useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -77,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           description: "Sản phẩm đã được thêm vào danh sách yêu thích",
         });
       }
-    } catch (error) {
+    } catch {
       notification.error({
         message: "Lỗi",
         description: isFavorite
@@ -93,7 +92,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   // Responsive CSS-in-JS Styles
   const cardStyle: React.CSSProperties = {
-    background: "#ffffff",
+    background: theme.colors.background.paper,
     borderRadius: isMobile ? "12px" : "16px",
     boxShadow: isHovered
       ? "0 20px 40px rgba(0, 0, 0, 0.15)"
@@ -101,7 +100,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     overflow: "hidden",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     transform: isHovered ? "translateY(-8px)" : "translateY(0)",
-    border: "1px solid rgba(0, 0, 0, 0.05)",
+    border: `1px solid ${theme.colors.surface.border}`,
     position: "relative",
     height: "100%",
     display: "flex",
@@ -145,7 +144,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const titleStyle: React.CSSProperties = {
     fontSize: isMobile ? "14px" : isTablet ? "16px" : "18px",
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: theme.colors.text.primary,
     textDecoration: "none",
     marginBottom: isMobile ? "8px" : "12px",
     lineHeight: 1.3,
@@ -161,22 +160,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     cursor: "pointer",
   };
 
-  const specStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    fontSize: isMobile ? "11px" : "12px",
-    color: "#666666",
-    background: "#f8f9fa",
-    padding: isMobile ? "4px 6px" : "5px 8px",
-    borderRadius: "12px",
-    whiteSpace: "nowrap",
-  };
-
   const priceStyle: React.CSSProperties = {
     fontSize: isMobile ? "16px" : isTablet ? "18px" : "20px",
     fontWeight: "700",
-    color: "#0066B1",
+    color: theme.colors.palette.primary,
     marginBottom: isMobile ? "12px" : "16px",
   };
 
@@ -190,8 +177,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const detailButtonStyle: React.CSSProperties = {
     flex: 1,
     background: "transparent",
-    border: "2px solid #0066B1",
-    color: "#0066B1",
+    border: `2px solid ${theme.colors.palette.primary}`,
+    color: theme.colors.palette.primary,
     padding: isMobile ? "8px 12px" : "10px 16px",
     borderRadius: "8px",
     fontSize: isMobile ? "13px" : "14px",
@@ -207,9 +194,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const consultationButtonStyle: React.CSSProperties = {
     flex: 1,
-    background: unavailable ? "#cccccc" : "#0066B1",
+    background: unavailable
+      ? theme.colors.text.muted
+      : theme.colors.palette.primary,
     border: "none",
-    color: "#ffffff",
+    color: theme.colors.text.white,
     padding: isMobile ? "8px 12px" : "10px 16px",
     borderRadius: "8px",
     fontSize: isMobile ? "13px" : "14px",
@@ -237,24 +226,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleDetailHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.currentTarget.style.background = "#0066B1";
-    e.currentTarget.style.color = "#ffffff";
+    e.currentTarget.style.background = theme.colors.palette.primary;
+    e.currentTarget.style.color = theme.colors.text.white;
   };
 
   const handleDetailLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.currentTarget.style.background = "transparent";
-    e.currentTarget.style.color = "#0066B1";
+    e.currentTarget.style.color = theme.colors.palette.primary;
   };
 
   const handleConsultationHover = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!unavailable) {
-      e.currentTarget.style.background = "#005599";
+      e.currentTarget.style.background = theme.colors.palette.primaryDark;
       e.currentTarget.style.transform = "translateY(-1px)";
     }
   };
 
   const handleConsultationLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.background = unavailable ? "#cccccc" : "#0066B1";
+    e.currentTarget.style.background = unavailable
+      ? theme.colors.text.muted
+      : theme.colors.palette.primary;
     e.currentTarget.style.transform = "translateY(0)";
   };
 
@@ -283,9 +274,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 size="small"
                 onClick={() => navigate(`/xe/${product._id}`)}
                 style={{
-                  backgroundColor: "#1890ff",
-                  borderColor: "#1890ff",
-                  boxShadow: "0 2px 4px rgba(24, 144, 255, 0.3)",
+                  backgroundColor: theme.colors.palette.info,
+                  borderColor: theme.colors.palette.info,
+                  boxShadow: `0 2px 4px ${theme.colors.palette.info}40`,
                 }}
               />
             </Tooltip>
@@ -300,11 +291,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 loading={isFavoriteLoading}
                 onClick={handleToggleFavorite}
                 style={{
-                  backgroundColor: isFavorite ? "#ff4d4f" : "#52c41a",
-                  borderColor: isFavorite ? "#ff4d4f" : "#52c41a",
+                  backgroundColor: isFavorite
+                    ? theme.colors.palette.error
+                    : theme.colors.palette.success,
+                  borderColor: isFavorite
+                    ? theme.colors.palette.error
+                    : theme.colors.palette.success,
                   boxShadow: isFavorite
-                    ? "0 2px 4px rgba(255, 77, 79, 0.3)"
-                    : "0 2px 4px rgba(82, 196, 26, 0.3)",
+                    ? `0 2px 4px ${theme.colors.palette.error}40`
+                    : `0 2px 4px ${theme.colors.palette.success}40`,
                 }}
               />
             </Tooltip>
@@ -329,17 +324,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               flex: 1,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#0066B1";
+              e.currentTarget.style.color = theme.colors.palette.primary;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "#1a1a1a";
+              e.currentTarget.style.color = theme.colors.text.primary;
             }}
           >
             {product.Product_Name}
           </Link>
           <HeartOutlined
             style={{
-              color: isFavorite ? "#ff4d4f" : "#d9d9d9",
+              color: isFavorite
+                ? theme.colors.palette.error
+                : theme.colors.text.muted,
               fontSize: isMobile ? "16px" : "18px",
               marginLeft: "8px",
               transition: "color 0.3s ease",

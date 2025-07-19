@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import axios from "axios";
 import { API_BASE_URL } from "@/api/config";
-import styles from "./Footer.module.scss";
-import { ROUTERS } from "@/utils/constant";
 import { useTheme } from "@/contexts/ThemeContext";
-import { FacebookOutlined, YoutubeOutlined, InstagramOutlined, PhoneOutlined, MailOutlined, EnvironmentOutlined, ClockCircleOutlined, CarOutlined, ToolOutlined, SafetyCertificateOutlined, CalculatorOutlined, CalendarOutlined } from "@ant-design/icons";
+import { ROUTERS } from "@/utils/constant";
+import {
+  CalculatorOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
+  EnvironmentOutlined,
+  FacebookOutlined,
+  InstagramOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  SafetyCertificateOutlined,
+  ToolOutlined,
+  YoutubeOutlined,
+} from "@ant-design/icons";
+import axios from "axios";
+import styles from "./Footer.module.scss";
 
 interface Category {
   _id: string;
@@ -64,8 +76,8 @@ const Footer: React.FC = () => {
     if (categories.length === 0) return [];
 
     // Chỉ lấy parent categories (ParentID = null)
-    const parentCategories = categories.filter(cat => !cat.ParentID);
-    
+    const parentCategories = categories.filter((cat) => !cat.ParentID);
+
     if (parentCategories.length === 0) return [];
 
     // Shuffle array and take first 5
@@ -240,7 +252,10 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <SafetyCertificateOutlined className={styles.linkIcon} style={iconStyle} />
+                <SafetyCertificateOutlined
+                  className={styles.linkIcon}
+                  style={iconStyle}
+                />
                 Sửa chữa & Phụ tùng
               </Link>
               <Link
@@ -248,7 +263,10 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <CalculatorOutlined className={styles.linkIcon} style={iconStyle} />
+                <CalculatorOutlined
+                  className={styles.linkIcon}
+                  style={iconStyle}
+                />
                 Bảng giá chi tiết
               </Link>
               <Link
@@ -256,7 +274,10 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <CalendarOutlined className={styles.linkIcon} style={iconStyle} />
+                <CalendarOutlined
+                  className={styles.linkIcon}
+                  style={iconStyle}
+                />
                 Đặt lịch hẹn
               </Link>
               <Link
@@ -272,7 +293,10 @@ const Footer: React.FC = () => {
                 className={styles.footerLink}
                 style={linkStyle}
               >
-                <CalculatorOutlined className={styles.linkIcon} style={iconStyle} />
+                <CalculatorOutlined
+                  className={styles.linkIcon}
+                  style={iconStyle}
+                />
                 Tính toán chi phí
               </Link>
             </div>
@@ -298,7 +322,10 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
-              <EnvironmentOutlined className={styles.footerIcon} style={iconStyle} />
+              <EnvironmentOutlined
+                className={styles.footerIcon}
+                style={iconStyle}
+              />
               <div>
                 <span className={styles.contactLabel}>Địa chỉ:</span>
                 <span className={styles.contactValue}>
@@ -307,7 +334,10 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
-              <ClockCircleOutlined className={styles.footerIcon} style={iconStyle} />
+              <ClockCircleOutlined
+                className={styles.footerIcon}
+                style={iconStyle}
+              />
               <div>
                 <span className={styles.contactLabel}>Giờ làm việc:</span>
                 <span className={styles.contactValue}>
