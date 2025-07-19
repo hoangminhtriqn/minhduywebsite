@@ -7,13 +7,13 @@ export const productService = {
   // Get all products
   getAllProducts: async (): Promise<Product[]> => {
     const response = await axios.get(`${API_URL}/xe`);
-    return response.data.products; // Assuming the response structure includes a 'products' array
+    return response.data.data.products; // Extract products array from the response structure
   },
 
   // Get product by ID
   getProductById: async (id: string): Promise<Product> => {
     const response = await axios.get(`${API_URL}/xe/${id}`);
-    return response.data.product; // Assuming the response structure includes a 'product' object
+    return response.data.data; // Extract data from the response structure
   },
 
   // Create a new product
@@ -45,5 +45,11 @@ export const productService = {
   getProductsByCategory: async (categoryId: string) => {
     const response = await axios.get<Product[]>(`${API_URL}/categories/${categoryId}/products`);
     return response.data;
+  },
+
+  // Get related products by product ID
+  getRelatedProducts: async (productId: string, limit: number = 4): Promise<Product[]> => {
+    const response = await axios.get(`${API_URL}/xe/${productId}/related?limit=${limit}`);
+    return response.data.data; // Extract data from the response structure
   },
 }; 

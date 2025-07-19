@@ -122,9 +122,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   onPriceRangeChange([value[0], value[1]]);
                 }
               }}
-              tipFormatter={(value) =>
-                value ? `${Math.round(value / 1000000)}M VNĐ` : ""
-              }
+              tooltip={{
+                formatter: (value) =>
+                  value ? `${Math.round(value / 1000000)}M VNĐ` : "",
+              }}
               trackStyle={[{ backgroundColor: "var(--primary-color)" }]}
               handleStyle={[
                 {

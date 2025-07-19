@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "@/api/config";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 import {
   CameraOutlined,
   CarOutlined,
@@ -37,8 +39,6 @@ import axios from "axios";
 import moment, { Moment } from "moment";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE_URL } from "@/api/config";
-import Breadcrumb from "@/components/admin/Breadcrumb";
 import styles from "./ProductFormPage.module.scss";
 
 // Custom VND icon component
@@ -86,8 +86,13 @@ const ProductFormPage: React.FC = () => {
   const [listImagesUploading, setListImagesUploading] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<ProductFormData>({
+    Product_Name: "",
+    Description: "",
+    Price: 0,
+    CategoryID: "",
+    Main_Image: "",
+  });
   const [editorLoading, setEditorLoading] = useState(true);
 
   const fetchProductData = async (productId: string) => {
@@ -150,7 +155,7 @@ const ProductFormPage: React.FC = () => {
 
       // Điền dữ liệu vào form
       form.setFieldsValue(formData);
-      setFormData(formData);
+      setFormData(formData as ProductFormData);
     } catch (error) {
       console.error("Error fetching product data:", error);
       notification.error({
@@ -181,37 +186,6 @@ const ProductFormPage: React.FC = () => {
       fetchProductData(id);
     }
   }, [id, isEditing]);
-
-  // Upload file to cloudinary
-  const uploadFileToCloudinary = async (file: File): Promise<UploadedFile> => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/files/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      const result = response.data.data;
-      return {
-        uid: result.public_id,
-        name: result.original_filename,
-        status: "done",
-        url: result.url,
-        public_id: result.public_id,
-      };
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      throw new Error("Upload failed");
-    }
-  };
 
   // Upload main image to cloudinary
   const uploadMainImageToCloudinary = async (
@@ -283,7 +257,6 @@ const ProductFormPage: React.FC = () => {
 
   // Handle main image upload
   const handleMainImageUpload = async (file: File) => {
-    
     setMainImageUploading(true);
     try {
       const uploadedFile = await uploadMainImageToCloudinary(file);
@@ -301,13 +274,11 @@ const ProductFormPage: React.FC = () => {
       });
     } finally {
       setMainImageUploading(false);
-
     }
   };
 
   // Handle list images upload
   const handleListImagesUpload = async (files: File[]) => {
-    
     setListImagesUploading(true);
     try {
       const uploadPromises = files.map((file) =>
@@ -334,7 +305,6 @@ const ProductFormPage: React.FC = () => {
       });
     } finally {
       setListImagesUploading(false);
-
     }
   };
 
@@ -364,12 +334,18 @@ const ProductFormPage: React.FC = () => {
 
     // Convert specifications from array of objects to object
     const specifications = values.Specifications
-      ? values.Specifications.reduce((acc: any, spec: any) => {
-          if (spec.key && spec.value) {
-            acc[spec.key] = spec.value;
-          }
-          return acc;
-        }, {})
+      ? values.Specifications.reduce(
+          (
+            acc: Record<string, string>,
+            spec: { key: string; value: string }
+          ) => {
+            if (spec.key && spec.value) {
+              acc[spec.key] = spec.value;
+            }
+            return acc;
+          },
+          {}
+        )
       : {};
 
     // Only send required fields according to Product model
@@ -427,7 +403,10 @@ const ProductFormPage: React.FC = () => {
     }
   };
 
-  const handleFormChange = (changedFields: any, allFields: any) => {
+  const handleFormChange = (
+    changedFields: ProductFormData,
+    allFields: ProductFormData
+  ) => {
     setFormData(allFields);
   };
 
@@ -485,10 +464,14 @@ const ProductFormPage: React.FC = () => {
           <Col span={12}>
             <Form.Item
               name="Price"
-              label="Giá xe"
+              label="Giá sản phẩm"
               rules={[
-                { required: true, message: "Vui lòng nhập giá xe!" },
-                { type: "number", min: 0, message: "Giá xe phải lớn hơn 0!" },
+                { required: true, message: "Vui lòng nhập giá sản phẩm!" },
+                {
+                  type: "number",
+                  min: 0,
+                  message: "Giá sản phẩm phải lớn hơn 0!",
+                },
               ]}
             >
               <InputNumber

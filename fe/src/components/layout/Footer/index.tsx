@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
   // Footer links arrays
   const aboutLinks: FooterLink[] = [
     {
-      path: ROUTERS.USER.CARS,
+      path: ROUTERS.USER.PRODUCTS,
       text: "Tất cả sản phẩm",
     },
     {

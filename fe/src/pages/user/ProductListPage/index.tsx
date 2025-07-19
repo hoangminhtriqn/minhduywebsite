@@ -183,7 +183,7 @@ const ProductListPage: React.FC = () => {
       console.error("Error fetching products:", error);
       notification.error({
         message: "Lỗi",
-        description: "Không thể tải danh sách xe.",
+        description: "Không thể tải danh sách sản phẩm.",
       });
     } finally {
       setLoading(false);
@@ -315,7 +315,7 @@ const ProductListPage: React.FC = () => {
     if (!user) {
       notification.warning({
         message: "Vui lòng đăng nhập",
-        description: "Bạn cần đăng nhập để thêm xe vào yêu thích",
+        description: "Bạn cần đăng nhập để thêm sản phẩm vào yêu thích",
       });
       return;
     }
@@ -500,7 +500,7 @@ const ProductListPage: React.FC = () => {
             <input
               type="text"
               style={searchInputStyle}
-              placeholder="Tìm kiếm xe..."
+              placeholder="Tìm kiếm sản phẩm..."
               value={filters.search}
               onChange={(e) => handleSearch(e.target.value)}
               onFocus={handleSearchInputFocus}
@@ -568,9 +568,10 @@ const ProductListPage: React.FC = () => {
                   handlePriceRangeChange([value[0], value[1]]);
                 }
               }}
-              tipFormatter={(value) =>
-                value ? `${Math.round(value / 1000000)}M VNĐ` : ""
-              }
+              tooltip={{
+                formatter: (value) =>
+                  value ? `${Math.round(value / 1000000)}M VNĐ` : "",
+              }}
               trackStyle={[{ backgroundColor: "var(--primary-color)" }]}
               handleStyle={[
                 {
@@ -795,7 +796,7 @@ const ProductListPage: React.FC = () => {
                   {products.map((product) => (
                     <Col xs={24} sm={12} md={8} key={product._id}>
                       <Link
-                        to={`${ROUTERS.USER.CARS}/${product._id}`}
+                        to={`${ROUTERS.USER.PRODUCTS}/${product._id}`}
                         style={{ textDecoration: "none" }}
                       >
                         <Card
@@ -819,7 +820,7 @@ const ProductListPage: React.FC = () => {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         navigate(
-                                          `${ROUTERS.USER.CARS}/${product._id}`
+                                          `${ROUTERS.USER.PRODUCTS}/${product._id}`
                                         );
                                       }}
                                     />
@@ -947,7 +948,7 @@ const ProductListPage: React.FC = () => {
                   total={pagination.total}
                   onChange={handlePageChange}
                   showTotal
-                  totalText="{start}-{end} của {total} xe"
+                  totalText="{start}-{end} của {total} sản phẩm"
                 />
               )}
             </Col>

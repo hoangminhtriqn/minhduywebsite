@@ -9,23 +9,20 @@ import {
   Table,
   Tooltip,
   Typography,
-  Space,
 } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
-import { API_BASE_URL } from "@/api/config";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Product } from "@/api/types"; // Import Product type
+import { productService } from "@/api/services/user/product";
 import PageBanner from "@/components/PageBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { ROUTERS } from "@/utils/constant";
 import { formatCurrency } from "@/utils/format";
-import styles from "./ProductDetailPage.scss";
-import { HeartOutlined, HeartFilled, EyeOutlined } from "@ant-design/icons";
+import { HeartOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { useNavigate, useParams } from "react-router-dom";
+import styles from "./styles.module.scss";
 
 const { Title, Paragraph } = Typography;
 
@@ -49,21 +46,25 @@ const ProductDetailPage: React.FC = () => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}${ROUTERS.USER.CARS}/${id}`
-        );
-        // Backend returns data directly, not nested in data.data
-        setProduct(response.data.data || response.data);
-      } catch (error: any) {
+        const productData = await productService.getProductById(id!);
+        setProduct(productData);
+      } catch (error: unknown) {
         console.error("Error fetching product detail:", error);
 
         // Handle specific error cases
-        if (error.response?.status === 404) {
+        if (
+          error instanceof Error &&
+          error.message === "Request failed with status code 404"
+        ) {
           notification.error({
-            message: "Không tìm thấy xe",
-            description: "Xe bạn đang tìm kiếm không tồn tại trong hệ thống.",
+            message: "Không tìm thấy sản phẩm",
+            description:
+              "Sản phẩm bạn đang tìm kiếm không tồn tại trong hệ thống.",
           });
-        } else if (error.response?.status === 500) {
+        } else if (
+          error instanceof Error &&
+          error.message === "Request failed with status code 500"
+        ) {
           notification.error({
             message: "Lỗi server",
             description: "Có lỗi xảy ra từ phía server. Vui lòng thử lại sau.",
@@ -77,7 +78,11 @@ const ProductDetailPage: React.FC = () => {
         }
 
         setProduct(null);
-        setError(error.response?.data?.message || "Không thể tải chi tiết xe.");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Không thể tải chi tiết sản phẩm."
+        );
       } finally {
         setLoading(false);
       }
@@ -95,21 +100,15 @@ const ProductDetailPage: React.FC = () => {
 
       setRelatedLoading(true);
       try {
-        const categoryId =
-          typeof product.CategoryID === "string"
-            ? product.CategoryID
-            : (product.CategoryID as any)?._id;
-
-        const response = await axios.get(`${API_BASE_URL}/xe`, {
-          params: {
-            limit: 4,
-            exclude: id,
-            category: categoryId,
-          },
-        });
-        setRelatedProducts(response.data.products || []);
+        // Use the new related products API
+        const related = await productService.getRelatedProducts(product._id, 4);
+        setRelatedProducts(related);
       } catch (error) {
         console.error("Error fetching related products:", error);
+        notification.error({
+          message: "Lỗi",
+          description: "Không thể tải sản phẩm liên quan",
+        });
       } finally {
         setRelatedLoading(false);
       }
@@ -154,7 +153,7 @@ const ProductDetailPage: React.FC = () => {
           description: "Sản phẩm đã được thêm vào danh sách yêu thích",
         });
       }
-    } catch (error) {
+    } catch {
       notification.error({
         message: "Lỗi",
         description: isFavorite
@@ -173,7 +172,7 @@ const ProductDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <Spin size="large" tip="Đang tải xe..." />
+        <Spin size="large" />
       </div>
     );
   }
@@ -181,17 +180,17 @@ const ProductDetailPage: React.FC = () => {
   if (!product) {
     return (
       <div style={{ textAlign: "center", padding: "50px" }}>
-        <Title level={3}>Không tìm thấy xe</Title>
+        <Title level={3}>Không tìm thấy sản phẩm</Title>
         <Paragraph>
           {error ||
-            "Xe bạn đang tìm kiếm có thể không tồn tại hoặc đã bị gỡ bỏ."}
+            "Sản phẩm bạn đang tìm kiếm có thể không tồn tại hoặc đã bị gỡ bỏ."}
         </Paragraph>
         <Button
           type="primary"
-          onClick={() => navigate(ROUTERS.USER.CARS)}
+          onClick={() => navigate(ROUTERS.USER.PRODUCTS)}
           style={{ marginTop: 16 }}
         >
-          Quay lại danh sách xe
+          Quay lại danh sách sản phẩm
         </Button>
       </div>
     );
@@ -215,34 +214,34 @@ const ProductDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="product-detail__container">
+    <div className={styles["product-detail__container"]}>
       <PageBanner
-        title="Chi tiết xe"
-        subtitle="Khám phá thông tin chi tiết về xe bạn quan tâm"
+        title="Chi tiết sản phẩm"
+        subtitle="Khám phá thông tin chi tiết về sản phẩm bạn quan tâm"
       />
 
-      <Card className="product-detail__card">
-        <div className="product-detail__grid">
+      <Card className={styles["product-detail__card"]}>
+        <div className={styles["product-detail__grid"]}>
           {/* Image Gallery */}
-          <div className="product-detail__gallery">
-            <div className="product-detail__gallery-main">
+          <div className={styles["product-detail__gallery"]}>
+            <div className={styles["product-detail__gallery-main"]}>
               <AntdImage
-                src={allImages[currentImageIndex]} // Use the raw URL from the combined list
+                src={allImages[currentImageIndex]}
                 alt={product.Product_Name}
-                className="product-detail__gallery-image"
+                className={styles["product-detail__gallery-image"]}
                 preview={true}
               />
               {allImages.length > 1 && (
                 <>
                   <button
                     onClick={handlePrevImage}
-                    className="product-detail__gallery-nav product-detail__gallery-nav--prev"
+                    className={`${styles["product-detail__gallery-nav"]} ${styles["product-detail__gallery-nav--prev"]}`}
                   >
                     <LeftOutlined />
                   </button>
                   <button
                     onClick={handleNextImage}
-                    className="product-detail__gallery-nav product-detail__gallery-nav--next"
+                    className={`${styles["product-detail__gallery-nav"]} ${styles["product-detail__gallery-nav--next"]}`}
                   >
                     <RightOutlined />
                   </button>
@@ -250,15 +249,15 @@ const ProductDetailPage: React.FC = () => {
               )}
             </div>
             {allImages.length > 1 && (
-              <div className="product-detail__gallery-thumbnails">
+              <div className={styles["product-detail__gallery-thumbnails"]}>
                 {allImages.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`product-detail__gallery-thumbnails-item ${currentImageIndex === index ? "product-detail__gallery-thumbnails-item--active" : ""}`}
+                    className={`${styles["product-detail__gallery-thumbnails-item"]} ${currentImageIndex === index ? styles["product-detail__gallery-thumbnails-item--active"] : ""}`}
                   >
                     <img
-                      src={image} // Use the raw URL from the list
+                      src={image}
                       alt={`${product.Product_Name} - ${index + 1}`}
                     />
                   </button>
@@ -268,8 +267,8 @@ const ProductDetailPage: React.FC = () => {
           </div>
 
           {/* Product Info */}
-          <div className="product-detail__info">
-            <div className="product-detail__info-header">
+          <div className={styles["product-detail__info"]}>
+            <div className={styles["product-detail__info-header"]}>
               <div
                 style={{
                   display: "flex",
@@ -282,7 +281,7 @@ const ProductDetailPage: React.FC = () => {
                 <div style={{ flex: 1 }}>
                   <Title
                     level={2}
-                    className="product-detail__info-title"
+                    className={styles["product-detail__info-title"]}
                     style={{ margin: 0 }}
                   >
                     {product.Product_Name}
@@ -315,17 +314,20 @@ const ProductDetailPage: React.FC = () => {
                   />
                 </Tooltip>
               </div>
-              <div className="product-detail__info-price-container">
-                <Typography.Text strong className="product-detail__info-price">
+              <div className={styles["product-detail__info-price-container"]}>
+                <Typography.Text
+                  strong
+                  className={styles["product-detail__info-price"]}
+                >
                   {formatCurrency(product.Price)}
                 </Typography.Text>
               </div>
             </div>
 
-            <div className="product-detail__info-section">
+            <div className={styles["product-detail__info-section"]}>
               {product.Specifications &&
               Object.keys(product.Specifications).length > 0 ? (
-                <div className="product-detail__specifications">
+                <div className={styles["product-detail__specifications"]}>
                   <Table
                     dataSource={Object.entries(product.Specifications).map(
                       ([key, value], index) => ({
@@ -341,7 +343,7 @@ const ProductDetailPage: React.FC = () => {
                         key: "spec",
                         width: "40%",
                         render: (text) => (
-                          <div className="product-detail__spec-label">
+                          <div className={styles["product-detail__spec-label"]}>
                             {text}
                           </div>
                         ),
@@ -352,7 +354,7 @@ const ProductDetailPage: React.FC = () => {
                         key: "value",
                         width: "60%",
                         render: (text) => (
-                          <div className="product-detail__spec-value">
+                          <div className={styles["product-detail__spec-value"]}>
                             {text}
                           </div>
                         ),
@@ -360,24 +362,24 @@ const ProductDetailPage: React.FC = () => {
                     ]}
                     pagination={false}
                     size="small"
-                    className="product-detail__spec-table"
+                    className={styles["product-detail__spec-table"]}
                   />
                 </div>
               ) : (
-                <div className="product-detail__info-section-content">
+                <div className={styles["product-detail__info-section-content"]}>
                   <Paragraph>Đang cập nhật...</Paragraph>
                 </div>
               )}
             </div>
 
-            <div className="product-detail__info-actions">
-              <div className="product-detail__info-buttons">
+            <div className={styles["product-detail__info-actions"]}>
+              <div className={styles["product-detail__info-buttons"]}>
                 <Button
                   type="primary"
                   size="large"
                   onClick={handleRegisterConsultation}
                   block
-                  className="product-detail__consultation-btn"
+                  className={styles["product-detail__consultation-btn"]}
                 >
                   Đăng ký tư vấn
                 </Button>
@@ -387,13 +389,13 @@ const ProductDetailPage: React.FC = () => {
         </div>
 
         {/* Description Row */}
-        <div className="product-detail__description-row">
-          <div className="product-detail__description-section">
-            <div className="product-detail__description-content">
+        <div className={styles["product-detail__description-row"]}>
+          <div className={styles["product-detail__description-section"]}>
+            <div className={styles["product-detail__description-content"]}>
               {product.Description ? (
                 <div
                   dangerouslySetInnerHTML={{ __html: product.Description }}
-                  className="product-detail__description-html"
+                  className={styles["product-detail__description-html"]}
                 />
               ) : (
                 <Paragraph>Đang cập nhật...</Paragraph>
@@ -404,36 +406,45 @@ const ProductDetailPage: React.FC = () => {
       </Card>
 
       {/* Related Products Section */}
-      <div className="product-detail__related">
-        <Spin spinning={relatedLoading}>
-          {relatedProducts.length > 0 ? (
-            <Row gutter={[20, 20]}>
+      {relatedProducts.length > 0 && (
+        <div className={styles["product-detail__related"]}>
+          <div className={styles["product-detail__related-header"]}>
+            <Title
+              level={3}
+              className={styles["product-detail__related-title"]}
+            >
+              Sản phẩm liên quan
+            </Title>
+            <Paragraph className={styles["product-detail__related-subtitle"]}>
+              Khám phá thêm các sản phẩm tương tự
+            </Paragraph>
+          </div>
+
+          <Spin spinning={relatedLoading}>
+            <Row gutter={[24, 24]}>
               {relatedProducts.map((relatedProduct) => (
-                <Col xs={24} sm={12} md={6} key={relatedProduct._id}>
+                <Col xs={24} sm={12} md={8} lg={6} key={relatedProduct._id}>
                   <Card
                     hoverable
-                    className="product-detail__related-card"
+                    className={styles["product-detail__related-card"]}
                     cover={
                       <div
-                        className="product-detail__related-image"
-                        style={{ position: "relative" }}
+                        className={
+                          styles["product-detail__related-image-container"]
+                        }
                       >
                         <img
                           alt={relatedProduct.Product_Name}
                           src={relatedProduct.Main_Image}
+                          className={styles["product-detail__related-image"]}
                           onClick={() =>
                             navigate(
-                              `${ROUTERS.USER.CARS}/${relatedProduct._id}`
+                              `${ROUTERS.USER.PRODUCTS}/${relatedProduct._id}`
                             )
                           }
                         />
                         <div
-                          style={{
-                            position: "absolute",
-                            top: "8px",
-                            right: "8px",
-                            zIndex: 3,
-                          }}
+                          className={styles["product-detail__related-favorite"]}
                         >
                           <Tooltip
                             title={
@@ -452,7 +463,16 @@ const ProductDetailPage: React.FC = () => {
                               size="small"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                // Handle favorite toggle for related product
+
+                                if (!user) {
+                                  notification.warning({
+                                    message: "Vui lòng đăng nhập",
+                                    description:
+                                      "Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích",
+                                  });
+                                  return;
+                                }
+
                                 const isRelatedFavorite = favorites.some(
                                   (fav) =>
                                     fav.ProductID._id === relatedProduct._id
@@ -469,53 +489,51 @@ const ProductDetailPage: React.FC = () => {
                                   addToFavorites(relatedProduct._id);
                                 }
                               }}
-                              style={{
-                                backgroundColor: favorites.some(
+                              className={`${styles["product-detail__related-favorite-btn"]} ${
+                                favorites.some(
                                   (fav) =>
                                     fav.ProductID._id === relatedProduct._id
                                 )
-                                  ? "#ff4d4f"
-                                  : "#52c41a",
-                                borderColor: favorites.some(
-                                  (fav) =>
-                                    fav.ProductID._id === relatedProduct._id
-                                )
-                                  ? "#ff4d4f"
-                                  : "#52c41a",
-                                boxShadow: favorites.some(
-                                  (fav) =>
-                                    fav.ProductID._id === relatedProduct._id
-                                )
-                                  ? "0 2px 4px rgba(255, 77, 79, 0.3)"
-                                  : "0 2px 4px rgba(82, 196, 26, 0.3)",
-                              }}
+                                  ? styles[
+                                      "product-detail__related-favorite-btn--active"
+                                    ]
+                                  : ""
+                              }`}
                             />
                           </Tooltip>
                         </div>
                       </div>
                     }
                     onClick={() =>
-                      navigate(`${ROUTERS.USER.CARS}/${relatedProduct._id}`)
+                      navigate(`${ROUTERS.USER.PRODUCTS}/${relatedProduct._id}`)
                     }
                   >
                     <Card.Meta
                       title={
                         <Tooltip
                           title={
-                            relatedProduct.Product_Name.length > 20
+                            relatedProduct.Product_Name.length > 25
                               ? relatedProduct.Product_Name
                               : null
                           }
                           placement="top"
                           mouseEnterDelay={0.5}
                         >
-                          <div className="product-detail__related-title">
+                          <div
+                            className={
+                              styles["product-detail__related-product-title"]
+                            }
+                          >
                             {relatedProduct.Product_Name}
                           </div>
                         </Tooltip>
                       }
                       description={
-                        <div className="product-detail__related-price">
+                        <div
+                          className={
+                            styles["product-detail__related-product-price"]
+                          }
+                        >
                           {formatCurrency(relatedProduct.Price)}
                         </div>
                       }
@@ -524,13 +542,9 @@ const ProductDetailPage: React.FC = () => {
                 </Col>
               ))}
             </Row>
-          ) : (
-            <div className="product-detail__related-empty">
-              <Paragraph>Không có xe liên quan</Paragraph>
-            </div>
-          )}
-        </Spin>
-      </div>
+          </Spin>
+        </div>
+      )}
     </div>
   );
 };

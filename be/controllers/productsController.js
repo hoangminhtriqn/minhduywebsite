@@ -303,6 +303,39 @@ const getAllProducts = async (req, res) => {
   }
 };
 
+// Get related products by product ID
+const getRelatedProducts = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { limit = 4 } = req.query;
+
+    // Get the current product to find its category
+    const currentProduct = await Product.findById(productId).populate('CategoryID');
+    
+    if (!currentProduct) {
+      return errorResponse(res, 'Không tìm thấy sản phẩm', HTTP_STATUS.NOT_FOUND);
+    }
+
+    // Get the category ID
+    const categoryId = currentProduct.CategoryID._id || currentProduct.CategoryID;
+
+    // Find related products in the same category, excluding the current product
+    const relatedProducts = await Product.find({
+      _id: { $ne: productId },
+      CategoryID: categoryId,
+      Status: 'active'
+    })
+    .populate('CategoryID')
+    .sort({ createdAt: -1 })
+    .limit(Number(limit));
+
+    successResponse(res, relatedProducts);
+  } catch (error) {
+    console.error('Error fetching related products:', error);
+    errorResponse(res, 'Lỗi lấy sản phẩm liên quan', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
@@ -310,5 +343,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByCategory,
-  getAllProducts
+  getAllProducts,
+  getRelatedProducts
 }; 

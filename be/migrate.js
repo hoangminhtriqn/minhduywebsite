@@ -522,11 +522,33 @@ function generateSampleProducts() {
       const startDate = new Date(now.getTime() + (categoryIndex * 7 + productIndex * 2) * 24 * 60 * 60 * 1000);
       const endDate = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000);
       
+      // Tạo danh sách ảnh phụ cho mỗi sản phẩm
+      const additionalImages = [
+        'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&h=600&fit=crop',
+        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop'
+      ];
+      
+      // Chọn ngẫu nhiên 2-4 ảnh phụ cho mỗi sản phẩm
+      const numAdditionalImages = Math.floor(Math.random() * 3) + 2; // 2-4 ảnh
+      const shuffledImages = [...additionalImages].sort(() => 0.5 - Math.random());
+      const selectedAdditionalImages = shuffledImages.slice(0, numAdditionalImages);
+      
       products.push({
         Product_Name: product.name,
         Description: product.description,
         Price: product.price,
         Main_Image: product.image,
+        List_Image: selectedAdditionalImages, // Thêm danh sách ảnh phụ
         Images: [product.image],
         RentalStartDate: startDate,
         RentalEndDate: endDate,
@@ -1074,14 +1096,16 @@ async function migrate() {
 
           productsWithCategories.push({
             ...product,
-            CategoryID: selectedSubCategory._id
+            CategoryID: selectedSubCategory._id,
+            List_Image: product.List_Image || [] // Đảm bảo List_Image được giữ lại
           });
         } else {
           // Fallback nếu không tìm thấy sub-category phù hợp
           const randomSubCategory = createdSubCategories[Math.floor(Math.random() * createdSubCategories.length)];
           productsWithCategories.push({
             ...product,
-            CategoryID: randomSubCategory._id
+            CategoryID: randomSubCategory._id,
+            List_Image: product.List_Image || [] // Đảm bảo List_Image được giữ lại
           });
         }
       });

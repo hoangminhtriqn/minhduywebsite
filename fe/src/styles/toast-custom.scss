@@ -14,6 +14,24 @@
   padding: 12px 18px !important;
   padding-right: 48px !important;
   padding-left: 18px !important;
+  z-index: 99999 !important;
+}
+
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
+
+// Ant Design Notification z-index fix
+.ant-notification {
+  z-index: 99999 !important;
+}
+
+.ant-notification-notice {
+  z-index: 99999 !important;
+}
+
+.ant-notification-notice-wrapper {
+  z-index: 99999 !important;
 }
 
 .Toastify__toast--error {

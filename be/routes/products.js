@@ -369,12 +369,13 @@
 
 const express = require('express');
 const router = express.Router();
-const { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductsByCategory, getAllProducts } = require('../controllers/productsController');
+const { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductsByCategory, getAllProducts, getRelatedProducts } = require('../controllers/productsController');
 const { upload } = require('../config/cloudinary');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.get('/', getAllProducts);
 router.get('/category/:categoryId', getProductsByCategory);
+router.get('/:productId/related', getRelatedProducts);
 router.get('/:productId', getProductById);
 router.post('/', protect, authorize('admin'), upload.fields([
   { name: 'Main_Image', maxCount: 1 },

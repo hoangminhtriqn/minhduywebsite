@@ -51,7 +51,7 @@ const Header: React.FC = () => {
 
         {/* Desktop Navigation */}
         <nav className={styles.headerNavDesktop}>
-          <Link to={ROUTERS.USER.CARS} className={styles.headerNavLink}>
+          <Link to={ROUTERS.USER.PRODUCTS} className={styles.headerNavLink}>
             Thiết bị
           </Link>
           <Link to={ROUTERS.USER.PRICE_LIST} className={styles.headerNavLink}>
@@ -140,7 +140,7 @@ const Header: React.FC = () => {
           </div>
           <nav className={styles.headerMobileMenuNav}>
             <Link
-              to={ROUTERS.USER.CARS}
+              to={ROUTERS.USER.PRODUCTS}
               className={styles.headerMobileNavLink}
               onClick={toggleMobileMenu}
             >

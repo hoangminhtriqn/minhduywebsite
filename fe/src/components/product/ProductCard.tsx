@@ -34,7 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   }, []);
 
   const handleViewDetail = () => {
-    navigate(`${ROUTERS.USER.CARS}/${product._id}`);
+    navigate(`${ROUTERS.USER.PRODUCTS}/${product._id}`);
   };
 
   const handleContactConsultation = () => {
@@ -256,7 +256,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseLeave={handleMouseLeave}
     >
       <div style={imageContainerStyle}>
-        <Link to={`/xe/${product._id}`}>
+        <Link to={`/san-pham/${product._id}`}>
           <img
             src={product.Main_Image}
             alt={product.Product_Name}
@@ -272,7 +272,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 shape="circle"
                 icon={<EyeOutlined />}
                 size="small"
-                onClick={() => navigate(`/xe/${product._id}`)}
+                onClick={() => navigate(`/san-pham/${product._id}`)}
                 style={{
                   backgroundColor: theme.colors.palette.info,
                   borderColor: theme.colors.palette.info,
@@ -317,7 +317,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           }}
         >
           <Link
-            to={`/xe/${product._id}`}
+            to={`/san-pham/${product._id}`}
             style={{
               ...titleStyle,
               marginBottom: 0,
@@ -411,7 +411,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         <div style={actionsStyle}>
           <Link
-            to={`/xe/${product._id}`}
+            to={`/san-pham/${product._id}`}
             style={detailButtonStyle}
             onClick={handleViewDetail}
             onMouseEnter={handleDetailHover}

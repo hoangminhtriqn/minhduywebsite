@@ -8,7 +8,6 @@ import {
   CloseOutlined,
   HeartOutlined,
   HomeOutlined,
-  CarOutlined,
   SettingOutlined,
   DollarOutlined,
   FileTextOutlined,
@@ -17,6 +16,7 @@ import {
   LogoutOutlined,
   LoginOutlined,
   UserAddOutlined,
+  ShoppingOutlined,
 } from "@ant-design/icons";
 import { ROUTERS } from "@/utils/constant";
 
@@ -471,7 +471,7 @@ const Header: React.FC = () => {
                 Trang chủ
               </Link>
               <Link
-                to={ROUTERS.USER.CARS}
+                to={ROUTERS.USER.PRODUCTS}
                 style={navLinkStyle}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
@@ -574,15 +574,15 @@ const Header: React.FC = () => {
             Trang chủ
           </Link>
           <Link
-            to={ROUTERS.USER.CARS}
+            to={ROUTERS.USER.PRODUCTS}
             style={mobileMenuLinkStyle}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
             data-theme="mobile-menu-link"
           >
-            <CarOutlined />
-            Xe thử
+            <ShoppingOutlined />
+            Sản phẩm
           </Link>
           <Link
             to={ROUTERS.USER.SERVICE}

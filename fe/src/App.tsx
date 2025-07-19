@@ -95,7 +95,7 @@ const App: React.FC = () => {
                     }
                   />
                   <Route
-                    path={ROUTERS.USER.CARS}
+                    path={ROUTERS.USER.PRODUCTS}
                     element={
                       <MainLayout>
                         <PublicProductListPage />
@@ -103,7 +103,7 @@ const App: React.FC = () => {
                     }
                   />
                   <Route
-                    path={ROUTERS.USER.CARS_DETAIL}
+                    path={ROUTERS.USER.PRODUCTS_DETAIL}
                     element={
                       <MainLayout>
                         <ProductDetailPage />

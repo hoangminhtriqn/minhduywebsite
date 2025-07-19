@@ -63,7 +63,7 @@ const FavoritesPage: React.FC = () => {
   };
 
   const handleViewProduct = (productId: string) => {
-    navigate(ROUTERS.USER.CARS + "/" + productId);
+          navigate(ROUTERS.USER.PRODUCTS + "/" + productId);
   };
 
   // Helper function để kiểm tra sản phẩm có trong favorites không
@@ -242,7 +242,7 @@ const FavoritesPage: React.FC = () => {
                   <br />
                   <Button
                     type="primary"
-                    onClick={() => navigate(ROUTERS.USER.CARS)}
+                    onClick={() => navigate(ROUTERS.USER.PRODUCTS)}
                     style={{ marginTop: 16 }}
                   >
                     Khám phá sản phẩm

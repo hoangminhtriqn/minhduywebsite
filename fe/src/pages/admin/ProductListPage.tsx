@@ -101,7 +101,7 @@ const ProductListPage: React.FC = () => {
       console.error("Error fetching products:", error);
       notification.error({
         message: "Lỗi",
-        description: "Không thể tải danh sách xe cho thuê.",
+        description: "Không thể tải danh sách sản phẩm.",
       });
     } finally {
       setLoading(false);
@@ -135,7 +135,7 @@ const ProductListPage: React.FC = () => {
 
   const handleDeleteProduct = async (productId: string) => {
     confirm({
-      title: "Bạn có chắc chắn muốn xóa xe cho thuê này?",
+      title: "Bạn có chắc chắn muốn xóa sản phẩm này?",
       content: "Hành động này không thể hoàn tác.",
       okText: "Xóa",
       okType: "danger",
@@ -145,14 +145,14 @@ const ProductListPage: React.FC = () => {
           await axios.delete(`${API_BASE_URL}/xe/${productId}`);
           notification.success({
             message: "Thành công",
-            description: "Xe cho thuê đã được xóa.",
+            description: "Sản phẩm đã được xóa.",
           });
           fetchProducts();
         } catch (error) {
           console.error("Error deleting product:", error);
           notification.error({
             message: "Lỗi",
-            description: "Không thể xóa xe cho thuê.",
+            description: "Không thể xóa sản phẩm.",
           });
         }
       },
@@ -177,13 +177,13 @@ const ProductListPage: React.FC = () => {
       render: (image: string) => (
         <img
           src={image}
-          alt="Xe cho thuê"
+          alt="Sản phẩm"
           style={{ width: 50, height: 50, objectFit: "cover" }}
         />
       ),
     },
     {
-      title: "Tên xe cho thuê",
+      title: "Tên sản phẩm",
       dataIndex: "Product_Name",
       key: "name",
       sorter: (a: Product, b: Product) =>
@@ -243,7 +243,7 @@ const ProductListPage: React.FC = () => {
             Sửa
           </Button>
           <Popconfirm
-            title="Bạn có chắc chắn muốn xóa xe cho thuê này?"
+            title="Bạn có chắc chắn muốn xóa sản phẩm này?"
             onConfirm={() => handleDeleteProduct(record._id)}
             okText="Có"
             cancelText="Không"
@@ -287,16 +287,16 @@ const ProductListPage: React.FC = () => {
   return (
     <div className={styles.productListPage}>
       <Breadcrumb
-        title="Quản lý xe cho thuê"
+        title="Quản lý sản phẩm"
         showAddButton={true}
-        addButtonText="Thêm xe cho thuê"
+        addButtonText="Thêm sản phẩm"
         onAddClick={() => navigate("/admin/products/add")}
       />
 
       <Card className={styles.filterCard}>
         <Space size="large">
           <Input
-            placeholder="Tìm kiếm xe cho thuê"
+            placeholder="Tìm kiếm sản phẩm"
             prefix={<SearchOutlined />}
             onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 300 }}
