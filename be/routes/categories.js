@@ -8,13 +8,15 @@ const {
   deleteCategory,
   getCategoryTree,
   updateCategoryIcon,
-  updateCategoryFull
+  updateCategoryFull,
+  getCategoriesForFilter
 } = require('../controllers/categoriesController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const { upload } = require('../config/cloudinary');
 
 // Public routes
 router.get('/', getAllCategories);
+router.get('/filter', getCategoriesForFilter);
 // router.get('/tree', getCategoryTree);
 router.get('/:id', getCategoryById);
 

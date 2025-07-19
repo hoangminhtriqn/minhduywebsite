@@ -13,21 +13,46 @@ export interface CategoryResponse {
   message?: string;
 }
 
+// Interface cho category từ API mới (chỉ parent categories)
+export interface CategoryFilter {
+  _id: string;
+  Name: string;
+  Description?: string;
+  Icon: string;
+  ParentID: null; // Chỉ parent categories nên ParentID luôn là null
+  Status: string;
+  Order: number;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+}
+
+// Lấy danh sách categories cho filter dropdown
+export const getCategoriesForFilter = async (): Promise<CategoryFilter[]> => {
+  try {
+    const response = await api.get('/categories/filter');
+    return response.data.data || response.data || [];
+  } catch (error) {
+    console.error('Error fetching categories for filter:', error);
+    return [];
+  }
+};
+
 // Lấy danh sách categories với cấu trúc phân cấp
 export const getCategoriesHierarchy = async (): Promise<Category[]> => {
   try {
-    const response = await api.get('/categories');
-    const allCategories = response.data.categories || response.data.data || [];
+    // Sử dụng API mới để lấy categories
+    const allCategories = await getCategoriesForFilter();
     
     // Tách parent categories (ParentID = null) và child categories
-    const parentCategories = allCategories.filter((cat: any) => !cat.ParentID);
-    const childCategories = allCategories.filter((cat: any) => cat.ParentID);
+    const parentCategories = allCategories.filter((cat: CategoryFilter) => !cat.ParentID);
+    const childCategories = allCategories.filter((cat: CategoryFilter) => cat.ParentID);
     
     // Tạo cấu trúc phân cấp
-    const hierarchicalCategories = parentCategories.map((parent: any) => {
+    const hierarchicalCategories = parentCategories.map((parent: CategoryFilter) => {
       const subCategories = childCategories
-        .filter((child: any) => child.ParentID && child.ParentID._id === parent._id)
-        .map((child: any) => child.Name);
+        .filter((child: CategoryFilter) => child.ParentID && child.ParentID._id === parent._id)
+        .map((child: CategoryFilter) => child.Name);
       
       return {
         id: parent._id || parent.id,

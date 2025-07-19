@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/responseHandler');
 // const { cloudinary } = require('../config/cloudinary'); // Xóa import Cloudinary
 
@@ -210,7 +211,44 @@ const getAllProducts = async (req, res) => {
     
     // Filter by category
     if (category) {
-      query.CategoryID = { $in: category.split(',') };
+      const categoryIds = category.split(',');
+      console.log('Original category filter:', categoryIds);
+      
+      // Tìm tất cả subcategories của các category group được chọn (ParentID = category group ID)
+      const subcategories = await Category.find({
+        ParentID: { $in: categoryIds },
+        Status: 'active'
+      }).select('_id Name ParentID');
+      
+      // Lấy tất cả ID của subcategories
+      const subcategoryIds = subcategories.map(sub => sub._id);
+      console.log('Subcategories found:', subcategories.map(sub => ({ id: sub._id, name: sub.Name, parentId: sub.ParentID })));
+      
+      // Kiểm tra xem có category nào là subcategory không (có ParentID)
+      const directSubcategories = await Category.find({
+        _id: { $in: categoryIds },
+        ParentID: { $ne: null },
+        Status: 'active'
+      }).select('_id Name ParentID');
+      
+      const directSubcategoryIds = directSubcategories.map(cat => cat._id);
+      console.log('Direct subcategories found:', directSubcategories.map(sub => ({ id: sub._id, name: sub.Name, parentId: sub.ParentID })));
+      
+      // Kết hợp cả subcategories từ category groups và direct subcategories
+      const allCategoryIds = [...subcategoryIds, ...directSubcategoryIds];
+      
+      // Chỉ query nếu có categories hợp lệ
+      if (allCategoryIds.length > 0) {
+        query.CategoryID = { $in: allCategoryIds };
+        console.log('Final category filter:', {
+          originalCategoryIds: categoryIds,
+          subcategoryIds,
+          directSubcategoryIds,
+          allCategoryIds
+        });
+      } else {
+        console.log('No valid categories found for filtering');
+      }
     }
     
     // Filter by status
@@ -221,9 +259,22 @@ const getAllProducts = async (req, res) => {
     // Filter by price range
     if (minPrice || maxPrice) {
       query.Price = {};
-      if (minPrice) query.Price.$gte = Number(minPrice);
-      if (maxPrice) query.Price.$lte = Number(maxPrice);
+      if (minPrice && !isNaN(Number(minPrice))) {
+        query.Price.$gte = Number(minPrice);
+      }
+      if (maxPrice && !isNaN(Number(maxPrice))) {
+        query.Price.$lte = Number(maxPrice);
+      }
     }
+
+    // Map frontend field names to database field names
+    const fieldMapping = {
+      'Name': 'Product_Name',
+      'Price': 'Price',
+      'createdAt': 'createdAt'
+    };
+
+    const sortField = fieldMapping[sortBy] || sortBy;
 
     // Calculate skip
     const skip = (page - 1) * limit;
@@ -231,7 +282,7 @@ const getAllProducts = async (req, res) => {
     // Execute query
     const [products, total] = await Promise.all([
       Product.find(query)
-        .sort({ [sortBy]: sortOrder === 'desc' ? -1 : 1 })
+        .sort({ [sortField]: sortOrder === 'desc' ? -1 : 1 })
         .skip(skip)
         .limit(Number(limit))
         .populate('CategoryID'),

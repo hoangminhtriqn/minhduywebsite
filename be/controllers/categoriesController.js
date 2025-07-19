@@ -200,6 +200,38 @@ const updateCategoryFull = async (req, res) => {
   }
 };
 
+// API lấy categories cho filter dropdown (cho frontend)
+const getCategoriesForFilter = async (req, res) => {
+  try {
+    // Lấy tất cả categories có status active (cả parent và sub)
+    const allCategories = await Category.find({ 
+      Status: 'active'
+    })
+      .populate('ParentID', 'Name')
+      .sort({ Order: 1 });
+
+    // Tạo cấu trúc cho frontend
+    const categoriesForFilter = allCategories.map(category => ({
+      _id: category._id,
+      Name: category.Name,
+      Description: category.Description,
+      Icon: category.Icon || '📁',
+      ParentID: category.ParentID,
+      Status: category.Status,
+      Order: category.Order,
+      createdAt: category.createdAt,
+      updatedAt: category.updatedAt,
+      id: category._id,
+      // Thêm thông tin parent category nếu có
+      parentName: category.ParentID ? category.ParentID.Name : null
+    }));
+
+    successResponse(res, categoriesForFilter);
+  } catch (error) {
+    errorResponse(res, 'Lỗi lấy danh sách danh mục cho filter', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
 module.exports = {
   getCategoriesHierarchy,
   getCategories: getCategoriesHierarchy, // Alias for backward compatibility
@@ -211,4 +243,5 @@ module.exports = {
   getProductsByCategory,
   updateCategoryIcon,
   updateCategoryFull,
+  getCategoriesForFilter,
 }; 

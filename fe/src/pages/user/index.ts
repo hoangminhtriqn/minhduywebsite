@@ -9,7 +9,7 @@ export { default as PriceListDetailPage } from './PriceListDetailPage/PriceListD
 export { default as PriceListPage } from './PriceListPage/PriceListPage';
 export { default as ProductDetail } from './ProductDetail/ProductDetail';
 export { default as ProductDetailPage } from './ProductDetailPage/ProductDetailPage';
-export { default as ProductListPage } from './ProductListPage/ProductListPage';
+export { default as ProductListPage } from './ProductListPage';
 export { default as ProfilePage } from './ProfilePage/ProfilePage';
 export { default as RegisterPage } from './RegisterPage/RegisterPage';
 export { default as RegistrationPage } from './RegistrationPage/RegistrationPage';
