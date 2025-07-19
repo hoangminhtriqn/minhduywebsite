@@ -36,6 +36,18 @@ $breakpoint-xxl: 1400px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 10;
+  
+  @media (max-width: 1200px) and (min-width: 769px) {
+    width: 320px;
+  }
+  
+  @media (max-width: 1024px) and (min-width: 769px) {
+    width: 300px;
+  }
+  
+  @media (max-width: 994px) and (min-width: 769px) {
+    width: 280px;
+  }
 }
 
 .sidebarHeader {
@@ -169,6 +181,24 @@ $breakpoint-xxl: 1400px;
   min-height: 500px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
+  
+  @media (max-width: 1200px) and (min-width: 769px) {
+    left: 320px;
+    min-width: 550px;
+    max-width: 750px;
+  }
+  
+  @media (max-width: 1024px) and (min-width: 769px) {
+    left: 300px;
+    min-width: 500px;
+    max-width: 700px;
+  }
+  
+  @media (max-width: 994px) and (min-width: 769px) {
+    left: 280px;
+    min-width: 450px;
+    max-width: 600px;
+  }
 }
 
 .megaMenuContent {
@@ -397,12 +427,14 @@ $breakpoint-xxl: 1400px;
 
 @media (max-width: 1024px) and (min-width: 769px) {
   .heroSection {
-    height: calc(100vh - 200px);
+    height: auto;
+    min-height: 500px;
   }
 
   .container {
     flex-direction: column;
     padding: 0;
+    min-height: auto;
   }
 
   .sidebar {
@@ -410,15 +442,61 @@ $breakpoint-xxl: 1400px;
     border-right: none;
     border-bottom: 1px solid #e9ecef;
     height: auto;
+    max-height: 300px;
   }
 
   .categoryList {
-    max-height: 300px;
+    max-height: 250px;
     height: auto;
+    overflow-y: auto;
   }
 
   .carouselSection {
-    height: calc(100vh - 500px); // Adjusted for sidebar height
+    height: 400px;
+    min-height: 400px;
+  }
+  
+  .carousel {
+    height: 400px;
+  }
+  
+  // Hide mega menu on tablet
+  .megaMenu {
+    display: none !important;
+  }
+}
+
+// Specific fix for 994px breakpoint
+@media (max-width: 994px) and (min-width: 769px) {
+  .container {
+    padding: 0 15px;
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .categoryList {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  
+  .carouselSection {
+    height: 350px;
+    min-height: 350px;
+  }
+  
+  .carousel {
+    height: 350px;
+  }
+  
+  // Hide mega menu on tablet
+  .megaMenu {
+    display: none !important;
   }
 }
 
