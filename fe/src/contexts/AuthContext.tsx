@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "../api/axios";
 import { toast } from "react-toastify";
 
 interface User {
@@ -46,20 +46,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const userId = localStorage.getItem("userId");
 
         if (token && userId) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-          const response = await axios.get(`/api/users/${userId}`);
+          const response = await apiClient.get(`/users/${userId}`);
           setUser(response.data.data);
         } else {
           localStorage.removeItem("token");
           localStorage.removeItem("userId");
-          delete axios.defaults.headers.common["Authorization"];
           setUser(null);
         }
       } catch (error) {
         console.error("Auth check failed:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
-        delete axios.defaults.headers.common["Authorization"];
         setUser(null);
       } finally {
         setLoading(false);
@@ -70,22 +67,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post("/api/users/login", {
+      console.log("🔍 Attempting login with:", { email, password });
+      console.log(
+        "🌐 API Base URL:",
+        import.meta.env.VITE_API_BASE_URL || "default"
+      );
+
+      const response = await apiClient.post("/users/login", {
         UserName: email,
         Password: password,
       });
+
+      console.log("📤 Login response:", response.data);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || "Login failed");
+      }
+
+      if (
+        !response.data.data ||
+        !response.data.data.token ||
+        !response.data.data.user
+      ) {
+        console.error("❌ Invalid response structure:", response.data);
+        throw new Error("Invalid response structure from server");
+      }
+
       const { token, user } = response.data.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("userId", user._id);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(user);
       toast.success("Đăng nhập thành công!");
+
+      console.log("✅ Login successful for user:", user.UserName);
     } catch (error: any) {
-      console.error("Login failed:", error);
+      console.error("❌ Login failed:", error);
+      console.error("🔍 Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
-      delete axios.defaults.headers.common["Authorization"];
       setUser(null);
 
       // Handle error response from backend
@@ -94,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           error.response.data.message || "Có lỗi xảy ra khi đăng nhập";
         throw new Error(errorMessage);
       } else {
-        throw new Error("Có lỗi xảy ra khi đăng nhập");
+        throw new Error(error.message || "Có lỗi xảy ra khi đăng nhập");
       }
     }
   };
@@ -105,14 +130,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     password: string
   ) => {
     try {
-      const response = await axios.post("/api/nguoi-dung/register", {
+      const response = await apiClient.post("/users/register", {
         username,
         email,
         password,
       });
-      const { token, user } = response.data;
+      const { token, user } = response.data.data;
       localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(user);
     } catch (error) {
       console.error("Registration failed:", error);
@@ -123,7 +147,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    delete axios.defaults.headers.common["Authorization"];
     setUser(null);
   };
 
