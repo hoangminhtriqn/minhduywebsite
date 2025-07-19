@@ -387,6 +387,8 @@ const express = require('express');
 const router = express.Router();
 const { register, login, logout, getAllUsers, getUserById, updateUser, deleteUser } = require('../controllers/usersController');
 const { protect, authorize } = require('../middleware/authMiddleware');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 router.post('/register', register);
 router.post('/login', login);
@@ -399,5 +401,76 @@ router.route('/:userId')
   .get(protect, getUserById)
   .put(protect, updateUser)
   .delete(protect, authorize('admin'), deleteUser);
+
+// Debug endpoint để kiểm tra environment variables
+router.get('/debug', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Debug info',
+    data: {
+      JWT_SECRET: process.env.JWT_SECRET ? 'SET' : 'NOT SET',
+      JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || 'NOT SET',
+      NODE_ENV: process.env.NODE_ENV,
+      MONGO_URI: process.env.MONGO_URI ? 'SET' : 'NOT SET'
+    }
+  });
+});
+
+// Test login response structure
+router.post('/test-login', async (req, res) => {
+  try {
+    const { UserName, Password } = req.body;
+    
+    // Tìm user
+    const user = await User.findOne({ UserName });
+    if (!user) {
+      return res.json({
+        success: false,
+        message: 'User not found',
+        data: null
+      });
+    }
+
+    // Kiểm tra password
+    const isMatch = await user.comparePassword(Password);
+    if (!isMatch) {
+      return res.json({
+        success: false,
+        message: 'Password incorrect',
+        data: null
+      });
+    }
+
+    // Tạo token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+    );
+
+    // Trả về response với cấu trúc đầy đủ
+    res.json({
+      success: true,
+      message: 'Login successful',
+      data: {
+        user: {
+          _id: user._id,
+          UserName: user.UserName,
+          Email: user.Email,
+          FullName: user.FullName,
+          Role: user.Role
+        },
+        token: token
+      }
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'Login error',
+      error: error.message,
+      data: null
+    });
+  }
+});
 
 module.exports = router; 
