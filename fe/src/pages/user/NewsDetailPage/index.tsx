@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getNewsEventById, NewsEvent } from "@/api/services/user/newsEvents";
 import PageBanner from "@/components/PageBanner";
+import styles from "./styles.module.scss";
 
 const NewsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +21,7 @@ const NewsDetailPage: React.FC = () => {
         } else {
           setError("Không tìm thấy tin tức.");
         }
-      } catch (err) {
+      } catch {
         setError("Không thể tải chi tiết tin tức. Vui lòng thử lại sau.");
       } finally {
         setLoading(false);
@@ -58,34 +59,20 @@ const NewsDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="news-detail-page">
-      <PageBanner title={news.Title} />
-      <div className="news-detail-content">
-        <img
-          src={news.ImageUrl || "/images/default-news-image.jpg"}
-          alt={news.Title}
-        />
-        <div style={{ color: "#666", marginBottom: 12 }}>
-          Ngày đăng: {formatDate(news.PublishDate || news.createdAt)} | Trạng
-          thái:{" "}
-          {news.Status === "published"
-            ? "Đã xuất bản"
-            : news.Status === "draft"
-              ? "Bản nháp"
-              : news.Status === "active"
-                ? "Hoạt động"
-                : news.Status === "inactive"
-                  ? "Không hoạt động"
-                  : news.Status === "archived"
-                    ? "Đã lưu trữ"
-                    : "Bản nháp"}
+    <>
+      <PageBanner title={"Nội dung tin tức"} />
+      <div className={styles.newsDetailPage}>
+        <div className={styles.newsDetailContent}>
+          <div className={styles.newsMeta}>
+            Ngày đăng: {formatDate(news.PublishDate || news.createdAt)}
+          </div>
+          <div
+            className={styles.newsContent}
+            dangerouslySetInnerHTML={{ __html: news.Content }}
+          />
         </div>
-        <div
-          style={{ fontSize: 18, lineHeight: 1.7 }}
-          dangerouslySetInnerHTML={{ __html: news.Content }}
-        />
       </div>
-    </div>
+    </>
   );
 };
 

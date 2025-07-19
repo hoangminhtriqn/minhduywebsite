@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, App as AntdApp } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { Provider } from "react-redux";
 import { store } from "@/store";
@@ -61,269 +61,271 @@ const App: React.FC = () => {
                 },
               }}
             >
-              <Router
-                future={{
-                  v7_startTransition: true,
-                  v7_relativeSplatPath: true,
-                }}
-              >
-                <ScrollToTop />
-                <Routes>
-                  {/* Public Routes */}
-                  <Route
-                    path="/"
-                    element={
-                      <MainLayout>
-                        <HomePage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.LOGIN}
-                    element={
-                      <PublicRoute>
-                        <LoginPage />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.REGISTER}
-                    element={
-                      <PublicRoute>
-                        <RegisterPage />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.PRODUCTS}
-                    element={
-                      <MainLayout>
-                        <PublicProductListPage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.PRODUCTS_DETAIL}
-                    element={
-                      <MainLayout>
-                        <ProductDetailPage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.NEWS}
-                    element={
-                      <MainLayout>
-                        <NewsPage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.NEWS_DETAIL}
-                    element={
-                      <MainLayout>
-                        <NewsDetailPage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.SERVICE}
-                    element={
-                      <MainLayout>
-                        <ServicePage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.TEST_DRIVE}
-                    element={
-                      <MainLayout>
-                        <TestDrivePage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.PRICE_LIST}
-                    element={
-                      <MainLayout>
-                        <PriceListPage />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.PRICE_LIST_DETAIL}
-                    element={
-                      <MainLayout>
-                        <PriceListDetailPage />
-                      </MainLayout>
-                    }
-                  />
-
-                  {/* Protected Routes */}
-                  <Route
-                    path={ROUTERS.USER.FAVORITES}
-                    element={
-                      <ProtectedRoute>
+              <AntdApp>
+                <Router
+                  future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                  }}
+                >
+                  <ScrollToTop />
+                  <Routes>
+                    {/* Public Routes */}
+                    <Route
+                      path="/"
+                      element={
                         <MainLayout>
-                          <FavoritesPage />
+                          <HomePage />
                         </MainLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.USER.PROFILE}
-                    element={
-                      <ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.LOGIN}
+                      element={
+                        <PublicRoute>
+                          <LoginPage />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.REGISTER}
+                      element={
+                        <PublicRoute>
+                          <RegisterPage />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.PRODUCTS}
+                      element={
                         <MainLayout>
-                          <ProfilePage />
+                          <PublicProductListPage />
                         </MainLayout>
-                      </ProtectedRoute>
-                    }
-                  />
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.PRODUCTS_DETAIL}
+                      element={
+                        <MainLayout>
+                          <ProductDetailPage />
+                        </MainLayout>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.NEWS}
+                      element={
+                        <MainLayout>
+                          <NewsPage />
+                        </MainLayout>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.NEWS_DETAIL}
+                      element={
+                        <MainLayout>
+                          <NewsDetailPage />
+                        </MainLayout>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.SERVICE}
+                      element={
+                        <MainLayout>
+                          <ServicePage />
+                        </MainLayout>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.TEST_DRIVE}
+                      element={
+                        <MainLayout>
+                          <TestDrivePage />
+                        </MainLayout>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.PRICE_LIST}
+                      element={
+                        <MainLayout>
+                          <PriceListPage />
+                        </MainLayout>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.PRICE_LIST_DETAIL}
+                      element={
+                        <MainLayout>
+                          <PriceListDetailPage />
+                        </MainLayout>
+                      }
+                    />
 
-                  {/* Admin Routes */}
-                  <Route
-                    path={ROUTERS.ADMIN.DASHBOARD}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <DashboardPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.PRODUCTS}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <AdminProductListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.PRODUCTS_ADD}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <ProductFormPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.PRODUCTS_EDIT}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <ProductFormPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.ORDERS}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <TestDriveBookingListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.ORDERS_DETAIL}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <OrderDetailPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.USERS}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <UserListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.CATEGORIES}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <CategoryListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.SERVICES}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <ServiceListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.TEST_DRIVE_BOOKINGS}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <TestDriveBookingListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.NEWS}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <NewsListPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.NEWS_ADD}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <NewsFormPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path={ROUTERS.ADMIN.NEWS_EDIT}
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <NewsFormPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/settings"
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <AdminLayout>
-                          <SettingsPage />
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-                </Routes>
-              </Router>
+                    {/* Protected Routes */}
+                    <Route
+                      path={ROUTERS.USER.FAVORITES}
+                      element={
+                        <ProtectedRoute>
+                          <MainLayout>
+                            <FavoritesPage />
+                          </MainLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.USER.PROFILE}
+                      element={
+                        <ProtectedRoute>
+                          <MainLayout>
+                            <ProfilePage />
+                          </MainLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* Admin Routes */}
+                    <Route
+                      path={ROUTERS.ADMIN.DASHBOARD}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <DashboardPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.PRODUCTS}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <AdminProductListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.PRODUCTS_ADD}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <ProductFormPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.PRODUCTS_EDIT}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <ProductFormPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.ORDERS}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <TestDriveBookingListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.ORDERS_DETAIL}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <OrderDetailPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.USERS}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <UserListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.CATEGORIES}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <CategoryListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.SERVICES}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <ServiceListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.TEST_DRIVE_BOOKINGS}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <TestDriveBookingListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.NEWS}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <NewsListPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.NEWS_ADD}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <NewsFormPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={ROUTERS.ADMIN.NEWS_EDIT}
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <NewsFormPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin/settings"
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout>
+                            <SettingsPage />
+                          </AdminLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Routes>
+                </Router>
+              </AntdApp>
             </ConfigProvider>
             <ToastContainer
               position="top-right"

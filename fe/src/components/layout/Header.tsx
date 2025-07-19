@@ -518,7 +518,7 @@ const Header: React.FC = () => {
                 onMouseLeave={handleNavLinkLeave}
                 data-theme="nav-link"
               >
-                {isTablet ? "Đặt lịch" : "Đặt lịch sửa chữa"}
+                Đặt lịch
               </Link>
             </nav>
 

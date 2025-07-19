@@ -3,12 +3,12 @@ import {
   Button,
   Card,
   Col,
-  notification,
   Row,
   Spin,
   Table,
   Tooltip,
   Typography,
+  App,
 } from "antd";
 import React, { useEffect, useState } from "react";
 
@@ -30,6 +30,7 @@ const ProductDetailPage: React.FC = () => {
   // Use scroll to top hook
   useScrollToTop();
 
+  const { notification } = App.useApp();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -91,7 +92,7 @@ const ProductDetailPage: React.FC = () => {
     if (id) {
       fetchProduct();
     }
-  }, [id]); // Refetch when ID changes
+  }, [id, notification]); // Refetch when ID changes
 
   // Fetch related products
   useEffect(() => {
@@ -115,7 +116,7 @@ const ProductDetailPage: React.FC = () => {
     };
 
     fetchRelatedProducts();
-  }, [product, id]);
+  }, [product, id, notification]);
 
   const isFavorite = product
     ? favorites.some((fav) => fav.ProductID._id === product._id)

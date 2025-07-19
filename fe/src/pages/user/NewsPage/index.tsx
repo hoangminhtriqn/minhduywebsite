@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { getAllNewsEvents, NewsEvent } from "@/api/services/user/newsEvents";
 import PageBanner from "@/components/PageBanner";
-import { usePagination } from "@/hooks/usePagination";
 import PaginationWrapper from "@/components/PaginationWrapper";
-import { useNavigate } from "react-router-dom";
+import { usePagination } from "@/hooks/usePagination";
 import { ROUTERS } from "@/utils/constant";
-import { Card, Row, Col, Typography, Spin, Empty } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NewsPage: React.FC = () => {
   const [newsEvents, setNewsEvents] = useState<NewsEvent[]>([]);
@@ -13,7 +12,7 @@ const NewsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
 
-  const { pagination, handlePageChange, setPageSize } = usePagination({
+  const { pagination, handlePageChange } = usePagination({
     initialPage: 1,
     initialPageSize: 10,
     initialTotal: 0,
@@ -37,7 +36,7 @@ const NewsPage: React.FC = () => {
         );
         setNewsEvents(data);
         setTotal(pageInfo.total);
-      } catch (err: any) {
+      } catch {
         setError("Không thể tải tin tức. Vui lòng thử lại sau.");
       } finally {
         setLoading(false);
