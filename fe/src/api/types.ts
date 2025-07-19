@@ -145,4 +145,16 @@ export interface FavoritesData {
   Status: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface NewsEvent {
+  _id: string;
+  Title: string;
+  Content: string;
+  PublishDate: string;
+  ImageUrl?: string;
+  Status: 'draft' | 'published' | 'archived' | 'active' | 'inactive';
+  viewCount: number;
+  createdAt: string;
+  updatedAt: string;
 } 

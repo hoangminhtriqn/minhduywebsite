@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Menu, Button, Dropdown, Space, Avatar } from "antd";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  DashboardOutlined,
   CarOutlined,
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-  ShoppingCartOutlined,
-  FileTextOutlined,
-  CalendarOutlined,
-  BellOutlined,
-  TeamOutlined,
   CarryOutOutlined,
+  DashboardOutlined,
+  FileTextOutlined,
+  LogoutOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
   TagsOutlined,
+  TeamOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+import { Dropdown, Layout, Menu, Space } from "antd";
+import React, { useEffect, useState } from "react";
 
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import ThemeController from "@/components/ThemeController";
 import { useAuth } from "@/contexts/AuthContext";
 import { ROUTERS } from "@/utils/constant";
-import ThemeController from "@/components/ThemeController";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./AdminLayout.module.css"; // Import CSS module
 
 const { Header, Content, Footer, Sider } = Layout;

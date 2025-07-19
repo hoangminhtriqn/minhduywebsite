@@ -6,13 +6,15 @@ const { upload } = require('../config/cloudinary'); // Import upload middleware
 
 // Routes for News & Events Management
 // Use middleware where needed (e.g., authorize for admin actions)
-router.route('/')
-  .get(newsEventsController.getAllNewsEvents) // Public
-  .post(protect, authorize('admin'), upload.single('ImageUrl'), newsEventsController.createNewsEvent); // Admin only, add upload middleware
 
-router.route('/:newsEventId')
-  .get(newsEventsController.getNewsEventById) // Public
-  .put(protect, authorize('admin'), upload.single('ImageUrl'), newsEventsController.updateNewsEvent) // Admin only, add upload middleware
-  .delete(protect, authorize('admin'), newsEventsController.deleteNewsEvent); // Admin only
+// Specific routes must come before parameterized routes
+router.get('/popular', newsEventsController.getPopularNewsEvents); // Public - Get popular news
+
+router.get('/', newsEventsController.getAllNewsEvents); // Public
+router.post('/', protect, authorize('admin'), upload.single('ImageUrl'), newsEventsController.createNewsEvent); // Admin only
+
+router.get('/:newsEventId', newsEventsController.getNewsEventById); // Public
+router.put('/:newsEventId', protect, authorize('admin'), upload.single('ImageUrl'), newsEventsController.updateNewsEvent); // Admin only
+router.delete('/:newsEventId', protect, authorize('admin'), newsEventsController.deleteNewsEvent); // Admin only
 
 module.exports = router; 

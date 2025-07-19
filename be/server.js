@@ -107,7 +107,7 @@ app.use('/api/xe', productRoutes);
 // Mount favorites routes
 app.use('/api/yeu-thich', favoritesRoutes);
 app.use('/api/dich-vu', servicesApis);
-app.use('/api/tin-tuc-su-kien', newsEventsApis);
+app.use('/api/news-events', newsEventsApis);
 app.use('/api/thong-ke', statisticsRoutes);
 app.use('/api', businessRoutes);
 app.use('/api/service-requests', serviceRequestsRouter);

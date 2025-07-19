@@ -7,6 +7,7 @@ export interface NewsEvent {
   PublishDate?: string;
   ImageUrl?: string;
   Status: 'draft' | 'published' | 'archived' | 'active' | 'inactive';
+  viewCount: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -37,45 +38,35 @@ export interface NewsEventsPaginationResponse {
 
 // Get all news events
 export const getAllNewsEvents = async (page = 1, limit = 10): Promise<NewsEventsPaginationResponse> => {
-  const response = await api.get('/tin-tuc-su-kien', { params: { page, limit } });
+  const response = await api.get('/news-events', { params: { page, limit } });
+  return response.data.data;
+};
+
+// Get popular news events
+export const getPopularNewsEvents = async (page = 1, limit = 6): Promise<NewsEventsPaginationResponse> => {
+  const response = await api.get('/news-events/popular', { params: { page, limit } });
   return response.data.data;
 };
 
 // Get single news event by ID
 export const getNewsEventById = async (id: string): Promise<NewsEvent> => {
-  try {
-    const response = await api.get(`/tin-tuc-su-kien/${id}`);
-    return response.data.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.get(`/news-events/${id}`);
+  return response.data.data;
 };
 
 // Create news event (Admin only)
 export const createNewsEvent = async (newsEventData: Partial<NewsEvent> | FormData): Promise<NewsEvent> => {
-  try {
-    const response = await api.post('/tin-tuc-su-kien', newsEventData);
-    return response.data.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.post('/news-events', newsEventData);
+  return response.data.data;
 };
 
 // Update news event (Admin only)
 export const updateNewsEvent = async (id: string, newsEventData: Partial<NewsEvent> | FormData): Promise<NewsEvent> => {
-  try {
-    const response = await api.put(`/tin-tuc-su-kien/${id}`, newsEventData);
-    return response.data.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.put(`/news-events/${id}`, newsEventData);
+  return response.data.data;
 };
 
 // Delete news event (Admin only)
 export const deleteNewsEvent = async (id: string): Promise<void> => {
-  try {
-    await api.delete(`/tin-tuc-su-kien/${id}`);
-  } catch (error) {
-    throw error;
-  }
+  await api.delete(`/news-events/${id}`);
 }; 

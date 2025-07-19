@@ -7,12 +7,12 @@ $breakpoint-xl: 1200px;
 $breakpoint-xxl: 1400px;
 
 .featuredModels {
-  padding: 4rem 2rem;
+  padding: 1rem 2rem;
   background-color: #ffffff;
   min-height: 400px;
 
   @media (max-width: 768px) {
-    padding: 2rem 1rem;
+    padding: 0.5rem 1rem;
   }
 }
 

@@ -4,7 +4,7 @@ const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/respon
 // const cloudinary = require('../config/cloudinary');
 
 // @desc    Get all news and events
-// @route   GET /api/tin-tuc-su-kien
+// @route   GET /api/news-events
 // @access  Public
 const getAllNewsEvents = async (req, res) => {
   try {
@@ -33,6 +33,39 @@ const getAllNewsEvents = async (req, res) => {
   } catch (error) {
     console.error('Error fetching news and events:', error);
     errorResponse(res, 'Lỗi khi lấy danh sách tin tức/sự kiện', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+// @desc    Get popular news and events (sorted by view count)
+// @route   GET /api/news-events/popular
+// @access  Public
+const getPopularNewsEvents = async (req, res) => {
+  try {
+    // Pagination
+    let { page = 1, limit = 6 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const skip = (page - 1) * limit;
+
+    const query = { Status: { $in: ['published', 'active'] } };
+    const total = await NewsEvent.countDocuments(query);
+    const newsEvents = await NewsEvent.find(query)
+      .sort({ viewCount: -1, PublishDate: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    successResponse(res, {
+      data: newsEvents,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching popular news and events:', error);
+    errorResponse(res, 'Lỗi khi lấy danh sách tin tức phổ biến', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
   }
 };
 
@@ -155,6 +188,7 @@ const deleteNewsEvent = async (req, res) => {
 
 module.exports = {
   getAllNewsEvents,
+  getPopularNewsEvents,
   getNewsEventById,
   createNewsEvent,
   updateNewsEvent,
