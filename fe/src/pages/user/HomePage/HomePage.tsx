@@ -3,7 +3,7 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import HeroSection from "@/components/HeroSection";
 import FeaturedModels from "@/components/FeaturedModels/FeaturedModels";
-import BrandExperience from "@/components/BrandExperience/BrandExperience";
+import BrandExperience from "@/components/BrandExperience";
 import { PageSEO } from "@/components/SEO";
 import { PageKeys } from "@/components/SEO/seoConfig";
 import styles from "./HomePage.module.scss";

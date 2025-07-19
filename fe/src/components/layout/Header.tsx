@@ -18,7 +18,6 @@ import {
   LoginOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { Button, Dropdown, Space, Avatar, Badge } from "antd";
 import { ROUTERS } from "@/utils/constant";
 
 // Hàm chuyển hex sang rgba
@@ -100,7 +99,6 @@ const Header: React.FC = () => {
   const authBarStyle: React.CSSProperties = {
     background: `linear-gradient(90deg, ${hexToRgba(theme.colors.palette.primaryDark, 0.16)} 0%, ${hexToRgba(theme.colors.palette.primary, 0.16)} 50%, ${hexToRgba(theme.colors.palette.primaryLight, 0.16)} 100%)`,
     color: "#ffffff",
-    padding: isMobile ? "3px 0" : "5px 0",
     fontSize: isMobile ? "13px" : "15px",
     width: "100%",
     display: isMobile ? "none" : "block",
