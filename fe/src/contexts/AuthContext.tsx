@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import apiClient from "../api/axios";
 import { toast } from "react-toastify";
+import { ROUTERS } from "../utils/constant";
 
 interface User {
   _id: string;
@@ -18,7 +19,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<string>;
   register: (
     username: string,
     email: string,
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     performAuthCheck();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<string> => {
     try {
       const response = await apiClient.post("/users/login", {
         UserName: email,
@@ -90,6 +91,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("userId", user._id);
       setUser(user);
       toast.success("Đăng nhập thành công!");
+
+      // Return redirect path based on user role
+      if (user.Role === "admin") {
+        return ROUTERS.ADMIN.DASHBOARD;
+      } else {
+        return ROUTERS.USER.HOME;
+      }
     } catch (error: any) {
       localStorage.removeItem("token");
       localStorage.removeItem("userId");

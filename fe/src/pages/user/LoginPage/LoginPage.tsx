@@ -35,9 +35,12 @@ const LoginPage: React.FC = () => {
     }
 
     try {
-      // Call login function from AuthContext
-      await login(formData.UserNameOrEmail, formData.Password);
-      navigate(ROUTERS.USER.HOME); // Navigate after successful login
+      // Call login function from AuthContext and get redirect path
+      const redirectPath = await login(
+        formData.UserNameOrEmail,
+        formData.Password
+      );
+      navigate(redirectPath); // Navigate to the appropriate page based on user role
     } catch (error: any) {
       // Error message is already handled in AuthContext, just show it
       toast.error(error.message);
