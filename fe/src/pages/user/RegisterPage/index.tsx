@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
 import { authService } from "@/api/services/user/auth";
 import { toast } from "react-toastify";
-import styles from "./RegisterPage.module.scss";
+import styles from "./styles.module.scss";
 import { RegisterData } from "@/api/types";
 import { ROUTERS } from "@/utils/constant";
 import {
@@ -15,6 +15,16 @@ import {
   EnvironmentOutlined,
   LockOutlined,
 } from "@ant-design/icons";
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+    status?: number;
+  };
+  message?: string;
+}
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -104,25 +114,27 @@ const RegisterPage: React.FC = () => {
       dispatch(setUser(user));
       toast.success("Đăng ký thành công!");
       navigate("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Xử lý lỗi từ server response
       let errorMessage = "Có lỗi xảy ra khi đăng ký";
 
-      if (error.response) {
+      if (error && typeof error === "object" && "response" in error) {
         // Lỗi từ server với response
-        const serverResponse = error.response.data;
+        const apiError = error as ApiError;
+        const serverResponse = apiError.response?.data;
         if (serverResponse && serverResponse.message) {
           errorMessage = serverResponse.message;
-        } else if (error.response.status === 400) {
+        } else if (apiError.response?.status === 400) {
           errorMessage = "Dữ liệu không hợp lệ";
-        } else if (error.response.status === 409) {
+        } else if (apiError.response?.status === 409) {
           errorMessage = "Tên đăng nhập hoặc email đã tồn tại";
-        } else if (error.response.status === 500) {
+        } else if (apiError.response?.status === 500) {
           errorMessage = "Lỗi server, vui lòng thử lại sau";
         }
-      } else if (error.message) {
+      } else if (error && typeof error === "object" && "message" in error) {
         // Lỗi từ network hoặc axios
-        errorMessage = error.message;
+        errorMessage =
+          (error as ApiError).message || "Có lỗi xảy ra khi đăng ký";
       }
 
       toast.error(errorMessage);

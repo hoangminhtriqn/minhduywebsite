@@ -42,8 +42,8 @@ import {
   ServicePage,
   BookingPage,
   NewsPage,
-  PriceListDetailPage,
   NewsDetailPage,
+  NotFoundPage,
 } from "@/pages/user";
 import "./styles/main.scss";
 import { ROUTERS } from "@/utils/constant";
@@ -150,14 +150,6 @@ const App: React.FC = () => {
                       element={
                         <MainLayout>
                           <PriceListPage />
-                        </MainLayout>
-                      }
-                    />
-                    <Route
-                      path={ROUTERS.USER.PRICE_LIST_DETAIL}
-                      element={
-                        <MainLayout>
-                          <PriceListDetailPage />
                         </MainLayout>
                       }
                     />
@@ -323,6 +315,16 @@ const App: React.FC = () => {
                             <SettingsPage />
                           </AdminLayout>
                         </ProtectedRoute>
+                      }
+                    />
+
+                    {/* 404 Not Found Route - Must be last */}
+                    <Route
+                      path="*"
+                      element={
+                        <MainLayout>
+                          <NotFoundPage />
+                        </MainLayout>
                       }
                     />
                   </Routes>

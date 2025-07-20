@@ -24,14 +24,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: $color-background-secondary;
+  background: var(--theme-bg-secondary, $color-background-secondary);
   padding: 2rem 1rem;
 }
 
 .profileCard {
-  background: $color-background-primary;
-  border-radius: $border-radius-xl;
-  box-shadow: $shadow-lg;
+  background: var(--theme-bg-primary, $color-background-primary);
+  border-radius: var(--theme-border-radius-xl, $border-radius-xl);
+  box-shadow: var(--theme-shadow-lg, $shadow-lg);
   padding: 2.5rem 2rem 2rem 2rem;
   max-width: 420px;
   width: 100%;
@@ -51,27 +51,27 @@
   width: 84px;
   height: 84px;
   border-radius: 50%;
-  background: $color-primary;
-  color: $color-text-white;
+  background: var(--theme-primary, $color-primary);
+  color: var(--theme-text-white, $color-text-white);
   font-size: 2.5rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  box-shadow: $shadow-md;
+  box-shadow: var(--theme-shadow-md, $shadow-md);
 }
 
 .fullName {
   font-size: $font-size-2xl;
   font-weight: $font-weight-semibold;
-  color: $color-text-primary;
+  color: var(--theme-text-primary, $color-text-primary);
   margin-bottom: 0.25rem;
 }
 
 .role {
   font-size: $font-size-base;
-  color: $color-primary;
+  color: var(--theme-primary, $color-primary);
   font-weight: $font-weight-medium;
   margin-bottom: 0.5rem;
 }
@@ -87,8 +87,8 @@
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  background: $color-background-light;
-  border-radius: $border-radius-md;
+  background: var(--theme-bg-light, $color-background-light);
+  border-radius: var(--theme-border-radius-md, $border-radius-md);
   padding: 0.7rem 1rem;
 }
 
@@ -96,26 +96,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-primary;
+  color: var(--theme-primary, $color-primary);
 }
 
 .label {
   font-size: $font-size-base;
-  color: $color-text-secondary;
+  color: var(--theme-text-secondary, $color-text-secondary);
   min-width: 110px;
   font-weight: $font-weight-medium;
 }
 
 .value {
   font-size: $font-size-base;
-  color: $color-text-primary;
+  color: var(--theme-text-primary, $color-text-primary);
   font-weight: $font-weight-medium;
   word-break: break-all;
 }
 
 .editInput {
   font-size: $font-size-base;
-  color: $color-text-primary;
+  color: var(--theme-text-primary, $color-text-primary);
   font-weight: $font-weight-medium;
   background: transparent;
   border: none;
@@ -123,16 +123,16 @@
   flex: 1;
   min-width: 150px;
   padding: 0.5rem 0.75rem;
-  border-bottom: 2px solid $color-primary;
-  border-radius: $border-radius-sm;
+  border-bottom: 2px solid var(--theme-primary, $color-primary);
+  border-radius: var(--theme-border-radius-sm, $border-radius-sm);
   
   &:focus {
-    border-bottom-color: $color-primary-dark;
-    background: rgba($color-primary, 0.05);
+    border-bottom-color: var(--theme-primary-dark, $color-primary-dark);
+    background: rgba(var(--theme-primary-rgb, 0, 102, 177), 0.05);
   }
   
   &::placeholder {
-    color: $color-text-muted;
+    color: var(--theme-text-muted, $color-text-muted);
   }
 }
 
@@ -146,12 +146,12 @@
 
 .editButton, .saveButton, .cancelButton {
   padding: 0.75rem 1.5rem;
-  border-radius: $border-radius-md;
+  border-radius: var(--theme-border-radius-md, $border-radius-md);
   font-size: $font-size-base;
   font-weight: $font-weight-medium;
   border: none;
   cursor: pointer;
-  transition: $transition-normal;
+  transition: var(--theme-transition-normal, $transition-normal);
   
   &:hover:not(:disabled) {
     transform: translateY(-1px);
@@ -165,29 +165,29 @@
 }
 
 .editButton {
-  background: $color-primary !important;
-  color: $color-text-white !important;
+  background: var(--theme-primary, $color-primary) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   
   &:hover:not(:disabled) {
-    background: $color-primary-dark !important;
+    background: var(--theme-primary-dark, $color-primary-dark) !important;
   }
 }
 
 .saveButton {
-  background: $color-success !important;
-  color: $color-text-white !important;
+  background: var(--theme-success, $color-success) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   
   &:hover:not(:disabled) {
-    background: $color-success !important;
+    background: var(--theme-success-dark, $color-success) !important;
   }
 }
 
 .cancelButton {
-  background: $color-text-muted !important;
-  color: $color-text-white !important;
+  background: var(--theme-text-muted, $color-text-muted) !important;
+  color: var(--theme-text-white, $color-text-white) !important;
   
   &:hover:not(:disabled) {
-    background: $color-text-secondary !important;
+    background: var(--theme-text-secondary, $color-text-secondary) !important;
   }
 }
 
@@ -201,8 +201,8 @@
 .spinner {
   width: 48px;
   height: 48px;
-  border: 5px solid $color-border-light;
-  border-top: 5px solid $color-primary;
+  border: 5px solid var(--theme-border-light, $color-border-light);
+  border-top: 5px solid var(--theme-primary, $color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -218,10 +218,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: $color-text-secondary;
-  background: $color-background-primary;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
+  color: var(--theme-text-secondary, $color-text-secondary);
+  background: var(--theme-bg-primary, $color-background-primary);
+  border-radius: var(--theme-border-radius-lg, $border-radius-lg);
+  box-shadow: var(--theme-shadow-md, $shadow-md);
   padding: 2.5rem 2rem;
   max-width: 400px;
   margin: 2rem auto;
@@ -243,7 +243,7 @@
   }
 }
 
-// Ultimate theme override with maximum specificity
+// Theme-aware button styles with maximum specificity
 html body .profileWrapper .profileCard .actionButtons .editButton,
 html body .profileWrapper .profileCard .actionButtons .saveButton,
 html body .profileWrapper .profileCard .actionButtons .cancelButton {
@@ -284,11 +284,11 @@ html body .profileWrapper .profileCard .actionButtons .cancelButton {
   outline: none !important;
   box-shadow: none !important;
   padding: 0.75rem 1.5rem !important;
-  border-radius: $border-radius-md !important;
+  border-radius: var(--theme-border-radius-md, $border-radius-md) !important;
   font-size: $font-size-base !important;
   font-weight: $font-weight-medium !important;
   cursor: pointer !important;
-  transition: $transition-normal !important;
+  transition: var(--theme-transition-normal, $transition-normal) !important;
   
   &:hover:not(:disabled) {
     transform: translateY(-1px) !important;

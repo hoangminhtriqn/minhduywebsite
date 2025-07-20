@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
 import { ROUTERS } from "@/utils/constant";
-import styles from "./LoginPage.module.scss"; // Import SCSS module
+import styles from "./styles.module.scss"; // Import SCSS module
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const LoginPage: React.FC = () => {
@@ -41,9 +41,11 @@ const LoginPage: React.FC = () => {
         formData.Password
       );
       navigate(redirectPath); // Navigate to the appropriate page based on user role
-    } catch (error: any) {
-      // Error message is already handled in AuthContext, just show it
-      toast.error(error.message);
+    } catch (error: unknown) {
+      // Display error message from the backend
+      const errorMessage =
+        error instanceof Error ? error.message : "Đăng nhập thất bại";
+      toast.error(errorMessage);
     }
   };
 

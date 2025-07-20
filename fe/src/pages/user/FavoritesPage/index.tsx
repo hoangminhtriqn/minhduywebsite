@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
-import {
-  Card,
-  Row,
-  Col,
-  Typography,
-  Spin,
-  Empty,
-  Button,
-  notification,
-  Space,
-  Tooltip,
-} from "antd";
-import {
-  HeartOutlined,
-  EyeOutlined,
-  DeleteOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import PageBanner from "@/components/PageBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import { useNavigate } from "react-router-dom";
-import PageBanner from "@/components/PageBanner";
 import useScrollToTop from "@/hooks/useScrollToTop";
-import styles from "./FavoritesPage.module.scss";
 import { ROUTERS } from "@/utils/constant";
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  HeartOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Col,
+  Empty,
+  notification,
+  Row,
+  Space,
+  Spin,
+  Tooltip,
+  Typography,
+} from "antd";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./styles.module.scss";
 
 const { Title, Text } = Typography;
 
@@ -52,7 +52,7 @@ const FavoritesPage: React.FC = () => {
         message: "Thành công",
         description: "Đã xóa sản phẩm khỏi danh sách yêu thích",
       });
-    } catch (error) {
+    } catch {
       notification.error({
         message: "Lỗi",
         description: "Không thể xóa sản phẩm khỏi danh sách yêu thích",
@@ -63,7 +63,7 @@ const FavoritesPage: React.FC = () => {
   };
 
   const handleViewProduct = (productId: string) => {
-          navigate(ROUTERS.USER.PRODUCTS + "/" + productId);
+    navigate(ROUTERS.USER.PRODUCTS + "/" + productId);
   };
 
   // Helper function để kiểm tra sản phẩm có trong favorites không
@@ -130,7 +130,10 @@ const FavoritesPage: React.FC = () => {
                       hoverable
                       className={styles.favoriteCard}
                       cover={
-                        <div className={styles.productImage}>
+                        <div
+                          className={styles.productImage}
+                          onClick={() => handleViewProduct(item.ProductID._id)}
+                        >
                           <img
                             alt={item.ProductID.Product_Name}
                             src={item.ProductID.Main_Image}

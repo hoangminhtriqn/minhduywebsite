@@ -1,6 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { API_BASE_URL, API_TIMEOUT } from './config';
 import { toast } from 'react-toastify';
+import { ROUTERS } from '@/utils/constant';
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
@@ -34,10 +35,14 @@ apiClient.interceptors.response.use(
   (error) => {
     // Handle common errors
     if (error.response?.status === 401) {
-      // Unauthorized - redirect to login
+      // Unauthorized - redirect to login only if not already on login page
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      localStorage.removeItem('userId');
+      
+      // Don't redirect if we're already on the login page
+      if (window.location.pathname !== ROUTERS.USER.LOGIN) {
+        window.location.href = ROUTERS.USER.LOGIN;
+      }
     }
     
     if (error.response?.status === 403) {
@@ -45,8 +50,12 @@ apiClient.interceptors.response.use(
       window.location.href = '/';
     }
     
-    const message = error.response?.data?.message || 'Có lỗi xảy ra';
-    toast.error(message);
+    // Don't show toast for 401 errors on login page to avoid duplicate messages
+    if (!(error.response?.status === 401 && window.location.pathname === ROUTERS.USER.LOGIN)) {
+      const message = error.response?.data?.message || 'Có lỗi xảy ra';
+      toast.error(message);
+    }
+    
     return Promise.reject(error);
   }
 );

@@ -1,14 +1,13 @@
 export const ROUTERS = {
  USER: {
   HOME: "/",
-  LOGIN: "/login",
+  LOGIN: "/dang-nhap",
   REGISTER: "/register",
   PROFILE: "/profile",
   PRODUCTS: "/san-pham",
   PRODUCTS_DETAIL: "/san-pham/:id",
   SERVICE: "/dich-vu",
   PRICE_LIST: "/bang-gia",
-  PRICE_LIST_DETAIL: "/bang-gia/:id",
   FAVORITES: "/yeu-thich",
   NEWS: "/tin-tuc",
   NEWS_DETAIL: "/tin-tuc-su-kien/:id",

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/api/services/user/auth";
+import { useAuth } from "@/contexts/AuthContext";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import styles from "./ProfilePage.module.scss";
-import { Form, Input, Button, Card, Typography } from "antd";
+import styles from "./styles.module.scss";
 
 const getInitials = (name?: string) => {
   if (!name) return "";
@@ -38,21 +37,18 @@ const ProfilePage: React.FC = () => {
 
     setIsSaving(true);
     try {
-      const updatedUser = await authService.updateProfile(user._id, editForm);
-
-      // Cập nhật user state trong AuthContext
+      await authService.updateProfile(user._id, editForm);
       updateUser(editForm);
 
-      // Delay toast để user thấy được
       setTimeout(() => {
         toast.success("Cập nhật thông tin thành công!");
       }, 500);
 
       setIsEditing(false);
-    } catch (error: any) {
-      console.error("Error saving user info:", error);
+    } catch (error: unknown) {
       const errorMessage =
-        error.response?.data?.message || "Có lỗi xảy ra khi cập nhật thông tin";
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Có lỗi xảy ra khi cập nhật thông tin";
       toast.error(errorMessage);
     } finally {
       setIsSaving(false);

@@ -98,18 +98,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } else {
         return ROUTERS.USER.HOME;
       }
-    } catch (error: any) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      setUser(null);
+    } catch (error: unknown) {
+      // Don't clear localStorage or setUser to null on login failure
+      // This prevents unnecessary state changes that could cause page reloads
 
       // Handle error response from backend
-      if (error.response && error.response.data) {
+      if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
+        error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response &&
+        error.response.data
+      ) {
         const errorMessage =
-          error.response.data.message || "Có lỗi xảy ra khi đăng nhập";
+          (error.response.data as { message?: string }).message ||
+          "Có lỗi xảy ra khi đăng nhập";
         throw new Error(errorMessage);
       } else {
-        throw new Error(error.message || "Có lỗi xảy ra khi đăng nhập");
+        throw new Error(
+          (error as Error).message || "Có lỗi xảy ra khi đăng nhập"
+        );
       }
     }
   };
