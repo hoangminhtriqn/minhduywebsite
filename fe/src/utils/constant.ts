@@ -13,6 +13,7 @@ export const ROUTERS = {
   NEWS: "/tin-tuc",
   NEWS_DETAIL: "/tin-tuc-su-kien/:id",
   TEST_DRIVE: "/lai-thu",
+  BOOKING: "/dat-lich",
  },
  ADMIN: {
   DASHBOARD: "/admin",
