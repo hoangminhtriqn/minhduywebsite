@@ -48,7 +48,7 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
 
   const presetColors = [
     "#059669", // SiVi Green (Default)
-    "#0066b1", // BMW Blue
+    "#0066b1", // Minh Duy Blue
     "#dc2626", // Sport Red
     "#8b5a2b", // Luxury Brown
     "#6366f1", // Elegant Purple

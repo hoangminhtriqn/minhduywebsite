@@ -35,7 +35,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Công ty TNHH MTV Công Nghệ Ứng Dụng Minh Duy - Chuyên thi công, lắp đặt, xử lý các sự cố kỹ thuật: máy vi tính, máy in, camera, máy chiếu, máy photocopy, máy dùng cho văn phòng, máy chấm công, PCCC, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời, mạng internet, cáp quang, chống sét, tổng đài điện thoại, server trạm tổng, trung tâm điều khiển server, công nghệ ứng dụng tổng hợp. Địa chỉ: 231 Hùng Vương, TP Tam Kỳ, Quảng Nam - 150 Nguyễn Đình Chiểu, TP Tam Kỳ, Quảng Nam - 62 Phạm Như Xương, TP Đà Nẵng.",
     keywords: "Minh Duy, Công ty TNHH MTV Công Nghệ Ứng Dụng, thi công lắp đặt, xử lý sự cố kỹ thuật, máy vi tính, máy in, camera, máy chiếu, máy photocopy, PCCC, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời, mạng internet, cáp quang, chống sét, tổng đài điện thoại, server, Tam Kỳ, Đà Nẵng, Quảng Nam",
     canonical: "https://minduywebsite.com/",
-    ogImage: "/images/logo.png",
+    ogImage: "/images/minhduy-x5m.jpg",
     structuredData: [
       {
         type: 'organization',
@@ -59,7 +59,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Báo giá laptop chính hãng đời 2025 tại Minh Duy. Dell Inspiron, Dell Vostro với cấu hình cao, bảo hành chính hãng. Tặng kèm túi xách, chuột không dây, bộ vệ sinh laptop.",
     keywords: "laptop chính hãng 2025, Dell Inspiron, Dell Vostro, laptop Dell, giá laptop, báo giá laptop, laptop Tam Kỳ, laptop Đà Nẵng, Minh Duy laptop",
     canonical: "https://minduywebsite.com/cars",
-    ogImage: "/images/logo.png",
+    ogImage: "/images/minhduy-x5m.jpg",
     structuredData: [
       {
         type: 'breadcrumb',
@@ -77,7 +77,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "{productName} tại Minh Duy. Giá laptop {productName} tốt nhất 2025, bảo hành chính hãng 1 năm. Tặng kèm túi xách, chuột không dây, bộ vệ sinh laptop.",
     keywords: "{productName}, giá laptop, laptop chính hãng, Dell Inspiron, Dell Vostro, Minh Duy, Tam Kỳ, Đà Nẵng",
     canonical: "https://minduywebsite.com/cars/{productId}",
-    ogImage: "/images/bmw-x5m.jpg",
+    ogImage: "/images/minhduy-x5m.jpg",
     structuredData: [
       {
         type: 'breadcrumb',
@@ -103,7 +103,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Tin tức mới nhất về công nghệ, khuyến mãi laptop, sự kiện công nghệ tại Minh Duy. Cập nhật thông tin sản phẩm mới và dịch vụ kỹ thuật.",
     keywords: "tin tức công nghệ, khuyến mãi laptop, sự kiện công nghệ, Minh Duy, tin tức máy tính, Tam Kỳ, Đà Nẵng",
     canonical: "https://minduywebsite.com/news",
-    ogImage: "/images/bmw-news.jpg",
+    ogImage: "/images/minhduy-news.jpg",
     structuredData: [
       {
         type: 'breadcrumb',
@@ -139,7 +139,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Dịch vụ kỹ thuật chuyên nghiệp tại Minh Duy: thi công, lắp đặt, xử lý các sự cố kỹ thuật máy vi tính, máy in, camera, máy chiếu, máy photocopy, PCCC, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời, mạng internet, cáp quang, chống sét, tổng đài điện thoại, server.",
     keywords: "dịch vụ kỹ thuật, thi công lắp đặt, xử lý sự cố, máy vi tính, máy in, camera, máy chiếu, PCCC, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời, mạng internet, cáp quang, chống sét, tổng đài điện thoại, server, Minh Duy, Tam Kỳ, Đà Nẵng",
     canonical: "https://minduywebsite.com/service",
-    ogImage: "/images/bmw-service-center.jpg",
+    ogImage: "/images/minhduy-service-center.jpg",
     structuredData: [
       {
         type: 'breadcrumb',
@@ -175,7 +175,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Bảng giá laptop chính hãng 2025 tại Minh Duy. Dell Inspiron, Dell Vostro với cấu hình cao, bảo hành chính hãng. Tặng kèm túi xách, chuột không dây, bộ vệ sinh laptop.",
     keywords: "bảng giá laptop 2025, giá Dell Inspiron, giá Dell Vostro, laptop chính hãng, báo giá laptop, Minh Duy, Tam Kỳ, Đà Nẵng",
     canonical: "https://minduywebsite.com/price-list",
-    ogImage: "/images/bmw-price-list.jpg",
+    ogImage: "/images/minhduy-price-list.jpg",
     structuredData: [
       {
         type: 'breadcrumb',

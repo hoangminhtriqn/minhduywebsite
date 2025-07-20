@@ -620,7 +620,7 @@ async function migrate() {
       adminUser = new User({
         UserName: 'admin',
         Password: 'admin123',
-        Email: 'admin@bmw.com',
+        Email: 'admin@minhduy.com',
         Phone: '0123456789',
         FullName: 'Administrator',
         Address: 'Hà Nội, Việt Nam',

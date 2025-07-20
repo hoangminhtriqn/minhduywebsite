@@ -428,7 +428,7 @@ const ProductFormPage: React.FC = () => {
               ]}
             >
               <Input
-                placeholder="VD: BMW X5 xDrive40i"
+                placeholder="VD: Minh Duy X5 xDrive40i"
                 prefix={<CarOutlined />}
                 size="large"
               />

@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Featured Models Section */}
-        <section aria-label="Featured BMW Models">
+        <section aria-label="Featured Minh Duy Models">
           <FeaturedModels />
         </section>
 

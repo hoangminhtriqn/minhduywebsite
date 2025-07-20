@@ -9,9 +9,9 @@ const generateColorVariations = (baseColor: string) => {
   };
 };
 
-// BMW Theme (Original)
-const bmwTheme: Theme = {
-  name: 'BMW',
+// Minh Duy Theme (Original)
+const minhduyTheme: Theme = {
+  name: 'MINH DUY',
   colors: {
     palette: {
       primary: '#0066b1',
@@ -121,12 +121,12 @@ const bmwTheme: Theme = {
 
 // SiVi Theme (Your Brand)
 const siviTheme: Theme = {
-  ...bmwTheme,
+  ...minhduyTheme,
   name: 'Minh Duy',
   colors: {
-    ...bmwTheme.colors,
+    ...minhduyTheme.colors,
     palette: {
-      ...bmwTheme.colors.palette,
+      ...minhduyTheme.colors.palette,
       primary: '#059669',
       primaryLight: '#20a77c',
       primaryDark: '#047857',
@@ -138,12 +138,12 @@ const siviTheme: Theme = {
       accentDark: '#c0392b',
     },
     text: {
-      ...bmwTheme.colors.text,
+      ...minhduyTheme.colors.text,
       link: '#059669',
       linkHover: '#047857',
     },
     background: {
-      ...bmwTheme.colors.background,
+      ...minhduyTheme.colors.background,
       gradient: 'linear-gradient(135deg, #059669 0%, #2c3e50 100%)',
     },
   },
@@ -151,12 +151,12 @@ const siviTheme: Theme = {
 
 // Luxury Theme
 const luxuryTheme: Theme = {
-  ...bmwTheme,
+  ...minhduyTheme,
   name: 'Luxury',
   colors: {
-    ...bmwTheme.colors,
+    ...minhduyTheme.colors,
     palette: {
-      ...bmwTheme.colors.palette,
+      ...minhduyTheme.colors.palette,
       primary: '#8b5a2b',
       primaryLight: '#a0694a',
       primaryDark: '#6b441f',
@@ -168,12 +168,12 @@ const luxuryTheme: Theme = {
       accentDark: '#b8941f',
     },
     text: {
-      ...bmwTheme.colors.text,
+      ...minhduyTheme.colors.text,
       link: '#8b5a2b',
       linkHover: '#6b441f',
     },
     background: {
-      ...bmwTheme.colors.background,
+      ...minhduyTheme.colors.background,
       gradient: 'linear-gradient(135deg, #8b5a2b 0%, #2c2416 100%)',
     },
   },
@@ -181,12 +181,12 @@ const luxuryTheme: Theme = {
 
 // Sport Theme
 const sportTheme: Theme = {
-  ...bmwTheme,
+  ...minhduyTheme,
   name: 'Sport',
   colors: {
-    ...bmwTheme.colors,
+    ...minhduyTheme.colors,
     palette: {
-      ...bmwTheme.colors.palette,
+      ...minhduyTheme.colors.palette,
       primary: '#dc2626',
       primaryLight: '#ef4444',
       primaryDark: '#b91c1c',
@@ -198,12 +198,12 @@ const sportTheme: Theme = {
       accentDark: '#f59e0b',
     },
     text: {
-      ...bmwTheme.colors.text,
+      ...minhduyTheme.colors.text,
       link: '#dc2626',
       linkHover: '#b91c1c',
     },
     background: {
-      ...bmwTheme.colors.background,
+      ...minhduyTheme.colors.background,
       gradient: 'linear-gradient(135deg, #dc2626 0%, #1f2937 100%)',
     },
   },
@@ -211,12 +211,12 @@ const sportTheme: Theme = {
 
 // Elegant Theme
 const elegantTheme: Theme = {
-  ...bmwTheme,
+  ...minhduyTheme,
   name: 'Elegant',
   colors: {
-    ...bmwTheme.colors,
+    ...minhduyTheme.colors,
     palette: {
-      ...bmwTheme.colors.palette,
+      ...minhduyTheme.colors.palette,
       primary: '#6366f1',
       primaryLight: '#818cf8',
       primaryDark: '#4f46e5',
@@ -228,12 +228,12 @@ const elegantTheme: Theme = {
       accentDark: '#0891b2',
     },
     text: {
-      ...bmwTheme.colors.text,
+      ...minhduyTheme.colors.text,
       link: '#6366f1',
       linkHover: '#4f46e5',
     },
     background: {
-      ...bmwTheme.colors.background,
+      ...minhduyTheme.colors.background,
       gradient: 'linear-gradient(135deg, #6366f1 0%, #1e293b 100%)',
     },
   },
@@ -241,7 +241,7 @@ const elegantTheme: Theme = {
 
 // Theme Configuration
 export const themeConfig: ThemeConfig = {
-  bmw: bmwTheme,
+  minhduy: minhduyTheme,
   sivi: siviTheme,
   luxury: luxuryTheme,
   sport: sportTheme,

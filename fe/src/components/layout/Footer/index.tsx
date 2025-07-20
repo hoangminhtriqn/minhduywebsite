@@ -182,7 +182,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <div className={styles.bmwFooterContainer} style={footerStyle}>
+    <div className={styles.minhduyFooterContainer} style={footerStyle}>
       <div className={styles.footerContainer}>
         <div className={styles.footerContent}>
           {/* Company Information */}

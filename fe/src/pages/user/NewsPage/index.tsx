@@ -70,7 +70,7 @@ const NewsPage: React.FC = () => {
       <div className="news-page">
         <PageBanner
           title="TIN TỨC - SỰ KIỆN"
-          subtitle="Cập nhật thông tin mới nhất từ BMW với những tin tức, sự kiện và cập nhật mới nhất về sản phẩm và dịch vụ."
+          subtitle="Cập nhật thông tin mới nhất từ Minh Duy với những tin tức, sự kiện và cập nhật mới nhất về sản phẩm và dịch vụ."
         />
         <div className="loading-container">
           <div className="loading-spinner">Đang tải...</div>
@@ -84,7 +84,7 @@ const NewsPage: React.FC = () => {
       <div className="news-page">
         <PageBanner
           title="TIN TỨC - SỰ KIỆN"
-          subtitle="Cập nhật thông tin mới nhất từ BMW với những tin tức, sự kiện và cập nhật mới nhất về sản phẩm và dịch vụ."
+          subtitle="Cập nhật thông tin mới nhất từ Minh Duy với những tin tức, sự kiện và cập nhật mới nhất về sản phẩm và dịch vụ."
         />
         <div className="error-container">
           <p className="error-message">{error}</p>
@@ -97,7 +97,7 @@ const NewsPage: React.FC = () => {
     <div className="news-page">
       <PageBanner
         title="TIN TỨC - SỰ KIỆN"
-        subtitle="Cập nhật thông tin mới nhất từ BMW với những tin tức, sự kiện và cập nhật mới nhất về sản phẩm và dịch vụ."
+        subtitle="Cập nhật thông tin mới nhất từ Minh Duy với những tin tức, sự kiện và cập nhật mới nhất về sản phẩm và dịch vụ."
       />
 
       {/* News List Section */}

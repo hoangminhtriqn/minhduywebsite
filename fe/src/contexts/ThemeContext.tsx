@@ -339,7 +339,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     );
 
     // Also set legacy CSS variables for backward compatibility
-    root.style.setProperty("--bmw-blue", currentTheme.colors.palette.primary);
+    root.style.setProperty(
+      "--minhduy-blue",
+      currentTheme.colors.palette.primary
+    );
     root.style.setProperty(
       "--color-primary",
       currentTheme.colors.palette.primary

@@ -129,7 +129,7 @@ export interface ThemeContextType {
 }
 
 // Available Theme Names
-export type ThemeName = 'bmw' | 'sivi' | 'luxury' | 'sport' | 'elegant' | 'custom';
+export type ThemeName = 'minhduy' | 'sivi' | 'luxury' | 'sport' | 'elegant' | 'custom';
 
 // Theme Configuration Interface
 export interface ThemeConfig {

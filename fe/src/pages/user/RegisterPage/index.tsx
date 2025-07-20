@@ -150,10 +150,10 @@ const RegisterPage: React.FC = () => {
         <div className={styles.register__logo}>
           <img
             src="/images/logo.png"
-            alt="BMW Logo"
+            alt="Minh Duy Logo"
             className={styles["register__logo-image"]}
           />
-          <h1 className={styles["register__logo-text"]}>BMW</h1>
+          <h1 className={styles["register__logo-text"]}>MINH DUY</h1>
         </div>
 
         <h2 className={styles.register__title}>Đăng ký tài khoản mới</h2>

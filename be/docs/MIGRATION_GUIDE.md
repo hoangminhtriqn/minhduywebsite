@@ -7,7 +7,7 @@
 Thay đổi `MONGO_URI` trong file `.env`:
 
 ```bash
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/bmw-website
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/minhduy-website
 ```
 
 ### 2. Chạy Migration
@@ -29,4 +29,4 @@ node migrate.js
 
 - **Username**: `admin`
 - **Password**: `password123`
-- **Email**: `admin@bmw.com`
+- **Email**: `admin@minhduy.com`

@@ -59,7 +59,7 @@ const ServicePage: React.FC = () => {
       icon: "https://cdn-icons-png.flaticon.com/512/1995/1995516.png",
       title: "Sửa Chữa & Đồng Sơn",
       description:
-        "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn BMW.",
+        "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn Minh Duy.",
       isFeatured: true,
     },
     {
@@ -75,7 +75,7 @@ const ServicePage: React.FC = () => {
       icon: "https://cdn-icons-png.flaticon.com/512/1995/1995518.png",
       title: "Thay Dầu & Lọc",
       description:
-        "Thay dầu động cơ và bộ lọc theo tiêu chuẩn BMW để đảm bảo hiệu suất tối ưu.",
+        "Thay dầu động cơ và bộ lọc theo tiêu chuẩn Minh Duy để đảm bảo hiệu suất tối ưu.",
       isFeatured: false,
     },
     {
@@ -99,7 +99,7 @@ const ServicePage: React.FC = () => {
       icon: "https://cdn-icons-png.flaticon.com/512/1995/1995521.png",
       title: "Lắp Đặt Phụ Kiện",
       description:
-        "Lắp đặt các phụ kiện chính hãng BMW với bảo hành và dịch vụ hậu mãi.",
+        "Lắp đặt các phụ kiện chính hãng Minh Duy với bảo hành và dịch vụ hậu mãi.",
       isFeatured: false,
     },
     {
@@ -135,7 +135,7 @@ const ServicePage: React.FC = () => {
           <div className={styles["service-overview__col"]}>
             <img
               src="/images/service_overview.jpg"
-              alt="BMW Service"
+              alt="Minh Duy Service"
               className={styles["service-overview__image"]}
             />
           </div>

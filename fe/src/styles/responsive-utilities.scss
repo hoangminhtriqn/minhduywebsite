@@ -1,5 +1,5 @@
 // ============================================================================
-// RESPONSIVE UTILITIES - BMW WEBSITE
+// RESPONSIVE UTILITIES - MINH DUY WEBSITE
 // ============================================================================
 
 // Import variables
@@ -633,17 +633,17 @@ $spacing-sizes: (
 }
 
 // ============================================================================
-// BMW SPECIFIC RESPONSIVE UTILITIES
+// MINH DUY SPECIFIC RESPONSIVE UTILITIES
 // ============================================================================
 
-// BMW Brand Colors
-.bmw-primary { color: $color-primary !important; }
-.bmw-primary-bg { background-color: $color-primary !important; }
-.bmw-secondary { color: $color-secondary !important; }
-.bmw-secondary-bg { background-color: $color-secondary !important; }
+// Minh Duy Brand Colors
+.minhduy-primary { color: $color-primary !important; }
+.minhduy-primary-bg { background-color: $color-primary !important; }
+.minhduy-secondary { color: $color-secondary !important; }
+.minhduy-secondary-bg { background-color: $color-secondary !important; }
 
-// BMW Responsive Typography
-.bmw-title {
+// Minh Duy Responsive Typography
+.minhduy-title {
   font-family: var(--font-family-base) !important;
   font-weight: $font-weight-bold;
   
@@ -664,7 +664,7 @@ $spacing-sizes: (
   }
 }
 
-.bmw-subtitle {
+.minhduy-subtitle {
   font-family: var(--font-family-base) !important;
   font-weight: $font-weight-semibold;
   
@@ -681,7 +681,7 @@ $spacing-sizes: (
   }
 }
 
-.bmw-body {
+.minhduy-body {
   font-family: var(--font-family-base) !important;
   font-weight: $font-weight-normal;
   line-height: $line-height-normal;
@@ -699,8 +699,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Spacing
-.bmw-section {
+// Minh Duy Responsive Spacing
+.minhduy-section {
   @include max-width($breakpoint-md) {
     padding: $spacing-xl 0;
   }
@@ -718,7 +718,7 @@ $spacing-sizes: (
   }
 }
 
-.bmw-container {
+.minhduy-container {
   @extend .container;
   
   @include max-width($breakpoint-md) {
@@ -737,8 +737,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Grid
-.bmw-grid {
+// Minh Duy Responsive Grid
+.minhduy-grid {
   display: grid;
   gap: $spacing-lg;
   
@@ -763,8 +763,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Buttons
-.bmw-btn {
+// Minh Duy Responsive Buttons
+.minhduy-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -804,8 +804,8 @@ $spacing-sizes: (
   }
 }
 
-.bmw-btn-primary {
-  @extend .bmw-btn;
+.minhduy-btn-primary {
+  @extend .minhduy-btn;
   background-color: $color-primary;
   color: $color-text-white;
   
@@ -814,8 +814,8 @@ $spacing-sizes: (
   }
 }
 
-.bmw-btn-secondary {
-  @extend .bmw-btn;
+.minhduy-btn-secondary {
+  @extend .minhduy-btn;
   background-color: transparent;
   color: $color-primary;
   border: 2px solid $color-primary;
@@ -826,8 +826,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Cards
-.bmw-card {
+// Minh Duy Responsive Cards
+.minhduy-card {
   background: $color-background-primary;
   border-radius: $border-radius-xl;
   box-shadow: $shadow-md;
@@ -852,8 +852,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Images
-.bmw-img {
+// Minh Duy Responsive Images
+.minhduy-img {
   width: 100%;
   height: auto;
   object-fit: cover;
@@ -871,8 +871,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Navigation
-.bmw-nav {
+// Minh Duy Responsive Navigation
+.minhduy-nav {
   display: flex;
   align-items: center;
   
@@ -887,7 +887,7 @@ $spacing-sizes: (
   }
 }
 
-.bmw-nav-link {
+.minhduy-nav-link {
   font-family: var(--font-family-base) !important;
   font-weight: $font-weight-medium;
   text-decoration: none;
@@ -909,8 +909,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Forms
-.bmw-form {
+// Minh Duy Responsive Forms
+.minhduy-form {
   @include max-width($breakpoint-md) {
     padding: $spacing-md;
   }
@@ -924,7 +924,7 @@ $spacing-sizes: (
   }
 }
 
-.bmw-input {
+.minhduy-input {
   width: 100%;
   padding: $spacing-md;
   border: 1px solid $color-border-light;
@@ -945,8 +945,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Tables
-.bmw-table {
+// Minh Duy Responsive Tables
+.minhduy-table {
   width: 100%;
   border-collapse: collapse;
   
@@ -974,8 +974,8 @@ $spacing-sizes: (
   }
 }
 
-// BMW Responsive Modals
-.bmw-modal {
+// Minh Duy Responsive Modals
+.minhduy-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -987,7 +987,7 @@ $spacing-sizes: (
   justify-content: center;
   z-index: $z-index-modal;
   
-  .bmw-modal-content {
+  .minhduy-modal-content {
     background: $color-background-primary;
     border-radius: $border-radius-xl;
     box-shadow: $shadow-2xl;
@@ -1008,97 +1008,6 @@ $spacing-sizes: (
     @include min-width($breakpoint-lg) {
       margin: $spacing-xl;
       padding: $spacing-2xl;
-    }
-  }
-}
-
-// BMW Responsive Hero Section
-.bmw-hero {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: $color-text-white;
-  
-  @include max-width($breakpoint-md) {
-    min-height: 60vh;
-    padding: $spacing-2xl $spacing-md;
-  }
-  
-  @include min-width($breakpoint-md) {
-    min-height: 70vh;
-    padding: $spacing-3xl $spacing-lg;
-  }
-  
-  @include min-width($breakpoint-lg) {
-    min-height: 80vh;
-    padding: $spacing-4xl $spacing-xl;
-  }
-  
-  .bmw-hero-content {
-    z-index: 2;
-    position: relative;
-    
-    @include max-width($breakpoint-md) {
-      max-width: 100%;
-    }
-    
-    @include min-width($breakpoint-md) {
-      max-width: 80%;
-    }
-    
-    @include min-width($breakpoint-lg) {
-      max-width: 70%;
-    }
-  }
-  
-  .bmw-hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
-    z-index: 1;
-  }
-}
-
-// BMW Responsive Footer
-.bmw-footer {
-  background-color: $color-secondary;
-  color: $color-text-white;
-  
-  @include max-width($breakpoint-md) {
-    padding: $spacing-2xl $spacing-md;
-  }
-  
-  @include min-width($breakpoint-md) {
-    padding: $spacing-3xl $spacing-lg;
-  }
-  
-  @include min-width($breakpoint-lg) {
-    padding: $spacing-4xl $spacing-xl;
-  }
-  
-  .bmw-footer-content {
-    @extend .bmw-container;
-    
-    @include max-width($breakpoint-md) {
-      display: flex;
-      flex-direction: column;
-      gap: $spacing-xl;
-    }
-    
-    @include min-width($breakpoint-md) {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: $spacing-2xl;
-    }
-    
-    @include min-width($breakpoint-lg) {
-      grid-template-columns: repeat(4, 1fr);
-      gap: $spacing-3xl;
     }
   }
 } 

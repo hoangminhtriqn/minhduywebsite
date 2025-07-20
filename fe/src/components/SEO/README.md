@@ -2,7 +2,7 @@
 
 ## Tổng quan
 
-Hệ thống SEO được thiết kế để dễ dàng quản lý và tối ưu hóa SEO cho từng trang trong ứng dụng Minh Duy BMW Đà Nẵng.
+Hệ thống SEO được thiết kế để dễ dàng quản lý và tối ưu hóa SEO cho từng trang trong ứng dụng Minh Duy Đà Nẵng.
 
 ## Cấu trúc thư mục
 
@@ -39,9 +39,9 @@ import { PageSEO } from "@/components/SEO";
 
 const ProductDetailPage: React.FC = () => {
   const product = {
-    name: "BMW 3 Series",
+    name: "Minh Duy 3 Series",
     price: "2.5 tỷ VNĐ",
-    description: "BMW 3 Series mới nhất 2024",
+    description: "Minh Duy 3 Series mới nhất 2024",
   };
 
   return (
@@ -52,7 +52,7 @@ const ProductDetailPage: React.FC = () => {
           productName: product.name,
           productPrice: product.price,
           productDescription: product.description,
-          productId: "bmw-3-series-2024",
+          productId: "minhduy-3-series-2024",
         }}
       />
       {/* Nội dung trang */}
@@ -72,7 +72,7 @@ const CustomPage: React.FC = () => {
       <PageSEO
         pageKey="products"
         customConfig={{
-          title: "Xe BMW Đặc Biệt | Minh Duy BMW Đà Nẵng",
+          title: "Xe Minh Duy Đặc Biệt | Minh Duy Đà Nẵng",
           description: "Mô tả tùy chỉnh cho trang này",
         }}
       />
@@ -123,9 +123,9 @@ export const seoConfigs: Record<string, SEOConfig> = {
 
   // Thêm cấu hình mới
   newPage: {
-    title: "Tiêu đề trang mới | Minh Duy BMW Đà Nẵng",
+    title: "Tiêu đề trang mới | Minh Duy Đà Nẵng",
     description: "Mô tả trang mới",
-    keywords: "từ khóa, trang mới, BMW",
+    keywords: "từ khóa, trang mới, Minh Duy",
     canonical: "https://minduywebsite.com/new-page",
     ogImage: "/images/new-page.jpg",
     structuredData: [
@@ -243,10 +243,10 @@ Hệ thống hỗ trợ các placeholder sau để thay thế bằng dữ liệu
 <PageSEO
   pageKey="productDetail"
   dynamicData={{
-    productName: "BMW 3 Series 2024",
+    productName: "Minh Duy 3 Series 2024",
     productPrice: "2.5 tỷ VNĐ",
-    productDescription: "BMW 3 Series mới nhất với công nghệ tiên tiến",
-    productId: "bmw-3-series-2024",
+    productDescription: "Minh Duy 3 Series mới nhất với công nghệ tiên tiến",
+    productId: "minhduy-3-series-2024",
   }}
 />
 ```
@@ -257,11 +257,11 @@ Hệ thống hỗ trợ các placeholder sau để thay thế bằng dữ liệu
 <PageSEO
   pageKey="newsDetail"
   dynamicData={{
-    newsTitle: "Khuyến mãi BMW tháng 12",
-    newsDescription: "Chương trình khuyến mãi đặc biệt cho BMW",
-    newsKeywords: "khuyến mãi, BMW, tháng 12",
-    newsId: "khuyen-mai-bmw-thang-12",
-    newsImage: "/images/promotion-bmw.jpg",
+    newsTitle: "Khuyến mãi Minh Duy tháng 12",
+    newsDescription: "Chương trình khuyến mãi đặc biệt cho Minh Duy",
+    newsKeywords: "khuyến mãi, Minh Duy, tháng 12",
+    newsId: "khuyen-mai-minhduy-thang-12",
+    newsImage: "/images/promotion-minhduy.jpg",
   }}
 />
 ```

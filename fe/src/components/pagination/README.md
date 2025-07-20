@@ -1,6 +1,6 @@
-# Hệ thống Pagination
+# Pagination System
 
-Hệ thống pagination tùy chỉnh với theme chung cho toàn bộ ứng dụng BMW.
+Hệ thống pagination tùy chỉnh với theme chung cho toàn bộ ứng dụng Minh Duy.
 
 ## 🎨 **Tính năng:**
 

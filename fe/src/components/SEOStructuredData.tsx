@@ -36,8 +36,8 @@ const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({
             availableLanguage: "Vietnamese",
           },
           // sameAs: [
-          //   "https://www.facebook.com/minduybmw",
-          //   "https://www.youtube.com/minduybmw",
+          //   "https://www.facebook.com/minduy",
+          //   "https://www.youtube.com/minduy",
           // ],
         };
 
@@ -50,7 +50,7 @@ const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({
             "Chuyên thi công, lắp đặt, xử lý các sự cố kỹ thuật: máy vi tính, máy in, camera, máy chiếu, máy photocopy, máy dùng cho văn phòng, máy chấm công, pccc, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời. mạng internet, cáp quang, chống sét, tổng đài điện thoại, server trạm tổng, trung tâm điều khiển server, công nghệ ứng dụng tổng hợp ",
           url: "https://minduywebsite.com",
           logo: "https://minduywebsite.com/images/logo.png",
-          image: "https://minduywebsite.com/images/bmw-showroom.jpg",
+          image: "https://minduywebsite.com/images/minhduy-showroom.jpg",
           address: {
             "@type": "PostalAddress",
             streetAddress: "231 Hùng Vương, phường Tam Kỳ, thành phố Đà Nẵng",

@@ -1,8 +1,8 @@
-# BMW Website - Responsive Design System
+# Minh Duy Website - Responsive Design System
 
 ## Tổng quan
 
-Hệ thống responsive design của BMW website được xây dựng với phương pháp mobile-first, sử dụng SCSS mixins và utility classes để đảm bảo trải nghiệm người dùng tốt trên mọi thiết bị.
+Hệ thống responsive design của Minh Duy website được xây dựng với phương pháp mobile-first, sử dụng SCSS mixins và utility classes để đảm bảo trải nghiệm người dùng tốt trên mọi thiết bị.
 
 ## Breakpoints
 
@@ -413,64 +413,64 @@ $spacing-4xl: 6rem; // 96px
 </div>
 ```
 
-## BMW Specific Utilities
+## Minh Duy Specific Utilities
 
-### BMW Typography Classes
+### Minh Duy Typography Classes
 
 ```scss
-.bmw-title {
-  // Responsive title with BMW styling
+.minhduy-title {
+  // Responsive title with Minh Duy styling
   // Mobile: 24px, Tablet: 30px, Desktop: 36px, Large: 48px
 }
 
-.bmw-subtitle {
-  // Responsive subtitle with BMW styling
+.minhduy-subtitle {
+  // Responsive subtitle with Minh Duy styling
   // Mobile: 18px, Tablet: 20px, Desktop: 24px
 }
 
-.bmw-body {
-  // Responsive body text with BMW styling
+.minhduy-body {
+  // Responsive body text with Minh Duy styling
   // Mobile: 14px, Tablet: 16px, Desktop: 18px
 }
 ```
 
-### BMW Layout Classes
+### Minh Duy Layout Classes
 
 ```scss
-.bmw-section {
+.minhduy-section {
   // Responsive section padding
   // Mobile: 32px, Tablet: 48px, Desktop: 64px, Large: 96px
 }
 
-.bmw-container {
-  // BMW branded container with responsive padding
+.minhduy-container {
+  // Minh Duy branded container with responsive padding
 }
 
-.bmw-grid {
-  // BMW branded responsive grid
+.minhduy-grid {
+  // Minh Duy branded responsive grid
   // Mobile: 1 column, Tablet: 2 columns, Desktop: 3 columns, Large: 4 columns
 }
 ```
 
-### BMW Component Classes
+### Minh Duy Component Classes
 
 ```scss
-.bmw-btn {
-  // Responsive BMW button
+.minhduy-btn {
+  // Responsive Minh Duy button
   // Mobile: 40px height, Tablet: 48px height, Desktop: 52px height
 }
 
-.bmw-card {
-  // Responsive BMW card with hover effects
+.minhduy-card {
+  // Responsive Minh Duy card with hover effects
 }
 
-.bmw-nav {
-  // Responsive BMW navigation
+.minhduy-nav {
+  // Responsive Minh Duy navigation
   // Mobile: column layout, Tablet+: row layout
 }
 
-.bmw-hero {
-  // Responsive BMW hero section
+.minhduy-hero {
+  // Responsive Minh Duy hero section
   // Mobile: 60vh height, Tablet: 70vh height, Desktop: 80vh height
 }
 ```
@@ -638,7 +638,7 @@ Sử dụng các utility classes có sẵn cho typography responsive.
 ```scss
 // ✅ Good - Using utility classes
 .title {
-  @extend .bmw-title;
+  @extend .minhduy-title;
 }
 
 // ❌ Bad - Manual responsive typography
@@ -769,4 +769,4 @@ Test trên các trình duyệt chính:
 
 ## Conclusion
 
-Hệ thống responsive design này cung cấp một foundation vững chắc cho BMW website, đảm bảo trải nghiệm người dùng tốt trên mọi thiết bị. Luôn tuân thủ các best practices và test kỹ lưỡng trên nhiều thiết bị khác nhau.
+Hệ thống responsive design này cung cấp một foundation vững chắc cho Minh Duy website, đảm bảo trải nghiệm người dùng tốt trên mọi thiết bị. Luôn tuân thủ các best practices và test kỹ lưỡng trên nhiều thiết bị khác nhau.

@@ -168,7 +168,6 @@ const NewsFormPage: React.FC = () => {
       });
     } finally {
       setImageUploading(false);
-
     }
   };
 
@@ -254,7 +253,10 @@ const NewsFormPage: React.FC = () => {
                 { required: true, message: "Vui lòng nhập tiêu đề tin tức!" },
               ]}
             >
-              <Input placeholder="VD: BMW ra mắt mẫu xe mới" size="large" />
+              <Input
+                placeholder="VD: Minh Duy ra mắt mẫu xe mới"
+                size="large"
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
