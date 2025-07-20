@@ -1,6 +1,5 @@
 // API Configuration
 const isDevelopment = import.meta.env.DEV;
-const isProduction = import.meta.env.PROD;
 
 // Base URL configuration
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 

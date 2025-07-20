@@ -63,6 +63,14 @@ const Footer: React.FC = () => {
       path: ROUTERS.USER.FAVORITES,
       text: "Yêu thích",
     },
+    {
+      path: ROUTERS.USER.SERVICE,
+      text: "Dịch vụ",
+    },
+    {
+      path: ROUTERS.USER.BOOKING,
+      text: "Đặt lịch hẹn",
+    },
   ];
 
   const serviceLinks: FooterLink[] = [
@@ -83,17 +91,17 @@ const Footer: React.FC = () => {
     },
     {
       icon: <CalendarOutlined />,
-      path: ROUTERS.USER.TEST_DRIVE,
+      path: ROUTERS.USER.BOOKING,
       text: "Đặt lịch hẹn",
     },
     {
       icon: <ToolOutlined />,
-      path: ROUTERS.USER.TEST_DRIVE,
+      path: ROUTERS.USER.BOOKING,
       text: "Tư vấn kỹ thuật",
     },
     {
       icon: <CalculatorOutlined />,
-      path: ROUTERS.USER.TEST_DRIVE,
+      path: ROUTERS.USER.BOOKING,
       text: "Tính toán chi phí",
     },
   ];

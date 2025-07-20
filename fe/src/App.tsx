@@ -40,7 +40,7 @@ import {
   ProfilePage,
   PriceListPage,
   ServicePage,
-  TestDrivePage,
+  BookingPage,
   NewsPage,
   PriceListDetailPage,
   NewsDetailPage,
@@ -138,10 +138,10 @@ const App: React.FC = () => {
                       }
                     />
                     <Route
-                      path={ROUTERS.USER.TEST_DRIVE}
+                      path={ROUTERS.USER.BOOKING}
                       element={
                         <MainLayout>
-                          <TestDrivePage />
+                          <BookingPage />
                         </MainLayout>
                       }
                     />

@@ -14,4 +14,4 @@ export { default as ProfilePage } from './ProfilePage/ProfilePage';
 export { default as RegisterPage } from './RegisterPage/RegisterPage';
 export { default as RegistrationPage } from './RegistrationPage/RegistrationPage';
 export { default as ServicePage } from './ServicePage';
-export { default as TestDrivePage } from './TestDrivePage/TestDrivePage'; 
+export { default as BookingPage } from './BookingPage'; 

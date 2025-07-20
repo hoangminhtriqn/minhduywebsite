@@ -1,0 +1,351 @@
+@use "../../../styles/theme-variables.scss" as *;
+
+// BookingPage Styles
+.testDrivePage {
+  .pageBanner {
+    background: var(--theme-bg-gradient, linear-gradient(135deg, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+    position: relative;
+    overflow: hidden;
+    padding: $spacing-2xl 0;
+    color: $color-text-white;
+    text-align: center;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 $spacing-base;
+    }
+
+    &__title {
+      font-size: $font-size-4xl;
+      font-weight: $font-weight-bold;
+    }
+
+    .breadcrumb {
+      justify-content: center;
+
+      .breadcrumb-item {
+        color: $color-text-white;
+
+        &.active {
+          color: $color-text-white;
+        }
+
+        a {
+          color: rgba($color-text-white, 0.8);
+          &:hover {
+            color: $color-text-white;
+          }
+        }
+      }
+    }
+  }
+
+  // Mobile Booking Button
+  .mobileBookingButton {
+    display: none;
+    padding: $spacing-lg $spacing-base;
+    background: $color-background-primary;
+    border-bottom: 1px solid $color-border-light;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: $shadow-base;
+
+    @media (max-width: $breakpoint-lg) {
+      display: block;
+    }
+
+    &__btn {
+      width: 100%;
+      height: 56px;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      border-radius: $border-radius-lg;
+      background: var(--theme-bg-gradient, linear-gradient(135deg, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+      border: none;
+      box-shadow: $shadow-base;
+      transition: $transition-base;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+      }
+
+      .anticon {
+        font-size: $font-size-lg;
+        margin-right: $spacing-sm;
+      }
+    }
+  }
+
+  .testDriveSection {
+    padding: $spacing-lg 0;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 $spacing-base;
+    }
+
+    &__row {
+      display: flex;
+      gap: $spacing-xl;
+
+      @media (max-width: $breakpoint-lg) {
+        flex-direction: column;
+        gap: $spacing-lg;
+      }
+    }
+
+    &__col {
+      flex: 1;
+
+      // Hide desktop form on mobile/tablet
+      &:last-child {
+        @media (max-width: $breakpoint-lg) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .testDriveInfo {
+    &__benefitsHeader {
+      margin-bottom: $spacing-lg;
+      text-align: center;
+    }
+
+    &__benefitsTitle {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $color-text-primary;
+      margin-bottom: $spacing-lg;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-2xl;
+      }
+    }
+
+    &__benefitsSubtitle {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      margin: 0;
+      font-weight: $font-weight-normal;
+
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-sm;
+      }
+    }
+
+    &__benefits {
+      margin-top: $spacing-lg;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: $spacing-lg;
+
+      @media (max-width: $breakpoint-md) {
+        gap: $spacing-base;
+      }
+    }
+
+    &__benefitItem {
+      background: $color-background-primary;
+      border-radius: $border-radius-xl;
+      padding: $spacing-xl;
+      position: relative;
+      border: 1px solid $color-border-light;
+      box-shadow: $shadow-base;
+      display: flex;
+      align-items: flex-start;
+      gap: $spacing-base;
+      transition: $transition-base;
+
+      @media (max-width: $breakpoint-md) {
+        padding: $spacing-lg;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+      }
+    }
+
+    &__benefitNumber {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      background: var(--theme-bg-gradient, linear-gradient(135deg, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+      color: $color-text-white;
+      border-radius: $border-radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-sm;
+      box-shadow: $shadow-base;
+    }
+
+    &__benefitIcon {
+      flex-shrink: 0;
+      width: 50px;
+      height: 50px;
+      background: var(--theme-bg-gradient, linear-gradient(135deg, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+      border-radius: $border-radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $color-text-white;
+      font-size: $font-size-xl;
+      box-shadow: $shadow-base;
+    }
+
+    &__benefitContent {
+      flex: 1;
+    }
+
+    &__benefitTitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      margin-bottom: $spacing-sm;
+    }
+
+    &__benefitDescription {
+      font-size: $font-size-base;
+      color: $color-text-light;
+      line-height: $line-height-relaxed;
+    }
+  }
+
+  .testDriveForm {
+    background-color: $color-background-secondary;
+    padding: $spacing-xl;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-base;
+
+    &__title {
+      text-align: center;
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-lg;
+      color: $color-text-primary;
+    }
+
+    &__form {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      .ant-form-item-label {
+        label {
+          font-weight: $font-weight-medium;
+          color: $color-text-primary;
+        }
+      }
+    }
+  }
+
+  // Booking Modal Styles
+  .bookingModal {
+    :global(.ant-modal-content) {
+      border-radius: $border-radius-xl;
+      overflow: hidden;
+    }
+
+    .ant-modal-header {
+      background: var(--theme-bg-gradient, linear-gradient(135deg, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+      border-bottom: none;
+      padding: $spacing-lg $spacing-xl;
+
+      .ant-modal-title {
+        color: $color-text-white;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        text-align: center;
+      }
+    }
+
+    .ant-modal-body {
+      padding: $spacing-xl;
+      max-height: 70vh;
+      overflow-y: auto;
+
+      @media (max-width: $breakpoint-md) {
+        padding: $spacing-lg;
+        max-height: 60vh;
+      }
+    }
+
+    .ant-modal-close {
+      color: $color-text-white;
+      font-size: $font-size-lg;
+
+      &:hover {
+        color: rgba($color-text-white, 0.8);
+      }
+    }
+
+    // Form styles in modal
+    .testDriveForm__form {
+      .ant-form-item {
+        margin-bottom: 4px !important;
+      }
+
+      .ant-form-item-label {
+        padding-bottom: 2px !important;
+        
+        label {
+          font-weight: $font-weight-medium;
+          color: $color-text-primary;
+        }
+      }
+
+      .ant-input,
+      .ant-select-selector,
+      .ant-picker {
+        border-radius: $border-radius-base;
+        border: 1px solid $color-border;
+        transition: $transition-base;
+
+        &:focus,
+        &:hover {
+          border-color: $color-primary;
+          box-shadow: 0 0 0 0.2rem rgba($static-primary, 0.25);
+        }
+      }
+
+      .ant-btn-primary {
+        background: var(--theme-bg-gradient, linear-gradient(135deg, var(--theme-primary, #059669) 0%, var(--theme-secondary, #2c3e50) 100%));
+        border: none;
+        border-radius: $border-radius-base;
+        font-weight: $font-weight-medium;
+        transition: $transition-base;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: $shadow-base;
+        }
+      }
+    }
+  }
+
+  // Override Ant Design modal z-index
+  :global(.ant-modal-wrap) {
+    z-index: 1000 !important;
+  }
+
+  :global(.ant-modal-mask) {
+    z-index: 999 !important;
+  }
+
+  :global(.ant-modal) {
+    z-index: 1000 !important;
+  }
+
+  .bookingModalWrap {
+    z-index: 1000 !important;
+  }
+}

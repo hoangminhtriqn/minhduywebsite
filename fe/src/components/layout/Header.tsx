@@ -90,7 +90,7 @@ const Header: React.FC = () => {
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 9999,
+    zIndex: 999,
     width: "100%",
     background: "transparent",
     pointerEvents: "auto",
@@ -345,7 +345,7 @@ const Header: React.FC = () => {
     width: "100%",
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 1000,
+    zIndex: 100,
     opacity: isMobileMenuOpen ? 1 : 0,
     visibility: isMobileMenuOpen ? "visible" : "hidden",
     transition: "all 0.3s ease",
@@ -511,7 +511,7 @@ const Header: React.FC = () => {
                 Tin tức
               </Link>
               <Link
-                to={ROUTERS.USER.TEST_DRIVE}
+                to={ROUTERS.USER.BOOKING}
                 style={navLinkStyle}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
@@ -618,7 +618,7 @@ const Header: React.FC = () => {
             Tin tức
           </Link>
           <Link
-            to={ROUTERS.USER.TEST_DRIVE}
+            to={ROUTERS.USER.BOOKING}
             style={mobileMenuLinkStyle}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
@@ -626,7 +626,7 @@ const Header: React.FC = () => {
             data-theme="mobile-menu-link"
           >
             <CalendarOutlined />
-            Đăng ký lái thử
+            Đặt lịch
           </Link>
           <Link
             to={ROUTERS.USER.FAVORITES}
