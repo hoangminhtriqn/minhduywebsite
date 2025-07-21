@@ -50,6 +50,10 @@ $breakpoint-xxl: 1400px;
   }
 }
 
+.sidebar .sidebarHeader {
+  border-bottom: none !important;
+}
+
 .sidebarHeader {
   background: var(--primary-color);
   color: #ffffff;
@@ -143,29 +147,40 @@ $breakpoint-xxl: 1400px;
 
 .collapseList {
   list-style: none;
-  padding: 8px 0;
+  padding: 6px 0 6px 20px;
   margin: 0;
 }
 
 .collapseItem {
-  padding: 8px 0 8px 20px;
-  font-size: 13px;
-  color: var(--text-color-secondary);
+  padding: 8px 0 8px 28px;
+  font-size: 14px;
+  color: #6b7280;
   cursor: pointer;
-  transition: color 0.3s ease;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  background: none;
+  font-weight: 400;
+  transition: color 0.2s, background 0.2s;
   position: relative;
+}
 
-  &:hover {
-    color: var(--primary-color);
-  }
+.collapseItem:hover {
+  color: var(--primary-color);
+  background: #f3f6fa;
+}
 
-  &::before {
-    content: "•";
-    position: absolute;
-    left: 8px;
-    color: var(--text-color-secondary);
-    font-size: 12px;
-  }
+.collapseItem:last-child {
+  margin-bottom: 0;
+}
+
+.collapseItem::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #bfc5cc;
+  font-size: 12px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 // Mega Menu Styles
@@ -425,6 +440,26 @@ $breakpoint-xxl: 1400px;
   }
 }
 
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e9ecef;
+    height: auto;
+    max-height: none;
+  }
+  .mobileCollapse {
+    display: block !important;
+    width: 100%;
+    position: static;
+    margin: 0;
+    padding: 0 0 0 0;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 0 0 8px 8px;
+  }
+}
+
 @media (max-width: 1024px) and (min-width: 769px) {
   .heroSection {
     height: auto;
@@ -435,14 +470,6 @@ $breakpoint-xxl: 1400px;
     flex-direction: column;
     padding: 0;
     min-height: auto;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #e9ecef;
-    height: auto;
-    max-height: 300px;
   }
 
   .categoryList {
@@ -567,5 +594,224 @@ $breakpoint-xxl: 1400px;
 
   .carouselSubtitle {
     font-size: 13px;
+  }
+}
+
+// Skeleton styles for HeroSectionSkeleton
+.skeletonHeader {
+  width: 70%;
+  height: 24px;
+  margin: 16px 0 12px 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+}
+
+.skeletonIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  margin-right: 12px;
+}
+
+.skeletonText {
+  width: 80px;
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  margin-right: 8px;
+}
+
+.skeletonArrow {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+}
+
+.skeletonCollapseItem {
+  margin-bottom: 12px;
+}
+.skeletonCollapseHeader {
+  width: 60%;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  margin-bottom: 8px;
+}
+.skeletonCollapseList {
+  padding-left: 16px;
+}
+.skeletonCollapseSubItem {
+  width: 50%;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  margin-bottom: 6px;
+}
+
+.skeletonBanner {
+  width: 100%;
+  height: 500px;
+  margin: 0;
+  background: linear-gradient(90deg, #eaeaea 25%, #e0e0e0 37%, #eaeaea 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  @media (max-width: 900px) {
+    height: 300px;
+  }
+  @media (max-width: 600px) {
+    height: 250px;
+  }
+}
+
+.skeletonNavBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  display: block;
+}
+
+.skeletonDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite linear;
+  display: block;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+// Responsive tweaks for skeletons
+@media (max-width: 900px) {
+  .skeletonHeader {
+    width: 60%;
+    height: 20px;
+  }
+  .skeletonText {
+    width: 60px;
+    height: 14px;
+  }
+  .skeletonCollapseHeader {
+    width: 50%;
+    height: 16px;
+  }
+  .skeletonCollapseSubItem {
+    width: 40%;
+    height: 10px;
+  }
+}
+@media (max-width: 600px) {
+  .skeletonHeader {
+    width: 50%;
+    height: 16px;
+  }
+  .skeletonText {
+    width: 40px;
+    height: 10px;
+  }
+  .skeletonCollapseHeader {
+    width: 40%;
+    height: 12px;
+  }
+  .skeletonCollapseSubItem {
+    width: 30%;
+    height: 8px;
+  }
+}
+
+// Đảm bảo mobileCollapse luôn hiện ở <= 1024px
+@media (max-width: 1024px) {
+  .mobileCollapse {
+    :global(.ant-collapse-header),
+    :global(.ant-collapse-header-text),
+    ._collapseHeader_3jt1y_121 {
+      border-bottom: none !important;
+    }
+    :global(.ant-collapse-item) {
+      border-bottom: none !important;
+    }
+    :global(.ant-collapse-header) {
+      border-bottom: 1px solid #e0e0e0 !important;
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 14px 12px !important;
+      font-weight: 600;
+      font-size: 15px;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    :global(.ant-collapse-item:last-child) .ant-collapse-header {
+      border-bottom: none !important;
+    }
+    :global(.ant-collapse-header):hover {
+      background: #f1f5f9;
+    }
+    :global(.ant-collapse-expand-icon) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #9da2a8;
+      background: none;
+      border: none;
+      box-shadow: none;
+      margin-right: 6px;
+      transition: color 0.2s;
+    }
+    :global(.ant-collapse-header):hover .ant-collapse-expand-icon {
+      color: #0d6e99;
+      background: none;
+      border: none;
+    }
+    :global(.ant-collapse-expand-icon svg) {
+      font-size: 13px;
+    }
+  }
+}
+
+// Ẩn mega menu ở <= 1024px
+@media (max-width: 1024px) {
+  .megaMenu {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .categoryList {
+    display: none !important;
+  }
+}
+
+// Xoá border-bottom của collapse item trong mobileCollapse
+@media (max-width: 1024px) {
+  .mobileCollapse {
+    :global(.ant-collapse-item) {
+      border-bottom: none !important;
+    }
   }
 } 

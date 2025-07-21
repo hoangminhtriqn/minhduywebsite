@@ -5,6 +5,7 @@ import {
 import { Collapse } from "antd";
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
+import HeroSectionSkeleton from "@/components/HeroSection/HeroSectionSkeleton";
 
 const HeroSection: React.FC = () => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
@@ -116,29 +117,7 @@ const HeroSection: React.FC = () => {
   }));
 
   if (loading) {
-    return (
-      <section className={styles.heroSection}>
-        <div className={styles.container}>
-          <div className={styles.sidebarContainer}>
-            <div className={styles.sidebar}>
-              <div className={styles.sidebarHeader}>
-                <p>DANH MỤC SẢN PHẨM</p>
-              </div>
-              <div className={styles.loadingSpinner}>
-                <p>Đang tải danh mục...</p>
-              </div>
-            </div>
-          </div>
-          <div className={styles.carouselSection}>
-            <div className={styles.carousel}>
-              <div className={styles.loadingSpinner}>
-                <p>Đang tải...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
+    return <HeroSectionSkeleton />;
   }
 
   return (
