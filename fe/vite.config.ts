@@ -43,7 +43,12 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // additionalData: `@use "@/styles/variables.scss" as *;`
+        additionalData: (content, filename) => {
+          if (filename && !filename.endsWith('.scss')) {
+            return `@use '@/styles/main.scss' as *;\n${content}`;
+          }
+          return content;
+        }
       }
     }
   }

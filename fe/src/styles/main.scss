@@ -4,8 +4,10 @@
 @use './toast-custom.scss' as *;
 @use './_news.scss' as *;
 
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+
 // Typography
-$font-family-base: 'Roboto', sans-serif;
+$font-family-base: 'Itim', cursive;
 
 /* Reset CSS */
 html {
