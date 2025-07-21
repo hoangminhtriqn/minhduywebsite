@@ -103,7 +103,7 @@ app.use('/api/nguoi-dung', roleUserRoutes); // Example mount for roleUserRoutes
 
 // Mount category routes
 app.use('/api/categories', categoryRoutes);
-app.use('/api/xe', productRoutes);
+app.use('/api/products', productRoutes);
 
 // Mount favorites routes
 app.use('/api/yeu-thich', favoritesRoutes);

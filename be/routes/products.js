@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /api/xe:
+ * /api/products:
  *   get:
  *     summary: Get all products
  *     tags: [Products]
@@ -73,7 +73,7 @@
 
 /**
  * @swagger
- * /api/xe/category/{categoryId}:
+ * /api/products/category/{categoryId}:
  *   get:
  *     summary: Get products by category
  *     tags: [Products]
@@ -121,7 +121,7 @@
 
 /**
  * @swagger
- * /api/xe/{productId}:
+ * /api/products/{productId}:
  *   get:
  *     summary: Get product by ID
  *     tags: [Products]
@@ -155,7 +155,7 @@
 
 /**
  * @swagger
- * /api/xe:
+ * /api/products:
  *   post:
  *     summary: Create new product (Admin only)
  *     tags: [Products]
@@ -235,7 +235,7 @@
 
 /**
  * @swagger
- * /api/xe/{productId}:
+ * /api/products/{productId}:
  *   put:
  *     summary: Update product (Admin only)
  *     tags: [Products]
@@ -320,7 +320,6 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *   
  *   delete:
  *     summary: Delete product (Admin only)
  *     tags: [Products]

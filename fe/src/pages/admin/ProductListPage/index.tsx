@@ -20,7 +20,7 @@ import {
   Typography,
   notification,
 } from "antd";
-import axios from "axios";
+import { productService } from "@/api/services/user/product";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "@/api/config";
 import CustomPagination from "@/components/CustomPagination";
@@ -70,32 +70,11 @@ const ProductListPage: React.FC = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/xe`, {
-        params: {
-          page: pagination.current,
-          limit: pagination.pageSize,
-          search: searchText,
-          sortBy:
-            sortColumn === "Product_Name"
-              ? "Product_Name"
-              : sortColumn === "Price"
-                ? "Price"
-                : sortColumn === "Stock"
-                  ? "Stock"
-                  : sortColumn,
-          order:
-            sortOrder === "ascend"
-              ? "asc"
-              : sortOrder === "descend"
-                ? "desc"
-                : undefined,
-          category: selectedCategory,
-        },
-      });
-      setProducts(response.data.products);
+      const products = await productService.getAllProducts();
+      setProducts(products);
       setPagination({
         ...pagination,
-        total: response.data.pagination.total,
+        total: products.length,
       });
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -142,7 +121,7 @@ const ProductListPage: React.FC = () => {
       cancelText: "Hủy",
       async onOk() {
         try {
-          await axios.delete(`${API_BASE_URL}/xe/${productId}`);
+          await productService.deleteProduct(productId);
           notification.success({
             message: "Thành công",
             description: "Sản phẩm đã được xóa.",

@@ -16,8 +16,8 @@ export const API_ENDPOINTS = {
   PROFILE: '/users/profile',
   
   // Products
-  PRODUCTS: '/xe',
-  PRODUCT_DETAIL: '/xe',
+  PRODUCTS: '/products',
+  PRODUCT_DETAIL: '/products',
   
   // Categories
   CATEGORIES: '/categories',

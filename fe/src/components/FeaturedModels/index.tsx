@@ -1,9 +1,8 @@
-import { API_BASE_URL } from "@/api/config";
+import { productService } from "@/api/services/user/product";
 import { Product } from "@/api/types";
 import ProductCard from "@/components/product/ProductCard";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Spin, message } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styles from "./style.module.scss";
 
@@ -15,34 +14,27 @@ const FeaturedModels: React.FC = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [totalProducts, setTotalProducts] = useState(0);
-  const limit = 9;
 
   const fetchProducts = async (pageNum = 1, append = false) => {
     const loadingState = pageNum === 1 ? setLoading : setLoadingMore;
     loadingState(true);
 
     try {
-      const response = await axios.get(`${API_BASE_URL}/xe`, {
-        params: {
-          page: pageNum,
-          limit: limit,
-          sortBy: "createdAt",
-          sortOrder: "desc",
-        },
+      const response = await productService.getAllProducts({
+        page: pageNum,
+        limit: 9,
       });
+      const newProducts = response.products || [];
+      const pagination = response.pagination || {};
 
-      if (response.data && response.data.products) {
-        const newProducts = response.data.products;
-        const pagination = response.data.pagination;
-
+      if (newProducts.length > 0) {
         if (append) {
           setProducts((prev) => [...prev, ...newProducts]);
         } else {
           setProducts(newProducts);
         }
-
-        setTotalProducts(pagination.total);
-        setHasMore(pageNum < pagination.totalPages);
+        setTotalProducts(pagination.total || newProducts.length);
+        setHasMore(pageNum < (pagination.totalPages || 1));
         setPage(pageNum);
       } else {
         if (!append) {
@@ -53,7 +45,7 @@ const FeaturedModels: React.FC = () => {
       }
     } catch (err) {
       console.error("Error fetching products:", err);
-      const errorMsg = "Không thể tải danh sách thiết bị.";
+      const errorMsg = "Không thể tải danh sách sản phẩm.";
       if (!append) {
         setError(errorMsg);
         message.error(errorMsg);

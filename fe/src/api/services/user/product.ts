@@ -3,38 +3,47 @@ import { Product, Category, CreateProductData, UpdateProductData } from '@/api/t
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL || '/api'; // Assuming backend API base path is /api
 
+// Định nghĩa kiểu PaginationInfo nếu chưa có
+export interface PaginationInfo {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  [key: string]: unknown;
+}
+
 export const productService = {
   // Get all products
-  getAllProducts: async (): Promise<Product[]> => {
-    const response = await axios.get(`${API_URL}/xe`);
-    return response.data.data.products; // Extract products array from the response structure
+  getAllProducts: async (params?: { page?: number; limit?: number; [key: string]: string | number | undefined }): Promise<{ products: Product[]; pagination: PaginationInfo }> => {
+    const response = await axios.get(`${API_URL}/products`, { params });
+    // Trả về đúng object { products, pagination }
+    return {
+      products: response.data.products || [],
+      pagination: response.data.pagination || {},
+    };
   },
 
   // Get product by ID
   getProductById: async (id: string): Promise<Product> => {
-    const response = await axios.get(`${API_URL}/xe/${id}`);
-    return response.data.data; // Extract data from the response structure
+    const response = await axios.get(`${API_URL}/products/${id}`);
+    return response.data.data || response.data.product; // Extract data from the response structure
   },
 
   // Create a new product
   createProduct: async (productData: CreateProductData): Promise<Product> => {
-    // Note: File uploads typically require FormData
-    // This is a simplified example for JSON data
-    const response = await axios.post(`${API_URL}/xe`, productData);
+    const response = await axios.post(`${API_URL}/products`, productData);
     return response.data.product; // Assuming the response structure includes the created product
   },
 
   // Update an existing product
   updateProduct: async (id: string, productData: UpdateProductData): Promise<Product> => {
-     // Note: File uploads typically require FormData
-    // This is a simplified example for JSON data
-    const response = await axios.put(`${API_URL}/xe/${id}`, productData);
+    const response = await axios.put(`${API_URL}/products/${id}`, productData);
     return response.data.product; // Assuming the response structure includes the updated product
   },
 
   // Delete a product
   deleteProduct: async (id: string): Promise<void> => {
-    await axios.delete(`${API_URL}/xe/${id}`);
+    await axios.delete(`${API_URL}/products/${id}`);
   },
 
   getCategories: async () => {
@@ -49,7 +58,7 @@ export const productService = {
 
   // Get related products by product ID
   getRelatedProducts: async (productId: string, limit: number = 4): Promise<Product[]> => {
-    const response = await axios.get(`${API_URL}/xe/${productId}/related?limit=${limit}`);
-    return response.data.data; // Extract data from the response structure
+    const response = await axios.get(`${API_URL}/products/${productId}/related?limit=${limit}`);
+    return response.data.data || response.data.products; // Extract data from the response structure
   },
 }; 

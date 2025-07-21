@@ -13,7 +13,7 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 const { upload } = require('../config/cloudinary');
 
 // Public routes
-router.get('/xe/:productId', getProductReviews);
+router.get('/products/:productId', getProductReviews);
 
 // Protected routes
 router.post('/', protect, upload.array('Images', 5), createReview);

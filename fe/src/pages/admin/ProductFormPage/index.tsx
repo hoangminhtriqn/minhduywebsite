@@ -40,6 +40,7 @@ import moment, { Moment } from "moment";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
+import { productService } from "@/api/services/user/product";
 
 // Custom VND icon component
 const VNDIcon = () => (
@@ -98,9 +99,7 @@ const ProductFormPage: React.FC = () => {
   const fetchProductData = async (productId: string) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/xe/${productId}`);
-      const productData = response.data.data;
-
+      const productData = await productService.getProductById(productId);
       // Convert specifications object to array for Form.List
       const specificationsArray = productData.Specifications
         ? Object.entries(productData.Specifications).map(([key, value]) => ({
@@ -108,7 +107,6 @@ const ProductFormPage: React.FC = () => {
             value: value,
           }))
         : [];
-
       // Set main image if exists
       if (productData.Main_Image) {
         setMainImageFile({
@@ -119,7 +117,6 @@ const ProductFormPage: React.FC = () => {
           public_id: `main-${Date.now()}`,
         });
       }
-
       // Set list images if exist
       if (productData.List_Image && Array.isArray(productData.List_Image)) {
         const listImageFiles = productData.List_Image.map(
@@ -133,7 +130,6 @@ const ProductFormPage: React.FC = () => {
         );
         setListImageFiles(listImageFiles);
       }
-
       // Chuyển đổi dữ liệu để phù hợp với form
       const formData = {
         Product_Name: productData.Product_Name,
@@ -366,13 +362,13 @@ const ProductFormPage: React.FC = () => {
 
     try {
       if (isEditing && id) {
-        await axios.put(`${API_BASE_URL}/xe/${id}`, dataToSend);
+        await productService.updateProduct(id, dataToSend);
         notification.success({
           message: "Thành công",
           description: "Cập nhật sản phẩm thành công.",
         });
       } else {
-        await axios.post(`${API_BASE_URL}/xe`, dataToSend);
+        await productService.createProduct(dataToSend);
         notification.success({
           message: "Thành công",
           description: "Thêm sản phẩm mới thành công.",

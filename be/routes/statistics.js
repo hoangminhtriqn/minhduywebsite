@@ -4,7 +4,7 @@ const { getOrderStatistics, getUserStatistics, getProductStatistics, getTopTestD
 
 router.get('/lich-lai-thu', getOrderStatistics);
 router.get('/nguoi-dung', getUserStatistics);
-router.get('/xe', getProductStatistics);
+router.get('/products', getProductStatistics);
 router.get('/top-xe-lai-thu', getTopTestDriveCars);
 router.get('/dang-ky-lai-thu-theo-ngay', getTestDriveRegistrationsByDate);
 router.get('/dashboard', getDashboardStatistics);

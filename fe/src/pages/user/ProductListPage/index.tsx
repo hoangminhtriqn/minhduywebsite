@@ -34,6 +34,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 import { PageKeys } from "@/components/SEO/seoConfig";
 import FilterSidebar from "./FilterSidebar";
+import { productService } from "@/api/services/user/product";
 
 const { Text } = Typography;
 
@@ -70,16 +71,7 @@ const ProductCardSkeleton: React.FC = () => (
             borderRadius: "20px",
             overflow: "hidden",
           }}
-        >
-          {/* <Skeleton.Image
-            active
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "20px",
-            }}
-          /> */}
-        </div>
+        ></div>
       </div>
     }
   >
@@ -154,31 +146,21 @@ const ProductListPage: React.FC = () => {
   // Fetch products with filters
   const fetchProducts = useCallback(async () => {
     setLoading(true);
-
     try {
-      const params = new URLSearchParams({
-        page: pagination.current.toString(),
-        limit: pagination.pageSize.toString(),
+      // Gọi API với params filter, page, limit
+      const response = await productService.getAllProducts({
+        page: pagination.current,
+        limit: pagination.pageSize,
+        search: debouncedSearch,
+        category: filters.category.join(","),
+        minPrice: debouncedPriceRange[0],
+        maxPrice: debouncedPriceRange[1],
+        status: filters.status.join(","),
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
       });
-
-      if (debouncedSearch) params.append("search", debouncedSearch);
-      if (filters.category.length > 0)
-        params.append("category", filters.category.join(","));
-      if (filters.status.length > 0)
-        params.append("status", filters.status.join(","));
-
-      // Always send price range parameters if they are different from default
-      if (debouncedPriceRange[0] !== 0 && !isNaN(debouncedPriceRange[0]))
-        params.append("minPrice", debouncedPriceRange[0].toString());
-      if (debouncedPriceRange[1] !== maxPrice && !isNaN(debouncedPriceRange[1]))
-        params.append("maxPrice", debouncedPriceRange[1].toString());
-
-      const response = await axios.get(`${API_BASE_URL}/xe?${params}`);
-
-      setProducts(response.data.products);
-      updateTotal(response.data.pagination.total);
+      setProducts(response.products);
+      updateTotal(response.pagination.total || response.products.length);
     } catch (error) {
       console.error("Error fetching products:", error);
       notification.error({
@@ -187,21 +169,19 @@ const ProductListPage: React.FC = () => {
       });
     } finally {
       setLoading(false);
-      // Only set initialLoading to false after the first successful fetch
       if (initialLoading) {
         setInitialLoading(false);
       }
     }
   }, [
-    pagination.current,
-    pagination.pageSize,
-    filters.sortBy,
-    filters.sortOrder,
     debouncedSearch,
+    debouncedPriceRange,
     filters.category,
     filters.status,
-    debouncedPriceRange,
-    maxPrice,
+    filters.sortBy,
+    filters.sortOrder,
+    pagination.current,
+    pagination.pageSize,
     initialLoading,
     updateTotal,
   ]);

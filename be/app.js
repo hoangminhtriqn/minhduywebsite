@@ -29,7 +29,6 @@ app.use(express.json());
 // Routes
 app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
-app.use('/api/xe', productsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/services', servicesRouter);
 app.use('/api/service-requests', serviceRequestsRouter);
