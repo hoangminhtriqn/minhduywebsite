@@ -14,10 +14,6 @@ const settingSchema = new mongoose.Schema({
     type: String,
     default: 'info@minhduy.com'
   },
-  address: {
-    type: String,
-    default: 'Hà Nội, Việt Nam'
-  },
   workingHours: {
     type: String,
     default: '8:00 - 18:00 (Thứ 2 - Thứ 7)'

@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// Enum for user roles
+const USER_ROLES = {
+  USER: 'user',
+  ADMIN: 'admin',
+};
+
 const userSchema = new mongoose.Schema({
   UserName: {
     type: String,
@@ -36,8 +42,8 @@ const userSchema = new mongoose.Schema({
   },
   Role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
+    enum: Object.values(USER_ROLES),
+    default: USER_ROLES.USER
   },
   Status: {
     type: String,
@@ -70,4 +76,5 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User; 
+module.exports = User;
+module.exports.USER_ROLES = USER_ROLES; 

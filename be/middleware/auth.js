@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { USER_ROLES } = require('../models/User');
 
 // Middleware xác thực JWT
 const auth = async (req, res, next) => {
@@ -44,7 +45,7 @@ const auth = async (req, res, next) => {
 const adminAuth = async (req, res, next) => {
   try {
     await auth(req, res, () => {
-      if (req.user.role !== 'admin') {
+      if (req.user.Role !== USER_ROLES.ADMIN) {
         return res.status(403).json({
           success: false,
           message: 'Không có quyền truy cập'

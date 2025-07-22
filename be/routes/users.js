@@ -387,6 +387,7 @@ const express = require('express');
 const router = express.Router();
 const { register, login, logout, getAllUsers, getUserById, updateUser, deleteUser } = require('../controllers/usersController');
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { USER_ROLES } = require('../models/User');
 
 router.post('/register', register);
 router.post('/login', login);

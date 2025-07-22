@@ -13,6 +13,31 @@ const Service = require('./models/Service');
 const NewsEvent = require('./models/NewsEvent');
 const DeviceRental = require('./models/OrderTestDrive');
 const Pricing = require('./models/Pricing');
+const Location = require('./models/Location');
+
+const sampleLocations = [
+  {
+    name: "MINH DUY - Đà Nẵng",
+    address: "Số 132 Lê Duẩn, Đống Đa, Hà Nội",
+    coordinates: "15.566762797033958,108.47919866217119",
+    mapUrl: "https://maps.app.goo.gl/tjX4cmFR9nJFaur58",
+    isMainAddress: true,
+  },
+  {
+    name: "MINH DUY - Hồ Chí Minh",
+    address: "Số 456 Nguyễn Huệ, Quận 1, TP.HCM",
+    coordinates: "10.123456,106.123456",
+    mapUrl: "https://maps.app.goo.gl/example2",
+    isMainAddress: false,
+  },
+  {
+    name: "MINH DUY - Hà Nội",
+    address: "Số 789 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội",
+    coordinates: "21.123456,105.123456",
+    mapUrl: "https://maps.app.goo.gl/example3",
+    isMainAddress: false,
+  },
+];
 
 // Sample data
 const sampleRoles = [
@@ -949,6 +974,7 @@ async function migrate() {
       await Service.deleteMany({});
       await NewsEvent.deleteMany({});
       await DeviceRental.deleteMany({});
+      await Location.deleteMany({});
       console.log('✅ Đã xóa dữ liệu cũ');
     }
 
@@ -1291,6 +1317,15 @@ async function migrate() {
       console.log('✅ Đã tạo pricing data');
     } else {
       console.log('✅ Pricing data đã tồn tại');
+    }
+
+    // Tạo sample locations nếu chưa có
+    const existingLocations = await Location.countDocuments();
+    if (existingLocations === 0) {
+      await Location.insertMany(sampleLocations);
+      console.log('✅ Đã tạo sample locations');
+    } else {
+      console.log('✅ Locations đã tồn tại');
     }
 
     console.log('🎉 Migration hoàn thành thành công!');
