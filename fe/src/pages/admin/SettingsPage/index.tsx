@@ -222,7 +222,7 @@ const SettingsPage: React.FC = () => {
                         style={{
                           display: "grid",
                           gridTemplateColumns: "1fr 1fr",
-                          gap: "24px",
+                          columnGap: "24px",
                         }}
                       >
                         <Form.Item
@@ -248,17 +248,19 @@ const SettingsPage: React.FC = () => {
                         >
                           <Input placeholder="Ví dụ: 8:00 - 18:00 (Thứ 2 - Thứ 7)" />
                         </Form.Item>
+                        <div style={{ gridColumn: "span 2" }}>
+                          <Form.Item
+                            label="Mô tả công ty"
+                            name="description"
+                            rules={[]}
+                          >
+                            <Input.TextArea
+                              placeholder="Nhập mô tả công ty"
+                              rows={3}
+                            />
+                          </Form.Item>
+                        </div>
                       </div>
-
-                      <Form.Item
-                        label="Logo URL"
-                        name="logo"
-                        rules={[
-                          { required: true, message: "Vui lòng nhập URL logo" },
-                        ]}
-                      >
-                        <Input placeholder="Nhập URL logo" />
-                      </Form.Item>
 
                       <Form.Item>
                         <Button
@@ -290,8 +292,7 @@ const SettingsPage: React.FC = () => {
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: "24px",
+                          gridTemplateColumns: "1fr",
                         }}
                       >
                         <Form.Item
@@ -301,7 +302,6 @@ const SettingsPage: React.FC = () => {
                         >
                           <Input placeholder="https://facebook.com/your-page" />
                         </Form.Item>
-
                         <Form.Item
                           label="YouTube"
                           name="youtube"
@@ -309,39 +309,14 @@ const SettingsPage: React.FC = () => {
                         >
                           <Input placeholder="https://youtube.com/your-channel" />
                         </Form.Item>
-                      </div>
-
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: "24px",
-                        }}
-                      >
                         <Form.Item
-                          label="Instagram"
-                          name="instagram"
+                          label="TikTok"
+                          name="tiktok"
                           rules={[{ type: "url", message: "URL không hợp lệ" }]}
                         >
-                          <Input placeholder="https://instagram.com/your-account" />
-                        </Form.Item>
-
-                        <Form.Item
-                          label="Twitter"
-                          name="twitter"
-                          rules={[{ type: "url", message: "URL không hợp lệ" }]}
-                        >
-                          <Input placeholder="https://twitter.com/your-account" />
+                          <Input placeholder="https://tiktok.com/@your-account" />
                         </Form.Item>
                       </div>
-
-                      <Form.Item
-                        label="LinkedIn"
-                        name="linkedin"
-                        rules={[{ type: "url", message: "URL không hợp lệ" }]}
-                      >
-                        <Input placeholder="https://linkedin.com/company/your-company" />
-                      </Form.Item>
 
                       <Form.Item>
                         <Button
@@ -469,6 +444,19 @@ const SettingsPage: React.FC = () => {
                                 e.target.value
                               )
                             }
+                          />
+                        </Form.Item>
+                        <Form.Item label="Mô tả">
+                          <Input.TextArea
+                            value={locationModal.values.description}
+                            onChange={(e) =>
+                              handleLocationFieldChange(
+                                "description",
+                                e.target.value
+                              )
+                            }
+                            rows={2}
+                            placeholder="Nhập mô tả chi nhánh (nếu có)"
                           />
                         </Form.Item>
                         <Form.Item label="Địa chỉ chính">

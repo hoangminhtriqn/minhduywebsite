@@ -8,6 +8,7 @@ export interface Location {
   coordinates: string;
   mapUrl: string;
   isMainAddress: boolean;
+  description?: string;
 }
 
 export interface Settings {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { API_BASE_URL } from "@/api/config";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { ROUTERS } from "@/utils/constant";
 import {
   CalculatorOutlined,
@@ -11,10 +11,10 @@ import {
   ClockCircleOutlined,
   EnvironmentOutlined,
   FacebookOutlined,
-  InstagramOutlined,
   MailOutlined,
   PhoneOutlined,
   SafetyCertificateOutlined,
+  TikTokOutlined,
   ToolOutlined,
   YoutubeOutlined,
 } from "@ant-design/icons";
@@ -45,7 +45,8 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const [categories, setCategories] = useState<Category[]>([]);
   const { theme } = useTheme();
-  const { settings, loading: settingsLoading } = useSettings();
+  const { settings, locations } = useSettings();
+  const mainLocation = locations.find((loc) => loc.isMainAddress);
 
   // Footer links arrays
   const aboutLinks: FooterLink[] = [
@@ -165,8 +166,6 @@ const Footer: React.FC = () => {
     color: theme.colors.text.white,
   };
 
-  if (settingsLoading) return null; // hoặc render skeleton nếu muốn
-
   return (
     <div className={styles.minhduyFooterContainer} style={footerStyle}>
       <div className={styles.footerContainer}>
@@ -175,15 +174,14 @@ const Footer: React.FC = () => {
           <div className={styles.footerColumn}>
             <div className={styles.footerLogoContainer}>
               <h3 className={styles.footerMainTitle}>
-                {settings?.companyName || "MINH DUY - ĐÀ NẴNG"}
+                {settings?.companyName || ""}
               </h3>
             </div>
             <p
               className={styles.footerDescription}
               style={{ color: "#e3f2fd" }}
             >
-              {settings?.description ||
-                "Công ty thiết bị công nghệ hàng đầu tại Việt Nam, chuyên cung cấp thiết bị công nghệ chất lượng cao với dịch vụ bảo hành, bảo trì chuyên nghiệp. Trải nghiệm công nghệ tiên tiến với đội ngũ tư vấn chuyên nghiệp và giá cả cạnh tranh."}
+              {settings?.description || ""}
             </p>
             <div className={styles.footerSocial}>
               {settings?.facebook && (
@@ -210,16 +208,16 @@ const Footer: React.FC = () => {
                   <YoutubeOutlined />
                 </a>
               )}
-              {settings?.instagram && (
+              {settings?.tiktok && (
                 <a
-                  href={settings.instagram}
+                  href={settings.tiktok}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.footerSocialLink}
                   style={socialLinkStyle}
                   aria-label="Instagram"
                 >
-                  <InstagramOutlined />
+                  <TikTokOutlined />
                 </a>
               )}
               {/* Có thể thêm các social khác nếu muốn */}
@@ -324,8 +322,7 @@ const Footer: React.FC = () => {
               <div>
                 <span className={styles.contactLabel}>Địa chỉ:</span>
                 <span className={styles.contactValue}>
-                  {settings?.address ||
-                    "123 Nguyễn Văn Linh, Quận Hải Châu, TP. Đà Nẵng"}
+                  {mainLocation?.address}
                 </span>
               </div>
             </div>

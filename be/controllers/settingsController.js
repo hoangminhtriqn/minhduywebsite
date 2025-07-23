@@ -59,9 +59,7 @@ const getPublicSettings = async (req, res) => {
       logo: settings.logo,
       facebook: settings.facebook,
       youtube: settings.youtube,
-      instagram: settings.instagram,
-      twitter: settings.twitter,
-      linkedin: settings.linkedin,
+      tiktok: settings.tiktok, // thêm tiktok
       description: settings.description,
       keywords: settings.keywords
     };

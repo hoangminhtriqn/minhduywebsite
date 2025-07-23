@@ -6,6 +6,7 @@ import useScrollToTop from "@/hooks/useScrollToTop";
 import { ROUTERS } from "@/utils/constant";
 import { CheckCircleOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import ServiceCard from "./ServiceCard";
+import { useSettings } from "@/contexts/SettingsContext";
 
 import styles from "./styles.module.scss";
 
@@ -16,33 +17,8 @@ const ServicePage: React.FC = () => {
   // Navigation hook
   const navigate = useNavigate();
 
-  // Locations data with isMainAddress property
-  const locations = [
-    {
-      id: 1,
-      name: "MINH DUY - Đà Nẵng",
-      address: "Số 132 Lê Duẩn, Đống Đa, Hà Nội",
-      coordinates: "15.566762797033958,108.47919866217119",
-      mapUrl: "https://maps.app.goo.gl/tjX4cmFR9nJFaur58",
-      isMainAddress: true,
-    },
-    {
-      id: 2,
-      name: "MINH DUY - Hồ Chí Minh",
-      address: "Số 456 Nguyễn Huệ, Quận 1, TP.HCM",
-      coordinates: "10.123456,106.123456",
-      mapUrl: "https://maps.app.goo.gl/example2",
-      isMainAddress: false,
-    },
-    {
-      id: 3,
-      name: "MINH DUY - Hà Nội",
-      address: "Số 789 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội",
-      coordinates: "21.123456,105.123456",
-      mapUrl: "https://maps.app.goo.gl/example3",
-      isMainAddress: false,
-    },
-  ];
+  // Lấy locations từ context
+  const { locations } = useSettings();
 
   // Services data
   const services = [
@@ -208,7 +184,10 @@ const ServicePage: React.FC = () => {
           {/* Location Cards */}
           <div className={styles["location-cards"]}>
             {locations.map((location) => (
-              <div key={location.id} className={styles["location-card"]}>
+              <div
+                key={location._id || location.id}
+                className={styles["location-card"]}
+              >
                 <div className={styles["location-card__info"]}>
                   <h3 className={styles["location-card__name"]}>
                     {location.name}
@@ -217,6 +196,11 @@ const ServicePage: React.FC = () => {
                     <EnvironmentOutlined />
                     {location.address}
                   </p>
+                  {location.description && (
+                    <p className={styles["location-card__description"]}>
+                      {location.description}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

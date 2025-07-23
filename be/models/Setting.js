@@ -32,17 +32,9 @@ const settingSchema = new mongoose.Schema({
     type: String,
     default: 'https://youtube.com'
   },
-  instagram: {
+  tiktok: {
     type: String,
-    default: 'https://instagram.com'
-  },
-  twitter: {
-    type: String,
-    default: 'https://twitter.com'
-  },
-  linkedin: {
-    type: String,
-    default: 'https://linkedin.com'
+    default: 'https://tiktok.com'
   },
   
   // Meta thông tin

@@ -4,14 +4,11 @@ export interface PublicSettings {
   companyName: string;
   phone: string;
   email: string;
-  address: string;
   workingHours: string;
   logo: string;
   facebook: string;
   youtube: string;
-  instagram: string;
-  twitter: string;
-  linkedin: string;
+  tiktok: string;
   description: string;
   keywords: string;
 }
@@ -21,4 +18,22 @@ export const getPublicSettings = async (): Promise<PublicSettings> => {
     '/settings/public'
   );
   return response.data.data;
+};
+
+export interface Location {
+  _id?: string;
+  id?: number;
+  name: string;
+  address: string;
+  coordinates: string;
+  mapUrl: string;
+  isMainAddress: boolean;
+  description?: string;
+}
+
+export const getLocations = async (): Promise<Location[]> => {
+  const res = await api.get<{ success: boolean; data: Location[] }>(
+    '/settings/locations'
+  );
+  return res.data.data;
 }; 
