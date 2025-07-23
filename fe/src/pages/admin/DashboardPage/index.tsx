@@ -73,7 +73,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className={styles.dashboardPage}>
-      <Breadcrumb title="Dashboard" showAddButton={false} />
+      <Breadcrumb title="Thống kê" showAddButton={false} />
 
       {/* Thống kê người dùng */}
       <div style={{ marginBottom: 32 }}>

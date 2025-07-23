@@ -159,11 +159,9 @@ const SettingsPage: React.FC = () => {
         <Breadcrumb title="Cài đặt hệ thống" showAddButton={false} />
       </div>
 
-      <div
-        style={{ flex: 1, padding: "16px 24px 24px 24px", overflow: "auto" }}
-      >
+      <div style={{ flex: 1, padding: "0", overflow: "auto" }}>
         <Card
-          style={{ height: "100%", margin: 0 }}
+          style={{ height: "100%", margin: 0, borderRadius: 0 }}
           styles={{ body: { height: "calc(100% - 57px)", overflow: "auto" } }}
         >
           <Tabs
@@ -176,19 +174,19 @@ const SettingsPage: React.FC = () => {
                 key: "basic",
                 label: "Thông tin cơ bản",
                 children: (
-                  <div style={{ padding: "16px 0" }}>
+                  <div style={{ padding: "16px" }}>
                     <Form
                       form={form}
                       layout="vertical"
                       onFinish={handleSubmit}
                       initialValues={settings || undefined}
-                      style={{ maxWidth: "800px" }}
+                      style={{ width: "100%" }}
                     >
                       <div
                         style={{
                           display: "grid",
                           gridTemplateColumns: "1fr 1fr",
-                          gap: "24px",
+                          gap: "16px",
                         }}
                       >
                         <Form.Item
@@ -222,7 +220,8 @@ const SettingsPage: React.FC = () => {
                         style={{
                           display: "grid",
                           gridTemplateColumns: "1fr 1fr",
-                          columnGap: "24px",
+                          gap: "16px",
+                          marginTop: "16px",
                         }}
                       >
                         <Form.Item
@@ -248,19 +247,19 @@ const SettingsPage: React.FC = () => {
                         >
                           <Input placeholder="Ví dụ: 8:00 - 18:00 (Thứ 2 - Thứ 7)" />
                         </Form.Item>
-                        <div style={{ gridColumn: "span 2" }}>
-                          <Form.Item
-                            label="Mô tả công ty"
-                            name="description"
-                            rules={[]}
-                          >
-                            <Input.TextArea
-                              placeholder="Nhập mô tả công ty"
-                              rows={3}
-                            />
-                          </Form.Item>
-                        </div>
                       </div>
+
+                      <Form.Item
+                        label="Mô tả công ty"
+                        name="description"
+                        rules={[]}
+                        style={{ marginTop: "16px" }}
+                      >
+                        <Input.TextArea
+                          placeholder="Nhập mô tả công ty"
+                          rows={3}
+                        />
+                      </Form.Item>
 
                       <Form.Item>
                         <Button
@@ -281,18 +280,19 @@ const SettingsPage: React.FC = () => {
                 key: "social",
                 label: "Mạng xã hội",
                 children: (
-                  <div style={{ padding: "16px 0" }}>
+                  <div style={{ padding: "16px" }}>
                     <Form
                       form={form}
                       layout="vertical"
                       onFinish={handleSubmit}
                       initialValues={settings || undefined}
-                      style={{ maxWidth: "800px" }}
+                      style={{ width: "100%" }}
                     >
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "1fr",
+                          gridTemplateColumns: "1fr 1fr 1fr",
+                          gap: "16px",
                         }}
                       >
                         <Form.Item
@@ -337,7 +337,7 @@ const SettingsPage: React.FC = () => {
                 key: "locations",
                 label: "Địa chỉ",
                 children: (
-                  <div style={{ padding: "16px 0" }}>
+                  <div style={{ padding: "16px" }}>
                     <Space style={{ marginBottom: 16 }}>
                       <Button type="primary" onClick={handleAddLocation}>
                         Thêm địa chỉ
