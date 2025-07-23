@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { API_BASE_URL } from "@/api/config";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { ROUTERS } from "@/utils/constant";
 import {
   CalculatorOutlined,
@@ -44,6 +45,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const [categories, setCategories] = useState<Category[]>([]);
   const { theme } = useTheme();
+  const { settings, loading: settingsLoading } = useSettings();
 
   // Footer links arrays
   const aboutLinks: FooterLink[] = [
@@ -106,24 +108,6 @@ const Footer: React.FC = () => {
     },
   ];
 
-  const socialLinks: FooterLink[] = [
-    {
-      icon: <FacebookOutlined />,
-      path: "https://facebook.com",
-      text: "Facebook",
-    },
-    {
-      icon: <YoutubeOutlined />,
-      path: "https://youtube.com",
-      text: "YouTube",
-    },
-    {
-      icon: <InstagramOutlined />,
-      path: "https://instagram.com",
-      text: "Instagram",
-    },
-  ];
-
   // Fetch categories from API
   const fetchCategories = async () => {
     try {
@@ -181,6 +165,8 @@ const Footer: React.FC = () => {
     color: theme.colors.text.white,
   };
 
+  if (settingsLoading) return null; // hoặc render skeleton nếu muốn
+
   return (
     <div className={styles.minhduyFooterContainer} style={footerStyle}>
       <div className={styles.footerContainer}>
@@ -188,32 +174,55 @@ const Footer: React.FC = () => {
           {/* Company Information */}
           <div className={styles.footerColumn}>
             <div className={styles.footerLogoContainer}>
-              <h3 className={styles.footerMainTitle}>MINH DUY - ĐÀ NẴNG</h3>
+              <h3 className={styles.footerMainTitle}>
+                {settings?.companyName || "MINH DUY - ĐÀ NẴNG"}
+              </h3>
             </div>
             <p
               className={styles.footerDescription}
               style={{ color: "#e3f2fd" }}
             >
-              Công ty thiết bị công nghệ hàng đầu tại Việt Nam, chuyên cung cấp
-              thiết bị công nghệ chất lượng cao với dịch vụ bảo hành, bảo trì
-              chuyên nghiệp. Trải nghiệm công nghệ tiên tiến với đội ngũ tư vấn
-              chuyên nghiệp và giá cả cạnh tranh.
+              {settings?.description ||
+                "Công ty thiết bị công nghệ hàng đầu tại Việt Nam, chuyên cung cấp thiết bị công nghệ chất lượng cao với dịch vụ bảo hành, bảo trì chuyên nghiệp. Trải nghiệm công nghệ tiên tiến với đội ngũ tư vấn chuyên nghiệp và giá cả cạnh tranh."}
             </p>
-
             <div className={styles.footerSocial}>
-              {socialLinks.map((link, index) => (
+              {settings?.facebook && (
                 <a
-                  key={index}
-                  href={link.path}
+                  href={settings.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.footerSocialLink}
                   style={socialLinkStyle}
-                  aria-label={link.text}
+                  aria-label="Facebook"
                 >
-                  {link.icon}
+                  <FacebookOutlined />
                 </a>
-              ))}
+              )}
+              {settings?.youtube && (
+                <a
+                  href={settings.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerSocialLink}
+                  style={socialLinkStyle}
+                  aria-label="YouTube"
+                >
+                  <YoutubeOutlined />
+                </a>
+              )}
+              {settings?.instagram && (
+                <a
+                  href={settings.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.footerSocialLink}
+                  style={socialLinkStyle}
+                  aria-label="Instagram"
+                >
+                  <InstagramOutlined />
+                </a>
+              )}
+              {/* Có thể thêm các social khác nếu muốn */}
             </div>
           </div>
 
@@ -293,14 +302,18 @@ const Footer: React.FC = () => {
               <PhoneOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Hotline:</span>
-                <span className={styles.contactValue}>1800 8123</span>
+                <span className={styles.contactValue}>
+                  {settings?.phone || "1800 8123"}
+                </span>
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
               <MailOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Email:</span>
-                <span className={styles.contactValue}>minhduy@gmail.com</span>
+                <span className={styles.contactValue}>
+                  {settings?.email || "minhduy@gmail.com"}
+                </span>
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>
@@ -311,7 +324,8 @@ const Footer: React.FC = () => {
               <div>
                 <span className={styles.contactLabel}>Địa chỉ:</span>
                 <span className={styles.contactValue}>
-                  123 Nguyễn Văn Linh, Quận Hải Châu, TP. Đà Nẵng
+                  {settings?.address ||
+                    "123 Nguyễn Văn Linh, Quận Hải Châu, TP. Đà Nẵng"}
                 </span>
               </div>
             </div>
@@ -323,7 +337,7 @@ const Footer: React.FC = () => {
               <div>
                 <span className={styles.contactLabel}>Giờ làm việc:</span>
                 <span className={styles.contactValue}>
-                  8:00 - 18:00 (Thứ 2 - Thứ 7)
+                  {settings?.workingHours || "8:00 - 18:00 (Thứ 2 - Thứ 7)"}
                 </span>
               </div>
             </div>

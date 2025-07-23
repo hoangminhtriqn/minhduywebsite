@@ -4,10 +4,29 @@ const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/respon
 // Lấy danh sách sản phẩm
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
-    successResponse(res, products);
+    const { page = 1, limit = 9 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const limitNum = parseInt(limit);
+
+    const [products, total] = await Promise.all([
+      Product.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum),
+      Product.countDocuments()
+    ]);
+
+    return res.json({
+      products,
+      pagination: {
+        total,
+        page: Number(page),
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum)
+      }
+    });
   } catch (error) {
-    errorResponse(res, 'Lỗi lấy danh sách sản phẩm', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    return res.status(500).json({ message: error.message });
   }
 };
 

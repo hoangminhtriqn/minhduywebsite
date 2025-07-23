@@ -298,3 +298,71 @@ Trong file route hoặc controller, thêm:
 
 - Đảm bảo đã cấu hình `securitySchemes` trong swagger config
 - Kiểm tra middleware authentication hoạt động đúng
+
+---
+
+Đây là một số nguyên nhân phổ biến khiến endpoint `/api/products` trả về lỗi 404 trên Render (production) nhưng lại hoạt động bình thường ở local:
+
+### 1. Đường dẫn hoặc route không được mount đúng trên production
+
+- Có thể file hoặc route `/api/products` không được import hoặc mount đúng trong file `app.js` hoặc `server.js` trên môi trường production.
+- Đôi khi, đường dẫn tĩnh hoặc cấu hình base path khác nhau giữa local và production.
+
+### 2. Build/Deploy không đầy đủ hoặc lỗi
+
+- Có thể bạn chưa deploy đầy đủ code mới nhất lên Render, hoặc build bị lỗi, dẫn đến thiếu file hoặc route.
+
+### 3. Cấu hình môi trường khác biệt
+
+- Ở local có thể bạn dùng một số middleware, proxy, hoặc cấu hình khác với production (ví dụ: base path, prefix `/api`).
+
+### 4. Lỗi do case-sensitive (phân biệt hoa thường)
+
+- Render (Linux) phân biệt hoa thường, còn Windows thì không. Nếu bạn có file hoặc import sai hoa thường, local vẫn chạy nhưng production sẽ lỗi.
+
+### 5. Lỗi do process.env hoặc biến môi trường
+
+- Có thể một số biến môi trường (ví dụ: BASE_URL, API_PREFIX) khác nhau giữa local và Render.
+
+---
+
+## Cách kiểm tra & khắc phục
+
+1. **Kiểm tra file `app.js` và `server.js`**  
+   Đảm bảo bạn có dòng như sau:
+
+   ```js
+   const productsRouter = require("./routes/products");
+   app.use("/api/products", productsRouter);
+   ```
+
+   hoặc tương tự.
+
+2. **Kiểm tra log trên Render**
+
+   - Vào dashboard Render, xem log server khi có request `/api/products` để xem có lỗi gì không.
+
+3. **Kiểm tra tên file và import**
+
+   - Đảm bảo file và import đúng chính tả, đúng hoa thường.
+
+4. **Kiểm tra file `routes/products.js`**
+
+   - Đảm bảo file này tồn tại và export đúng router.
+
+5. **Kiểm tra Dockerfile hoặc Procfile**
+
+   - Đảm bảo lệnh start đúng, không bị thiếu bước build hoặc chạy sai file.
+
+6. **Kiểm tra biến môi trường**
+   - Đảm bảo các biến môi trường trên Render giống local (nếu có liên quan đến route/api).
+
+---
+
+Nếu bạn muốn mình kiểm tra cụ thể, hãy gửi:
+
+- Nội dung file `app.js` và `server.js`
+- Nội dung file `routes/products.js`
+- Log lỗi trên Render (nếu có)
+
+Bạn có muốn mình kiểm tra các file này không?
