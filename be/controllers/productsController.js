@@ -206,10 +206,116 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// Lấy sản phẩm liên quan
+const getRelatedProducts = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { limit = 4 } = req.query;
+    
+    // Tìm sản phẩm hiện tại
+    const currentProduct = await Product.findById(productId);
+    if (!currentProduct) {
+      return errorResponse(res, 'Không tìm thấy sản phẩm', HTTP_STATUS.NOT_FOUND);
+    }
+
+    // Tìm sản phẩm liên quan cùng danh mục, loại trừ sản phẩm hiện tại
+    const relatedProducts = await Product.aggregate([
+      {
+        $match: {
+          _id: { $ne: currentProduct._id },
+          CategoryID: currentProduct.CategoryID,
+          Status: 'active'
+        }
+      },
+      { $limit: parseInt(limit) },
+      // Lookup category (child)
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'CategoryID',
+          foreignField: '_id',
+          as: 'categoryObj',
+        },
+      },
+      { $unwind: { path: '$categoryObj', preserveNullAndEmptyArrays: true } },
+      // Lookup parent category
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'categoryObj.ParentID',
+          foreignField: '_id',
+          as: 'parentCategoryObj',
+        },
+      },
+      { $unwind: { path: '$parentCategoryObj', preserveNullAndEmptyArrays: true } },
+      // Lookup favorites
+      {
+        $lookup: {
+          from: 'favorites',
+          let: { productId: '$_id' },
+          pipeline: [
+            { $unwind: '$items' },
+            { $match: { $expr: { $eq: ['$items.ProductID', '$$productId'] } } },
+            // Join with user
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'UserID',
+                foreignField: '_id',
+                as: 'userInfo',
+              },
+            },
+            { $unwind: '$userInfo' },
+            {
+              $project: {
+                _id: 0,
+                user: {
+                  _id: '$userInfo._id',
+                  UserName: '$userInfo.UserName',
+                  FullName: '$userInfo.FullName',
+                  Email: '$userInfo.Email',
+                  Phone: '$userInfo.Phone',
+                },
+              },
+            },
+          ],
+          as: 'favoritedUsers',
+        },
+      },
+      // Add favorite count
+      {
+        $addFields: {
+          favoriteCount: { $size: '$favoritedUsers' },
+          CategoryID: {
+            _id: '$categoryObj._id',
+            Name: '$categoryObj.Name',
+            ParentID: {
+              _id: '$parentCategoryObj._id',
+              Name: '$parentCategoryObj.Name',
+            },
+          },
+        },
+      },
+      // Remove temp fields
+      {
+        $project: {
+          categoryObj: 0,
+          parentCategoryObj: 0,
+        },
+      },
+    ]);
+
+    successResponse(res, relatedProducts);
+  } catch (error) {
+    errorResponse(res, 'Lỗi lấy sản phẩm liên quan', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getRelatedProducts
 }; 
