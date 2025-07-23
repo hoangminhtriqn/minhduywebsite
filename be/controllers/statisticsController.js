@@ -1,6 +1,14 @@
 const OrderTestDrive = require('../models/OrderTestDrive');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const Service = require('../models/Service');
+const Pricing = require('../models/Pricing');
+const NewsEvent = require('../models/NewsEvent');
+const Location = require('../models/Location');
+const Category = require('../models/Category');
+const Role = require('../models/Role');
+const RoleUser = require('../models/RoleUser');
+const ServiceRequest = require('../models/ServiceRequest');
 const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/responseHandler');
 
 // Thống kê lịch lái thử
@@ -105,69 +113,39 @@ const getTestDriveRegistrationsByDate = async (req, res) => {
 // API tổng hợp dashboard
 const getDashboardStatistics = async (req, res) => {
   try {
-    // Order stats
-    const totalOrders = await OrderTestDrive.countDocuments();
-    const pendingOrders = await OrderTestDrive.countDocuments({ Status: 'pending' });
-    const confirmedOrders = await OrderTestDrive.countDocuments({ Status: 'confirmed' });
-    const completedOrders = await OrderTestDrive.countDocuments({ Status: 'completed' });
-    const cancelledOrders = await OrderTestDrive.countDocuments({ Status: 'cancelled' });
-    const totalTestDriveRevenue = await OrderTestDrive.aggregate([
-      { $group: { _id: null, total: { $sum: '$Total_Amount' } } }
+    // Service request stats
+    const [
+      totalRequests,
+      pendingRequests,
+      confirmedRequests,
+      completedRequests,
+      cancelledRequests
+    ] = await Promise.all([
+      ServiceRequest.countDocuments(),
+      ServiceRequest.countDocuments({ Status: 'pending' }),
+      ServiceRequest.countDocuments({ Status: 'confirmed' }),
+      ServiceRequest.countDocuments({ Status: 'completed' }),
+      ServiceRequest.countDocuments({ Status: 'cancelled' })
     ]);
-    const orderStats = {
-      totalOrders,
-      pendingOrders,
-      confirmedOrders,
-      completedOrders,
-      cancelledOrders,
-      totalTestDriveRevenue: totalTestDriveRevenue[0]?.total || 0 // Tổng doanh thu lái thử
+    const serviceRequestStats = {
+      totalRequests,
+      pendingRequests,
+      confirmedRequests,
+      completedRequests,
+      cancelledRequests
     };
 
     // User stats
-    const totalUsers = await User.countDocuments();
-    const usersWithOrders = await OrderTestDrive.distinct('UserID');
-    const bookedUsers = usersWithOrders.length;
-    const userStats = { totalUsers, bookedUsers };
-
-    // Product stats
-    const totalProducts = await Product.countDocuments();
-    const availableProducts = await Product.countDocuments({ Stock: { $gt: 0 } });
-    const productStats = { totalProducts, availableProducts };
-
-    // Top 4 test drive cars
-    const topCars = await OrderTestDrive.aggregate([
-      { $group: { _id: '$ProductID', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 4 },
-      {
-        $lookup: {
-          from: 'products',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'car'
-        }
-      },
-      { $unwind: '$car' },
-      { $project: { _id: 0, carName: '$car.Product_Name', count: 1 } }
+    const [totalUsers, adminCount, userCount] = await Promise.all([
+      User.countDocuments(),
+      User.countDocuments({ Role: 'admin' }),
+      User.countDocuments({ Role: 'user' })
     ]);
-
-    // Registrations by date
-    const registrationsByDate = await OrderTestDrive.aggregate([
-      {
-        $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } }
-    ]);
+    const userStats = { totalUsers, adminCount, userCount };
 
     successResponse(res, {
-      orderStats,
       userStats,
-      productStats,
-      topCars,
-      registrationsByDate
+      serviceRequestStats
     });
   } catch (error) {
     errorResponse(res, 'Lỗi thống kê dashboard', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);

@@ -90,7 +90,6 @@ const newsEventsApis = require('./routes/newsEvents'); // News & Events API
 const statisticsRoutes = require('./routes/statistics');
 const businessRoutes = require('./routes/business');
 const serviceRequestsRouter = require('./routes/serviceRequests');
-const testDriveOrdersRouter = require('./routes/testDriveOrders');
 const filesRouter = require('./routes/files');
 const settingsRouter = require('./routes/settings');
 const pricingRouter = require('./routes/pricing');
@@ -112,7 +111,6 @@ app.use('/api/news-events', newsEventsApis);
 app.use('/api/thong-ke', statisticsRoutes);
 app.use('/api', businessRoutes);
 app.use('/api/service-requests', serviceRequestsRouter);
-app.use('/api/test-drive-orders', testDriveOrdersRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/pricing', pricingRouter);

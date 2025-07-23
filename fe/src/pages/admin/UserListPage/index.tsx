@@ -1,35 +1,25 @@
-import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Tag,
-  Button,
-  Space,
-  message,
-  Modal,
-  Form,
-  Input,
-  Select,
-  Typography,
-  Card,
-} from "antd";
-// Import Option from antd
-// import { Option } from 'antd/es/select';
-// import { Option } from 'antd';
-// Import Option via Select
-const { Option } = Select;
-import {
-  EditOutlined,
-  LockOutlined,
-  UnlockOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  EyeOutlined,
-} from "@ant-design/icons";
-import axios from "axios";
 import CustomPagination from "@/components/CustomPagination";
 import Breadcrumb from "@/components/admin/Breadcrumb";
-import { useNavigate } from "react-router-dom";
-import styles from "./styles.module.scss";
+import { EditOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import React, { useEffect, useState } from "react";
+import type { TablePaginationConfig } from "antd/es/table";
+import {
+  getUsers,
+  updateUser,
+  updateUserStatus,
+} from "@/api/services/admin/user";
+const { Option } = Select;
 
 interface User {
   _id: string;
@@ -68,9 +58,12 @@ const UserListPage: React.FC = () => {
   ) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `/api/nguoi-dung?page=${page}&limit=${limit}&search=${search}&${role ? `role=${role}` : ""}`
-      );
+      const response = await getUsers({
+        page,
+        limit,
+        search,
+        role,
+      });
       setUsers(response.data.users);
       setPagination({
         ...pagination,
@@ -89,8 +82,8 @@ const UserListPage: React.FC = () => {
     fetchUsers();
   }, [pagination.current, pagination.pageSize, searchTerm, selectedRole]);
 
-  const handleTableChange = (pagination: any) => {
-    fetchUsers(pagination.current, pagination.pageSize);
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    fetchUsers(pagination.current!, pagination.pageSize!);
   };
 
   const handlePaginationChange = (page: number, pageSize?: number) => {
@@ -114,7 +107,7 @@ const UserListPage: React.FC = () => {
 
   const handleStatusChange = async (userId: string, newStatus: string) => {
     try {
-      await axios.put(`/api/nguoi-dung/${userId}`, { Status: newStatus });
+      await updateUserStatus(userId, newStatus);
       message.success("Cập nhật trạng thái người dùng thành công");
       fetchUsers();
     } catch (error) {
@@ -127,7 +120,7 @@ const UserListPage: React.FC = () => {
     try {
       const values = await form.validateFields();
       if (editingUser) {
-        await axios.put(`/api/nguoi-dung/${editingUser._id}`, values);
+        await updateUser(editingUser._id, values);
         message.success("Cập nhật thông tin người dùng thành công");
       }
       setIsModalVisible(false);
@@ -191,7 +184,7 @@ const UserListPage: React.FC = () => {
     {
       title: "Thao tác",
       key: "action",
-      render: (_: any, record: User) => (
+      render: (_: unknown, record: User) => (
         <Space size="middle">
           <Button
             type="primary"

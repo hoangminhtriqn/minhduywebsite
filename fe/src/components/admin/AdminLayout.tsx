@@ -1,10 +1,10 @@
 import {
-  CarOutlined,
   CarryOutOutlined,
   DashboardOutlined,
   FileTextOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
+  ProfileOutlined,
   SettingOutlined,
   TagsOutlined,
   TeamOutlined,
@@ -104,27 +104,28 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     {
       key: "users",
       icon: <TeamOutlined />,
-      label: <Link to="/admin/users">Người dùng</Link>,
-    },
-    {
-      key: "products",
-      icon: <CarOutlined />,
-      label: <Link to={ROUTERS.ADMIN.PRODUCTS}>Xe thử</Link>,
-    },
-    {
-      key: "orders",
-      icon: <CarryOutOutlined />,
-      label: <Link to="/admin/orders">Đăng ký lái thử</Link>,
+      label: <Link to={ROUTERS.ADMIN.USERS}>Người dùng</Link>,
     },
     {
       key: "categories",
       icon: <TagsOutlined />,
-      label: <Link to="/admin/categories">Danh mục</Link>,
+      label: <Link to={ROUTERS.ADMIN.CATEGORIES}>Danh mục</Link>,
     },
+    {
+      key: "products",
+      icon: <ProfileOutlined />,
+      label: <Link to={ROUTERS.ADMIN.PRODUCTS}>Sản phẩm</Link>,
+    },
+    {
+      key: "orders",
+      icon: <CarryOutOutlined />,
+      label: <Link to={ROUTERS.ADMIN.ORDERS}>Đặt lịch</Link>,
+    },
+
     {
       key: "services",
       icon: <DashboardOutlined />,
-      label: <Link to="/admin/services">Dịch vụ</Link>,
+      label: <Link to={ROUTERS.ADMIN.SERVICES}>Dịch vụ</Link>,
     },
     {
       key: "news",
@@ -134,7 +135,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     {
       key: "settings",
       icon: <SettingOutlined />,
-      label: <Link to="/admin/settings">Cài đặt</Link>,
+      label: <Link to={ROUTERS.ADMIN.SETTINGS}>Cài đặt</Link>,
     },
   ];
 

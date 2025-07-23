@@ -25,7 +25,6 @@ import OrderDetailPage from "@/pages/admin/OrderDetailPage";
 import UserListPage from "@/pages/admin/UserListPage";
 import CategoryListPage from "@/pages/admin/CategoryListPage";
 import ServiceListPage from "@/pages/admin/ServiceListPage";
-import TestDriveBookingListPage from "@/pages/admin/TestDriveBookingListPage";
 import NewsListPage from "@/pages/admin/NewsListPage";
 import NewsFormPage from "@/pages/admin/NewsFormPage";
 import SettingsPage from "@/pages/admin/SettingsPage";
@@ -220,16 +219,6 @@ const App: React.FC = () => {
                         }
                       />
                       <Route
-                        path={ROUTERS.ADMIN.ORDERS}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <TestDriveBookingListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
                         path={ROUTERS.ADMIN.ORDERS_DETAIL}
                         element={
                           <ProtectedRoute requireAdmin>
@@ -265,16 +254,6 @@ const App: React.FC = () => {
                           <ProtectedRoute requireAdmin>
                             <AdminLayout>
                               <ServiceListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.TEST_DRIVE_BOOKINGS}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <TestDriveBookingListPage />
                             </AdminLayout>
                           </ProtectedRoute>
                         }

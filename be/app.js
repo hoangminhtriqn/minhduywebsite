@@ -18,7 +18,6 @@ const favoritesRouter = require('./routes/favorites');
 const newsEventsRouter = require('./routes/newsEvents');
 const reviewsRouter = require('./routes/reviews');
 const statisticsRouter = require('./routes/statistics');
-const testDriveOrdersRouter = require('./routes/testDriveOrders');
 const filesRouter = require('./routes/files');
 const settingsRouter = require('./routes/settings');
 
@@ -39,7 +38,6 @@ app.use('/api/favorites', favoritesRouter);
 app.use('/api/news-events', newsEventsRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/statistics', statisticsRouter);
-app.use('/api/test-drive-orders', testDriveOrdersRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/settings', settingsRouter);
 

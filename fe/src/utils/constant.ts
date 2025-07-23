@@ -26,7 +26,6 @@ export const ROUTERS = {
   NEWS: "/admin/news",
   NEWS_ADD: "/admin/news/add",
   NEWS_EDIT: "/admin/news/edit/:id",
-  TEST_DRIVE_BOOKINGS: "/admin/test-drive-bookings",
-  TEST_DRIVE_BOOKINGS_DETAIL: "/admin/test-drive-bookings/:id",
+  SETTINGS: "/admin/settings",
  },
 };
