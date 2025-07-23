@@ -31,10 +31,11 @@ export const authService = {
       if (response.data.success === false) {
         throw new Error(response.data.message || 'Login failed');
       }
-      if (!response.data.success || !response.data.data || !response.data.data.token || !response.data.data.user) {
+      if (!response.data.success || !response.data.data || !response.data.data.token || !response.data.data.user || !response.data.data.refreshToken) {
         throw new Error('Invalid response structure from server');
       }
       localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('refreshToken', response.data.data.refreshToken);
       localStorage.setItem('userId', response.data.data.user._id);
       return response.data.data.user;
     } catch (error: unknown) {
@@ -60,10 +61,11 @@ export const authService = {
       if (response.data.success === false) {
         throw new Error(response.data.message || 'Registration failed');
       }
-      if (!response.data.success || !response.data.data || !response.data.data.token || !response.data.data.user) {
+      if (!response.data.success || !response.data.data || !response.data.data.token || !response.data.data.user || !response.data.data.refreshToken) {
         throw new Error('Invalid response structure from server');
       }
       localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('refreshToken', response.data.data.refreshToken);
       localStorage.setItem('userId', response.data.data.user._id);
       return response.data.data.user;
     } catch (error: unknown) {
@@ -88,6 +90,7 @@ export const authService = {
       // ignore
     } finally {
       localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('userId');
     }
   },
@@ -109,4 +112,17 @@ export const authService = {
       throw error;
     }
   },
+};
+
+// Hàm gọi API refresh token
+export const refreshAccessToken = async () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+  if (!refreshToken) throw new Error('No refresh token');
+  const response = await api.post('/users/refresh-token', { refreshToken });
+  if (response.data && response.data.success && response.data.data && response.data.data.token) {
+    localStorage.setItem('token', response.data.data.token);
+    return response.data.data.token;
+  } else {
+    throw new Error(response.data?.message || 'Refresh token failed');
+  }
 }; 

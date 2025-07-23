@@ -14,6 +14,7 @@ const NewsEvent = require('./models/NewsEvent');
 const DeviceRental = require('./models/OrderTestDrive');
 const Pricing = require('./models/Pricing');
 const Location = require('./models/Location');
+const Setting = require('./models/Setting');
 
 const sampleLocations = [
   {
@@ -1326,6 +1327,29 @@ async function migrate() {
       console.log('✅ Đã tạo sample locations');
     } else {
       console.log('✅ Locations đã tồn tại');
+    }
+
+    // Tạo/cập nhật settings mẫu
+    const settingsData = {
+      companyName: 'Minh Duy',
+      phone: '0123456333',
+      email: 'info@minhduy.com',
+      workingHours: '08:00 - 18:00 (Thứ 2 - Thứ 7)',
+      logo: '/images/logo.png',
+      facebook: 'https://www.facebook.com/minhduyqnam',
+      youtube: 'https://youtube.com',
+      tiktok: 'https://tiktok.com/@minhduy',
+      description: 'Công ty thiết bị công nghệ hàng đầu tại Việt Nam, chuyên cung cấp thiết bị công nghệ chất lượng cao với dịch vụ bảo hành, bảo trì chuyên nghiệp. Trải nghiệm công nghệ tiên tiến với đội ngũ tư vấn chuyên nghiệp và giá cả cạnh tranh.',
+      keywords: 'laptop, máy tính, thiết bị công nghệ'
+    };
+    const existingSetting = await Setting.findOne();
+    if (!existingSetting) {
+      await Setting.create(settingsData);
+      console.log('✅ Đã tạo settings mẫu');
+    } else {
+      Object.assign(existingSetting, settingsData);
+      await existingSetting.save();
+      console.log('✅ Đã cập nhật settings mẫu');
     }
 
     console.log('🎉 Migration hoàn thành thành công!');

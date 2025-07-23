@@ -43,27 +43,26 @@ const updateSettings = async (req, res) => {
 const getPublicSettings = async (req, res) => {
   try {
     let settings = await Setting.findOne();
-    
     if (!settings) {
       settings = new Setting();
       await settings.save();
     }
-    
+    // Lấy danh sách locations
+    const locations = await Location.find();
     // Chỉ trả về thông tin cần thiết cho frontend
     const publicSettings = {
       companyName: settings.companyName,
       phone: settings.phone,
       email: settings.email,
-      address: settings.address,
       workingHours: settings.workingHours,
       logo: settings.logo,
       facebook: settings.facebook,
       youtube: settings.youtube,
-      tiktok: settings.tiktok, // thêm tiktok
+      tiktok: settings.tiktok,
       description: settings.description,
-      keywords: settings.keywords
+      keywords: settings.keywords,
+      locations // thêm danh sách địa chỉ vào public settings
     };
-    
     successResponse(res, publicSettings);
   } catch (error) {
     errorResponse(res, 'Lỗi lấy cài đặt', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);

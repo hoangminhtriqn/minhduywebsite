@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 
 import { API_BASE_URL, API_TIMEOUT } from './config';
 import { toast } from 'react-toastify';
 import { ROUTERS } from '@/utils/constant';
+import { refreshAccessToken } from '@/api/services/user/auth';
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
@@ -27,35 +28,80 @@ apiClient.interceptors.request.use(
   }
 );
 
+type FailedQueueItem = {
+  resolve: (token: string | null) => void;
+  reject: (error: unknown) => void;
+};
+let isRefreshing = false;
+let failedQueue: FailedQueueItem[] = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 // Response interceptor
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
-    // Handle common errors
-    if (error.response?.status === 401) {
-      // Unauthorized - redirect to login only if not already on login page
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      
-      // Don't redirect if we're already on the login page
-      if (window.location.pathname !== ROUTERS.USER.LOGIN) {
-        window.location.href = ROUTERS.USER.LOGIN;
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (localStorage.getItem('refreshToken')) {
+        if (isRefreshing) {
+          return new Promise(function(resolve, reject) {
+            failedQueue.push({ resolve, reject });
+          })
+          .then((token) => {
+            originalRequest.headers['Authorization'] = 'Bearer ' + token;
+            return apiClient(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+        }
+        originalRequest._retry = true;
+        isRefreshing = true;
+        try {
+          const newToken = await refreshAccessToken();
+          processQueue(null, newToken);
+          originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
+          return apiClient(originalRequest);
+        } catch (refreshError) {
+          processQueue(refreshError, null);
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('userId');
+          if (window.location.pathname !== ROUTERS.USER.LOGIN) {
+            window.location.href = ROUTERS.USER.LOGIN;
+          }
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+        }
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userId');
+        if (window.location.pathname !== ROUTERS.USER.LOGIN) {
+          window.location.href = ROUTERS.USER.LOGIN;
+        }
       }
     }
-    
     if (error.response?.status === 403) {
-      // Forbidden - redirect to home
       window.location.href = '/';
     }
-    
-    // Don't show toast for 401 errors on login page to avoid duplicate messages
     if (!(error.response?.status === 401 && window.location.pathname === ROUTERS.USER.LOGIN)) {
       const message = error.response?.data?.message || 'Có lỗi xảy ra';
       toast.error(message);
     }
-    
     return Promise.reject(error);
   }
 );

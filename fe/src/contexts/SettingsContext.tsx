@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import {
   getPublicSettings,
-  getLocations,
   PublicSettings,
   Location,
 } from "@/api/services/user/settings";
@@ -27,18 +26,13 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [settings, setSettings] = useState<PublicSettings | null>(null);
-  const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchSettings = async () => {
     setLoading(true);
     try {
-      const [settingsData, locationsData] = await Promise.all([
-        getPublicSettings(),
-        getLocations(),
-      ]);
+      const settingsData = await getPublicSettings();
       setSettings(settingsData);
-      setLocations(locationsData);
     } finally {
       setLoading(false);
     }
@@ -47,6 +41,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     fetchSettings();
   }, []);
+
+  const locations = settings?.locations || [];
 
   return (
     <SettingsContext.Provider

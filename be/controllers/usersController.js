@@ -25,14 +25,19 @@ const register = async (req, res) => {
 
     await user.save();
     
-    // Tạo token
+    // Tạo access token
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
-
-    successResponse(res, { user, token }, 'Đăng ký thành công', HTTP_STATUS.CREATED);
+    // Tạo refresh token (7 ngày)
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    successResponse(res, { user, token, refreshToken }, 'Đăng ký thành công', HTTP_STATUS.CREATED);
   } catch (error) {
     errorResponse(res, 'Lỗi đăng ký', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
   }
@@ -55,14 +60,19 @@ const login = async (req, res) => {
       return errorResponse(res, 'Mật khẩu không đúng', HTTP_STATUS.UNAUTHORIZED);
     }
 
-    // Tạo token
+    // Tạo access token
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
     );
-
-    const responseData = { user, token };
+    // Tạo refresh token (7 ngày)
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    const responseData = { user, token, refreshToken };
     successResponse(res, responseData, 'Đăng nhập thành công');
   } catch (error) {
     errorResponse(res, 'Lỗi đăng nhập', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
@@ -76,6 +86,31 @@ const logout = async (req, res) => {
     successResponse(res, null, 'Đăng xuất thành công');
   } catch (error) {
     errorResponse(res, 'Lỗi đăng xuất', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
+// Refresh token endpoint
+const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return errorResponse(res, 'Thiếu refresh token', HTTP_STATUS.BAD_REQUEST);
+    }
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    } catch (err) {
+      return errorResponse(res, 'Refresh token không hợp lệ hoặc đã hết hạn', HTTP_STATUS.UNAUTHORIZED);
+    }
+    // Tạo access token mới
+    const token = jwt.sign(
+      { userId: decoded.userId },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+    );
+    successResponse(res, { token }, 'Làm mới access token thành công');
+  } catch (error) {
+    errorResponse(res, 'Lỗi refresh token', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
   }
 };
 
@@ -194,5 +229,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
+  refreshToken
 }; 

@@ -11,6 +11,7 @@ export interface PublicSettings {
   tiktok: string;
   description: string;
   keywords: string;
+  locations: Location[];
 }
 
 export const getPublicSettings = async (): Promise<PublicSettings> => {
@@ -29,11 +30,4 @@ export interface Location {
   mapUrl: string;
   isMainAddress: boolean;
   description?: string;
-}
-
-export const getLocations = async (): Promise<Location[]> => {
-  const res = await api.get<{ success: boolean; data: Location[] }>(
-    '/settings/locations'
-  );
-  return res.data.data;
-}; 
+} 

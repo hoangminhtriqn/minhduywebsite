@@ -392,6 +392,7 @@ const { USER_ROLES } = require('../models/User');
 router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', logout);
+router.post('/refresh-token', require('../controllers/usersController').refreshToken);
 
 // User management routes (protected)
 router.route('/')
