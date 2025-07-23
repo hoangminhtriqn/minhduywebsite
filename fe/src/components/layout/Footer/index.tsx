@@ -79,32 +79,32 @@ const Footer: React.FC = () => {
   const serviceLinks: FooterLink[] = [
     {
       icon: <ToolOutlined />,
-      path: ROUTERS.USER.SERVICE,
+      path: "",
       text: "Bảo hành & Bảo trì",
     },
     {
       icon: <SafetyCertificateOutlined />,
-      path: ROUTERS.USER.SERVICE,
-      text: "Sửa chữa & Phụ tùng",
+      path: "",
+      text: "Sửa chữa & Thi công",
     },
     {
       icon: <CalculatorOutlined />,
-      path: ROUTERS.USER.PRICE_LIST,
+      path: "",
       text: "Bảng giá chi tiết",
     },
     {
       icon: <CalendarOutlined />,
-      path: ROUTERS.USER.BOOKING,
+      path: "",
       text: "Đặt lịch hẹn",
     },
     {
       icon: <ToolOutlined />,
-      path: ROUTERS.USER.BOOKING,
+      path: "",
       text: "Tư vấn kỹ thuật",
     },
     {
       icon: <CalculatorOutlined />,
-      path: ROUTERS.USER.BOOKING,
+      path: "",
       text: "Tính toán chi phí",
     },
   ];
@@ -271,9 +271,9 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Services & Utilities */}
+          {/* Services */}
           <div className={styles.footerColumn}>
-            <h4 className={styles.footerTitle}>DỊCH VỤ & TIỆN ÍCH</h4>
+            <h4 className={styles.footerTitle}>DỊCH VỤ</h4>
             <div className={styles.footerList}>
               {serviceLinks.map((link, index) => (
                 <Link

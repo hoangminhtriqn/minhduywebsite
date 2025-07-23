@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -33,6 +33,7 @@ function hexToRgba(hex: string, alpha: number) {
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
   const { theme } = useTheme();
   const { favoritesCount } = useFavorites();
@@ -45,6 +46,11 @@ const Header: React.FC = () => {
   // Responsive breakpoints
   const isMobile = windowWidth <= 768;
   const isTablet = windowWidth > 768 && windowWidth <= 1024;
+
+  // Function to check if a route is active
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path;
+  };
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -225,6 +231,20 @@ const Header: React.FC = () => {
     position: "relative",
   };
 
+  const getNavLinkStyle = (path: string): React.CSSProperties => {
+    const isActive = isActiveRoute(path);
+    return {
+      ...navLinkStyle,
+      color: isActive
+        ? theme.colors.palette.primary
+        : theme.colors.text.primary,
+      backgroundColor: isActive ? "rgba(255, 255, 255, 0.9)" : "transparent",
+      boxShadow: isActive ? "0 8px 25px rgba(0, 0, 0, 0.15)" : "none",
+      transform: isActive ? "translateY(-2px)" : "translateY(0)",
+      fontWeight: isActive ? 700 : 600,
+    };
+  };
+
   const favoritesLinkStyle: React.CSSProperties = {
     position: "relative",
     display: isMobile ? "none" : "flex",
@@ -338,6 +358,28 @@ const Header: React.FC = () => {
     position: "relative",
   };
 
+  const getMobileMenuLinkStyle = (path: string): React.CSSProperties => {
+    const isActive = isActiveRoute(path);
+    return {
+      ...mobileMenuLinkStyle,
+      color: isActive
+        ? theme.colors.palette.primary
+        : theme.colors.text.primary,
+      backgroundColor: isActive ? "rgba(0, 0, 0, 0.05)" : "transparent",
+      fontWeight: isActive ? 600 : 500,
+      borderLeft: isActive
+        ? `3px solid ${theme.colors.palette.primary}`
+        : "none",
+      paddingLeft: isActive
+        ? isMobile
+          ? "17px"
+          : "21px"
+        : isMobile
+          ? "20px"
+          : "24px",
+    };
+  };
+
   const overlayStyle: React.CSSProperties = {
     position: "fixed",
     top: 0,
@@ -369,27 +411,39 @@ const Header: React.FC = () => {
   };
 
   const handleNavLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.currentTarget.style.color = theme.colors.palette.primary;
-    e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-    e.currentTarget.style.transform = "translateY(-2px)";
-    e.currentTarget.style.boxShadow = "0 8px 25px rgba(0, 0, 0, 0.15)";
+    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    if (!isActive) {
+      e.currentTarget.style.color = theme.colors.palette.primary;
+      e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+      e.currentTarget.style.transform = "translateY(-2px)";
+      e.currentTarget.style.boxShadow = "0 8px 25px rgba(0, 0, 0, 0.15)";
+    }
   };
 
   const handleNavLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.currentTarget.style.color = theme.colors.text.primary;
-    e.currentTarget.style.backgroundColor = "transparent";
-    e.currentTarget.style.transform = "translateY(0)";
-    e.currentTarget.style.boxShadow = "none";
+    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    if (!isActive) {
+      e.currentTarget.style.color = theme.colors.text.primary;
+      e.currentTarget.style.backgroundColor = "transparent";
+      e.currentTarget.style.transform = "translateY(0)";
+      e.currentTarget.style.boxShadow = "none";
+    }
   };
 
   const handleMobileLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
-    e.currentTarget.style.color = theme.colors.palette.primary;
+    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    if (!isActive) {
+      e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
+      e.currentTarget.style.color = theme.colors.palette.primary;
+    }
   };
 
   const handleMobileLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.currentTarget.style.backgroundColor = "transparent";
-    e.currentTarget.style.color = theme.colors.text.primary;
+    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    if (!isActive) {
+      e.currentTarget.style.backgroundColor = "transparent";
+      e.currentTarget.style.color = theme.colors.text.primary;
+    }
   };
 
   return (
@@ -462,7 +516,7 @@ const Header: React.FC = () => {
             <nav style={navStyle}>
               <Link
                 to={ROUTERS.USER.HOME}
-                style={navLinkStyle}
+                style={getNavLinkStyle(ROUTERS.USER.HOME)}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
                 onMouseLeave={handleNavLinkLeave}
@@ -472,7 +526,7 @@ const Header: React.FC = () => {
               </Link>
               <Link
                 to={ROUTERS.USER.PRODUCTS}
-                style={navLinkStyle}
+                style={getNavLinkStyle(ROUTERS.USER.PRODUCTS)}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
                 onMouseLeave={handleNavLinkLeave}
@@ -482,7 +536,7 @@ const Header: React.FC = () => {
               </Link>
               <Link
                 to={ROUTERS.USER.SERVICE}
-                style={navLinkStyle}
+                style={getNavLinkStyle(ROUTERS.USER.SERVICE)}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
                 onMouseLeave={handleNavLinkLeave}
@@ -492,7 +546,7 @@ const Header: React.FC = () => {
               </Link>
               <Link
                 to={ROUTERS.USER.PRICE_LIST}
-                style={navLinkStyle}
+                style={getNavLinkStyle(ROUTERS.USER.PRICE_LIST)}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
                 onMouseLeave={handleNavLinkLeave}
@@ -502,7 +556,7 @@ const Header: React.FC = () => {
               </Link>
               <Link
                 to={ROUTERS.USER.NEWS}
-                style={navLinkStyle}
+                style={getNavLinkStyle(ROUTERS.USER.NEWS)}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
                 onMouseLeave={handleNavLinkLeave}
@@ -512,7 +566,7 @@ const Header: React.FC = () => {
               </Link>
               <Link
                 to={ROUTERS.USER.BOOKING}
-                style={navLinkStyle}
+                style={getNavLinkStyle(ROUTERS.USER.BOOKING)}
                 onClick={closeMobileMenu}
                 onMouseEnter={handleNavLinkHover}
                 onMouseLeave={handleNavLinkLeave}
@@ -564,7 +618,7 @@ const Header: React.FC = () => {
         <nav style={mobileMenuNavStyle}>
           <Link
             to={ROUTERS.USER.HOME}
-            style={mobileMenuLinkStyle}
+            style={getMobileMenuLinkStyle(ROUTERS.USER.HOME)}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
@@ -575,7 +629,7 @@ const Header: React.FC = () => {
           </Link>
           <Link
             to={ROUTERS.USER.PRODUCTS}
-            style={mobileMenuLinkStyle}
+            style={getMobileMenuLinkStyle(ROUTERS.USER.PRODUCTS)}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
@@ -586,7 +640,7 @@ const Header: React.FC = () => {
           </Link>
           <Link
             to={ROUTERS.USER.SERVICE}
-            style={mobileMenuLinkStyle}
+            style={getMobileMenuLinkStyle(ROUTERS.USER.SERVICE)}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
@@ -597,7 +651,7 @@ const Header: React.FC = () => {
           </Link>
           <Link
             to={ROUTERS.USER.PRICE_LIST}
-            style={mobileMenuLinkStyle}
+            style={getMobileMenuLinkStyle(ROUTERS.USER.PRICE_LIST)}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
@@ -608,7 +662,7 @@ const Header: React.FC = () => {
           </Link>
           <Link
             to={ROUTERS.USER.NEWS}
-            style={mobileMenuLinkStyle}
+            style={getMobileMenuLinkStyle(ROUTERS.USER.NEWS)}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
@@ -619,7 +673,7 @@ const Header: React.FC = () => {
           </Link>
           <Link
             to={ROUTERS.USER.BOOKING}
-            style={mobileMenuLinkStyle}
+            style={getMobileMenuLinkStyle(ROUTERS.USER.BOOKING)}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
             onMouseLeave={handleMobileLinkLeave}
@@ -631,11 +685,13 @@ const Header: React.FC = () => {
           <Link
             to={ROUTERS.USER.FAVORITES}
             style={{
-              ...mobileMenuLinkStyle,
+              ...getMobileMenuLinkStyle(ROUTERS.USER.FAVORITES),
               display: "flex",
               alignItems: "center",
               gap: "12px",
-              color: "#ff4757",
+              color: isActiveRoute(ROUTERS.USER.FAVORITES)
+                ? "#ff4757"
+                : "#ff4757",
             }}
             onClick={closeMobileMenu}
             onMouseEnter={handleMobileLinkHover}
