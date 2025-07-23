@@ -136,7 +136,7 @@ const ProductFormPage: React.FC = () => {
         Description: productData.Description || "",
         Price: productData.Price,
         Stock: productData.Stock,
-        CategoryID: productData.CategoryID?._id,
+        CategoryID: productData.CategoryID,
         Main_Image: productData.Main_Image || "",
         List_Image: productData.List_Image?.join(",") || "",
         Specifications: specificationsArray,
@@ -347,17 +347,20 @@ const ProductFormPage: React.FC = () => {
     // Only send required fields according to Product model
     const dataToSend = {
       Product_Name: values.Product_Name,
-      Description: values.Description,
+      Description: values.Description || "",
       Price: values.Price,
       CategoryID: values.CategoryID,
-      Main_Image: values.Main_Image,
+      Main_Image: values.Main_Image || "",
       List_Image: values.List_Image
         ? values.List_Image.split(",").map((url) => url.trim())
         : [],
       Specifications: specifications,
-      Status: values.Status || "active",
+      Status:
+        (values.Status as "available" | "unavailable" | undefined) ||
+        "available",
       TestDriveStartDate: values.TestDriveStartDate?.toISOString(),
       TestDriveEndDate: values.TestDriveEndDate?.toISOString(),
+      Stock: form.getFieldValue("Stock") ?? 0,
     };
 
     try {

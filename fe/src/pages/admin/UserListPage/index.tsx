@@ -11,6 +11,7 @@ import {
   Space,
   Table,
   Tag,
+  Popconfirm, // Thêm Popconfirm
 } from "antd";
 import React, { useEffect, useState } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
@@ -195,23 +196,29 @@ const UserListPage: React.FC = () => {
             Sửa
           </Button>
           {record.Status === "active" ? (
-            <Button
-              danger
-              icon={<LockOutlined />}
-              onClick={() => handleStatusChange(record._id, "inactive")}
-              size="small"
+            <Popconfirm
+              title="Xác nhận khóa người dùng?"
+              onConfirm={() => handleStatusChange(record._id, "inactive")}
+              okText="Khóa"
+              cancelText="Hủy"
+              okType="danger"
             >
-              Khóa
-            </Button>
+              <Button danger icon={<LockOutlined />} size="small">
+                Khóa
+              </Button>
+            </Popconfirm>
           ) : (
-            <Button
-              type="primary"
-              icon={<UnlockOutlined />}
-              onClick={() => handleStatusChange(record._id, "active")}
-              size="small"
+            <Popconfirm
+              title="Xác nhận mở khóa người dùng?"
+              onConfirm={() => handleStatusChange(record._id, "active")}
+              okText="Mở khóa"
+              cancelText="Hủy"
+              okType="primary"
             >
-              Mở khóa
-            </Button>
+              <Button type="primary" icon={<UnlockOutlined />} size="small">
+                Mở khóa
+              </Button>
+            </Popconfirm>
           )}
         </Space>
       ),

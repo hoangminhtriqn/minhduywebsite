@@ -12,70 +12,62 @@ dotenv.config();
 // Khởi tạo Express app
 const app = express();
 
-// CORS configuration - Allow specific origins
-const corsOptions = {
+// CORS configuration
+app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001', 
       'http://localhost:5173',
-      'http://localhost:3000', 
-      'http://localhost:3001',
-      process.env.FRONTEND_URL,
-      'https://*.onrender.com',
-      'https://minhduywebsite.onrender.com'
-    ].filter(Boolean); // Remove undefined values
+      'http://localhost:4173',
+      'https://minduywebsite.onrender.com',
+      'https://minduywebsite-be.onrender.com'
+    ];
     
-    // Check if origin is allowed
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
-  optionsSuccessStatus: 200
-};
+  credentials: true
+}));
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware log request (tạm thời để debug)
+// Logging middleware
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Origin: ${req.headers.origin}`);
   next();
 });
 
-// Hàm kết nối MongoDB với retry logic
-const connectDB = async (retries = 5, delay = 5000) => {
+// MongoDB connection with retry logic
+const connectWithRetry = async () => {
+  const retries = 5;
+  const delay = 5000;
+  
   for (let i = 0; i < retries; i++) {
     try {
-      console.log(`🔄 Thử kết nối MongoDB lần ${i + 1}/${retries}...`);
       await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         serverSelectionTimeoutMS: 10000,
         socketTimeoutMS: 45000,
       });
-      console.log('✅ Kết nối MongoDB thành công');
-      return true;
-    } catch (err) {
-      console.error(`❌ Lỗi kết nối MongoDB lần ${i + 1}:`, err.message);
+      break;
+    } catch (error) {
       if (i === retries - 1) {
         console.error('❌ Không thể kết nối MongoDB sau nhiều lần thử');
-        return false;
+        console.error('🔍 Chi tiết lỗi:', error);
+        process.exit(1);
       }
-      console.log(`⏳ Chờ ${delay/1000}s trước khi thử lại...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-  return false;
 };
 
 // Import routes
@@ -150,18 +142,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Khởi động server với kết nối database
+// Start server
+const PORT = process.env.PORT || 3000;
+
+// Initialize server with database connection
 const startServer = async () => {
   try {
-    // Kết nối database trước
-    const dbConnected = await connectDB();
-    if (!dbConnected) {
-      console.error('❌ Không thể kết nối database, thoát ứng dụng');
-      process.exit(1);
-    }
-
-    // Khởi động server
-    const PORT = process.env.PORT || 3000;
+    await connectWithRetry();
+    
     app.listen(PORT, () => {
       console.log(`🚀 Server đang chạy trên port ${PORT}`);
       console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
@@ -174,5 +162,4 @@ const startServer = async () => {
   }
 };
 
-// Khởi động ứng dụng
 startServer(); 

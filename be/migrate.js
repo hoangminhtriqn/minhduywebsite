@@ -581,7 +581,7 @@ function generateSampleProducts() {
         RentalEndDate: endDate,
         Stock: Math.floor(Math.random() * 10) + 1,
         Specifications: product.specs,
-        Status: 'active',
+        Status: Math.random() < 0.85 ? 'active' : 'inactive', // 85% còn kinh doanh, 15% ngừng kinh doanh
         CategoryName: categoryName // Thêm tên category để mapping sau này
       });
     });

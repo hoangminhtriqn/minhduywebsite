@@ -131,27 +131,26 @@ const CategoryListPage: React.FC = () => {
   const emojiPickerRef = useRef<HTMLDivElement>(null);
 
   const fetchCategories = async () => {
-    setLoading(true);
     try {
-      const response = await fetch("/api/categories");
-      const data = await response.json();
-      const allCategories = data.categories || [];
-      console.log("Fetched categories:", allCategories.length);
+      setLoading(true);
+      const response = await categoryService.getAllCategories();
+      const allCategories = response.data;
       setCategories(allCategories);
 
       // Separate parent and child categories
       const parents = allCategories.filter((cat: Category) => !cat.ParentID);
-      console.log("Parent categories:", parents.length);
-      setParentCategories(parents);
+      const children = allCategories.filter((cat: Category) => cat.ParentID);
 
-      // Chỉ mở category đầu tiên, các category khác đóng
-      const firstParentKey = parents.length > 0 ? parents[0]._id : "";
-      setExpandedKeys(firstParentKey ? [firstParentKey] : []);
+      setParentCategories(parents);
+      setChildCategories(children);
     } catch (error) {
-      message.error("Lỗi khi tải danh sách danh mục");
-      console.error("Error fetching categories:", error);
+      notification.error({
+        message: "Lỗi",
+        description: "Không thể tải danh sách danh mục.",
+      });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -257,9 +256,7 @@ const CategoryListPage: React.FC = () => {
       // Thêm icon nếu có
       if (selectedEmoji) {
         values.Icon = selectedEmoji;
-        console.log("Setting icon:", selectedEmoji);
       }
-      console.log("Final values to save:", values);
 
       if (editingCategory) {
         await updateCategory(editingCategory._id, values);
@@ -276,8 +273,6 @@ const CategoryListPage: React.FC = () => {
         });
 
         const responseData = await response.json();
-        console.log("API Response:", responseData);
-        console.log("Saved category data:", responseData.data);
 
         if (!response.ok) {
           throw new Error(responseData.message || "Lỗi khi thêm danh mục");
@@ -291,7 +286,6 @@ const CategoryListPage: React.FC = () => {
       }
 
       // Reset form và refresh dữ liệu
-      console.log("Resetting form and refreshing data...");
       setEditingCategory(null);
       setIsParentCategory(true);
       setSelectedEmoji(undefined);
@@ -300,13 +294,9 @@ const CategoryListPage: React.FC = () => {
       // Reset form ngay lập tức
       form.resetFields();
       form.setFieldsValue({ ParentID: null, Status: "active" });
-      console.log("Form reset completed");
-      console.log("Selected emoji after reset:", selectedEmoji);
 
       // Refresh dữ liệu
-      console.log("Fetching updated categories...");
       await fetchCategories();
-      console.log("Data refresh completed");
     } catch (error) {
       console.error("Error saving category:", error);
       message.error(
@@ -340,8 +330,6 @@ const CategoryListPage: React.FC = () => {
       const children = categories.filter(
         (cat) => cat.ParentID && cat.ParentID._id === parent._id
       );
-
-      console.log(`Parent category "${parent.Name}" icon:`, parent.Icon);
 
       const parentNode: CategoryTreeNode = {
         key: parent._id,

@@ -194,7 +194,6 @@ const BookingPage = () => {
         setIsModalVisible(false);
       }
     } catch (error) {
-      console.log(error);
       message.error("Đã có lỗi xảy ra khi đăng ký lái thử. Vui lòng thử lại.");
     } finally {
       setSubmitting(false);
