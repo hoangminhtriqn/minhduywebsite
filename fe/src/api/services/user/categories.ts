@@ -51,7 +51,13 @@ export const getCategoriesHierarchy = async (): Promise<Category[]> => {
     // Tạo cấu trúc phân cấp
     const hierarchicalCategories = parentCategories.map((parent: CategoryFilter) => {
       const subCategories = childCategories
-        .filter((child: CategoryFilter) => child.ParentID && child.ParentID._id === parent._id)
+        .filter(
+          (child: CategoryFilter) =>
+            child.ParentID &&
+            typeof child.ParentID === 'object' &&
+            '_id' in child.ParentID &&
+            (child.ParentID as { _id: string })._id === parent._id
+        )
         .map((child: CategoryFilter) => child.Name);
       
       return {
