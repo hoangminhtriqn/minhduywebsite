@@ -18,22 +18,45 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    const allowedOrigins = [
+    // Get allowed origins from environment variable
+    const allowedOriginsEnv = process.env.ALLOWED_ORIGINS || '';
+    const allowedOrigins = allowedOriginsEnv.split(',').map(origin => origin.trim()).filter(origin => origin);
+    
+    // Default origins for development
+    const defaultOrigins = [
       'http://localhost:3000',
       'http://localhost:3001', 
       'http://localhost:5173',
-      'http://localhost:4173',
-      'https://minduywebsite.onrender.com',
-      'https://minduywebsite-be.onrender.com'
+      'http://localhost:4173'
     ];
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Combine environment origins with defaults
+    const allAllowedOrigins = [...defaultOrigins, ...allowedOrigins];
+    
+    // Allow any Render subdomain for development/production flexibility
+    const isRenderDomain = origin && (
+      origin.includes('onrender.com') ||
+      origin.includes('localhost') ||
+      origin.includes('127.0.0.1')
+    );
+    
+    // Log all origins for debugging
+    console.log('Request origin:', origin);
+    console.log('Allowed origins from env:', allowedOrigins);
+    console.log('All allowed origins:', allAllowedOrigins);
+    console.log('isRenderDomain:', isRenderDomain);
+    
+    if (allAllowedOrigins.indexOf(origin) !== -1 || isRenderDomain) {
+      console.log('✅ CORS allowed for origin:', origin);
       callback(null, true);
     } else {
+      console.log('❌ CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Middleware
