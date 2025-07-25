@@ -22,17 +22,10 @@ import axios from "axios";
 import styles from "./style.module.scss";
 
 interface Category {
-  _id: string;
-  Name: string;
-  Description?: string;
-  ParentID?: {
-    _id: string;
-    Name: string;
-    id: string;
-  } | null;
-  Status?: string;
-  Order?: number;
   id: string;
+  name: string;
+  icon?: string;
+  subCategories?: string[];
 }
 
 interface FooterLink {
@@ -113,7 +106,8 @@ const Footer: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/categories`);
-      setCategories(response.data.categories || []);
+      // The API returns data in response.data.data structure
+      setCategories(response.data.data || []);
     } catch (error) {
       console.error("Error fetching categories for footer:", error);
       setCategories([]);
@@ -126,15 +120,12 @@ const Footer: React.FC = () => {
 
   // Get 5 random parent categories
   const getRandomCategories = () => {
-    if (categories.length === 0) return [];
+    if (!categories || !Array.isArray(categories) || categories.length === 0)
+      return [];
 
-    // Chỉ lấy parent categories (ParentID = null)
-    const parentCategories = categories.filter((cat) => !cat.ParentID);
-
-    if (parentCategories.length === 0) return [];
-
+    // The API returns parent categories directly (no ParentID field)
     // Shuffle array and take first 5
-    const shuffled = [...parentCategories].sort(() => 0.5 - Math.random());
+    const shuffled = [...categories].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 5);
   };
 
@@ -249,19 +240,20 @@ const Footer: React.FC = () => {
             <h4 className={styles.footerTitle}>THIẾT BỊ</h4>
             <div className={styles.footerList}>
               {/* Random categories from API */}
-              {randomCategories.map((category) => (
+              {randomCategories &&
+                randomCategories.map((category) => (
+                  <Link
+                    key={category.id}
+                    to={`${ROUTERS.USER.PRODUCTS}?category=${category.id}`}
+                    className={styles.footerLink}
+                    style={linkStyle}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              {categories && categories.length > 5 && (
                 <Link
-                  key={category._id}
-                  to={ROUTERS.USER.PRICE_LIST}
-                  className={styles.footerLink}
-                  style={linkStyle}
-                >
-                  {category.Name}
-                </Link>
-              ))}
-              {categories.length > 5 && (
-                <Link
-                  to="/bang-gia"
+                  to={ROUTERS.USER.PRODUCTS}
                   className={styles.footerLink}
                   style={linkStyle}
                 >

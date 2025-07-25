@@ -21,7 +21,6 @@
 .adminLogo {
   height: 63px;
   width: 100%;
-  background: var(--theme-gradient-primary, var(--theme-primary-color));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,13 +39,9 @@
 }
 
 .logoImg {
-  height: 44px;
-  width: 44px;
-  object-fit: cover;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  border: 2px solid #fff;
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
   transition: box-shadow 0.2s;
 }
 
@@ -55,7 +50,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   font-family: var(--font-family-base) !important;
-  color: #fff;
+  color: var(--theme-primary-color);
   text-shadow: 0 2px 8px rgba(0,0,0,0.10);
   transition: opacity 0.2s;
 }

@@ -9,18 +9,21 @@ const {
   getCategoryTree,
   updateCategoryIcon,
   updateCategoryFull,
-  getCategoriesForFilter
+  getCategoriesForFilter,
+  getCategoriesHierarchy
 } = require('../controllers/categoriesController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const { upload } = require('../config/cloudinary');
 
 // Public routes
-router.get('/', getAllCategories);
+router.get('/', getCategoriesHierarchy);
+router.get('/hierarchy', getCategoriesHierarchy);
 router.get('/filter', getCategoriesForFilter);
-// router.get('/tree', getCategoryTree);
+router.get('/tree', getCategoryTree);
 router.get('/:id', getCategoryById);
 
 // Protected routes (Admin only)
+router.get('/admin/all', protect, authorize('admin'), getAllCategories);
 router.post('/', protect, authorize('admin'), upload.single('Image'), createCategory);
 router.put('/:id', protect, authorize('admin'), upload.single('Image'), updateCategory);
 router.put('/:id/icon', protect, authorize('admin'), updateCategoryIcon);

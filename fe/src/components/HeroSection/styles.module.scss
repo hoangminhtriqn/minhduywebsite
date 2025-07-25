@@ -160,13 +160,24 @@ $breakpoint-xxl: 1400px;
   margin-bottom: 2px;
   background: none;
   font-weight: 400;
-  transition: color 0.2s, background 0.2s;
+  transition: color 0.2s, background 0.2s, transform 0.2s;
   position: relative;
-}
+  user-select: none;
 
-.collapseItem:hover {
-  color: var(--primary-color);
-  background: #f3f6fa;
+  &:hover {
+    color: var(--primary-color);
+    background: #f3f6fa;
+    transform: translateX(2px);
+  }
+
+  &:active {
+    transform: translateX(1px);
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
 }
 
 .collapseItem:last-child {
@@ -241,10 +252,21 @@ $breakpoint-xxl: 1400px;
   border-radius: 4px;
   transition: all 0.3s ease;
   position: relative;
+  user-select: none;
 
   &:hover {
     color: var(--primary-color);
     background: var(--hover-color);
+    transform: translateX(2px);
+  }
+
+  &:active {
+    transform: translateX(1px);
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
   }
 
   &::before {

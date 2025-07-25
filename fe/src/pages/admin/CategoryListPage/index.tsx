@@ -1,4 +1,4 @@
-import { updateCategory } from "@/api/services/user/categories";
+import { categoryService } from "@/api/services/admin/categories";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import {
   DeleteOutlined,
@@ -6,11 +6,9 @@ import {
   EditOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  PlusOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import {
-  App,
   Button,
   Card,
   Col,
@@ -18,6 +16,7 @@ import {
   Input,
   message,
   Modal,
+  notification,
   Row,
   Select,
   Space,
@@ -27,9 +26,9 @@ import {
   Typography,
 } from "antd";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { confirm } = Modal;
 
 // Danh sách emoji cho icon danh mục
@@ -123,7 +122,7 @@ const CategoryListPage: React.FC = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const [isParentCategory, setIsParentCategory] = useState(false);
+
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string | undefined>(
     undefined
@@ -134,19 +133,38 @@ const CategoryListPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await categoryService.getAllCategories();
-      const allCategories = response.data;
+
+      const allCategories = response.categories || [];
+      const hierarchicalCategories = response.hierarchicalCategories || [];
+
       setCategories(allCategories);
 
-      // Separate parent and child categories
-      const parents = allCategories.filter((cat: Category) => !cat.ParentID);
-      const children = allCategories.filter((cat: Category) => cat.ParentID);
-
-      setParentCategories(parents);
-      setChildCategories(children);
+      // Use hierarchical categories for better tree display
+      if (hierarchicalCategories.length > 0) {
+        // Extract parent categories from hierarchical structure
+        const parents = hierarchicalCategories.map((parent: Category) => ({
+          _id: parent._id,
+          Name: parent.Name,
+          Description: parent.Description,
+          Icon: parent.Icon,
+          Status: parent.Status,
+          Order: parent.Order,
+          createdAt: parent.createdAt,
+          updatedAt: parent.updatedAt,
+        }));
+        setParentCategories(parents);
+      } else {
+        // Fallback to filtering flat categories
+        const parents = allCategories.filter((cat: Category) => !cat.ParentID);
+        setParentCategories(parents);
+      }
     } catch (error) {
       notification.error({
         message: "Lỗi",
-        description: "Không thể tải danh sách danh mục.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Không thể tải danh sách danh mục.",
       });
     } finally {
       setLoading(false);
@@ -177,20 +195,8 @@ const CategoryListPage: React.FC = () => {
     };
   }, [showEmojiPicker]);
 
-  const handleAdd = () => {
-    setEditingCategory(null);
-    setIsParentCategory(true); // Mặc định là danh mục gốc khi thêm mới
-    setSelectedEmoji(undefined);
-    setShowEmojiPicker(false);
-    form.resetFields();
-    // Đảm bảo ParentID được set về null khi thêm mới
-    form.setFieldsValue({ ParentID: null });
-  };
-
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
-    const isParent = !category.ParentID;
-    setIsParentCategory(isParent);
     setShowEmojiPicker(false);
     form.setFieldsValue({
       Name: category.Name,
@@ -213,24 +219,10 @@ const CategoryListPage: React.FC = () => {
       cancelText: "Hủy",
       async onOk() {
         try {
-          const token = localStorage.getItem("token");
-          const response = await fetch(`/api/categories/${id}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Lỗi khi xóa danh mục");
-          }
-
+          await categoryService.deleteCategory(id);
           message.success("Xóa danh mục thành công");
           await fetchCategories();
         } catch (error) {
-          console.error("Error deleting category:", error);
           message.error(
             error instanceof Error ? error.message : "Lỗi khi xóa danh mục"
           );
@@ -259,35 +251,15 @@ const CategoryListPage: React.FC = () => {
       }
 
       if (editingCategory) {
-        await updateCategory(editingCategory._id, values);
+        await categoryService.updateCategory(editingCategory._id, values);
         message.success("Cập nhật danh mục thành công");
       } else {
-        const token = localStorage.getItem("token");
-        const response = await fetch("/api/categories", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(values),
-        });
-
-        const responseData = await response.json();
-
-        if (!response.ok) {
-          throw new Error(responseData.message || "Lỗi khi thêm danh mục");
-        }
-
-        if (responseData.success) {
-          message.success(responseData.message || "Thêm danh mục thành công");
-        } else {
-          throw new Error(responseData.message || "Lỗi khi thêm danh mục");
-        }
+        await categoryService.createCategory(values);
+        message.success("Thêm danh mục thành công");
       }
 
       // Reset form và refresh dữ liệu
       setEditingCategory(null);
-      setIsParentCategory(true);
       setSelectedEmoji(undefined);
       setShowEmojiPicker(false);
 
@@ -298,7 +270,6 @@ const CategoryListPage: React.FC = () => {
       // Refresh dữ liệu
       await fetchCategories();
     } catch (error) {
-      console.error("Error saving category:", error);
       message.error(
         error instanceof Error ? error.message : "Lỗi khi lưu danh mục"
       );
@@ -306,11 +277,8 @@ const CategoryListPage: React.FC = () => {
   };
 
   const handleParentChange = (value: string | undefined) => {
-    const isParent = !value;
-    setIsParentCategory(isParent);
-
     // Nếu chuyển thành danh mục con, xóa Order
-    if (!isParent) {
+    if (value) {
       form.setFieldsValue({ Order: undefined });
     }
   };
@@ -445,7 +413,11 @@ const CategoryListPage: React.FC = () => {
     return treeData;
   };
 
-  const handleDrop = async (info: any) => {
+  const handleDrop = async (info: {
+    node: { key: string; pos: string };
+    dragNode: { key: string };
+    dropPosition: number;
+  }) => {
     const dropKey = info.node.key;
     const dragKey = info.dragNode.key;
     const dropPos = info.node.pos.split("-");
@@ -501,13 +473,12 @@ const CategoryListPage: React.FC = () => {
       }
 
       // Cập nhật Order trong database
-      await updateCategory(dragKey, { Order: newOrder });
+      await categoryService.updateCategory(dragKey, { Order: newOrder });
       message.success("Cập nhật thứ tự thành công");
 
       // Refresh data
       await fetchCategories();
     } catch (error) {
-      console.error("Error updating order:", error);
       message.error(
         error instanceof Error ? error.message : "Lỗi khi cập nhật thứ tự"
       );
@@ -563,11 +534,10 @@ const CategoryListPage: React.FC = () => {
                 style={{ fontSize: "16px" }}
                 draggable={{
                   icon: false,
-                  nodeDraggable: (node: any) =>
-                    (node as CategoryTreeNode).isParent,
+                  nodeDraggable: (node) => (node as CategoryTreeNode).isParent,
                 }}
                 onDrop={handleDrop}
-                switcherIcon={(props) => {
+                switcherIcon={(props: { expanded?: boolean }) => {
                   const { expanded } = props;
                   return expanded ? (
                     <span style={{ fontSize: "16px", color: "#1890ff" }}>
@@ -778,7 +748,6 @@ const CategoryListPage: React.FC = () => {
                     size="large"
                     onClick={() => {
                       setEditingCategory(null);
-                      setIsParentCategory(true);
                       setSelectedEmoji(undefined);
                       setShowEmojiPicker(false);
                       form.resetFields();

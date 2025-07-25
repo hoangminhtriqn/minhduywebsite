@@ -2,16 +2,20 @@ import {
   Category,
   getCategoriesHierarchy,
 } from "@/api/services/user/categories";
-import { Collapse } from "antd";
+import { Collapse, notification } from "antd";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 import HeroSectionSkeleton from "@/components/HeroSection/HeroSectionSkeleton";
+import { ROUTERS } from "@/utils/constant";
 
 const HeroSection: React.FC = () => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [navigating, setNavigating] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch categories from API
   useEffect(() => {
@@ -59,6 +63,15 @@ const HeroSection: React.FC = () => {
     return () => clearInterval(interval);
   }, [carouselImages.length]);
 
+  // Reset navigating state after navigation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setNavigating(false);
+    }, 1000); // Reset after 1 second
+
+    return () => clearTimeout(timer);
+  }, [navigating]);
+
   const handleCategoryHover = (categoryId: string) => {
     setHoveredCategory(categoryId);
   };
@@ -91,6 +104,34 @@ const HeroSection: React.FC = () => {
     setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
   };
 
+  // Handle sub category click
+  const handleSubCategoryClick = (categoryId: string) => {
+    if (navigating) return; // Prevent multiple clicks
+
+    setNavigating(true);
+    // Navigate to products page with category filter
+    navigate(`${ROUTERS.USER.PRODUCTS}?category=${categoryId}`);
+    notification.success({
+      message: "Đang chuyển hướng",
+      description: "Đang tải sản phẩm theo danh mục đã chọn...",
+      duration: 1.5,
+    });
+  };
+
+  // Handle mobile sub category click
+  const handleMobileSubCategoryClick = (categoryId: string) => {
+    if (navigating) return; // Prevent multiple clicks
+
+    setNavigating(true);
+    // Navigate to products page with category filter
+    navigate(`${ROUTERS.USER.PRODUCTS}?category=${categoryId}`);
+    notification.success({
+      message: "Đang chuyển hướng",
+      description: "Đang tải sản phẩm theo danh mục đã chọn...",
+      duration: 1.5,
+    });
+  };
+
   // Get current category
   const currentCategory = hoveredCategory
     ? categories.find((cat) => cat.id === hoveredCategory)
@@ -108,7 +149,20 @@ const HeroSection: React.FC = () => {
     children: (
       <ul className={styles.collapseList}>
         {category.subCategories.map((subCategory, index) => (
-          <li key={index} className={styles.collapseItem}>
+          <li
+            key={index}
+            className={styles.collapseItem}
+            onClick={() => handleMobileSubCategoryClick(category.id)}
+            role="button"
+            tabIndex={0}
+            aria-label={`Xem sản phẩm ${subCategory}`}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleMobileSubCategoryClick(category.id);
+              }
+            }}
+          >
             {subCategory}
           </li>
         ))}
@@ -171,7 +225,20 @@ const HeroSection: React.FC = () => {
                 {/* Sub Categories List */}
                 <ul className={styles.megaMenuList}>
                   {currentCategory.subCategories.map((subCategory, index) => (
-                    <li key={index} className={styles.megaMenuItem}>
+                    <li
+                      key={index}
+                      className={styles.megaMenuItem}
+                      onClick={() => handleSubCategoryClick(currentCategory.id)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Xem sản phẩm ${subCategory}`}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleSubCategoryClick(currentCategory.id);
+                        }
+                      }}
+                    >
                       <span>{subCategory}</span>
                     </li>
                   ))}

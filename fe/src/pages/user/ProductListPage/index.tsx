@@ -30,7 +30,7 @@ import {
 } from "antd";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./styles.module.scss";
 import { PageKeys } from "@/components/SEO/seoConfig";
 import FilterSidebar from "./FilterSidebar";
@@ -94,6 +94,7 @@ const ProductListPage: React.FC = () => {
   const { user } = useAuth();
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -125,6 +126,17 @@ const ProductListPage: React.FC = () => {
   const [debouncedPriceRange, setDebouncedPriceRange] = useState<
     [number, number]
   >([0, 1000000000]);
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get("category");
+    if (categoryFromUrl) {
+      setFilters((prev) => ({
+        ...prev,
+        category: [categoryFromUrl],
+      }));
+    }
+  }, [searchParams]);
 
   // Debounce effects
   useEffect(() => {
@@ -269,6 +281,13 @@ const ProductListPage: React.FC = () => {
 
   const handleCategoryChange = (value: string[]) => {
     handleFilterChange("category", value);
+
+    // Update URL parameters
+    if (value.length > 0) {
+      setSearchParams({ category: value[0] });
+    } else {
+      setSearchParams({});
+    }
   };
 
   const handleSortChange = (value: string) => {
@@ -287,6 +306,7 @@ const ProductListPage: React.FC = () => {
       sortOrder: "desc",
     });
     setPriceRange([0, maxPrice]);
+    setSearchParams({}); // Clear URL parameters
     handlePageChange(1);
   };
 

@@ -39,8 +39,25 @@ const getAllCategories = async (req, res) => {
       .populate('ParentID', 'Name')
       .sort({ Order: 1 });
 
+    // Tách parent và child categories để tạo cấu trúc phân cấp
+    const parentCategories = categories.filter(cat => !cat.ParentID);
+    const childCategories = categories.filter(cat => cat.ParentID);
+
+    // Tạo cấu trúc phân cấp cho admin
+    const hierarchicalCategories = parentCategories.map(parent => {
+      const children = childCategories.filter(child => 
+        child.ParentID && child.ParentID._id.toString() === parent._id.toString()
+      );
+      
+      return {
+        ...parent.toObject(),
+        children: children.map(child => child.toObject())
+      };
+    });
+
     res.json({
-      categories,
+      categories: categories,
+      hierarchicalCategories: hierarchicalCategories,
       total: categories.length
     });
   } catch (error) {
@@ -232,6 +249,46 @@ const getCategoriesForFilter = async (req, res) => {
   }
 };
 
+// API lấy categories dạng tree structure (cho admin)
+const getCategoryTree = async (req, res) => {
+  try {
+    // Lấy tất cả categories
+    const categories = await Category.find({})
+      .populate('ParentID', 'Name')
+      .sort({ Order: 1 });
+
+    // Tách parent và child categories
+    const parentCategories = categories.filter(cat => !cat.ParentID);
+    const childCategories = categories.filter(cat => cat.ParentID);
+
+    // Tạo cấu trúc tree cho admin
+    const treeData = parentCategories.map(parent => {
+      const children = childCategories.filter(child => 
+        child.ParentID && child.ParentID._id.toString() === parent._id.toString()
+      );
+      
+      return {
+        key: parent._id.toString(),
+        title: parent.Name,
+        icon: parent.Icon || '📁',
+        status: parent.Status,
+        order: parent.Order,
+        children: children.map(child => ({
+          key: child._id.toString(),
+          title: child.Name,
+          icon: child.Icon || '📄',
+          status: child.Status,
+          parentId: child.ParentID._id.toString()
+        }))
+      };
+    });
+
+    successResponse(res, treeData);
+  } catch (error) {
+    errorResponse(res, 'Lỗi lấy cấu trúc tree danh mục', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+  }
+};
+
 module.exports = {
   getCategoriesHierarchy,
   getCategories: getCategoriesHierarchy, // Alias for backward compatibility
@@ -244,4 +301,5 @@ module.exports = {
   updateCategoryIcon,
   updateCategoryFull,
   getCategoriesForFilter,
+  getCategoryTree,
 }; 
