@@ -1,0 +1,30 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/san-pham",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/dich-vu",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/bang-gia",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/tin-tuc",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+} 
