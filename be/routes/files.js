@@ -10,12 +10,12 @@ const {
   getFileUrl,
   searchFiles
 } = require('../controllers/fileController');
-const { upload } = require('../config/cloudinary');
+const { uploadWithErrorHandling } = require('../config/cloudinary');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Upload routes
-router.post('/upload', protect, upload.single('file'), uploadFile);
-router.post('/upload-multiple', protect, upload.array('files', 10), uploadMultipleFiles);
+// Upload routes with error handling
+router.post('/upload', protect, uploadWithErrorHandling, uploadFile);
+router.post('/upload-multiple', protect, uploadWithErrorHandling, uploadMultipleFiles);
 
 // Get file info and list
 router.get('/', protect, getAllFiles);

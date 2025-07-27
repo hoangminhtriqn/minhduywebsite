@@ -2,6 +2,8 @@ const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
+
+
 // Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,6 +20,8 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Chỉ chấp nhận file ảnh!'), false);
   }
 };
+
+
 
 // Configure storage
 const storage = new CloudinaryStorage({
@@ -39,7 +43,35 @@ const upload = multer({
   }
 });
 
+// Wrapper function with error handling
+const uploadWithErrorHandling = (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({
+          success: false,
+          message: 'File quá lớn. Kích thước tối đa: 5MB'
+        });
+      }
+      
+      if (err.message.includes('Chỉ chấp nhận file ảnh') || err.message.includes('not allowed')) {
+        return res.status(400).json({
+          success: false,
+          message: 'Định dạng file không hợp lệ. Chỉ chấp nhận: jpg, jpeg, png, gif, webp'
+        });
+      }
+      
+      return res.status(500).json({
+        success: false,
+        message: 'Lỗi upload file: ' + err.message
+      });
+    }
+    next();
+  });
+};
+
 module.exports = {
   cloudinary,
-  upload
+  upload,
+  uploadWithErrorHandling
 }; 

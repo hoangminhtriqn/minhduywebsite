@@ -1,7 +1,8 @@
-import { api } from "@/api";
 import { categoryService } from "@/api/services/admin/categories";
 import { productService } from "@/api/services/user/product";
+import { uploadFile } from "@/api/services/admin/upload";
 import Breadcrumb from "@/components/admin/Breadcrumb";
+import EditorCustom from "@/components/admin/EditorCustom";
 import {
   CameraOutlined,
   DeleteOutlined,
@@ -14,7 +15,7 @@ import {
   ToolOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Editor } from "@tinymce/tinymce-react";
+
 import {
   Button,
   Card,
@@ -31,7 +32,6 @@ import {
   Row,
   Select,
   Space,
-  Spin,
   Tooltip,
   Typography,
   Upload,
@@ -101,7 +101,6 @@ const ProductFormPage: React.FC = () => {
     CategoryID: "",
     Main_Image: "",
   });
-  const [editorLoading, setEditorLoading] = useState(true);
 
   const fetchProductData = async (productId: string) => {
     setLoading(true);
@@ -210,56 +209,30 @@ const ProductFormPage: React.FC = () => {
   const uploadMainImageToCloudinary = async (
     file: File
   ): Promise<UploadedFile> => {
-    const formData = new FormData();
-    formData.append("file", file);
+    const result = await uploadFile(file);
 
-    try {
-      const response = await api.post("/files/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      const result = response.data.data;
-
-      return {
-        uid: result.public_id,
-        name: result.original_filename,
-        status: "done",
-        url: result.url,
-        public_id: result.public_id,
-      };
-    } catch {
-      throw new Error("Main image upload failed");
-    }
+    return {
+      uid: result.public_id,
+      name: result.original_filename,
+      status: "done",
+      url: result.url,
+      public_id: result.public_id,
+    };
   };
 
   // Upload list image to cloudinary
   const uploadListImageToCloudinary = async (
     file: File
   ): Promise<UploadedFile> => {
-    const formData = new FormData();
-    formData.append("file", file);
+    const result = await uploadFile(file);
 
-    try {
-      const response = await api.post("/files/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      const result = response.data.data;
-
-      return {
-        uid: result.public_id,
-        name: result.original_filename,
-        status: "done",
-        url: result.url,
-        public_id: result.public_id,
-      };
-    } catch {
-      throw new Error("List image upload failed");
-    }
+    return {
+      uid: result.public_id,
+      name: result.original_filename,
+      status: "done",
+      url: result.url,
+      public_id: result.public_id,
+    };
   };
 
   // Handle main image upload
@@ -273,10 +246,15 @@ const ProductFormPage: React.FC = () => {
         message: "Thành công",
         description: "Upload ảnh chính thành công!",
       });
-    } catch {
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        (error as { message?: string })?.message ||
+        "Upload ảnh chính thất bại!";
       notification.error({
         message: "Lỗi",
-        description: "Upload ảnh chính thất bại!",
+        description: errorMessage,
       });
     } finally {
       setMainImageUploading(false);
@@ -303,10 +281,15 @@ const ProductFormPage: React.FC = () => {
         message: "Thành công",
         description: `Upload ${files.length} ảnh phụ thành công!`,
       });
-    } catch {
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        (error as { message?: string })?.message ||
+        "Upload ảnh phụ thất bại!";
       notification.error({
         message: "Lỗi",
-        description: "Upload ảnh phụ thất bại!",
+        description: errorMessage,
       });
     } finally {
       setListImagesUploading(false);
@@ -548,7 +531,7 @@ const ProductFormPage: React.FC = () => {
                 formatter={(value) =>
                   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
-                parser={(value) => value!.replace(/₫\s?|(,*)/g, "")}
+                min={0}
               />
             </Form.Item>
           </Col>
@@ -563,61 +546,13 @@ const ProductFormPage: React.FC = () => {
         </Row>
 
         <Form.Item name="Description" label="Mô tả sản phẩm">
-          <Spin spinning={editorLoading} tip="Đang tải trình soạn thảo...">
-            <div style={{ minHeight: 320 }}>
-              <Editor
-                apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
-                initialValue={formData.Description || ""}
-                init={{
-                  height: 300,
-                  menubar: false,
-                  plugins: [
-                    "advlist",
-                    "autolink",
-                    "lists",
-                    "link",
-                    "image",
-                    "charmap",
-                    "preview",
-                    "anchor",
-                    "searchreplace",
-                    "visualblocks",
-                    "code",
-                    "fullscreen",
-                    "insertdatetime",
-                    "media",
-                    "table",
-                    "code",
-                    "help",
-                    "wordcount",
-                    "autoresize",
-                  ],
-                  toolbar:
-                    "undo redo | blocks | " +
-                    "bold italic forecolor | alignleft aligncenter " +
-                    "alignright alignjustify | bullist numlist outdent indent | " +
-                    "removeformat | help",
-                  content_style:
-                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  placeholder:
-                    "Mô tả chi tiết về sản phẩm, tính năng nổi bật, lợi ích...",
-                  branding: false,
-                  elementpath: false,
-                  resize: true,
-                  statusbar: false,
-                  readonly: false,
-                  autoresize_bottom_margin: 50,
-                  autoresize_overflow_padding: 50,
-                  min_height: 200,
-                  max_height: 600,
-                }}
-                onInit={() => setEditorLoading(false)}
-                onEditorChange={(content: string) => {
-                  form.setFieldsValue({ Description: content });
-                }}
-              />
-            </div>
-          </Spin>
+          <EditorCustom
+            initialValue={formData.Description || ""}
+            placeholder="Mô tả chi tiết về sản phẩm, tính năng nổi bật, lợi ích..."
+            onEditorChange={(content: string) => {
+              form.setFieldsValue({ Description: content });
+            }}
+          />
         </Form.Item>
 
         <Title level={4}>
@@ -862,7 +797,7 @@ const ProductFormPage: React.FC = () => {
                           },
                         ]}
                       >
-                        <Input placeholder="VD: Động cơ, Công suất, Kích thước..." />
+                        <Input placeholder="VD: Dòng thiết bị, Màu sắc, Kích thước..." />
                       </Form.Item>
                     </Col>
                     <Col span={11}>
@@ -876,7 +811,7 @@ const ProductFormPage: React.FC = () => {
                           },
                         ]}
                       >
-                        <Input placeholder="VD: 2.0L, 155HP, 4.7m x 1.9m..." />
+                        <Input placeholder="Vui lòng nhập giá trị" />
                       </Form.Item>
                     </Col>
                     <Col span={1}>

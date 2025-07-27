@@ -7,6 +7,11 @@ const { USER_ROLES } = require('../models/User');
 const protect = async (req, res, next) => {
   let token;
 
+  // Check JWT_SECRET
+  if (!process.env.JWT_SECRET) {
+    return errorResponse(res, 'Server configuration error', HTTP_STATUS.INTERNAL_SERVER_ERROR);
+  }
+
   // Check for token in headers (Bearer token)
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
@@ -19,9 +24,12 @@ const protect = async (req, res, next) => {
       // Find user by ID from token payload and attach to request (excluding password)
       req.user = await User.findById(decoded.userId).select('-Password');
 
+      if (!req.user) {
+        return errorResponse(res, 'User not found', HTTP_STATUS.UNAUTHORIZED);
+      }
+
       next(); // Move to the next middleware/route handler
     } catch (error) {
-      console.error('Error in auth middleware (protect):', error);
       errorResponse(res, 'Không được phép truy cập (token lỗi hoặc hết hạn)', HTTP_STATUS.UNAUTHORIZED);
     }
   } else {

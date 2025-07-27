@@ -10,21 +10,48 @@ const uploadFile = async (req, res) => {
       return errorResponse(res, 'Không có file được upload', HTTP_STATUS.BAD_REQUEST);
     }
 
+    // Kiểm tra file size
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (req.file.size > maxSize) {
+      return errorResponse(res, `File quá lớn. Kích thước tối đa: 5MB`, HTTP_STATUS.BAD_REQUEST);
+    }
+
+    // Kiểm tra file format
+    const allowedFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    const fileFormat = req.file.originalname?.split('.').pop()?.toLowerCase();
+    if (!allowedFormats.includes(fileFormat)) {
+      return errorResponse(res, `Định dạng file không hợp lệ. Chỉ chấp nhận: ${allowedFormats.join(', ')}`, HTTP_STATUS.BAD_REQUEST);
+    }
+
     const result = {
-      public_id: req.file.filename,
-      url: req.file.path,
-      secure_url: req.file.path,
-      format: req.file.format,
-      width: req.file.width,
-      height: req.file.height,
-      bytes: req.file.size,
+      public_id: req.file.filename || req.file.public_id,
+      url: req.file.path || req.file.url,
+      secure_url: req.file.path || req.file.secure_url || req.file.url,
+      format: req.file.format || req.file.originalname?.split('.').pop(),
+      width: req.file.width || null,
+      height: req.file.height || null,
+      bytes: req.file.size || req.file.bytes || 0,
       original_filename: req.file.originalname
     };
 
     successResponse(res, result, 'Upload file thành công', HTTP_STATUS.CREATED);
   } catch (error) {
-    console.error('Error uploading file:', error);
-    errorResponse(res, 'Lỗi khi upload file', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
+    // Xử lý lỗi cụ thể
+    let errorMessage = 'Lỗi khi upload file';
+    let statusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR;
+    
+    if (error.message.includes('File too large')) {
+      errorMessage = 'File quá lớn. Kích thước tối đa: 5MB';
+      statusCode = HTTP_STATUS.BAD_REQUEST;
+    } else if (error.message.includes('Invalid file type')) {
+      errorMessage = 'Định dạng file không hợp lệ';
+      statusCode = HTTP_STATUS.BAD_REQUEST;
+    } else if (error.message.includes('network') || error.message.includes('timeout')) {
+      errorMessage = 'Lỗi kết nối. Vui lòng thử lại';
+      statusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR;
+    }
+    
+    errorResponse(res, errorMessage, statusCode, error.message);
   }
 };
 
@@ -38,19 +65,18 @@ const uploadMultipleFiles = async (req, res) => {
     }
 
     const results = req.files.map(file => ({
-      public_id: file.filename,
-      url: file.path,
-      secure_url: file.path,
-      format: file.format,
-      width: file.width,
-      height: file.height,
-      bytes: file.size,
+      public_id: file.filename || file.public_id,
+      url: file.path || file.url,
+      secure_url: file.path || file.secure_url || file.url,
+      format: file.format || file.originalname?.split('.').pop(),
+      width: file.width || null,
+      height: file.height || null,
+      bytes: file.size || file.bytes || 0,
       original_filename: file.originalname
     }));
 
     successResponse(res, results, 'Upload nhiều file thành công', HTTP_STATUS.CREATED);
   } catch (error) {
-    console.error('Error uploading multiple files:', error);
     errorResponse(res, 'Lỗi khi upload nhiều file', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
   }
 };
@@ -72,7 +98,6 @@ const getFileInfo = async (req, res) => {
 
     successResponse(res, result, 'Lấy thông tin file thành công');
   } catch (error) {
-    console.error('Error getting file info:', error);
     if (error.http_code === 404) {
       return errorResponse(res, 'Không tìm thấy file', HTTP_STATUS.NOT_FOUND);
     }
@@ -96,7 +121,6 @@ const getAllFiles = async (req, res) => {
 
     successResponse(res, result, 'Lấy danh sách file thành công');
   } catch (error) {
-    console.error('Error getting all files:', error);
     errorResponse(res, 'Lỗi khi lấy danh sách file', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
   }
 };
@@ -122,7 +146,6 @@ const deleteFile = async (req, res) => {
       errorResponse(res, 'Lỗi khi xóa file', HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
   } catch (error) {
-    console.error('Error deleting file:', error);
     if (error.http_code === 404) {
       return errorResponse(res, 'Không tìm thấy file để xóa', HTTP_STATUS.NOT_FOUND);
     }
@@ -147,7 +170,6 @@ const deleteMultipleFiles = async (req, res) => {
 
     successResponse(res, result, 'Xóa nhiều file thành công');
   } catch (error) {
-    console.error('Error deleting multiple files:', error);
     errorResponse(res, 'Lỗi khi xóa nhiều file', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
   }
 };
@@ -173,7 +195,7 @@ const getFileUrl = async (req, res) => {
     if (quality) {
       transformation.push({ quality: parseInt(quality) });
     }
-    
+      
     if (format) {
       transformation.push({ fetch_format: format });
     }
@@ -185,7 +207,6 @@ const getFileUrl = async (req, res) => {
 
     successResponse(res, { url, public_id: publicId }, 'Lấy URL file thành công');
   } catch (error) {
-    console.error('Error getting file URL:', error);
     errorResponse(res, 'Lỗi khi lấy URL file', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
   }
 };
@@ -211,7 +232,6 @@ const searchFiles = async (req, res) => {
 
     successResponse(res, result, 'Tìm kiếm file thành công');
   } catch (error) {
-    console.error('Error searching files:', error);
     errorResponse(res, 'Lỗi khi tìm kiếm file', HTTP_STATUS.INTERNAL_SERVER_ERROR, error.message);
   }
 };
