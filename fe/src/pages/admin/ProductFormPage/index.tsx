@@ -1,8 +1,9 @@
-import { API_BASE_URL } from "@/api/config";
+import { api } from "@/api";
+import { categoryService } from "@/api/services/admin/categories";
+import { productService } from "@/api/services/user/product";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import {
   CameraOutlined,
-  CarOutlined,
   DeleteOutlined,
   EyeOutlined,
   InfoCircleOutlined,
@@ -35,12 +36,10 @@ import {
   Typography,
   Upload,
 } from "antd";
-import axios from "axios";
 import moment, { Moment } from "moment";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
-import { productService } from "@/api/services/user/product";
 
 // Custom VND icon component
 const VNDIcon = () => (
@@ -54,6 +53,7 @@ interface ProductFormData {
   Product_Name: string;
   Description?: string;
   Price: number;
+  ParentCategoryID?: string;
   CategoryID: string;
   Main_Image?: string;
   List_Image?: string;
@@ -78,9 +78,16 @@ const ProductFormPage: React.FC = () => {
   const isEditing = !!id;
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [categories, setCategories] = useState<
-    { _id: string; Category_Name: string }[]
+
+  const [parentCategories, setParentCategories] = useState<
+    { _id: string; Name: string }[]
   >([]);
+  const [childCategories, setChildCategories] = useState<
+    { _id: string; Name: string; ParentID: { _id: string; Name: string } }[]
+  >([]);
+  const [selectedParentCategory, setSelectedParentCategory] =
+    useState<string>("");
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [mainImageFile, setMainImageFile] = useState<UploadedFile | null>(null);
   const [listImageFiles, setListImageFiles] = useState<UploadedFile[]>([]);
   const [mainImageUploading, setMainImageUploading] = useState(false);
@@ -152,8 +159,7 @@ const ProductFormPage: React.FC = () => {
       // Điền dữ liệu vào form
       form.setFieldsValue(formData);
       setFormData(formData as ProductFormData);
-    } catch (error) {
-      console.error("Error fetching product data:", error);
+    } catch {
       notification.error({
         message: "Lỗi",
         description: "Không thể tải dữ liệu sản phẩm.",
@@ -164,15 +170,32 @@ const ProductFormPage: React.FC = () => {
   };
 
   const fetchCategories = async () => {
+    setCategoriesLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/categories`);
-      setCategories(response.data.categories);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
+      const response = await categoryService.getAllCategories();
+      const allCategories = response.categories || [];
+
+      // Phân loại categories thành cha và con
+      const parents = allCategories.filter(
+        (cat: { ParentID?: { _id: string; Name: string } | null }) =>
+          !cat.ParentID
+      );
+      const children = allCategories.filter(
+        (cat: { ParentID?: { _id: string; Name: string } | null }) =>
+          cat.ParentID
+      );
+
+      setParentCategories(parents);
+      setChildCategories(children);
+    } catch {
+      setParentCategories([]);
+      setChildCategories([]);
       notification.error({
         message: "Lỗi",
         description: "Không thể tải danh sách danh mục.",
       });
+    } finally {
+      setCategoriesLoading(false);
     }
   };
 
@@ -191,16 +214,11 @@ const ProductFormPage: React.FC = () => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/files/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await api.post("/files/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const result = response.data.data;
 
@@ -211,8 +229,7 @@ const ProductFormPage: React.FC = () => {
         url: result.url,
         public_id: result.public_id,
       };
-    } catch (error) {
-      console.error("Error uploading main image:", error);
+    } catch {
       throw new Error("Main image upload failed");
     }
   };
@@ -225,16 +242,11 @@ const ProductFormPage: React.FC = () => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/files/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await api.post("/files/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const result = response.data.data;
 
@@ -245,8 +257,7 @@ const ProductFormPage: React.FC = () => {
         url: result.url,
         public_id: result.public_id,
       };
-    } catch (error) {
-      console.error("Error uploading list image:", error);
+    } catch {
       throw new Error("List image upload failed");
     }
   };
@@ -262,8 +273,7 @@ const ProductFormPage: React.FC = () => {
         message: "Thành công",
         description: "Upload ảnh chính thành công!",
       });
-    } catch (error) {
-      console.error("Main image upload error:", error);
+    } catch {
       notification.error({
         message: "Lỗi",
         description: "Upload ảnh chính thất bại!",
@@ -293,8 +303,7 @@ const ProductFormPage: React.FC = () => {
         message: "Thành công",
         description: `Upload ${files.length} ảnh phụ thành công!`,
       });
-    } catch (error) {
-      console.error("List images upload error:", error);
+    } catch {
       notification.error({
         message: "Lỗi",
         description: "Upload ảnh phụ thất bại!",
@@ -379,24 +388,21 @@ const ProductFormPage: React.FC = () => {
       }
       navigate("/admin/products");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Error submitting product form:", error.message);
-        notification.error({
-          message: "Lỗi",
-          description:
-            error.response?.data?.message ||
-            error.message ||
-            (isEditing
-              ? "Đã xảy ra lỗi khi cập nhật sản phẩm."
-              : "Đã xảy ra lỗi khi thêm sản phẩm."),
-        });
-      } else {
-        console.error("Unexpected error:", error);
-        notification.error({
-          message: "Lỗi",
-          description: "Đã xảy ra lỗi không mong muốn.",
-        });
-      }
+      const errorMessage =
+        (
+          error as {
+            response?: { data?: { message?: string } };
+            message?: string;
+          }
+        )?.response?.data?.message ||
+        (error as { message?: string })?.message ||
+        (isEditing
+          ? "Đã xảy ra lỗi khi cập nhật sản phẩm."
+          : "Đã xảy ra lỗi khi thêm sản phẩm.");
+      notification.error({
+        message: "Lỗi",
+        description: errorMessage,
+      });
     } finally {
       setSaving(false);
     }
@@ -418,7 +424,7 @@ const ProductFormPage: React.FC = () => {
         </Title>
 
         <Row gutter={[24, 16]}>
-          <Col span={12}>
+          <Col span={24}>
             <Form.Item
               name="Product_Name"
               label="Tên sản phẩm"
@@ -426,34 +432,95 @@ const ProductFormPage: React.FC = () => {
                 { required: true, message: "Vui lòng nhập tên sản phẩm!" },
               ]}
             >
-              <Input
-                placeholder="VD: Minh Duy X5 xDrive40i"
-                prefix={<CarOutlined />}
-                size="large"
-              />
+              <Input placeholder="Nhập tên sản phẩm" size="large" />
             </Form.Item>
           </Col>
+        </Row>
+
+        <Row gutter={[24, 16]}>
           <Col span={12}>
             <Form.Item
-              name="CategoryID"
-              label="Danh mục"
-              rules={[{ required: true, message: "Vui lòng chọn danh mục!" }]}
+              name="ParentCategoryID"
+              label="Danh mục cha"
+              rules={[
+                { required: true, message: "Vui lòng chọn danh mục cha!" },
+              ]}
             >
               <Select
-                placeholder="Chọn danh mục sản phẩm"
+                placeholder={
+                  categoriesLoading
+                    ? "Đang tải danh mục..."
+                    : "Chọn danh mục cha"
+                }
                 size="large"
                 showSearch
+                loading={categoriesLoading}
+                disabled={categoriesLoading}
+                value={selectedParentCategory}
+                onChange={(value) => {
+                  setSelectedParentCategory(value);
+                  form.setFieldsValue({ CategoryID: undefined }); // Reset child category
+                }}
                 filterOption={(input, option) =>
                   (option?.label as string)
                     ?.toLowerCase()
                     .indexOf(input.toLowerCase()) >= 0
                 }
               >
-                {categories.map((category) => (
-                  <Option key={category._id} value={category._id}>
-                    {category.Category_Name}
-                  </Option>
-                ))}
+                {!categoriesLoading &&
+                parentCategories &&
+                parentCategories.length > 0
+                  ? parentCategories.map((category) => (
+                      <Option key={category._id} value={category._id}>
+                        {category.Name}
+                      </Option>
+                    ))
+                  : null}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="CategoryID"
+              label="Danh mục con"
+              rules={[
+                { required: true, message: "Vui lòng chọn danh mục con!" },
+              ]}
+            >
+              <Select
+                placeholder={
+                  !selectedParentCategory
+                    ? "Chọn danh mục cha trước"
+                    : categoriesLoading
+                      ? "Đang tải danh mục..."
+                      : "Chọn danh mục con"
+                }
+                size="large"
+                showSearch
+                loading={categoriesLoading}
+                disabled={categoriesLoading || !selectedParentCategory}
+                filterOption={(input, option) =>
+                  (option?.label as string)
+                    ?.toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {!categoriesLoading &&
+                selectedParentCategory &&
+                childCategories &&
+                childCategories.length > 0
+                  ? childCategories
+                      .filter(
+                        (category) =>
+                          category.ParentID &&
+                          category.ParentID._id === selectedParentCategory
+                      )
+                      .map((category) => (
+                        <Option key={category._id} value={category._id}>
+                          {category.Name}
+                        </Option>
+                      ))
+                  : null}
               </Select>
             </Form.Item>
           </Col>
