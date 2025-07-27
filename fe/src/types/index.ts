@@ -1,3 +1,10 @@
+// Product Status Enum
+export enum ProductStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  OUT_OF_STOCK = "out_of_stock"
+}
+
 // User Types
 export interface User {
   _id: string;
@@ -23,7 +30,7 @@ export interface Product {
   List_Image: string[];
   Specifications: Record<string, string>;
 
-  Status: 'active' | 'inactive' | 'out_of_stock';
+  Status: ProductStatus;
   Stock: number;
   createdAt: string;
   updatedAt: string;

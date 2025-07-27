@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Product, UpdateProductData, Category } from "@/api/types";
 import { productService } from "@/api/services/user/product";
 import { toast } from "react-toastify";
+import { ProductStatus } from "@/types";
 
 const AdminEditProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +14,7 @@ const AdminEditProductPage: React.FC = () => {
     Main_Image: "", // This will hold File or string URL
     List_Image: [], // This will hold array of File or string URLs or a mix
     Specifications: {}, // Start with an empty object for specifications
-    Status: "available", // Default status
+    Status: ProductStatus.ACTIVE, // Default status
     Stock: 0,
     Price: 0,
     Description: "",
@@ -271,13 +272,14 @@ const AdminEditProductPage: React.FC = () => {
           <select
             id="Status"
             name="Status"
-            value={formData.Status || "available"} // Use default if null/undefined
+            value={formData.Status || ProductStatus.ACTIVE} // Use default if null/undefined
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             required
           >
-            <option value="available">Còn hàng</option>
-            <option value="unavailable">Hết hàng</option>
+            <option value={ProductStatus.ACTIVE}>Hoạt động</option>
+            <option value={ProductStatus.INACTIVE}>Không hoạt động</option>
+            <option value={ProductStatus.OUT_OF_STOCK}>Hết hàng</option>
           </select>
         </div>
 

@@ -1,19 +1,20 @@
 import { api } from '@/api';
 import { Order, CartItem } from '@/api/types';
+import { API_ENDPOINTS } from '@/api/config';
 
 export const orderService = {
   getOrders: async (params?: { page?: number; limit?: number }) => {
-    const response = await api.get<Order[]>('/orders', { params });
+    const response = await api.get<Order[]>(API_ENDPOINTS.ORDERS, { params });
     return response.data;
   },
 
   getOrderById: async (orderId: string) => {
-    const response = await api.get<Order>(`/orders/${orderId}`);
+    const response = await api.get<Order>(`${API_ENDPOINTS.ORDERS}/${orderId}`);
     return response.data;
   },
 
   getUserOrders: async (userId: string) => {
-    const response = await api.get<Order[]>(`/users/${userId}/orders`);
+    const response = await api.get<Order[]>(`${API_ENDPOINTS.USERS}/${userId}/orders`);
     return response.data;
   },
 
@@ -27,7 +28,7 @@ export const orderService = {
     formData.append('items', JSON.stringify(items));
     formData.append('totalAmount', totalAmount.toString());
 
-    const response = await api.post<Order>(`/users/${userId}/orders`, formData, {
+    const response = await api.post<Order>(`${API_ENDPOINTS.USERS}/${userId}/orders`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -36,7 +37,7 @@ export const orderService = {
   },
 
   updateOrderStatus: async (orderId: string, status: Order['Status']) => {
-    const response = await api.put<Order>(`/orders/${orderId}/status`, { status });
+    const response = await api.put<Order>(`${API_ENDPOINTS.ORDERS}/${orderId}/status`, { status });
     return response.data;
   },
 }; 

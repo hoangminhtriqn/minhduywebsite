@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface Location {
   _id?: string;
@@ -37,7 +38,7 @@ export interface SettingsResponse {
 // Lấy settings
 export const getSettings = async (): Promise<Settings> => {
   try {
-    const response = await api.get<SettingsResponse>('/settings');
+    const response = await api.get<SettingsResponse>(API_ENDPOINTS.SETTINGS);
     return response.data.data;
   } catch (error) {
     console.error('Error fetching settings:', error);
@@ -48,7 +49,7 @@ export const getSettings = async (): Promise<Settings> => {
 // Cập nhật settings
 export const updateSettings = async (data: Partial<Settings>): Promise<Settings> => {
   try {
-    const response = await api.put<SettingsResponse>('/settings', data);
+    const response = await api.put<SettingsResponse>(API_ENDPOINTS.SETTINGS, data);
     return response.data.data;
   } catch (error) {
     console.error('Error updating settings:', error);
@@ -59,7 +60,7 @@ export const updateSettings = async (data: Partial<Settings>): Promise<Settings>
 // Lấy public settings (cho frontend)
 export const getPublicSettings = async (): Promise<Settings> => {
   try {
-    const response = await api.get<SettingsResponse>('/settings/public');
+    const response = await api.get<SettingsResponse>(API_ENDPOINTS.SETTINGS_PUBLIC);
     return response.data.data;
   } catch (error) {
     console.error('Error fetching public settings:', error);
@@ -68,21 +69,21 @@ export const getPublicSettings = async (): Promise<Settings> => {
 };
 
 export const getLocations = async (): Promise<Location[]> => {
-  const res = await api.get('/settings/locations');
+  const res = await api.get(API_ENDPOINTS.SETTINGS_LOCATIONS);
   return res.data.data;
 };
 
 export const createLocation = async (data: Omit<Location, 'id'>): Promise<Location> => {
-  const res = await api.post('/settings/locations', data);
+  const res = await api.post(API_ENDPOINTS.SETTINGS_LOCATIONS, data);
   return res.data.data;
 };
 
 export const updateLocation = async (id: string, data: Partial<Location>): Promise<Location> => {
-  const res = await api.put(`/settings/locations/${id}`, data);
+  const res = await api.put(`${API_ENDPOINTS.SETTINGS_LOCATIONS}/${id}`, data);
   return res.data.data;
 };
 
 export const deleteLocation = async (id: string): Promise<Location> => {
-  const res = await api.delete(`/settings/locations/${id}`);
+  const res = await api.delete(`${API_ENDPOINTS.SETTINGS_LOCATIONS}/${id}`);
   return res.data.data;
 }; 

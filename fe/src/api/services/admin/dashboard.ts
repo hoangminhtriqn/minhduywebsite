@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface UserStats {
   totalUsers: number;
@@ -20,5 +21,5 @@ export interface DashboardStats {
 }
 
 export const getDashboardStats = async () => {
-  return api.get<{ data: DashboardStats }>("/dashboard");
+  return api.get<{ data: DashboardStats }>(API_ENDPOINTS.DASHBOARD);
 }; 

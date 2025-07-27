@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface Category {
   id: string;
@@ -30,7 +31,7 @@ export interface CategoryFilter {
 // Lấy danh sách categories cho filter dropdown
 export const getCategoriesForFilter = async (): Promise<CategoryFilter[]> => {
   try {
-    const response = await api.get('/categories/filter');
+    const response = await api.get(API_ENDPOINTS.CATEGORIES_FILTER);
     return response.data.data || response.data || [];
   } catch (error) {
     console.error('Error fetching categories for filter:', error);
@@ -41,7 +42,7 @@ export const getCategoriesForFilter = async (): Promise<CategoryFilter[]> => {
 // Lấy danh sách categories với cấu trúc phân cấp
 export const getCategoriesHierarchy = async (): Promise<Category[]> => {
   try {
-    const response = await api.get('/categories/hierarchy');
+    const response = await api.get(API_ENDPOINTS.CATEGORIES_HIERARCHY);
     return response.data.data || response.data || [];
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -54,7 +55,7 @@ export const getCategoriesHierarchy = async (): Promise<Category[]> => {
 // Lấy thông tin category theo ID
 export const getCategoryById = async (id: string) => {
   try {
-    const response = await api.get(`/categories/${id}`);
+    const response = await api.get(`${API_ENDPOINTS.CATEGORIES}/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching category by ID:', error);

@@ -6,7 +6,6 @@ require('dotenv').config();
 const User = require('./models/User');
 const Role = require('./models/Role');
 const RoleUser = require('./models/RoleUser');
-const ProductCategory = require('./models/ProductCategory');
 const Product = require('./models/Product');
 const Category = require('./models/Category');
 const Service = require('./models/Service');
@@ -896,7 +895,6 @@ async function migrate() {
       await User.deleteMany({});
       await Role.deleteMany({});
       await RoleUser.deleteMany({});
-      await ProductCategory.deleteMany({});
       await Product.deleteMany({});
       await Category.deleteMany({});
       await Service.deleteMany({});

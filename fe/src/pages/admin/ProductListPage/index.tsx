@@ -1,6 +1,7 @@
 import { productService as adminProductService } from "@/api/services/admin/product";
 import CustomPagination from "@/components/CustomPagination";
 import Breadcrumb from "@/components/admin/Breadcrumb";
+import { ProductStatus } from "@/types";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -272,8 +273,8 @@ const ProductListPage: React.FC = () => {
       dataIndex: "Status",
       key: "status",
       render: (status: string) => (
-        <Tag color={status === "active" ? "green" : "red"}>
-          {status === "active" ? "Còn kinh doanh" : "Ngừng kinh doanh"}
+        <Tag color={status === ProductStatus.ACTIVE ? "green" : "red"}>
+          {status === ProductStatus.ACTIVE ? "Còn kinh doanh" : "Ngừng kinh doanh"}
         </Tag>
       ),
     },

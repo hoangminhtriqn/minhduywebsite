@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface User {
   _id: string;
@@ -23,10 +24,10 @@ export interface UserListResponse {
 }
 
 export const getUsers = (params: { page: number; limit: number; search?: string; role?: string }) =>
-  api.get<UserListResponse>('/nguoi-dung', { params });
+  api.get<UserListResponse>(API_ENDPOINTS.ADMIN_USERS, { params });
 
 export const updateUser = (id: string, data: Partial<User>) =>
-  api.put(`/nguoi-dung/${id}`, data);
+  api.put(`${API_ENDPOINTS.ADMIN_USERS}/${id}`, data);
 
 export const updateUserStatus = (id: string, status: string) =>
-  api.put(`/nguoi-dung/${id}`, { Status: status }); 
+  api.put(`${API_ENDPOINTS.ADMIN_USERS}/${id}`, { Status: status }); 

@@ -1,5 +1,6 @@
 import { LoginCredentials, RegisterData, User } from '@/api/types';
 import { api } from "@/api";
+import { API_ENDPOINTS } from '@/api/config';
 
 // Retry function for network issues
 const retryRequest = async (requestFn: () => Promise<any>, maxRetries = 3) => {
@@ -26,7 +27,7 @@ export const authService = {
   login: async (credentials: LoginCredentials) => {
     try {
       const response = await retryRequest(() => 
-        api.post('/users/login', credentials)
+        api.post(API_ENDPOINTS.LOGIN, credentials)
       );
       if (response.data.success === false) {
         throw new Error(response.data.message || 'Login failed');
@@ -56,7 +57,7 @@ export const authService = {
   register: async (data: RegisterData) => {
     try {
       const response = await retryRequest(() => 
-        api.post('/users/register', data)
+        api.post(API_ENDPOINTS.REGISTER, data)
       );
       if (response.data.success === false) {
         throw new Error(response.data.message || 'Registration failed');
@@ -85,7 +86,7 @@ export const authService = {
 
   logout: async () => {
     try {
-      await api.post('/users/logout');
+      await api.post(API_ENDPOINTS.LOGOUT);
     } catch {
       // ignore
     } finally {
@@ -97,7 +98,7 @@ export const authService = {
 
   getCurrentUser: async (userId: string) => {
     try {
-      const response = await api.get(`/users/${userId}`);
+      const response = await api.get(`${API_ENDPOINTS.USERS}/${userId}`);
       return response.data.data;
     } catch (error: unknown) {
       throw error;
@@ -106,7 +107,7 @@ export const authService = {
 
   updateProfile: async (userId: string, data: Partial<User>) => {
     try {
-      const response = await api.put(`/users/${userId}`, data);
+      const response = await api.put(`${API_ENDPOINTS.USERS}/${userId}`, data);
       return response.data.data;
     } catch (error: unknown) {
       throw error;
@@ -118,7 +119,7 @@ export const authService = {
 export const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refreshToken');
   if (!refreshToken) throw new Error('No refresh token');
-  const response = await api.post('/users/refresh-token', { refreshToken });
+  const response = await api.post(API_ENDPOINTS.REFRESH_TOKEN, { refreshToken });
   if (response.data && response.data.success && response.data.data && response.data.data.token) {
     localStorage.setItem('token', response.data.data.token);
     return response.data.data.token;

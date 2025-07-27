@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CreateProductData, Category } from "@/api/types";
 import { productService } from "@/api/services/user/product";
 import { toast } from "react-toastify";
+import { ProductStatus } from "@/types";
 
 const AdminAddProductPage: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const AdminAddProductPage: React.FC = () => {
     Main_Image: "", // This will hold File or string URL
     List_Image: [], // This will hold array of File or string URLs
     Specifications: {}, // Start with an empty object for specifications
-    Status: "available", // Default status
+    Status: ProductStatus.ACTIVE, // Default status
     Stock: 0,
     Price: 0,
     Description: "",
@@ -232,8 +233,9 @@ const AdminAddProductPage: React.FC = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             required
           >
-            <option value="available">Còn hàng</option>
-            <option value="unavailable">Hết hàng</option>
+            <option value={ProductStatus.ACTIVE}>Hoạt động</option>
+            <option value={ProductStatus.INACTIVE}>Không hoạt động</option>
+            <option value={ProductStatus.OUT_OF_STOCK}>Hết hàng</option>
           </select>
         </div>
 

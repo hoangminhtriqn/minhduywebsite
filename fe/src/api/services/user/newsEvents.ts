@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface NewsEvent {
   _id: string;
@@ -38,35 +39,35 @@ export interface NewsEventsPaginationResponse {
 
 // Get all news events
 export const getAllNewsEvents = async (page = 1, limit = 10): Promise<NewsEventsPaginationResponse> => {
-  const response = await api.get('/news-events', { params: { page, limit } });
+  const response = await api.get(API_ENDPOINTS.NEWS_EVENTS, { params: { page, limit } });
   return response.data.data;
 };
 
 // Get popular news events
 export const getPopularNewsEvents = async (page = 1, limit = 6): Promise<NewsEventsPaginationResponse> => {
-  const response = await api.get('/news-events/popular', { params: { page, limit } });
+  const response = await api.get(API_ENDPOINTS.NEWS_EVENTS_POPULAR, { params: { page, limit } });
   return response.data.data;
 };
 
 // Get single news event by ID
 export const getNewsEventById = async (id: string): Promise<NewsEvent> => {
-  const response = await api.get(`/news-events/${id}`);
+  const response = await api.get(`${API_ENDPOINTS.NEWS_EVENTS}/${id}`);
   return response.data.data;
 };
 
 // Create news event (Admin only)
 export const createNewsEvent = async (newsEventData: Partial<NewsEvent> | FormData): Promise<NewsEvent> => {
-  const response = await api.post('/news-events', newsEventData);
+  const response = await api.post(API_ENDPOINTS.NEWS_EVENTS, newsEventData);
   return response.data.data;
 };
 
 // Update news event (Admin only)
 export const updateNewsEvent = async (id: string, newsEventData: Partial<NewsEvent> | FormData): Promise<NewsEvent> => {
-  const response = await api.put(`/news-events/${id}`, newsEventData);
+  const response = await api.put(`${API_ENDPOINTS.NEWS_EVENTS}/${id}`, newsEventData);
   return response.data.data;
 };
 
 // Delete news event (Admin only)
 export const deleteNewsEvent = async (id: string): Promise<void> => {
-  await api.delete(`/news-events/${id}`);
+  await api.delete(`${API_ENDPOINTS.NEWS_EVENTS}/${id}`);
 }; 

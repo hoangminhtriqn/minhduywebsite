@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface PublicSettings {
   companyName: string;
@@ -16,7 +17,7 @@ export interface PublicSettings {
 
 export const getPublicSettings = async (): Promise<PublicSettings> => {
   const response = await api.get<{ success: boolean; data: PublicSettings }>(
-    '/settings/public'
+    API_ENDPOINTS.SETTINGS_PUBLIC
   );
   return response.data.data;
 };

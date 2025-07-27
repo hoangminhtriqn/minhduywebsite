@@ -1,4 +1,5 @@
 import { api } from '@/api/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface PricingDocument {
   name: string;
@@ -46,6 +47,6 @@ export const getAllPricing = async (params?: {
   page?: number;
   limit?: number;
 }): Promise<PricingResponse> => {
-  const response = await api.get('/pricing', { params });
+  const response = await api.get(API_ENDPOINTS.PRICING, { params });
   return response.data;
 }; 

@@ -2,6 +2,7 @@ import { Product } from "@/api/types";
 import { formatCurrency } from "@/utils/format";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ProductStatus } from "@/types";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -88,7 +89,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
-  const unavailable = product.Status === "expired";
+  const unavailable = product.Status === ProductStatus.OUT_OF_STOCK;
 
   // Responsive CSS-in-JS Styles
   const cardStyle: React.CSSProperties = {

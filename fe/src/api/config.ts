@@ -7,35 +7,54 @@ export const API_TIMEOUT = 30000; // 30 seconds for production
 
 // API endpoints
 export const API_ENDPOINTS = {
-  // Auth
+  // ========================================
+  // USER ENDPOINTS (Frontend User Services)
+  // ========================================
+  
+  // Authentication & User Management
   LOGIN: '/users/login',
   REGISTER: '/users/register',
-  PROFILE: '/users/profile',
+  LOGOUT: '/users/logout',
+  REFRESH_TOKEN: '/users/refresh-token',
+  USERS: '/users',
   
-  // Products
+  // Products & Categories (User)
   PRODUCTS: '/products',
   PRODUCT_DETAIL: '/products',
-  
-  // Categories
   CATEGORIES: '/categories',
+  CATEGORIES_FILTER: '/categories/filter',
+  CATEGORIES_HIERARCHY: '/categories/hierarchy',
   
-  // Favorites
+  // User Features
   FAVORITES: '/yeu-thich',
+  ORDERS: '/orders',
+  PRICING: '/pricing',
+  NEWS_EVENTS: '/news-events',
+  NEWS_EVENTS_POPULAR: '/news-events/popular',
   
-  // Services
-  SERVICES: '/dich-vu',
+  // Public Settings
+  SETTINGS_PUBLIC: '/settings/public',
   
-  // News & Events
-  NEWS_EVENTS: '/tin-tuc-su-kien',
+  // ========================================
+  // ADMIN ENDPOINTS (Admin Panel Services)
+  // ========================================
   
-
+  // Dashboard & Statistics
+  DASHBOARD: '/dashboard',
   
-  // Files
+  // Admin User Management
+  ADMIN_USERS: '/nguoi-dung',
+  
+  // Admin Categories Management
+  CATEGORIES_ADMIN: '/categories/admin/all',
+  
+  // Admin Settings Management
+  SETTINGS: '/settings',
+  SETTINGS_LOCATIONS: '/settings/locations',
+  
+  // File Upload & Management
   FILES: '/files',
-  
-  // Statistics
-  STATISTICS: '/thong-ke',
-  
-  // Business
-  BUSINESS: '/business'
+  FILES_UPLOAD: '/files/upload',
+  FILES_UPLOAD_MULTIPLE: '/files/upload-multiple',
+  FILES_SEARCH: '/files/search',
 } as const; 

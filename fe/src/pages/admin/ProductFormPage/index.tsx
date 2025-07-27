@@ -38,6 +38,7 @@ import {
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ProductStatus } from "@/types";
 import styles from "./styles.module.scss";
 
 // Custom VND icon component
@@ -57,7 +58,7 @@ interface ProductFormData {
   Main_Image?: string;
   List_Image?: string;
   Specifications?: Array<{ key: string; value: string }>;
-  Status?: string;
+  Status?: ProductStatus;
 }
 
 interface UploadedFile {
@@ -97,6 +98,7 @@ const ProductFormPage: React.FC = () => {
     Price: 0,
     CategoryID: "",
     Main_Image: "",
+    Status: ProductStatus.ACTIVE,
   });
 
   const fetchProductData = async (productId: string) => {
@@ -133,18 +135,43 @@ const ProductFormPage: React.FC = () => {
         );
         setListImageFiles(listImageFiles);
       }
+
+      // Tìm category tương ứng để set ParentCategoryID
+      const allCategories = [...parentCategories, ...childCategories];
+      const currentCategory = allCategories.find(
+        (cat) => cat._id === productData.CategoryID
+      );
+
+      let parentCategoryId = "";
+      if (currentCategory) {
+        // Kiểm tra xem category này có ParentID không (là category con)
+        const childCategory = childCategories.find(
+          (cat) => cat._id === productData.CategoryID
+        );
+        if (childCategory && childCategory.ParentID) {
+          parentCategoryId = childCategory.ParentID._id;
+        } else {
+          // Nếu là category cha, sử dụng chính nó
+          parentCategoryId = currentCategory._id;
+        }
+      }
+
       // Chuyển đổi dữ liệu để phù hợp với form
       const formData = {
         Product_Name: productData.Product_Name,
         Description: productData.Description || "",
         Price: productData.Price,
         Stock: productData.Stock,
+        ParentCategoryID: parentCategoryId,
         CategoryID: productData.CategoryID,
         Main_Image: productData.Main_Image || "",
         List_Image: productData.List_Image?.join(",") || "",
         Specifications: specificationsArray,
-        Status: productData.Status || "available",
+        Status: productData.Status || ProductStatus.ACTIVE,
       };
+
+      // Set selected parent category for dropdown
+      setSelectedParentCategory(parentCategoryId);
 
       // Điền dữ liệu vào form
       form.setFieldsValue(formData);
@@ -191,10 +218,13 @@ const ProductFormPage: React.FC = () => {
 
   useEffect(() => {
     fetchCategories();
-    if (isEditing && id) {
+  }, []);
+
+  useEffect(() => {
+    if (isEditing && id && !categoriesLoading && parentCategories.length > 0) {
       fetchProductData(id);
     }
-  }, [id, isEditing]);
+  }, [id, isEditing, categoriesLoading, parentCategories, childCategories]);
 
   // Upload main image to cloudinary
   const uploadMainImageToCloudinary = async (
@@ -338,9 +368,7 @@ const ProductFormPage: React.FC = () => {
         ? values.List_Image.split(",").map((url) => url.trim())
         : [],
       Specifications: specifications,
-      Status:
-        (values.Status as "active" | "inactive" | "out_of_stock" | undefined) ||
-        "active",
+      Status: values.Status || ProductStatus.ACTIVE,
 
       Stock: form.getFieldValue("Stock") ?? 0,
     };
@@ -527,10 +555,15 @@ const ProductFormPage: React.FC = () => {
           </Col>
           <Col span={12}>
             <Form.Item name="Status" label="Trạng thái">
-              <Select placeholder="Chọn trạng thái" size="large">
-                <Option value="active">Hoạt động</Option>
-                <Option value="inactive">Không hoạt động</Option>
-                <Option value="out_of_stock">Hết hàng</Option>
+              <Select
+                placeholder="Chọn trạng thái"
+                size="large"
+                value={formData.Status}
+                disabled={!isEditing}
+              >
+                <Option value={ProductStatus.ACTIVE}>Hoạt động</Option>
+                <Option value={ProductStatus.INACTIVE}>Không hoạt động</Option>
+                <Option value={ProductStatus.OUT_OF_STOCK}>Hết hàng</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -821,7 +854,7 @@ const ProductFormPage: React.FC = () => {
           {...(!isEditing && {
             initialValues: {
               Price: 0,
-              Status: "available",
+              Status: ProductStatus.ACTIVE,
               IsFeatured: false,
               IsNew: false,
               autoSave: true,

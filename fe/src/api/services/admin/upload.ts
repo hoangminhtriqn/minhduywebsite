@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { API_ENDPOINTS } from '@/api/config';
 
 export interface UploadFileResponse {
   public_id: string;
@@ -35,7 +36,7 @@ export const uploadFile = async (file: File): Promise<UploadFileResponse> => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await api.post('/files/upload', formData, {
+  const response = await api.post(API_ENDPOINTS.FILES_UPLOAD, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -51,7 +52,7 @@ export const uploadMultipleFiles = async (files: File[]): Promise<UploadFileResp
     formData.append('files', file);
   });
 
-  const response = await api.post('/files/upload-multiple', formData, {
+  const response = await api.post(API_ENDPOINTS.FILES_UPLOAD_MULTIPLE, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -62,7 +63,7 @@ export const uploadMultipleFiles = async (files: File[]): Promise<UploadFileResp
 
 // Get file info by public_id
 export const getFileInfo = async (publicId: string): Promise<FileInfo> => {
-  const response = await api.get(`/files/${publicId}`);
+  const response = await api.get(`${API_ENDPOINTS.FILES}/${publicId}`);
   return response.data.data;
 };
 
@@ -74,19 +75,19 @@ export const getAllFiles = async (maxResults = 50, nextCursor?: string) => {
     params.append('next_cursor', nextCursor);
   }
 
-  const response = await api.get(`/files?${params.toString()}`);
+  const response = await api.get(`${API_ENDPOINTS.FILES}?${params.toString()}`);
   return response.data.data;
 };
 
 // Delete file by public_id
 export const deleteFile = async (publicId: string) => {
-  const response = await api.delete(`/files/${publicId}`);
+  const response = await api.delete(`${API_ENDPOINTS.FILES}/${publicId}`);
   return response.data.data;
 };
 
 // Delete multiple files
 export const deleteMultipleFiles = async (publicIds: string[]) => {
-  const response = await api.delete('/files', {
+  const response = await api.delete(API_ENDPOINTS.FILES, {
     data: { public_ids: publicIds },
   });
   return response.data.data;
@@ -101,7 +102,7 @@ export const getFileUrl = async (publicId: string, params: FileUrlParams = {}) =
     }
   });
 
-  const response = await api.get(`/files/${publicId}/url?${queryParams.toString()}`);
+  const response = await api.get(`${API_ENDPOINTS.FILES}/${publicId}/url?${queryParams.toString()}`);
   return response.data.data;
 };
 
@@ -114,6 +115,6 @@ export const searchFiles = async (query: string, maxResults = 50, nextCursor?: s
     params.append('next_cursor', nextCursor);
   }
 
-  const response = await api.get(`/files/search?${params.toString()}`);
+  const response = await api.get(`${API_ENDPOINTS.FILES_SEARCH}?${params.toString()}`);
   return response.data.data;
 }; 

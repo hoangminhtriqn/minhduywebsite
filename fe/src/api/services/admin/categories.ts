@@ -1,5 +1,5 @@
 import axios from '@/api/axios';
-import { API_BASE_URL } from '@/api/config';
+import { API_BASE_URL, API_ENDPOINTS } from '@/api/config';
 
 export interface Category {
   _id: string;
@@ -19,7 +19,7 @@ export interface Category {
 export const categoryService = {
   // Lấy tất cả categories (cho admin)
   async getAllCategories() {
-    const response = await axios.get(`${API_BASE_URL}/categories/admin/all`);
+    const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.CATEGORIES_ADMIN}`);
     return response.data;
   },
 
@@ -32,7 +32,7 @@ export const categoryService = {
     Status?: string;
     Icon?: string;
   }) {
-    const response = await axios.post(`${API_BASE_URL}/categories`, data);
+    const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.CATEGORIES}`, data);
     return response.data;
   },
 
@@ -45,19 +45,19 @@ export const categoryService = {
     Status?: string;
     Icon?: string;
   }) {
-    const response = await axios.put(`${API_BASE_URL}/categories/${id}`, data);
+    const response = await axios.put(`${API_BASE_URL}${API_ENDPOINTS.CATEGORIES}/${id}`, data);
     return response.data;
   },
 
   // Xóa category
   async deleteCategory(id: string) {
-    const response = await axios.delete(`${API_BASE_URL}/categories/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}${API_ENDPOINTS.CATEGORIES}/${id}`);
     return response.data;
   },
 
   // Lấy category theo ID
   async getCategoryById(id: string) {
-    const response = await axios.get(`${API_BASE_URL}/categories/${id}`);
+    const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.CATEGORIES}/${id}`);
     return response.data;
   },
 }; 
