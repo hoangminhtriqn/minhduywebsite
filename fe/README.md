@@ -25,7 +25,7 @@ npm install
 3. Create a `.env` file in the root directory and add the following environment variables:
 
 ```
-REACT_APP_API_URL=http://localhost:3000/api
+REACT_APP_API_URL=http://localhost:9200/api
 ```
 
 4. Start the development server:
@@ -34,7 +34,7 @@ REACT_APP_API_URL=http://localhost:3000/api
 npm start
 ```
 
-The application will be available at `http://localhost:3000`.
+The application will be available at `http://localhost:9200`.
 
 ## Available Scripts
 

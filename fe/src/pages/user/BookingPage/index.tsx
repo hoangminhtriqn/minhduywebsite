@@ -154,36 +154,6 @@ const BookingPage = () => {
         return;
       }
 
-      // Gộp TestDriveDate và TestDriveTime thành Test_Drive_Date
-      // const testDriveDateTime = new Date(
-      //   `${values.TestDriveDate.format("YYYY-MM-DD")}T${values.TestDriveTime}:00`
-      // );
-
-      // const dataToSend = {
-      //   // Thông tin người đăng ký
-      //   FullName: values.FullName,
-      //   Email: values.Email,
-      //   Phone: values.Phone,
-
-      //   // Thông tin đặt lịch
-      //   Test_Drive_Date: testDriveDateTime.toISOString(),
-      //   CarModel: values.CarModel,
-      //   Address: values.Address,
-      //   Notes: values.Notes || "",
-
-      //   // Thông tin hệ thống
-      //   Order_Date: new Date().toISOString(),
-      //   Status: "pending", // Trạng thái mặc định khi tạo mới
-      //   Total_Amount: 0, // Lái thử miễn phí
-
-      //   // Các trường bắt buộc từ backend schema
-      //   UserID: localStorage.getItem("userId") || "000000000000000000000000", // Lấy UserID từ localStorage
-      // };
-
-      // const response = await axios.post(
-      //   `${API_BASE_URL}/lich-lai-thu`,
-      //   dataToSend
-      // );
       message.success("Đăng ký đặt lịch thành công!");
 
       // Reset form after successful submission
@@ -193,7 +163,7 @@ const BookingPage = () => {
       if (isModalVisible) {
         setIsModalVisible(false);
       }
-    } catch (error) {
+    } catch {
       message.error("Đã có lỗi xảy ra khi đăng ký lái thử. Vui lòng thử lại.");
     } finally {
       setSubmitting(false);

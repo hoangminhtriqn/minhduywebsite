@@ -44,7 +44,6 @@ git push origin master
 Trong Render Dashboard, thêm các biến môi trường:
 
 ```
-NODE_ENV=production
 PORT=10000
 MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database
 JWT_SECRET=your_jwt_secret_key

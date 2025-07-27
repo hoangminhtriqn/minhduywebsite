@@ -6,7 +6,7 @@ export enum PageKeys {
   NEWS = 'news',
   NEWS_DETAIL = 'newsDetail',
   SERVICE = 'service',
-  BOOKING = 'booking',
+
   PRICE_LIST = 'priceList',
   LOGIN = 'login',
   REGISTER = 'register',
@@ -151,23 +151,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     ]
   },
 
-  // Test Drive Page SEO
-  [PageKeys.BOOKING]: {
-    title: "Tư Vấn Kỹ Thuật | Minh Duy - Công Ty TNHH MTV Công Nghệ Ứng Dụng",
-    description: "Tư vấn kỹ thuật chuyên nghiệp tại Minh Duy. Hỗ trợ lựa chọn sản phẩm phù hợp, tư vấn giải pháp công nghệ cho doanh nghiệp và cá nhân.",
-    keywords: "tư vấn kỹ thuật, tư vấn công nghệ, giải pháp công nghệ, Minh Duy, Tam Kỳ, Đà Nẵng, Công Ty TNHH MTV Công Nghệ Ứng Dụng",
-    canonical: "https://minduywebsite.com/test-drive",
-    ogImage: "/images/test-drive.jpg",
-    structuredData: [
-      {
-        type: 'breadcrumb',
-        data: {
-          currentPage: "Tư Vấn Kỹ Thuật",
-          currentPath: "/test-drive"
-        }
-      }
-    ]
-  },
+
 
   // Price List Page SEO
   [PageKeys.PRICE_LIST]: {

@@ -31,14 +31,7 @@ const productSchema = new mongoose.Schema({
     type: Map,
     of: String
   },
-  RentalStartDate: {
-    type: Date,
-    required: [true, 'Ngày bắt đầu cho thuê là bắt buộc']
-  },
-  RentalEndDate: {
-    type: Date,
-    required: [true, 'Ngày kết thúc cho thuê là bắt buộc']
-  },
+
   Stock: {
     type: Number,
     default: 1,

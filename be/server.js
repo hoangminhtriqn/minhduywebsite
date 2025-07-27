@@ -22,16 +22,8 @@ app.use(cors({
     const allowedOriginsEnv = process.env.ALLOWED_ORIGINS || '';
     const allowedOrigins = allowedOriginsEnv.split(',').map(origin => origin.trim()).filter(origin => origin);
     
-    // Default origins for development
-    const defaultOrigins = [
-      'http://localhost:3000',
-      'http://localhost:3001', 
-      'http://localhost:5173',
-      'http://localhost:4173'
-    ];
-    
     // Combine environment origins with defaults
-    const allAllowedOrigins = [...defaultOrigins, ...allowedOrigins];
+    const allAllowedOrigins = [...allowedOrigins];
     
     // Allow any Render subdomain for development/production flexibility
     const isRenderDomain = origin && (
@@ -40,17 +32,9 @@ app.use(cors({
       origin.includes('127.0.0.1')
     );
     
-    // Log all origins for debugging
-    console.log('Request origin:', origin);
-    console.log('Allowed origins from env:', allowedOrigins);
-    console.log('All allowed origins:', allAllowedOrigins);
-    console.log('isRenderDomain:', isRenderDomain);
-    
     if (allAllowedOrigins.indexOf(origin) !== -1 || isRenderDomain) {
-      console.log('✅ CORS allowed for origin:', origin);
       callback(null, true);
     } else {
-      console.log('❌ CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -84,8 +68,7 @@ const connectWithRetry = async () => {
       break;
     } catch (error) {
       if (i === retries - 1) {
-        console.error('❌ Không thể kết nối MongoDB sau nhiều lần thử');
-        console.error('🔍 Chi tiết lỗi:', error);
+        
         process.exit(1);
       }
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -102,8 +85,7 @@ const roleUserRoutes = require('./routes/roleUsers');
 const favoritesRoutes = require('./routes/favorites'); // Favorites routes
 const servicesApis = require('./routes/services'); // Services API
 const newsEventsApis = require('./routes/newsEvents'); // News & Events API
-const statisticsRoutes = require('./routes/statistics');
-const businessRoutes = require('./routes/business');
+
 const serviceRequestsRouter = require('./routes/serviceRequests');
 const filesRouter = require('./routes/files');
 const settingsRouter = require('./routes/settings');
@@ -123,8 +105,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/yeu-thich', favoritesRoutes);
 app.use('/api/dich-vu', servicesApis);
 app.use('/api/news-events', newsEventsApis);
-app.use('/api/thong-ke', statisticsRoutes);
-app.use('/api', businessRoutes);
+
 app.use('/api/service-requests', serviceRequestsRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/settings', settingsRouter);
@@ -157,30 +138,29 @@ app.use((req, res) => {
 
 // Xử lý lỗi chung
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+
   res.status(500).json({
     success: false,
     message: 'Đã xảy ra lỗi server',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    error: err.message || undefined
   });
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Initialize server with database connection
 const startServer = async () => {
   try {
     await connectWithRetry();
     
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server đang chạy trên port ${PORT}`);
-      console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
-      console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+      console.log(`🔗 Server: http://localhost:${PORT}`);
+      console.log(`📚 API: http://localhost:${PORT}/api-docs`);
     });
   } catch (error) {
-    console.error('❌ Lỗi khởi động server:', error);
+
     process.exit(1);
   }
 };

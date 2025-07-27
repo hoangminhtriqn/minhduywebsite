@@ -1,12 +1,9 @@
 // API Configuration
-const isDevelopment = import.meta.env.DEV;
-
 // Base URL configuration
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-  (isDevelopment ? "http://localhost:3000/api" : "https://minhduywebsite-backend.onrender.com/api");
+export const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // API timeout - increased for Render server
-export const API_TIMEOUT = isDevelopment ? 10000 : 30000; // 30 seconds for production
+export const API_TIMEOUT = 30000; // 30 seconds for production
 
 // API endpoints
 export const API_ENDPOINTS = {
@@ -31,8 +28,7 @@ export const API_ENDPOINTS = {
   // News & Events
   NEWS_EVENTS: '/tin-tuc-su-kien',
   
-  // Test Drive Orders
-  TEST_DRIVE_ORDERS: '/test-drive-orders',
+
   
   // Files
   FILES: '/files',

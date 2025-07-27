@@ -114,7 +114,7 @@ const getAllFiles = async (req, res) => {
 
     const result = await cloudinary.api.resources({
       type: 'upload',
-      prefix: 'test-drive-booking',
+      prefix: 'minhduy-website',
       max_results: parseInt(max_results),
       next_cursor: next_cursor
     });
@@ -224,7 +224,7 @@ const searchFiles = async (req, res) => {
 
     const result = await cloudinary.api.resources({
       type: 'upload',
-      prefix: 'test-drive-booking',
+      prefix: 'minhduy-website',
       max_results: parseInt(max_results),
       next_cursor: next_cursor,
       expression: query

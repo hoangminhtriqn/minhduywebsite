@@ -20,7 +20,6 @@ import {
   Button,
   Card,
   Col,
-  DatePicker,
   Form,
   Image,
   Input,
@@ -36,7 +35,7 @@ import {
   Typography,
   Upload,
 } from "antd";
-import moment, { Moment } from "moment";
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
@@ -59,8 +58,6 @@ interface ProductFormData {
   List_Image?: string;
   Specifications?: Array<{ key: string; value: string }>;
   Status?: string;
-  TestDriveStartDate?: Moment;
-  TestDriveEndDate?: Moment;
 }
 
 interface UploadedFile {
@@ -147,12 +144,6 @@ const ProductFormPage: React.FC = () => {
         List_Image: productData.List_Image?.join(",") || "",
         Specifications: specificationsArray,
         Status: productData.Status || "available",
-        TestDriveStartDate: productData.TestDriveStartDate
-          ? moment(productData.TestDriveStartDate)
-          : undefined,
-        TestDriveEndDate: productData.TestDriveEndDate
-          ? moment(productData.TestDriveEndDate)
-          : undefined,
       };
 
       // Điền dữ liệu vào form
@@ -348,10 +339,9 @@ const ProductFormPage: React.FC = () => {
         : [],
       Specifications: specifications,
       Status:
-        (values.Status as "available" | "unavailable" | undefined) ||
-        "available",
-      TestDriveStartDate: values.TestDriveStartDate?.toISOString(),
-      TestDriveEndDate: values.TestDriveEndDate?.toISOString(),
+        (values.Status as "active" | "inactive" | "out_of_stock" | undefined) ||
+        "active",
+
       Stock: form.getFieldValue("Stock") ?? 0,
     };
 
@@ -538,8 +528,9 @@ const ProductFormPage: React.FC = () => {
           <Col span={12}>
             <Form.Item name="Status" label="Trạng thái">
               <Select placeholder="Chọn trạng thái" size="large">
-                <Option value="available">Hoạt động</Option>
-                <Option value="unavailable">Hết hạn</Option>
+                <Option value="active">Hoạt động</Option>
+                <Option value="inactive">Không hoạt động</Option>
+                <Option value="out_of_stock">Hết hàng</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -746,39 +737,6 @@ const ProductFormPage: React.FC = () => {
           <ToolOutlined style={{ marginRight: 8 }} />
           Thông số kỹ thuật
         </Title>
-
-        <Row gutter={[24, 16]}>
-          <Col span={12}>
-            <Form.Item
-              name="TestDriveStartDate"
-              label="Ngày bắt đầu chạy thử"
-              rules={[
-                { required: true, message: "Vui lòng chọn ngày bắt đầu!" },
-              ]}
-            >
-              <DatePicker
-                style={{ width: "100%" }}
-                placeholder="Chọn ngày bắt đầu"
-                size="large"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="TestDriveEndDate"
-              label="Ngày kết thúc chạy thử"
-              rules={[
-                { required: true, message: "Vui lòng chọn ngày kết thúc!" },
-              ]}
-            >
-              <DatePicker
-                style={{ width: "100%" }}
-                placeholder="Chọn ngày kết thúc"
-                size="large"
-              />
-            </Form.Item>
-          </Col>
-        </Row>
 
         <Form.Item name="Specifications" label="Thông số chi tiết">
           <Form.List name="Specifications">

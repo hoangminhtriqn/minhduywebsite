@@ -89,8 +89,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (path.startsWith("/admin/services")) return "services";
     if (path.startsWith("/admin/news")) return "news";
     if (path.startsWith("/admin/settings")) return "settings";
-    if (path.startsWith("/admin/test-drive-bookings"))
-      return "test-drive-bookings";
+
     return "dashboard"; // Default to dashboard
   };
 

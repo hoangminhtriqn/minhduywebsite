@@ -11,7 +11,7 @@ const Product = require('./models/Product');
 const Category = require('./models/Category');
 const Service = require('./models/Service');
 const NewsEvent = require('./models/NewsEvent');
-const DeviceRental = require('./models/OrderTestDrive');
+
 const Pricing = require('./models/Pricing');
 const Location = require('./models/Location');
 const Setting = require('./models/Setting');
@@ -577,8 +577,7 @@ function generateSampleProducts() {
         Main_Image: product.image,
         List_Image: selectedAdditionalImages, // Thêm danh sách ảnh phụ
         Images: [product.image],
-        RentalStartDate: startDate,
-        RentalEndDate: endDate,
+        
         Stock: Math.floor(Math.random() * 10) + 1,
         Specifications: product.specs,
         Status: Math.random() < 0.85 ? 'active' : 'inactive', // 85% còn kinh doanh, 15% ngừng kinh doanh
@@ -840,79 +839,7 @@ const sampleNewsEvents = [
   }
 ];
 
-// Function to generate sample device rental orders
-function generateSampleDeviceRentals(users, products) {
-  const orders = [];
-  const statuses = ['pending', 'confirmed', 'delivered', 'returned', 'cancelled'];
-  const addresses = [
-    '123 Nguyễn Huệ, Quận 1, TP.HCM',
-    '456 Lê Lợi, Quận 3, TP.HCM',
-    '789 Trần Hưng Đạo, Quận 5, TP.HCM',
-    '321 Võ Văn Tần, Quận 3, TP.HCM',
-    '654 Điện Biên Phủ, Quận Bình Thạnh, TP.HCM',
-    '987 Cách Mạng Tháng 8, Quận 10, TP.HCM',
-    '147 Nguyễn Thị Minh Khai, Quận 1, TP.HCM',
-    '258 Lý Tự Trọng, Quận 1, TP.HCM',
-    '369 Hai Bà Trưng, Quận 1, TP.HCM',
-    '741 Đồng Khởi, Quận 1, TP.HCM'
-  ];
-  const now = new Date();
 
-  // Tổng số đơn tối đa cho toàn bộ sản phẩm
-  let totalOrders = 0;
-  const maxTotalOrders = 200;
-
-  // Sinh số lượng đơn cho từng thiết bị: phân phối ngẫu nhiên, có thiết bị nhiều, có thiết bị ít
-  const productOrderCounts = products.map((_, idx) => {
-    // Tăng xác suất thiết bị đầu danh sách nhiều đơn, thiết bị cuối ít đơn
-    let base = Math.floor(Math.random() * 10) + 2; // 2-11
-    if (idx % 7 === 0) base += Math.floor(Math.random() * 8); // Một số thiết bị nổi bật
-    if (idx % 13 === 0) base += Math.floor(Math.random() * 5); // Một số thiết bị rất nổi bật
-    return Math.min(base, 20);
-  });
-
-  products.forEach((product, idx) => {
-    let numOrders = productOrderCounts[idx];
-    if (totalOrders + numOrders > maxTotalOrders) numOrders = maxTotalOrders - totalOrders;
-    if (numOrders < 2) numOrders = 2;
-    for (let i = 0; i < numOrders; i++) {
-      if (totalOrders >= maxTotalOrders) break;
-      const user = users[(idx * 7 + i) % users.length];
-      const status = statuses[(idx + i) % statuses.length];
-      const address = addresses[(idx + i) % addresses.length];
-      // Random date within last 30 days
-      const daysAgo = Math.floor(Math.random() * 30);
-      const orderDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-      // Random rental dates (future dates)
-      const rentalStartDays = Math.floor(Math.random() * 7) + 1;
-      const rentalEndDays = rentalStartDays + Math.floor(Math.random() * 30) + 7; // 7-37 days
-      const rentalStartDate = new Date(now.getTime() + rentalStartDays * 24 * 60 * 60 * 1000);
-      const rentalEndDate = new Date(now.getTime() + rentalEndDays * 24 * 60 * 60 * 1000);
-      // Random amount based on product price
-      const baseAmount = product.Price || 20000000;
-      const amountVariation = Math.random() * 0.3 - 0.15;
-      const finalAmount = Math.round(baseAmount * (1 + amountVariation));
-      // Random ngày tạo đơn (trong 30 ngày gần nhất)
-      const createdAt = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-      orders.push({
-        UserID: user._id,
-        ProductID: product._id,
-        Order_Date: orderDate,
-        Rental_Start_Date: rentalStartDate,
-        Rental_End_Date: rentalEndDate,
-        Address: address,
-        Status: status,
-        Total_Amount: finalAmount,
-        Quantity: Math.floor(Math.random() * 3) + 1, // 1-3 items
-        Notes: `Đơn thuê ${product.Product_Name} cho ${user.FullName}`,
-        ImageUrl: product.Main_Image || null,
-        createdAt
-      });
-      totalOrders++;
-    }
-  });
-  return orders;
-}
 
 // Migration function
 async function migrate() {
@@ -974,7 +901,7 @@ async function migrate() {
       await Category.deleteMany({});
       await Service.deleteMany({});
       await NewsEvent.deleteMany({});
-      await DeviceRental.deleteMany({});
+
       await Location.deleteMany({});
       console.log('✅ Đã xóa dữ liệu cũ');
     }
@@ -1299,16 +1226,7 @@ async function migrate() {
       console.log('✅ Users đã tồn tại');
     }
 
-    console.log('📋 Tạo device rental orders...');
-    // Create device rental orders only if they don't exist
-    const existingOrders = await DeviceRental.countDocuments();
-    if (existingOrders === 0) {
-      const deviceRentalOrders = generateSampleDeviceRentals(createdUsers, dbProducts);
-      await DeviceRental.insertMany(deviceRentalOrders);
-      console.log('✅ Đã tạo device rental orders');
-    } else {
-      console.log('✅ Device rental orders đã tồn tại');
-    }
+
 
     console.log('💰 Tạo pricing data...');
     // Create pricing data only if they don't exist
@@ -1361,7 +1279,7 @@ async function migrate() {
     console.log(`   - ${sampleServices.length} services`);
     console.log(`   - ${sampleNewsEvents.length} news events`);
     console.log(`   - ${createdUsers.length} users`);
-    console.log(`   - ${existingOrders === 0 ? 'device rental orders' : 'orders already exist'}`);
+
     console.log(`   - ${existingPricing === 0 ? samplePricing.length : existingPricing} pricing items`);
 
   } catch (error) {

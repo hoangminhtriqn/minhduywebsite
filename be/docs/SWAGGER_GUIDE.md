@@ -17,7 +17,7 @@ npm run dev
 3. Truy cập Swagger UI:
 
 ```
-http://localhost:3000/api-docs
+http://localhost:9200/api-docs
 ```
 
 ## Cấu trúc Swagger
@@ -273,7 +273,7 @@ Trong file route hoặc controller, thêm:
 
 ## Testing với Swagger UI
 
-1. Mở `http://localhost:3000/api-docs`
+1. Mở `http://localhost:9200/api-docs`
 2. Chọn endpoint muốn test
 3. Click "Try it out"
 4. Điền parameters/body nếu cần

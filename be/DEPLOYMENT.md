@@ -16,7 +16,6 @@ Set these environment variables in your deployment platform:
 
 ```
 MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database_name?retryWrites=true&w=majority
-NODE_ENV=production
 PORT=3000
 FRONTEND_URL=https://your-frontend-url.onrender.com
 JWT_SECRET=your-jwt-secret-key
@@ -41,7 +40,6 @@ yarn start
 Add all required environment variables in Render dashboard:
 
 - `MONGO_URI`
-- `NODE_ENV=production`
 - `JWT_SECRET`
 - `FRONTEND_URL`
 

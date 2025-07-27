@@ -19,8 +19,8 @@ const options = {
     },
     servers: [
       {
-        url: process.env.API_URL || 'http://localhost:3000',
-        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
+        url: process.env.API_URL || 'http://localhost:9201',
+        description: 'Local server'
       },
       {
         url: 'https://minhduywebsite-backend.onrender.com',

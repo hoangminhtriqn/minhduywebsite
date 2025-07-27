@@ -27,7 +27,7 @@ const fileFilter = (req, file, cb) => {
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'test-drive-booking',
+    folder: 'minhduy-website',
     allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
     transformation: [{ width: 1000, height: 1000, crop: 'limit' }],
     resource_type: 'image'

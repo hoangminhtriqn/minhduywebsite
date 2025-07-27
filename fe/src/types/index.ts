@@ -22,7 +22,8 @@ export interface Product {
   Main_Image: string;
   List_Image: string[];
   Specifications: Record<string, string>;
-  Status: 'available' | 'unavailable';
+
+  Status: 'active' | 'inactive' | 'out_of_stock';
   Stock: number;
   createdAt: string;
   updatedAt: string;
@@ -57,21 +58,7 @@ export interface CartItem {
   updatedAt: string;
 }
 
-// Order Types
-export interface OrderTestDrive {
-  _id: string;
-  UserID: string;
-  CartID: string;
-  Order_Date: string;
-  Test_Drive_Date: string;
-  Address: string;
-  Status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
-  Notes?: string;
-  Total_Amount: number;
-  ImageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+
 
 // API Response Types
 export interface ApiResponse<T> {
@@ -100,14 +87,7 @@ export interface RegisterData extends Omit<User, '_id' | 'createdAt' | 'updatedA
   Password: string;
 }
 
-// Form Types
-export interface TestDriveFormData {
-  Order_Date: string;
-  Test_Drive_Date: string;
-  Address: string;
-  Notes?: string;
-  ImageUrl?: File;
-}
+
 
 // Re-export theme types for easy access
 export type { 

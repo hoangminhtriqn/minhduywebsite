@@ -24,7 +24,6 @@
 Thêm các biến môi trường trong Render Dashboard:
 
 ```
-NODE_ENV=production
 PORT=10000
 MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database
 JWT_SECRET=your_jwt_secret_key
@@ -115,8 +114,6 @@ services:
     buildCommand: cd be && yarn install
     startCommand: cd be && yarn migrate && yarn start
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: PORT
         value: 10000
       - key: MONGO_URI
