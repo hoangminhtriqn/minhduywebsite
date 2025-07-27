@@ -20,5 +20,5 @@ export interface DashboardStats {
 }
 
 export const getDashboardStats = async () => {
-  return api.get<{ data: DashboardStats }>("/thong-ke/dashboard");
+  return api.get<{ data: DashboardStats }>("/dashboard");
 }; 

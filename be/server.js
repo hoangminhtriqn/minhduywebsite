@@ -90,6 +90,7 @@ const serviceRequestsRouter = require('./routes/serviceRequests');
 const filesRouter = require('./routes/files');
 const settingsRouter = require('./routes/settings');
 const pricingRouter = require('./routes/pricing');
+const dashboardRouter = require('./routes/dashboard');
 
 // Mount API routes FIRST (before Swagger)
 app.use('/api/users', userRoutes); // User management routes
@@ -110,6 +111,7 @@ app.use('/api/service-requests', serviceRequestsRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/pricing', pricingRouter);
+app.use('/api/dashboard', dashboardRouter);
 
 // Swagger Documentation - Mount AFTER API routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
