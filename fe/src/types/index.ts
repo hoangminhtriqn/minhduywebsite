@@ -1,9 +1,7 @@
-// Product Status Enum
-export enum ProductStatus {
-  ACTIVE = "active",
-  INACTIVE = "inactive",
-  OUT_OF_STOCK = "out_of_stock"
-}
+import { ProductStatus, BookingStatus } from './enum';
+
+// Re-export enums for easy access
+export { ProductStatus, BookingStatus } from './enum';
 
 // User Types
 export interface User {
@@ -65,6 +63,22 @@ export interface CartItem {
   updatedAt: string;
 }
 
+// Booking Types
+export interface Booking {
+  _id: string;
+  FullName: string;
+  Email: string;
+  Phone: string;
+  Address: string;
+  CarModel: string;
+  TestDriveDate: string;
+  TestDriveTime: string;
+  Notes?: string;
+  Status: BookingStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
 
 
 // API Response Types
@@ -93,6 +107,8 @@ export interface LoginCredentials {
 export interface RegisterData extends Omit<User, '_id' | 'createdAt' | 'updatedAt'> {
   Password: string;
 }
+
+
 
 
 

@@ -3,6 +3,8 @@ import useScrollToTop from "@/hooks/useScrollToTop";
 import { message, DatePicker, Form, Input, Select, Button, Modal } from "antd";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import { createBooking } from "@/api/services/user/booking";
+import { getActiveServiceTypes, ServiceType } from "@/api/services/user/serviceTypes";
 
 import {
   FormOutlined,
@@ -22,6 +24,8 @@ const BookingPage = () => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
+  const [loadingServiceTypes, setLoadingServiceTypes] = useState(false);
 
   // Inject compact form styles when modal opens
   useEffect(() => {
@@ -79,6 +83,24 @@ const BookingPage = () => {
       };
     }
   }, [isModalVisible]);
+
+  // Fetch service types on component mount
+  useEffect(() => {
+    const fetchServiceTypes = async () => {
+      try {
+        setLoadingServiceTypes(true);
+        const response = await getActiveServiceTypes();
+        setServiceTypes(response.data);
+      } catch (error) {
+        console.error("Error fetching service types:", error);
+        message.error("Lỗi khi tải danh sách dịch vụ");
+      } finally {
+        setLoadingServiceTypes(false);
+      }
+    };
+
+    fetchServiceTypes();
+  }, []);
 
   // Form validation rules
   const formRules = {
@@ -154,6 +176,18 @@ const BookingPage = () => {
         return;
       }
 
+      // Call API to create booking
+      await createBooking({
+        FullName: values.FullName,
+        Email: values.Email,
+        Phone: values.Phone,
+        Address: values.Address,
+        CarModel: values.CarModel,
+        TestDriveDate: values.TestDriveDate.toISOString(),
+        TestDriveTime: values.TestDriveTime,
+        Notes: values.Notes
+      });
+
       message.success("Đăng ký đặt lịch thành công!");
 
       // Reset form after successful submission
@@ -163,8 +197,9 @@ const BookingPage = () => {
       if (isModalVisible) {
         setIsModalVisible(false);
       }
-    } catch {
-      message.error("Đã có lỗi xảy ra khi đăng ký lái thử. Vui lòng thử lại.");
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      message.error("Đã có lỗi xảy ra khi đăng ký đặt lịch. Vui lòng thử lại.");
     } finally {
       setSubmitting(false);
     }
@@ -207,10 +242,21 @@ const BookingPage = () => {
         name="CarModel"
         rules={formRules.CarModel}
       >
-        <Select placeholder="Chọn dịch vụ">
-          <Select.Option value="Sửa chữa">Sửa chữa</Select.Option>
-          <Select.Option value="Lắp đặt">Lắp đặt</Select.Option>
-          <Select.Option value="Thi công">Thi công</Select.Option>
+        <Select 
+          placeholder="Chọn dịch vụ" 
+          loading={loadingServiceTypes}
+          showSearch
+          optionFilterProp="children"
+        >
+          {serviceTypes.map((serviceType) => (
+            <Select.Option 
+              key={serviceType._id}
+              value={serviceType.name}
+              title={serviceType.description || serviceType.name}
+            >
+              {serviceType.name}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 

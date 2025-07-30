@@ -196,7 +196,7 @@ const ProductListPage: React.FC = () => {
         <img
           src={image}
           alt="Sản phẩm"
-          style={{ width: 50, height: 50, objectFit: "cover" }}
+          style={{ width: 50, height: 50, objectFit: "contain" }}
         />
       ),
     },
@@ -274,7 +274,9 @@ const ProductListPage: React.FC = () => {
       key: "status",
       render: (status: string) => (
         <Tag color={status === ProductStatus.ACTIVE ? "green" : "red"}>
-          {status === ProductStatus.ACTIVE ? "Còn kinh doanh" : "Ngừng kinh doanh"}
+          {status === ProductStatus.ACTIVE
+            ? "Còn kinh doanh"
+            : "Ngừng kinh doanh"}
         </Tag>
       ),
     },

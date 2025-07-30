@@ -18,16 +18,18 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Admin Pages
-import DashboardPage from "@/pages/admin/DashboardPage";
-import AdminProductListPage from "@/pages/admin/ProductListPage";
-import ProductFormPage from "@/pages/admin/ProductFormPage";
-import OrderDetailPage from "@/pages/admin/OrderDetailPage";
-import UserListPage from "@/pages/admin/UserListPage";
-import CategoryListPage from "@/pages/admin/CategoryListPage";
-import ServiceListPage from "@/pages/admin/ServiceListPage";
-import NewsListPage from "@/pages/admin/NewsListPage";
-import NewsFormPage from "@/pages/admin/NewsFormPage";
-import SettingsPage from "@/pages/admin/SettingsPage";
+import {
+  AdminDashboardPage,
+  AdminProductListPage,
+  AdminProductUpsetPage,
+  AdminUserListPage,
+  AdminCategoryListPage,
+  AdminServiceListPage,
+  AdminNewsListPage,
+  AdminNewsFormPage,
+  AdminSettingsPage,
+  AdminBookingListPage,
+} from "@/pages/admin";
 
 // Public Pages
 import {
@@ -35,7 +37,7 @@ import {
   LoginPage,
   RegisterPage,
   ProductDetailPage,
-  ProductListPage as PublicProductListPage,
+  ProductListPage,
   FavoritesPage,
   ProfilePage,
   PriceListPage,
@@ -47,6 +49,137 @@ import {
 } from "@/pages/user";
 import "./styles/main.scss";
 import { ROUTERS } from "@/utils/constant";
+
+// Route configurations
+const publicRoutes = [
+  {
+    path: "/",
+    element: HomePage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.LOGIN,
+    element: LoginPage,
+    layout: PublicRoute,
+  },
+  {
+    path: ROUTERS.USER.REGISTER,
+    element: RegisterPage,
+    layout: PublicRoute,
+  },
+  {
+    path: ROUTERS.USER.PRODUCTS,
+    element: ProductListPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.PRODUCTS_DETAIL,
+    element: ProductDetailPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.NEWS,
+    element: NewsPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.NEWS_DETAIL,
+    element: NewsDetailPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.SERVICE,
+    element: ServicePage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.BOOKING,
+    element: BookingPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.PRICE_LIST,
+    element: PriceListPage,
+    layout: MainLayout,
+  },
+];
+
+const protectedRoutes = [
+  {
+    path: ROUTERS.USER.FAVORITES,
+    element: FavoritesPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.PROFILE,
+    element: ProfilePage,
+    layout: MainLayout,
+  },
+];
+
+const adminRoutes = [
+  {
+    path: ROUTERS.ADMIN.DASHBOARD,
+    element: AdminDashboardPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.PRODUCTS,
+    element: AdminProductListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.PRODUCTS_ADD,
+    element: AdminProductUpsetPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.PRODUCTS_EDIT,
+    element: AdminProductUpsetPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.BOOKINGS,
+    element: AdminBookingListPage,
+    layout: AdminLayout,
+  },
+
+  {
+    path: ROUTERS.ADMIN.USERS,
+    element: AdminUserListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.CATEGORIES,
+    element: AdminCategoryListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.SERVICES,
+    element: AdminServiceListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.NEWS,
+    element: AdminNewsListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.NEWS_ADD,
+    element: AdminNewsFormPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.NEWS_EDIT,
+    element: AdminNewsFormPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.SETTINGS,
+    element: AdminSettingsPage,
+    layout: AdminLayout,
+  },
+];
 
 const App: React.FC = () => {
   return (
@@ -74,230 +207,47 @@ const App: React.FC = () => {
                     <ScrollToTop />
                     <Routes>
                       {/* Public Routes */}
-                      <Route
-                        path="/"
-                        element={
-                          <MainLayout>
-                            <HomePage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.LOGIN}
-                        element={
-                          <PublicRoute>
-                            <LoginPage />
-                          </PublicRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.REGISTER}
-                        element={
-                          <PublicRoute>
-                            <RegisterPage />
-                          </PublicRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.PRODUCTS}
-                        element={
-                          <MainLayout>
-                            <PublicProductListPage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.PRODUCTS_DETAIL}
-                        element={
-                          <MainLayout>
-                            <ProductDetailPage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.NEWS}
-                        element={
-                          <MainLayout>
-                            <NewsPage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.NEWS_DETAIL}
-                        element={
-                          <MainLayout>
-                            <NewsDetailPage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.SERVICE}
-                        element={
-                          <MainLayout>
-                            <ServicePage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.BOOKING}
-                        element={
-                          <MainLayout>
-                            <BookingPage />
-                          </MainLayout>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.PRICE_LIST}
-                        element={
-                          <MainLayout>
-                            <PriceListPage />
-                          </MainLayout>
-                        }
-                      />
+                      {publicRoutes.map((route) => (
+                        <Route
+                          key={route.path}
+                          path={route.path}
+                          element={
+                            <route.layout>
+                              <route.element />
+                            </route.layout>
+                          }
+                        />
+                      ))}
 
                       {/* Protected Routes */}
-                      <Route
-                        path={ROUTERS.USER.FAVORITES}
-                        element={
-                          <ProtectedRoute>
-                            <MainLayout>
-                              <FavoritesPage />
-                            </MainLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.USER.PROFILE}
-                        element={
-                          <ProtectedRoute>
-                            <MainLayout>
-                              <ProfilePage />
-                            </MainLayout>
-                          </ProtectedRoute>
-                        }
-                      />
+                      {protectedRoutes.map((route) => (
+                        <Route
+                          key={route.path}
+                          path={route.path}
+                          element={
+                            <ProtectedRoute>
+                              <route.layout>
+                                <route.element />
+                              </route.layout>
+                            </ProtectedRoute>
+                          }
+                        />
+                      ))}
 
                       {/* Admin Routes */}
-                      <Route
-                        path={ROUTERS.ADMIN.DASHBOARD}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <DashboardPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.PRODUCTS}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <AdminProductListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.PRODUCTS_ADD}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <ProductFormPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.PRODUCTS_EDIT}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <ProductFormPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.ORDERS_DETAIL}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <OrderDetailPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.USERS}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <UserListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.CATEGORIES}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <CategoryListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.SERVICES}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <ServiceListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.NEWS}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <NewsListPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.NEWS_ADD}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <NewsFormPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path={ROUTERS.ADMIN.NEWS_EDIT}
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <NewsFormPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/admin/settings"
-                        element={
-                          <ProtectedRoute requireAdmin>
-                            <AdminLayout>
-                              <SettingsPage />
-                            </AdminLayout>
-                          </ProtectedRoute>
-                        }
-                      />
+                      {adminRoutes.map((route) => (
+                        <Route
+                          key={route.path}
+                          path={route.path}
+                          element={
+                            <ProtectedRoute requireAdmin>
+                              <route.layout>
+                                <route.element />
+                              </route.layout>
+                            </ProtectedRoute>
+                          }
+                        />
+                      ))}
 
                       {/* 404 Not Found Route - Must be last */}
                       <Route

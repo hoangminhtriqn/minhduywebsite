@@ -18,8 +18,9 @@ export const ROUTERS = {
   PRODUCTS: "/admin/products",
   PRODUCTS_ADD: "/admin/products/add",
   PRODUCTS_EDIT: "/admin/products/edit/:id",
-  ORDERS: "/admin/orders",
-  ORDERS_DETAIL: "/admin/orders/:id",
+  BOOKINGS: "/admin/bookings",
+  BOOKINGS_DETAIL: "/admin/bookings/:id",
+  
   USERS: "/admin/users",
   CATEGORIES: "/admin/categories",
   SERVICES: "/admin/services",

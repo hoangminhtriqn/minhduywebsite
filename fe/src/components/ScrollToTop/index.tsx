@@ -60,7 +60,7 @@ const ScrollToTop = () => {
           top: 0,
           behavior: "smooth",
         });
-      } catch (e) {
+      } catch {
         // Fallback to instant scroll if smooth is not supported
         window.scrollTo(0, 0);
       }

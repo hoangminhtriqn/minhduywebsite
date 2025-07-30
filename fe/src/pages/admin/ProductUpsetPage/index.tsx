@@ -69,7 +69,7 @@ interface UploadedFile {
   public_id?: string;
 }
 
-const ProductFormPage: React.FC = () => {
+const ProductUpsetPage: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
@@ -910,4 +910,4 @@ const ProductFormPage: React.FC = () => {
   );
 };
 
-export default ProductFormPage;
+export default ProductUpsetPage;

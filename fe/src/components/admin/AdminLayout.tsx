@@ -96,43 +96,43 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Menu items configuration using new items API
   const menuItems = [
     {
-      key: "dashboard",
+      key: ROUTERS.ADMIN.DASHBOARD,
       icon: <DashboardOutlined />,
       label: <Link to={ROUTERS.ADMIN.DASHBOARD}>Thống kê</Link>,
     },
     {
-      key: "users",
+      key: ROUTERS.ADMIN.USERS,
       icon: <TeamOutlined />,
       label: <Link to={ROUTERS.ADMIN.USERS}>Người dùng</Link>,
     },
     {
-      key: "categories",
+      key: ROUTERS.ADMIN.CATEGORIES,
       icon: <TagsOutlined />,
       label: <Link to={ROUTERS.ADMIN.CATEGORIES}>Danh mục</Link>,
     },
     {
-      key: "products",
+      key: ROUTERS.ADMIN.PRODUCTS,
       icon: <ProfileOutlined />,
       label: <Link to={ROUTERS.ADMIN.PRODUCTS}>Sản phẩm</Link>,
     },
     {
-      key: "orders",
+      key: ROUTERS.ADMIN.BOOKINGS,
       icon: <CarryOutOutlined />,
-      label: <Link to={ROUTERS.ADMIN.ORDERS}>Đặt lịch</Link>,
+      label: <Link to={ROUTERS.ADMIN.BOOKINGS}>Đặt lịch</Link>,
     },
 
     {
-      key: "services",
+      key: ROUTERS.ADMIN.SERVICES,
       icon: <DashboardOutlined />,
       label: <Link to={ROUTERS.ADMIN.SERVICES}>Dịch vụ</Link>,
     },
     {
-      key: "news",
+      key: ROUTERS.ADMIN.NEWS,
       icon: <FileTextOutlined />,
       label: <Link to={ROUTERS.ADMIN.NEWS}>Tin tức</Link>,
     },
     {
-      key: "settings",
+      key: ROUTERS.ADMIN.SETTINGS,
       icon: <SettingOutlined />,
       label: <Link to={ROUTERS.ADMIN.SETTINGS}>Cài đặt</Link>,
     },

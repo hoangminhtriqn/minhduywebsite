@@ -276,14 +276,15 @@ const ProductDetailPage: React.FC = () => {
                   alignItems: "flex-start",
                   justifyContent: "space-between",
                   marginBottom: "16px",
-                  gap: "16px",
+                  gap: "12px",
+                  flexWrap: "wrap",
                 }}
               >
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <Title
                     level={2}
                     className={styles["product-detail__info-title"]}
-                    style={{ margin: 0 }}
+                    style={{ margin: 0, wordBreak: "break-word" }}
                   >
                     {product.Product_Name}
                   </Title>

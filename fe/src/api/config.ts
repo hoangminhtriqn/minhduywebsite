@@ -31,6 +31,8 @@ export const API_ENDPOINTS = {
   PRICING: '/pricing',
   NEWS_EVENTS: '/news-events',
   NEWS_EVENTS_POPULAR: '/news-events/popular',
+  BOOKINGS: '/bookings',
+  USER_SERVICE_TYPES: '/user/service-types',
   
   // Public Settings
   SETTINGS_PUBLIC: '/settings/public',
@@ -47,6 +49,13 @@ export const API_ENDPOINTS = {
   
   // Admin Categories Management
   CATEGORIES_ADMIN: '/categories/admin/all',
+  
+  // Admin Booking Management
+  ADMIN_BOOKINGS: '/bookings',
+  
+  // Admin Service Types Management
+  ADMIN_SERVICE_TYPES: '/service-types',
+  ADMIN_SERVICE_TYPES_ACTIVE: '/service-types/active',
   
   // Admin Settings Management
   SETTINGS: '/settings',
