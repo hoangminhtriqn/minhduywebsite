@@ -1,102 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import PageBanner from "@/components/PageBanner";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { ROUTERS } from "@/utils/constant";
 import { CheckCircleOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import ServiceCard from "./ServiceCard";
 import { useSettings } from "@/contexts/SettingsContext";
-
+import { serviceApi } from "@/api/services/user/service"; 
 import styles from "./styles.module.scss";
 
+interface Service {
+  _id: string;
+  icon: string;
+  title: string;
+  description: string;
+  isFeatured: boolean;
+}
+
 const ServicePage: React.FC = () => {
-  // Use scroll to top hook
   useScrollToTop();
-
-  // Navigation hook
   const navigate = useNavigate();
-
-  // Lấy locations từ context
   const { locations } = useSettings();
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Services data
-  const services = [
-    {
-      id: 1,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995515.png",
-      title: "Bảo Dưỡng Định Kỳ",
-      description:
-        "Thực hiện kiểm tra và bảo dưỡng theo định kỳ để đảm bảo xe luôn vận hành ổn định và an toàn.",
-      isFeatured: false,
-    },
-    {
-      id: 2,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995516.png",
-      title: "Sửa Chữa & Đồng Sơn",
-      description:
-        "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn Minh Duy.",
-      isFeatured: true,
-    },
-    {
-      id: 3,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995517.png",
-      title: "Nâng Cấp Hiệu Suất",
-      description:
-        "Cải thiện sức mạnh và khả năng vận hành của xe với các gói nâng cấp chính hãng.",
-      isFeatured: false,
-    },
-    {
-      id: 4,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995518.png",
-      title: "Thay Dầu & Lọc",
-      description:
-        "Thay dầu động cơ và bộ lọc theo tiêu chuẩn Minh Duy để đảm bảo hiệu suất tối ưu.",
-      isFeatured: false,
-    },
-    {
-      id: 5,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995519.png",
-      title: "Kiểm Tra Điện Tử",
-      description:
-        "Chẩn đoán và sửa chữa các vấn đề điện tử, hệ thống điều khiển với thiết bị chuyên dụng.",
-      isFeatured: false,
-    },
-    {
-      id: 6,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995520.png",
-      title: "Bảo Dưỡng Phanh",
-      description:
-        "Kiểm tra, bảo dưỡng và thay thế hệ thống phanh để đảm bảo an toàn tối đa.",
-      isFeatured: false,
-    },
-    {
-      id: 7,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995521.png",
-      title: "Lắp Đặt Phụ Kiện",
-      description:
-        "Lắp đặt các phụ kiện chính hãng Minh Duy với bảo hành và dịch vụ hậu mãi.",
-      isFeatured: false,
-    },
-    {
-      id: 8,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995522.png",
-      title: "Tư Vấn Kỹ Thuật",
-      description:
-        "Tư vấn chuyên sâu về kỹ thuật, bảo dưỡng và nâng cấp xe với đội ngũ chuyên gia.",
-      isFeatured: false,
-    },
-    {
-      id: 9,
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995523.png",
-      title: "Dịch Vụ Khẩn Cấp",
-      description:
-        "Dịch vụ cứu hộ và sửa chữa khẩn cấp 24/7 cho các trường hợp cần thiết.",
-      isFeatured: false,
-    },
-  ];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const response = await serviceApi.getAllServices();
+        setServices(response.data || []);
+      } catch (err) {
+        setError("Không thể tải danh sách dịch vụ.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Get main address for map
+    fetchServices();
+  }, []);
+
   const mainAddress = locations.find((location) => location.isMainAddress);
 
   return (
@@ -168,20 +113,25 @@ const ServicePage: React.FC = () => {
 
         <h2 className="section-title">CÁC DỊCH VỤ CỦA CHÚNG TÔI</h2>
         <div className={styles["service-categories__row"]}>
-          {services.map((service) => (
-            <ServiceCard
-              key={service.id}
-              icon={service.icon}
-              title={service.title}
-              description={service.description}
-              isFeatured={service.isFeatured}
-            />
-          ))}
+          {loading ? (
+            <p>Đang tải...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            services.map((service) => (
+              <ServiceCard
+                key={service._id}
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+                isFeatured={service.isFeatured}
+              />
+            ))
+          )}
         </div>
 
         <h2 className="section-title">ĐỊA ĐIỂM KINH DOANH</h2>
         <div className={styles["service-locations__row"]}>
-          {/* Location Cards */}
           <div className={styles["location-cards"]}>
             {locations.map((location) => (
               <div
@@ -206,7 +156,6 @@ const ServicePage: React.FC = () => {
             ))}
           </div>
 
-          {/* Map Section */}
           <div className={styles["location-map"]}>
             <iframe
               src={`https://maps.google.com/maps?q=${mainAddress?.coordinates}&output=embed`}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Product, UpdateProductData, Category } from "@/api/types";
+import { UpdateProductData, Category } from "@/api/types";
 import { productService } from "@/api/services/user/product";
 import { toast } from "react-toastify";
 import { ProductStatus } from "@/types";
@@ -48,12 +48,13 @@ const AdminEditProductPage: React.FC = () => {
         // Fetch categories
         const categoriesData = await productService.getCategories();
         setCategories(categoriesData);
-      } catch (err: any) {
+      } catch (err) {
+        const error = err as { response?: { data?: { message?: string } }; message?: string };
         toast.error(
           "Lỗi khi tải dữ liệu sản phẩm: " +
-            (err.response?.data?.message || err.message)
+            (error.response?.data?.message || error.message)
         );
-        setError(err.response?.data?.message || err.message);
+        setError(error.response?.data?.message || error.message || "Đã xảy ra lỗi không xác định");
       } finally {
         setLoading(false);
       }
@@ -149,19 +150,20 @@ const AdminEditProductPage: React.FC = () => {
         setLoading(false);
         return;
       }
-      const updatedProduct = await productService.updateProduct(
+      await productService.updateProduct(
         id,
-        data as any
+        data as unknown as UpdateProductData
       ); // Cast to any for FormData
 
       toast.success("Đã cập nhật sản phẩm thành công!");
       navigate("/admin/products"); // Navigate back to product list
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } }; message?: string };
       toast.error(
         "Lỗi khi cập nhật sản phẩm: " +
-          (err.response?.data?.message || err.message)
+          (error.response?.data?.message || error.message)
       );
-      setError(err.response?.data?.message || err.message);
+      setError(error.response?.data?.message || error.message || "Đã xảy ra lỗi không xác định");
     } finally {
       setLoading(false);
     }

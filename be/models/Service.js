@@ -1,31 +1,25 @@
 const mongoose = require('mongoose');
 
 const serviceSchema = new mongoose.Schema({
-  Name: {
+  title: {
     type: String,
     required: true,
     trim: true
   },
-  Description: {
+  description: {
     type: String,
     required: true
   },
-  Price: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  Status: {
+  icon: {
     type: String,
-    enum: ['available', 'unavailable'],
-    default: 'available'
+    required: true
   },
-  ImageUrl: {
-    type: String
+  isFeatured: {
+    type: Boolean,
+    default: false
   },
-  // Add any other relevant fields (e.g., duration, included features)
 }, { timestamps: true });
 
 const Service = mongoose.model('Service', serviceSchema);
 
-module.exports = Service; 
+module.exports = Service;

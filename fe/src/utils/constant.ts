@@ -24,6 +24,8 @@ export const ROUTERS = {
   USERS: "/admin/users",
   CATEGORIES: "/admin/categories",
   SERVICES: "/admin/services",
+  SERVICES_ADD: "/admin/services/add",
+  SERVICES_EDIT: "/admin/services/edit/:id",
   NEWS: "/admin/news",
   NEWS_ADD: "/admin/news/add",
   NEWS_EDIT: "/admin/news/edit/:id",

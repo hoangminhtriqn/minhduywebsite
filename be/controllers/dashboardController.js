@@ -1,30 +1,30 @@
 const User = require('../models/User');
-const ServiceRequest = require('../models/ServiceRequest');
+const Booking = require('../models/Booking');
 const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/responseHandler');
 
 const getDashboard = async (req, res) => {
   try {
-    // Service request stats
+    // Booking stats
     const [
-      totalRequests,
-      pendingRequests,
-      confirmedRequests,
-      completedRequests,
-      cancelledRequests
+      totalBookings,
+      pendingBookings,
+      confirmedBookings,
+      completedBookings,
+      cancelledBookings
     ] = await Promise.all([
-      ServiceRequest.countDocuments(),
-      ServiceRequest.countDocuments({ Status: 'pending' }),
-      ServiceRequest.countDocuments({ Status: 'confirmed' }),
-      ServiceRequest.countDocuments({ Status: 'completed' }),
-      ServiceRequest.countDocuments({ Status: 'cancelled' })
+      Booking.countDocuments(),
+      Booking.countDocuments({ Status: 'pending' }),
+      Booking.countDocuments({ Status: 'confirmed' }),
+      Booking.countDocuments({ Status: 'completed' }),
+      Booking.countDocuments({ Status: 'cancelled' })
     ]);
     
-    const serviceRequestStats = {
-      totalRequests,
-      pendingRequests,
-      confirmedRequests,
-      completedRequests,
-      cancelledRequests
+    const bookingStats = {
+      totalBookings,
+      pendingBookings,
+      confirmedBookings,
+      completedBookings,
+      cancelledBookings
     };
 
     // User stats
@@ -42,7 +42,7 @@ const getDashboard = async (req, res) => {
 
     successResponse(res, {
       userStats,
-      serviceRequestStats
+      bookingStats
     });
   } catch (error) {
     errorResponse(res, 'Lỗi thống kê dashboard', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
@@ -51,4 +51,4 @@ const getDashboard = async (req, res) => {
 
 module.exports = {
   getDashboard
-}; 
+};

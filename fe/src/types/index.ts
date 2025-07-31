@@ -27,7 +27,6 @@ export interface Product {
   Main_Image: string;
   List_Image: string[];
   Specifications: Record<string, string>;
-
   Status: ProductStatus;
   Stock: number;
   createdAt: string;
@@ -39,6 +38,17 @@ export interface Category {
   _id: string;
   Category_Name: string;
   Description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Service Types
+export interface Service {
+  _id: string;
+  title: string;
+  description: string;
+  icon: string;
+  isFeatured: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -79,8 +89,6 @@ export interface Booking {
   updatedAt: string;
 }
 
-
-
 // API Response Types
 export interface ApiResponse<T> {
   success: boolean;
@@ -107,10 +115,6 @@ export interface LoginCredentials {
 export interface RegisterData extends Omit<User, '_id' | 'createdAt' | 'updatedAt'> {
   Password: string;
 }
-
-
-
-
 
 // Re-export theme types for easy access
 export type { 

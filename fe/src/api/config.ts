@@ -26,7 +26,8 @@ export const API_ENDPOINTS = {
   CATEGORIES_HIERARCHY: '/categories/hierarchy',
   
   // User Features
-  FAVORITES: '/yeu-thich',
+  SERVICES: '/services',
+  FAVORITES: '/favorites',
   ORDERS: '/orders',
   PRICING: '/pricing',
   NEWS_EVENTS: '/news-events',
@@ -45,7 +46,7 @@ export const API_ENDPOINTS = {
   DASHBOARD: '/dashboard',
   
   // Admin User Management
-  ADMIN_USERS: '/nguoi-dung',
+  ADMIN_USERS: '/admin/users',
   
   // Admin Categories Management
   CATEGORIES_ADMIN: '/categories/admin/all',

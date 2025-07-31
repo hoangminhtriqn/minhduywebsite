@@ -1,12 +1,12 @@
-// User Pages
-export { default as AdminBookingAdPage } from "./BookingListPage";
-export { default as AdminDashboardPage } from "./DashboardPage";
-export { default as AdminProductUpsetPage } from "./ProductUpsetPage";
-export { default as AdminProductListPage } from "./ProductListPage";
-export { default as AdminUserListPage } from "./UserListPage";
-export { default as AdminNewsFormPage } from "./NewsFormPage";
-export { default as AdminNewsListPage } from "./NewsListPage";
-export { default as AdminSettingsPage } from "./SettingsPage";
-export { default as AdminCategoryListPage } from "./CategoryListPage";
-export { default as AdminServiceListPage } from "./ServiceListPage";
-export { default as AdminBookingListPage } from "./BookingListPage";
+export { default as AdminDashboardPage } from './DashboardPage';
+export { default as AdminProductListPage } from './ProductListPage';
+export { default as AdminProductUpsetPage } from './ProductUpsetPage';
+export { default as AdminUserListPage } from './UserListPage';
+export { default as AdminCategoryListPage } from './CategoryListPage';
+export { default as AdminServiceListPage } from './ServiceListPage';
+export { default as AddServicePage } from './AddServicePage';
+export { default as EditServicePage } from './EditServicePage';
+export { default as AdminNewsListPage } from './NewsListPage';
+export { default as AdminNewsFormPage } from './NewsFormPage';
+export { default as AdminSettingsPage } from './SettingsPage';
+export { default as AdminBookingListPage } from './BookingListPage';

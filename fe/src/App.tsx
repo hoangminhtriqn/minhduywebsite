@@ -25,6 +25,8 @@ import {
   AdminUserListPage,
   AdminCategoryListPage,
   AdminServiceListPage,
+  AddServicePage,
+  EditServicePage,
   AdminNewsListPage,
   AdminNewsFormPage,
   AdminSettingsPage,
@@ -157,6 +159,16 @@ const adminRoutes = [
   {
     path: ROUTERS.ADMIN.SERVICES,
     element: AdminServiceListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.SERVICES_ADD,
+    element: AddServicePage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.SERVICES_EDIT,
+    element: EditServicePage,
     layout: AdminLayout,
   },
   {

@@ -892,47 +892,70 @@ const sampleProducts = generateSampleProducts();
 
 // Sample services data
 const sampleServices = [
-  {
-    Name: "Sửa chữa máy tính",
-    Description: "Dịch vụ sửa chữa máy tính, laptop, PC chuyên nghiệp",
-    Price: 500000,
-    Status: "available",
-    ImageUrl:
-      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop",
-  },
-  {
-    Name: "Nâng cấp RAM",
-    Description: "Dịch vụ nâng cấp RAM cho laptop và máy tính để bàn",
-    Price: 300000,
-    Status: "available",
-    ImageUrl:
-      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop",
-  },
-  {
-    Name: "Thay ổ cứng SSD",
-    Description: "Dịch vụ thay ổ cứng HDD sang SSD tăng tốc độ",
-    Price: 800000,
-    Status: "available",
-    ImageUrl:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-  },
-  {
-    Name: "Cài đặt phần mềm",
-    Description: "Dịch vụ cài đặt Windows, Office và các phần mềm khác",
-    Price: 200000,
-    Status: "available",
-    ImageUrl:
-      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop",
-  },
-  {
-    Name: "Khôi phục dữ liệu",
-    Description: "Dịch vụ khôi phục dữ liệu từ ổ cứng bị hỏng",
-    Price: 1000000,
-    Status: "available",
-    ImageUrl:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-  },
-];
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995515.png",
+      title: "Bảo Dưỡng Định Kỳ",
+      description:
+        "Thực hiện kiểm tra và bảo dưỡng theo định kỳ để đảm bảo xe luôn vận hành ổn định và an toàn.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995516.png",
+      title: "Sửa Chữa & Đồng Sơn",
+      description:
+        "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn Minh Duy.",
+      isFeatured: true,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995517.png",
+      title: "Nâng Cấp Hiệu Suất",
+      description:
+        "Cải thiện sức mạnh và khả năng vận hành của xe với các gói nâng cấp chính hãng.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995518.png",
+      title: "Thay Dầu & Lọc",
+      description:
+        "Thay dầu động cơ và bộ lọc theo tiêu chuẩn Minh Duy để đảm bảo hiệu suất tối ưu.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995519.png",
+      title: "Kiểm Tra Điện Tử",
+      description:
+        "Chẩn đoán và sửa chữa các vấn đề điện tử, hệ thống điều khiển với thiết bị chuyên dụng.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995520.png",
+      title: "Bảo Dưỡng Phanh",
+      description:
+        "Kiểm tra, bảo dưỡng và thay thế hệ thống phanh để đảm bảo an toàn tối đa.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995521.png",
+      title: "Lắp Đặt Phụ Kiện",
+      description:
+        "Lắp đặt các phụ kiện chính hãng Minh Duy với bảo hành và dịch vụ hậu mãi.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995522.png",
+      title: "Tư Vấn Kỹ Thuật",
+      description:
+        "Tư vấn chuyên sâu về kỹ thuật, bảo dưỡng và nâng cấp xe với đội ngũ chuyên gia.",
+      isFeatured: false,
+    },
+    {
+      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995523.png",
+      title: "Dịch Vụ Khẩn Cấp",
+      description:
+        "Dịch vụ cứu hộ và sửa chữa khẩn cấp 24/7 cho các trường hợp cần thiết.",
+      isFeatured: false,
+    },
+  ];
 
 // Sample pricing data
 const samplePricing = [

@@ -1,6 +1,6 @@
 import {
   getDashboardStats,
-  ServiceRequestStats,
+  BookingStats,
   UserStats,
 } from "@/api/services/admin/dashboard";
 import { UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
@@ -19,14 +19,13 @@ const DashboardPage: React.FC = () => {
     adminCount: 0,
     userCount: 0,
   });
-  const [serviceRequestStats, setServiceRequestStats] =
-    useState<ServiceRequestStats>({
-      totalRequests: 0,
-      pendingRequests: 0,
-      confirmedRequests: 0,
-      completedRequests: 0,
-      cancelledRequests: 0,
-    });
+  const [bookingStats, setBookingStats] = useState<BookingStats>({
+    totalBookings: 0,
+    pendingBookings: 0,
+    confirmedBookings: 0,
+    completedBookings: 0,
+    cancelledBookings: 0,
+  });
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -36,7 +35,7 @@ const DashboardPage: React.FC = () => {
         const res = await getDashboardStats();
         const data = res.data.data;
         setUserStats(data.userStats);
-        setServiceRequestStats(data.serviceRequestStats);
+        setBookingStats(data.bookingStats);
       } catch {
         setError("Không thể tải dữ liệu thống kê. Vui lòng thử lại sau.");
       } finally {
@@ -191,10 +190,10 @@ const DashboardPage: React.FC = () => {
           </Col>
         </Row>
       </div>
-      {/* Thống kê đơn tư vấn dịch vụ */}
+      {/* Thống kê đơn đặt lịch */}
       <div>
         <Title level={4} style={{ marginBottom: 16 }}>
-          Thống kê đơn tư vấn dịch vụ
+          Thống kê đơn đặt lịch
         </Title>
         <Row gutter={[24, 24]}>
           <Col xs={24}>
@@ -213,11 +212,11 @@ const DashboardPage: React.FC = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{serviceRequestStats.totalRequests || 0}</td>
-                    <td>{serviceRequestStats.pendingRequests || 0}</td>
-                    <td>{serviceRequestStats.confirmedRequests || 0}</td>
-                    <td>{serviceRequestStats.completedRequests || 0}</td>
-                    <td>{serviceRequestStats.cancelledRequests || 0}</td>
+                    <td>{bookingStats.totalBookings || 0}</td>
+                    <td>{bookingStats.pendingBookings || 0}</td>
+                    <td>{bookingStats.confirmedBookings || 0}</td>
+                    <td>{bookingStats.completedBookings || 0}</td>
+                    <td>{bookingStats.cancelledBookings || 0}</td>
                   </tr>
                 </tbody>
               </table>
