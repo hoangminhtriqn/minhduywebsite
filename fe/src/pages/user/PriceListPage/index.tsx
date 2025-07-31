@@ -1,15 +1,11 @@
 import PageBanner from "@/components/PageBanner";
 import { PaginationWrapper, usePagination } from "@/components/pagination";
 
-import {
-  DownloadOutlined,
-  FilePdfOutlined,
-  FileWordOutlined,
-  FileExcelOutlined,
-} from "@ant-design/icons";
+
 import { notification, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { getAllPricing, Pricing } from "@/api/services/user/pricing";
+import PricingCard from "@/components/PricingCard";
 import styles from "./styles.module.scss";
 
 const PriceListPage: React.FC = () => {
@@ -22,18 +18,7 @@ const PriceListPage: React.FC = () => {
   });
 
   // Get document icon
-  const getDocumentIcon = (type: string) => {
-    switch (type) {
-      case "pdf":
-        return <FilePdfOutlined />;
-      case "word":
-        return <FileWordOutlined />;
-      case "excel":
-        return <FileExcelOutlined />;
-      default:
-        return <DownloadOutlined />;
-    }
-  };
+
 
   // Handle document download
   const handleDownload = (document: {
@@ -105,73 +90,12 @@ const PriceListPage: React.FC = () => {
               <div className={styles["pricing-cards__grid"]}>
                 {Array.isArray(pricingData) &&
                   pricingData.map((card) => (
-                    <div
+                    <PricingCard
                       key={card._id}
-                      className={`${styles["pricing-card"]} ${styles[`pricing-card--${card.color}`]}`}
-                    >
-                      {/* Card Header */}
-                      <div className={styles["pricing-card__header"]}>
-                        <h3 className={styles["pricing-card__title"]}>
-                          {card.title}
-                        </h3>
-                      </div>
-
-                      {/* Card Description */}
-                      <div className={styles["pricing-card__description"]}>
-                        {card.description}
-                      </div>
-
-                      {/* Card Features */}
-                      <div className={styles["pricing-card__features"]}>
-                        <ul>
-                          {card.features.map((feature, index) => (
-                            <li key={index}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Card Documents */}
-                      <div className={styles["pricing-card__documents"]}>
-                        <div className={styles["pricing-card__documents-list"]}>
-                          {card.documents.map((doc, index) => (
-                            <button
-                              key={index}
-                              className={styles["pricing-card__document"]}
-                              onClick={() => handleDownload(doc)}
-                              title={doc.name}
-                            >
-                              <div
-                                className={
-                                  styles["pricing-card__document-info"]
-                                }
-                              >
-                                <span
-                                  className={
-                                    styles["pricing-card__document-name"]
-                                  }
-                                >
-                                  {doc.name}
-                                </span>
-                                <span
-                                  className={
-                                    styles["pricing-card__document-size"]
-                                  }
-                                >
-                                  {doc.size}
-                                </span>
-                              </div>
-                              <span
-                                className={
-                                  styles["pricing-card__document-icon"]
-                                }
-                              >
-                                {getDocumentIcon(doc.type)}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                      pricing={card}
+                      variant="user"
+                      onDownload={handleDownload}
+                    />
                   ))}
               </div>
             </Spin>

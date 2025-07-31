@@ -94,6 +94,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       ROUTERS.ADMIN.NEWS,
       ROUTERS.ADMIN.SETTINGS,
       ROUTERS.ADMIN.DASHBOARD,
+      ROUTERS.ADMIN.PRICE_LIST,
     ];
 
     // Find all routes that are a prefix of the current path

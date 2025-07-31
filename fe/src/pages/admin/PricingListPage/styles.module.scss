@@ -1,0 +1,39 @@
+.pricingListPage {
+  padding: 24px;
+  
+  .ant-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .ant-table {
+    .ant-table-thead > tr > th {
+      background-color: #fafafa;
+      font-weight: 600;
+    }
+    
+    .ant-table-tbody > tr:hover > td {
+      background-color: #f5f5f5;
+    }
+  }
+  
+  .ant-tag {
+    border-radius: 4px;
+  }
+  
+  .ant-btn {
+    border-radius: 6px;
+  }
+  
+  .ant-input-search {
+    .ant-input {
+      border-radius: 6px;
+    }
+  }
+  
+  .ant-select {
+    .ant-select-selector {
+      border-radius: 6px;
+    }
+  }
+} 

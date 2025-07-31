@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import PublicRoute from "@/components/PublicRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import MainLayout from "@/components/layout/MainLayout";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -19,18 +18,23 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Admin Pages
 import {
-  AdminDashboardPage,
-  AdminProductListPage,
-  AdminProductUpsetPage,
-  AdminUserListPage,
-  AdminCategoryListPage,
-  AdminServiceListPage,
+  DashboardPage,
+  ProductListPage,
+  AddProductPage,
+  EditProductPage,
+  UserListPage,
+  CategoryListPage,
+  ServiceListPage,
   AddServicePage,
   EditServicePage,
-  AdminNewsListPage,
-  AdminNewsFormPage,
-  AdminSettingsPage,
-  AdminBookingListPage,
+  NewsListPage,
+  NewsFormPage,
+  SettingsPage,
+  BookingListPage,
+  // Pricing Management
+  PricingListPage,
+  AddPricingPage,
+  EditPricingPage,
 } from "@/pages/admin";
 
 // Public Pages
@@ -39,7 +43,7 @@ import {
   LoginPage,
   RegisterPage,
   ProductDetailPage,
-  ProductListPage,
+  ProductListPage as UserProductListPage,
   FavoritesPage,
   ProfilePage,
   PriceListPage,
@@ -62,21 +66,31 @@ const publicRoutes = [
   {
     path: ROUTERS.USER.LOGIN,
     element: LoginPage,
-    layout: PublicRoute,
+    layout: MainLayout,
   },
   {
     path: ROUTERS.USER.REGISTER,
     element: RegisterPage,
-    layout: PublicRoute,
+    layout: MainLayout,
   },
   {
     path: ROUTERS.USER.PRODUCTS,
-    element: ProductListPage,
+    element: UserProductListPage,
     layout: MainLayout,
   },
   {
     path: ROUTERS.USER.PRODUCTS_DETAIL,
     element: ProductDetailPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.SERVICE,
+    element: ServicePage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.PRICE_LIST,
+    element: PriceListPage,
     layout: MainLayout,
   },
   {
@@ -89,9 +103,17 @@ const publicRoutes = [
     element: NewsDetailPage,
     layout: MainLayout,
   },
+];
+
+const protectedRoutes = [
   {
-    path: ROUTERS.USER.SERVICE,
-    element: ServicePage,
+    path: ROUTERS.USER.PROFILE,
+    element: ProfilePage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.USER.FAVORITES,
+    element: FavoritesPage,
     layout: MainLayout,
   },
   {
@@ -99,66 +121,47 @@ const publicRoutes = [
     element: BookingPage,
     layout: MainLayout,
   },
-  {
-    path: ROUTERS.USER.PRICE_LIST,
-    element: PriceListPage,
-    layout: MainLayout,
-  },
-];
-
-const protectedRoutes = [
-  {
-    path: ROUTERS.USER.FAVORITES,
-    element: FavoritesPage,
-    layout: MainLayout,
-  },
-  {
-    path: ROUTERS.USER.PROFILE,
-    element: ProfilePage,
-    layout: MainLayout,
-  },
 ];
 
 const adminRoutes = [
   {
     path: ROUTERS.ADMIN.DASHBOARD,
-    element: AdminDashboardPage,
+    element: DashboardPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.PRODUCTS,
-    element: AdminProductListPage,
+    element: ProductListPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.PRODUCTS_ADD,
-    element: AdminProductUpsetPage,
+    element: AddProductPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.PRODUCTS_EDIT,
-    element: AdminProductUpsetPage,
+    element: EditProductPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.BOOKINGS,
-    element: AdminBookingListPage,
+    element: BookingListPage,
     layout: AdminLayout,
   },
-
   {
     path: ROUTERS.ADMIN.USERS,
-    element: AdminUserListPage,
+    element: UserListPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.CATEGORIES,
-    element: AdminCategoryListPage,
+    element: CategoryListPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.SERVICES,
-    element: AdminServiceListPage,
+    element: ServiceListPage,
     layout: AdminLayout,
   },
   {
@@ -173,22 +176,38 @@ const adminRoutes = [
   },
   {
     path: ROUTERS.ADMIN.NEWS,
-    element: AdminNewsListPage,
+    element: NewsListPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.NEWS_ADD,
-    element: AdminNewsFormPage,
+    element: NewsFormPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.NEWS_EDIT,
-    element: AdminNewsFormPage,
+    element: NewsFormPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.SETTINGS,
-    element: AdminSettingsPage,
+    element: SettingsPage,
+    layout: AdminLayout,
+  },
+  // Pricing Management Routes
+  {
+    path: ROUTERS.ADMIN.PRICE_LIST,
+    element: PricingListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.PRICE_LIST_ADD,
+    element: AddPricingPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.PRICE_LIST_EDIT,
+    element: EditPricingPage,
     layout: AdminLayout,
   },
 ];

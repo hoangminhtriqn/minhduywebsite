@@ -1,12 +1,23 @@
-export { default as AdminDashboardPage } from './DashboardPage';
-export { default as AdminProductListPage } from './ProductListPage';
-export { default as AdminProductUpsetPage } from './ProductUpsetPage';
-export { default as AdminUserListPage } from './UserListPage';
-export { default as AdminCategoryListPage } from './CategoryListPage';
-export { default as AdminServiceListPage } from './ServiceListPage';
+// Product Management
+export { default as AddProductPage } from './AddProductPage';
+export { default as EditProductPage } from './EditProductPage';
+export { default as ProductListPage } from './ProductListPage';
+
+// Pricing Management
+export { default as AddPricingPage } from './AddPricingPage';
+export { default as EditPricingPage } from './EditPricingPage';
+export { default as PricingListPage } from './PricingListPage';
+
+// Service Management
 export { default as AddServicePage } from './AddServicePage';
 export { default as EditServicePage } from './EditServicePage';
-export { default as AdminNewsListPage } from './NewsListPage';
-export { default as AdminNewsFormPage } from './NewsFormPage';
-export { default as AdminSettingsPage } from './SettingsPage';
-export { default as AdminBookingListPage } from './BookingListPage';
+
+// Other existing exports...
+export { default as DashboardPage } from './DashboardPage';
+export { default as UserListPage } from './UserListPage';
+export { default as CategoryListPage } from './CategoryListPage';
+export { default as ServiceListPage } from './ServiceListPage';
+export { default as BookingListPage } from './BookingListPage';
+export { default as NewsListPage } from './NewsListPage';
+export { default as NewsFormPage } from './NewsFormPage';
+export { default as SettingsPage } from './SettingsPage';

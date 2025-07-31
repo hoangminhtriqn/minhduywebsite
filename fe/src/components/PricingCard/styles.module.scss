@@ -1,0 +1,300 @@
+.pricing-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--card-color-primary), var(--card-color-secondary));
+  }
+
+  // Color variants
+  &--blue {
+    --card-color-primary: #3b82f6;
+    --card-color-secondary: #1d4ed8;
+    --card-bg-gradient: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  }
+  
+  &--green {
+    --card-color-primary: #10b981;
+    --card-color-secondary: #059669;
+    --card-bg-gradient: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  }
+  
+  &--purple {
+    --card-color-primary: #8b5cf6;
+    --card-color-secondary: #7c3aed;
+    --card-bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  }
+  
+  &--orange {
+    --card-color-primary: #f59e0b;
+    --card-color-secondary: #d97706;
+    --card-bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  }
+  
+  &--red {
+    --card-color-primary: #ef4444;
+    --card-color-secondary: #dc2626;
+    --card-bg-gradient: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  }
+  
+  &--teal {
+    --card-color-primary: #14b8a6;
+    --card-color-secondary: #0d9488;
+    --card-bg-gradient: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+  }
+  
+  &--indigo {
+    --card-color-primary: #6366f1;
+    --card-color-secondary: #4f46e5;
+    --card-bg-gradient: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+  }
+  
+  &--pink {
+    --card-color-primary: #ec4899;
+    --card-color-secondary: #db2777;
+    --card-bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  }
+  
+  &--yellow {
+    --card-color-primary: #eab308;
+    --card-color-secondary: #ca8a04;
+    --card-bg-gradient: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+  }
+  
+  &--cyan {
+    --card-color-primary: #06b6d4;
+    --card-color-secondary: #0891b2;
+    --card-bg-gradient: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+  }
+  
+  &--lime {
+    --card-color-primary: #84cc16;
+    --card-color-secondary: #65a30d;
+    --card-bg-gradient: linear-gradient(135deg, #f7fee7 0%, #ecfccb 100%);
+  }
+  
+  &--amber {
+    --card-color-primary: #f59e0b;
+    --card-color-secondary: #d97706;
+    --card-bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  }
+  
+  &--emerald {
+    --card-color-primary: #10b981;
+    --card-color-secondary: #059669;
+    --card-bg-gradient: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  }
+  
+  &--violet {
+    --card-color-primary: #8b5cf6;
+    --card-color-secondary: #7c3aed;
+    --card-bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  }
+  
+  &--rose {
+    --card-color-primary: #f43f5e;
+    --card-color-secondary: #e11d48;
+    --card-bg-gradient: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+  }
+  
+  &--sky {
+    --card-color-primary: #0ea5e9;
+    --card-color-secondary: #0284c7;
+    --card-bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  }
+  
+
+
+  &__header {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+  }
+
+
+
+
+
+  &__description {
+    color: #374151;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  &__features {
+    margin-bottom: 1.5rem;
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    li {
+      color: #1f2937;
+      font-size: 0.875rem;
+      padding: 0.25rem 0;
+      position: relative;
+      padding-left: 1.25rem;
+      
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--card-color-primary);
+        font-weight: bold;
+      }
+    }
+  }
+
+
+
+  &__documents {
+    margin-bottom: 0;
+  }
+
+  &__documents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__document {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: #1f2937;
+    border: 2px solid #374151;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      border-color: var(--card-color-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__document-icon {
+    font-size: 1.5rem;
+    color: #ffffff;
+    flex-shrink: 0;
+    background: var(--card-color-primary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__document-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  &__document-name {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__document-size {
+    font-size: 0.85rem;
+    color: #d1d5db;
+    font-weight: 600;
+  }
+
+
+
+
+}
+
+
+
+// Animation for cards
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pricing-card {
+  animation: fadeInUp 0.6s ease-out;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+  &:nth-child(6) { animation-delay: 0.6s; }
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .pricing-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-card {
+    padding: 1.25rem;
+    
+    &__title {
+      font-size: 1.25rem;
+    }
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .pricing-card {
+    padding: 1rem;
+    
+    &__title {
+      font-size: 1.125rem;
+    }
+  }
+} 
