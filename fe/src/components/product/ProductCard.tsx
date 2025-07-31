@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleContactConsultation = () => {
-    navigate("/lien-he");
+    navigate(ROUTERS.USER.BOOKING);
   };
 
   const isFavorite = favorites.some((fav) => fav.ProductID._id === product._id);
@@ -318,7 +318,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           }}
         >
           <Link
-            to={`/san-pham/${product._id}`}
+            to={`${ROUTERS.USER.PRODUCTS}${product._id}`}
             style={{
               ...titleStyle,
               marginBottom: 0,

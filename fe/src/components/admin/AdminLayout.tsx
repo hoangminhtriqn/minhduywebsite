@@ -82,15 +82,30 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Determine selected menu key based on current path
   const getSelectedKey = () => {
     const path = location.pathname;
-    if (path.startsWith("/admin/products")) return "products";
-    if (path.startsWith("/admin/orders")) return "orders";
-    if (path.startsWith("/admin/users")) return "users";
-    if (path.startsWith("/admin/categories")) return "categories";
-    if (path.startsWith("/admin/services")) return "services";
-    if (path.startsWith("/admin/news")) return "news";
-    if (path.startsWith("/admin/settings")) return "settings";
 
-    return "dashboard"; // Default to dashboard
+    // List of admin routes that correspond to menu keys
+    const adminRoutes = [
+      ROUTERS.ADMIN.PRODUCTS,
+      ROUTERS.ADMIN.BOOKINGS,
+      ROUTERS.ADMIN.USERS,
+      ROUTERS.ADMIN.CATEGORIES,
+      ROUTERS.ADMIN.SERVICES,
+      ROUTERS.ADMIN.NEWS,
+      ROUTERS.ADMIN.SETTINGS,
+      ROUTERS.ADMIN.DASHBOARD,
+    ];
+
+    // Find all routes that are a prefix of the current path
+    const matchingKeys = adminRoutes.filter(
+      (route) => route && path.startsWith(route)
+    );
+
+    // If there are matches, return the longest one (most specific)
+    if (matchingKeys.length > 0) {
+      return matchingKeys.reduce((a, b) => (a.length > b.length ? a : b));
+    }
+
+    return ROUTERS.ADMIN.DASHBOARD; // Default to dashboard
   };
 
   // Menu items configuration using new items API

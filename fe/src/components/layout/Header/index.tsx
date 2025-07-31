@@ -48,8 +48,27 @@ const Header: React.FC = () => {
   const isTablet = windowWidth > 768 && windowWidth <= 1024;
 
   // Function to check if a route is active
-  const isActiveRoute = (path: string) => {
-    return location.pathname === path;
+  const isActiveRoute = (path: string): boolean => {
+    const { pathname } = location;
+    // The `HOME` route is just '/', and we need an exact match to avoid
+    // it matching every other route.
+    if (path === ROUTERS.USER.HOME) {
+      return pathname === ROUTERS.USER.HOME;
+    }
+    // For other routes, we want to match if the current pathname starts with
+    // the link's path. This handles nested routes, e.g., a link to '/san-pham'
+    // should be active when the user is on '/san-pham/123'.
+    if (pathname.startsWith(path)) {
+      // It's an exact match
+      if (pathname.length === path.length) {
+        return true;
+      }
+      // It's a sub-route (the next character should be a '/')
+      if (pathname.charAt(path.length) === "/") {
+        return true;
+      }
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -394,6 +413,12 @@ const Header: React.FC = () => {
   };
 
   // Event handlers
+  const getCleanPathFromHref = (href: string | null): string => {
+    const rawPath = href || "";
+    // For HashRouter, href attributes are like '#/path', so we strip the '#'
+    return rawPath.startsWith("#") ? rawPath.substring(1) : rawPath;
+  };
+
   const handleAuthLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
   };
@@ -411,7 +436,8 @@ const Header: React.FC = () => {
   };
 
   const handleNavLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.color = theme.colors.palette.primary;
       e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
@@ -421,7 +447,8 @@ const Header: React.FC = () => {
   };
 
   const handleNavLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.color = theme.colors.text.primary;
       e.currentTarget.style.backgroundColor = "transparent";
@@ -431,7 +458,8 @@ const Header: React.FC = () => {
   };
 
   const handleMobileLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
       e.currentTarget.style.color = theme.colors.palette.primary;
@@ -439,7 +467,8 @@ const Header: React.FC = () => {
   };
 
   const handleMobileLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const isActive = isActiveRoute(e.currentTarget.getAttribute("href") || "");
+    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.backgroundColor = "transparent";
       e.currentTarget.style.color = theme.colors.text.primary;
