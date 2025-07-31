@@ -30,5 +30,8 @@ export const ROUTERS = {
   NEWS_ADD: "/admin/news/add",
   NEWS_EDIT: "/admin/news/edit/:id",
   SETTINGS: "/admin/settings",
+  PRICE_LIST: "/admin/price-list",
+  PRICE_LIST_ADD: "/admin/price-list/add",
+  PRICE_LIST_EDIT: "/admin/price-list/edit/:id",
  },
 };

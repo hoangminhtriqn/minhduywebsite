@@ -1,4 +1,5 @@
 import {
+  CalendarOutlined,
   CarryOutOutlined,
   DashboardOutlined,
   FileTextOutlined,
@@ -8,7 +9,7 @@ import {
   SettingOutlined,
   TagsOutlined,
   TeamOutlined,
-  UserOutlined,
+  UserOutlined
 } from "@ant-design/icons";
 import { Dropdown, Layout, Menu, Space } from "antd";
 import React, { useEffect, useState } from "react";
@@ -140,6 +141,11 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: ROUTERS.ADMIN.SERVICES,
       icon: <DashboardOutlined />,
       label: <Link to={ROUTERS.ADMIN.SERVICES}>Dịch vụ</Link>,
+    },
+    {
+      key: ROUTERS.ADMIN.PRICE_LIST,
+      icon: <CalendarOutlined />,
+      label: <Link to={ROUTERS.ADMIN.PRICE_LIST}>Bảng giá</Link>,
     },
     {
       key: ROUTERS.ADMIN.NEWS,
