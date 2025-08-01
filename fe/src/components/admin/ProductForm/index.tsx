@@ -81,6 +81,7 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
   const isEditing = mode === "edit";
 
   const [saving, setSaving] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const [parentCategories, setParentCategories] = useState<
     { _id: string; Name: string }[]
@@ -336,6 +337,21 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
   const handlePreview = (file: UploadedFile) => {
     setPreviewImage(file.url || "");
     setPreviewVisible(true);
+  };
+
+  const handleButtonClick = async () => {
+    try {
+      await form.validateFields();
+      setShowConfirm(true);
+    } catch {
+      // Form validation failed, submit to show errors
+      form.submit();
+    }
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowConfirm(false);
+    form.submit();
   };
 
   const onFinish = async (values: ProductFormData) => {
@@ -843,16 +859,18 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
             <Popconfirm
               title="Xác nhận lưu sản phẩm?"
               description="Bạn có chắc chắn muốn lưu sản phẩm này?"
-              onConfirm={() => form.submit()}
+              open={showConfirm}
+              onConfirm={handleConfirmSubmit}
+              onCancel={() => setShowConfirm(false)}
               okText="Có"
               cancelText="Không"
             >
               <Button
                 type="primary"
-                htmlType="submit"
                 loading={saving}
                 icon={<SaveOutlined />}
                 size="large"
+                onClick={handleButtonClick}
               >
                 {isEditing ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
               </Button>

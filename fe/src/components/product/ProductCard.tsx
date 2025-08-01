@@ -1,7 +1,7 @@
 import { Product } from "@/api/types";
 import { formatCurrency } from "@/utils/format";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -15,7 +15,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { theme } = useTheme();
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
@@ -32,14 +31,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const handleViewDetail = () => {
-    navigate(`${ROUTERS.USER.PRODUCTS}/${product._id}`);
-  };
-
-  const handleContactConsultation = () => {
-    navigate(ROUTERS.USER.BOOKING);
-  };
 
   const isFavorite = favorites.some((fav) => fav.ProductID._id === product._id);
 
@@ -193,6 +184,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.3s ease",
+    textDecoration: "none",
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   const productActionsStyle: React.CSSProperties = {
@@ -222,12 +218,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.currentTarget.style.color = theme.colors.palette.primary;
   };
 
-  const handleConsultationHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleConsultationHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.currentTarget.style.background = theme.colors.palette.primaryDark;
     e.currentTarget.style.transform = "translateY(-1px)";
   };
 
-  const handleConsultationLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleConsultationLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.currentTarget.style.background = theme.colors.palette.primary;
     e.currentTarget.style.transform = "translateY(0)";
   };
@@ -249,18 +245,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div style={productActionsStyle}>
           <Space>
             <Tooltip title="Xem chi tiết">
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<EyeOutlined />}
-                size="small"
-                onClick={() => navigate(`/san-pham/${product._id}`)}
-                style={{
-                  backgroundColor: theme.colors.palette.info,
-                  borderColor: theme.colors.palette.info,
-                  boxShadow: `0 2px 4px ${theme.colors.palette.info}40`,
-                }}
-              />
+              <Link to={`/san-pham/${product._id}`}>
+                <Button
+                  type="primary"
+                  shape="circle"
+                  icon={<EyeOutlined />}
+                  size="small"
+                  style={{
+                    backgroundColor: theme.colors.palette.info,
+                    borderColor: theme.colors.palette.info,
+                    boxShadow: `0 2px 4px ${theme.colors.palette.info}40`,
+                  }}
+                />
+              </Link>
             </Tooltip>
             <Tooltip
               title={isFavorite ? "Xóa khỏi yêu thích" : "Thêm vào yêu thích"}
@@ -393,22 +390,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         <div style={actionsStyle}>
           <Link
-            to={`/san-pham/${product._id}`}
+            to={`${ROUTERS.USER.PRODUCTS}/${product._id}`}
             style={detailButtonStyle}
-            onClick={handleViewDetail}
             onMouseEnter={handleDetailHover}
             onMouseLeave={handleDetailLeave}
           >
             Xem chi tiết
           </Link>
-          <button
+          <Link
+            to={ROUTERS.USER.BOOKING}
             style={consultationButtonStyle}
-            onClick={handleContactConsultation}
             onMouseEnter={handleConsultationHover}
             onMouseLeave={handleConsultationLeave}
           >
             Tư vấn
-          </button>
+          </Link>
         </div>
       </div>
     </div>
