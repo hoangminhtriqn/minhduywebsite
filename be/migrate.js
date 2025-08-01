@@ -940,7 +940,6 @@ const sampleServices = [
 const samplePricing = [
   {
     title: "Lắp đặt Camera Giám Sát",
-    category: "An Ninh",
     description:
       "Hệ thống camera giám sát chuyên nghiệp với công nghệ HD/4K, hỗ trợ xem từ xa qua điện thoại.",
     features: [
@@ -957,11 +956,9 @@ const samplePricing = [
       { name: "Bảng giá chi tiết", type: "excel", size: "2.1MB", url: "#" },
     ],
     color: "indigo",
-    order: 1,
   },
   {
     title: "Lắp đặt Server & Network",
-    category: "Hạ Tầng",
     description:
       "Thiết kế và lắp đặt hệ thống server, mạng LAN/WAN cho doanh nghiệp vừa và nhỏ.",
     features: [
@@ -982,11 +979,9 @@ const samplePricing = [
       { name: "Thông số kỹ thuật", type: "word", size: "1.8MB", url: "#" },
     ],
     color: "emerald",
-    order: 2,
   },
   {
     title: "Phần Mềm Quản Lý",
-    category: "Software",
     description:
       "Phát triển phần mềm quản lý theo yêu cầu, tích hợp với hệ thống hiện có.",
     features: [
@@ -1003,11 +998,9 @@ const samplePricing = [
       { name: "Timeline dự án", type: "excel", size: "1.8MB", url: "#" },
     ],
     color: "violet",
-    order: 3,
   },
   {
     title: "Bảo Trì Hệ Thống",
-    category: "Dịch Vụ",
     description:
       "Dịch vụ bảo trì, bảo dưỡng hệ thống IT định kỳ, đảm bảo hoạt động ổn định.",
     features: [
@@ -1024,11 +1017,9 @@ const samplePricing = [
       { name: "Lịch bảo trì", type: "excel", size: "1.3MB", url: "#" },
     ],
     color: "amber",
-    order: 4,
   },
   {
     title: "Thiết Kế Website",
-    category: "Web",
     description:
       "Thiết kế website chuyên nghiệp, responsive, tối ưu SEO và tốc độ tải trang.",
     features: [
@@ -1044,11 +1035,9 @@ const samplePricing = [
       { name: "Portfolio mẫu", type: "word", size: "2.3MB", url: "#" },
     ],
     color: "sky",
-    order: 5,
   },
   {
     title: "Cloud & Backup",
-    category: "Cloud",
     description:
       "Giải pháp lưu trữ đám mây và sao lưu dữ liệu an toàn, tiết kiệm chi phí.",
     features: [
@@ -1065,11 +1054,9 @@ const samplePricing = [
       { name: "Chi phí vận hành", type: "excel", size: "2.4MB", url: "#" },
     ],
     color: "rose",
-    order: 6,
   },
   {
     title: "Tư Vấn IT",
-    category: "Tư Vấn",
     description:
       "Dịch vụ tư vấn công nghệ thông tin, đánh giá và đề xuất giải pháp tối ưu.",
     features: [
@@ -1086,11 +1073,9 @@ const samplePricing = [
       { name: "Case study", type: "excel", size: "1.9MB", url: "#" },
     ],
     color: "lime",
-    order: 7,
   },
   {
     title: "Bảo Mật Hệ Thống",
-    category: "Bảo Mật",
     description:
       "Giải pháp bảo mật toàn diện cho hệ thống IT, bảo vệ dữ liệu khỏi các mối đe dọa.",
     features: [
@@ -1106,7 +1091,6 @@ const samplePricing = [
       { name: "Quy trình bảo mật", type: "word", size: "1.4MB", url: "#" },
     ],
     color: "cyan",
-    order: 8,
   },
 ];
 

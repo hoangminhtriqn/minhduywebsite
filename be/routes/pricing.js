@@ -7,13 +7,11 @@ const {
   createPricing,
   updatePricing,
   deletePricing,
-  getPricingCategories,
 } = require("../controllers/pricingController");
 const { auth, adminAuth } = require("../middleware/auth");
 
 // Public routes
 router.get("/", getAllPricing);
-router.get("/categories", getPricingCategories);
 
 // Admin routes (protected)
 router.get("/admin", auth, adminAuth, getAllPricingAdmin);

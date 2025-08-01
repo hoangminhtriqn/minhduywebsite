@@ -1,12 +1,12 @@
 
 import { pricingService } from "@/api/services/admin/pricing";
+import { colorOptions } from "@/utils/constant";
 import {
   Button,
   Card,
   Col,
   Form,
   Input,
-  InputNumber,
   notification,
   Popconfirm,
   Row,
@@ -33,7 +33,6 @@ const { TextArea } = Input;
 
 interface PricingFormData {
   title: string;
-  category: string;
   description: string;
   features: string[];
   documents: Array<{
@@ -44,7 +43,6 @@ interface PricingFormData {
   }>;
   color: string;
   status: "active" | "inactive";
-  order: number;
 }
 
 interface PricingFormProps {
@@ -52,6 +50,7 @@ interface PricingFormProps {
   pricingId?: string;
   onSubmit?: (data: PricingFormData) => Promise<void>;
 }
+
 
 const PricingForm: React.FC<PricingFormProps> = ({
   mode,
@@ -69,13 +68,11 @@ const PricingForm: React.FC<PricingFormProps> = ({
       
       const formData = {
         title: pricingData.title,
-        category: pricingData.category,
         description: pricingData.description,
         features: pricingData.features || [],
         documents: pricingData.documents || [],
         color: pricingData.color,
         status: pricingData.status,
-        order: pricingData.order,
       };
 
       form.setFieldsValue(formData);
@@ -137,21 +134,6 @@ const PricingForm: React.FC<PricingFormProps> = ({
     }
   };
 
-
-
-  const colorOptions = [
-    { value: 'blue', label: 'Blue' },
-    { value: 'green', label: 'Green' },
-    { value: 'purple', label: 'Purple' },
-    { value: 'orange', label: 'Orange' },
-    { value: 'red', label: 'Red' },
-    { value: 'teal', label: 'Teal' },
-    { value: 'indigo', label: 'Indigo' },
-    { value: 'pink', label: 'Pink' },
-    { value: 'yellow', label: 'Yellow' },
-    { value: 'cyan', label: 'Cyan' },
-  ];
-
   return (
     <>
       <Form
@@ -161,7 +143,6 @@ const PricingForm: React.FC<PricingFormProps> = ({
         initialValues={{
           color: "blue",
           status: "active",
-          order: 0,
           features: [],
           documents: [],
         }}
@@ -172,30 +153,15 @@ const PricingForm: React.FC<PricingFormProps> = ({
             Thông tin cơ bản
           </Title>
 
-          <Row gutter={[24, 16]}>
-            <Col span={12}>
-              <Form.Item
-                name="title"
-                label="Tiêu đề"
-                rules={[
-                  { required: true, message: "Vui lòng nhập tiêu đề!" },
-                ]}
-              >
-                <Input placeholder="Nhập tiêu đề bảng giá" size="large" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="category"
-                label="Danh mục"
-                rules={[
-                  { required: true, message: "Vui lòng nhập danh mục!" },
-                ]}
-              >
-                <Input placeholder="Nhập danh mục" size="large" />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            name="title"
+            label="Tiêu đề"
+            rules={[
+              { required: true, message: "Vui lòng nhập tiêu đề!" },
+            ]}
+          >
+            <Input placeholder="Nhập tiêu đề bảng giá" size="large" />
+          </Form.Item>
 
           <Row gutter={[24, 16]}>
             <Col span={12}>
@@ -215,7 +181,7 @@ const PricingForm: React.FC<PricingFormProps> = ({
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={12}>
               <Form.Item
                 name="status"
                 label="Trạng thái"
@@ -227,22 +193,6 @@ const PricingForm: React.FC<PricingFormProps> = ({
                   <Option value="active">Hoạt động</Option>
                   <Option value="inactive">Không hoạt động</Option>
                 </Select>
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item
-                name="order"
-                label="Thứ tự"
-                rules={[
-                  { required: true, message: "Vui lòng nhập thứ tự!" },
-                ]}
-              >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  placeholder="0"
-                  size="large"
-                  min={0}
-                />
               </Form.Item>
             </Col>
           </Row>

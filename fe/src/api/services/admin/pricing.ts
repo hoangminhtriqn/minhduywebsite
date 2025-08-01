@@ -3,7 +3,6 @@ import { Pricing } from '@/api/services/user/pricing';
 
 export interface CreatePricingData {
   title: string;
-  category: string;
   description: string;
   features: string[];
   documents: {
@@ -14,7 +13,6 @@ export interface CreatePricingData {
   }[];
   color: string;
   status: 'active' | 'inactive';
-  order: number;
 }
 
 export type UpdatePricingData = Partial<CreatePricingData>;
@@ -25,7 +23,6 @@ export const pricingService = {
     page?: number;
     limit?: number;
     search?: string;
-    category?: string;
     status?: string;
     sortBy?: string;
     sortOrder?: string;

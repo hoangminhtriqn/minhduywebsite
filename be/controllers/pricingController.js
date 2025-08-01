@@ -4,11 +4,11 @@ const { successResponse, errorResponse } = require("../utils/responseHandler");
 // Get all pricing items with pagination (public)
 const getAllPricing = async (req, res) => {
   try {
-    const { 
-      page = 1, 
-      limit = 6, 
-      sortBy = "createdAt", 
-      sortOrder = "desc" 
+    const {
+      page = 1,
+      limit = 6,
+      sortBy = "createdAt",
+      sortOrder = "desc",
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -19,10 +19,7 @@ const getAllPricing = async (req, res) => {
     sort[sortBy] = sortOrder === "desc" ? -1 : 1;
 
     const [pricing, total] = await Promise.all([
-      Pricing.find({ status: "active" })
-        .sort(sort)
-        .skip(skip)
-        .limit(limitNum),
+      Pricing.find({ status: "active" }).sort(sort).skip(skip).limit(limitNum),
       Pricing.countDocuments({ status: "active" }),
     ]);
 
@@ -55,7 +52,6 @@ const getAllPricingAdmin = async (req, res) => {
       page = 1,
       limit = 10,
       search = "",
-      category = "",
       status = "",
       sortBy = "createdAt",
       sortOrder = "desc",
@@ -71,12 +67,7 @@ const getAllPricingAdmin = async (req, res) => {
       filter.$or = [
         { title: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
-        { category: { $regex: search, $options: "i" } },
       ];
-    }
-
-    if (category) {
-      filter.category = category;
     }
 
     if (status) {
@@ -180,22 +171,6 @@ const deletePricing = async (req, res) => {
   }
 };
 
-// Get pricing categories
-const getPricingCategories = async (req, res) => {
-  try {
-    const categories = await Pricing.distinct("category", { status: "active" });
-
-    return successResponse(
-      res,
-      categories,
-      "Lấy danh sách danh mục báo giá thành công"
-    );
-  } catch (error) {
-    console.error("Error getting pricing categories:", error);
-    return errorResponse(res, "Lỗi khi lấy danh sách danh mục báo giá", 500);
-  }
-};
-
 module.exports = {
   getAllPricing,
   getAllPricingAdmin,
@@ -203,5 +178,4 @@ module.exports = {
   createPricing,
   updatePricing,
   deletePricing,
-  getPricingCategories,
 };

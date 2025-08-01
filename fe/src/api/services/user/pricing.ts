@@ -11,16 +11,12 @@ export interface PricingDocument {
 export interface Pricing {
   _id: string;
   title: string;
-  category: string;
   description: string;
   features: string[];
   documents: PricingDocument[];
   color: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 
-          'indigo' | 'pink' | 'yellow' | 'cyan' | 'lime' | 'amber' |
-          'emerald' | 'violet' | 'rose' | 'sky' | 'slate' | 'zinc' |
-          'neutral' | 'stone' | 'gray' | 'cool-gray' | 'warm-gray';
+          'indigo' | 'pink' | 'yellow' | 'cyan' | 'violet' | 'gray';
   status: 'active' | 'inactive';
-  order: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -35,3 +35,18 @@ export const ROUTERS = {
   PRICE_LIST_EDIT: "/admin/price-list/edit/:id",
  },
 };
+
+export const colorOptions = [
+  { value: 'blue', label: 'Blue' },
+  { value: 'green', label: 'Green' },
+  { value: 'purple', label: 'Purple' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'red', label: 'Red' },
+  { value: 'teal', label: 'Teal' },
+  { value: 'indigo', label: 'Indigo' },
+  { value: 'pink', label: 'Pink' },
+  { value: 'yellow', label: 'Yellow' },
+  { value: 'cyan', label: 'Cyan' },
+  { value: 'violet', label: 'Violet' },
+  { value: 'gray', label: 'Gray' },
+];

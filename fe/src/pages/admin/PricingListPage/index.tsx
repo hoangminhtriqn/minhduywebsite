@@ -3,7 +3,7 @@ import { Pricing } from "@/api/services/user/pricing";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import CustomPagination from "@/components/CustomPagination";
 import PricingCard from "@/components/PricingCard";
-import { ROUTERS } from "@/utils/constant";
+import { ROUTERS, colorOptions } from "@/utils/constant";
 import {
     DeleteOutlined,
     DownloadOutlined,
@@ -25,6 +25,7 @@ import {
     Spin,
     Table,
     Tag,
+    Tooltip,
     notification,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
@@ -34,6 +35,8 @@ import styles from "./styles.module.scss";
 const { confirm } = Modal;
 const { Option } = Select;
 
+
+
 interface PricingWithActions extends Pricing {
   key: string;
 }
@@ -42,7 +45,6 @@ const PricingListPage: React.FC = () => {
   const [pricing, setPricing] = useState<PricingWithActions[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<string>("desc");
@@ -63,7 +65,6 @@ const PricingListPage: React.FC = () => {
         page: pagination.current,
         limit: pagination.pageSize,
         search: searchText,
-        category: selectedCategory,
         status: selectedStatus,
         sortBy,
         sortOrder,
@@ -88,7 +89,7 @@ const PricingListPage: React.FC = () => {
       setLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination.current, pagination.pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]);
+  }, [pagination.current, pagination.pageSize, searchText, selectedStatus, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchPricing();
@@ -125,10 +126,7 @@ const PricingListPage: React.FC = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
-    setPagination((prev) => ({ ...prev, current: 1 }));
-  };
+
 
   const handleStatusChange = (value: string) => {
     setSelectedStatus(value);
@@ -162,41 +160,51 @@ const PricingListPage: React.FC = () => {
       key: "title",
       width: 200,
       render: (text: string) => (
-        <span 
-          className="font-medium block"
-          style={{ 
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}
-          title={text}
-        >
-          {text}
-        </span>
+        <Tooltip title={text} placement="topLeft">
+          <span 
+            className="font-medium block overflow-hidden"
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              lineHeight: '1.5em',
+              maxHeight: '1.5em'
+            }}
+          >
+            {text}
+          </span>
+        </Tooltip>
       ),
     },
-    {
-      title: "Danh mục",
-      dataIndex: "category",
-      key: "category",
-      width: 120,
-    },
+
     {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",
       width: 300,
       render: (text: string) => (
-        <span className="text-gray-600">
-          {text.length > 50 ? `${text.substring(0, 50)}...` : text}
-        </span>
+        <Tooltip title={text.length > 50 ? text : undefined} placement="topLeft">
+          <span 
+            className="text-gray-600 block overflow-hidden"
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              lineHeight: '1.5em',
+              maxHeight: '1.5em'
+            }}
+          >
+            {text}
+          </span>
+        </Tooltip>
       ),
     },
     {
       title: "Tính năng",
       dataIndex: "features",
       key: "features",
-      width: 180,
+      width: 120,
+      align: "center" as const,
       render: (features: string[]) => {
         if (!features || features.length === 0) {
           return <span className="text-gray-400">Không có tính năng</span>;
@@ -205,7 +213,7 @@ const PricingListPage: React.FC = () => {
         const featuresContent = (
           <div style={{ maxWidth: '300px' }}>
             <div style={{ fontWeight: 'bold', marginBottom: 12, fontSize: '14px' }}>
-              Tất cả tính năng ({features.length})
+              Danh sách tính năng ({features.length})
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               {features.map((feature, index) => (
@@ -218,29 +226,24 @@ const PricingListPage: React.FC = () => {
         );
 
         return (
-          <div className="flex flex-wrap items-center gap-1">
-            {features.slice(0, 2).map((feature, index) => (
-              <Tag key={index} color="blue">
-                {feature}
-              </Tag>
-            ))}
-            {features.length > 2 && (
-              <Popover
-                content={featuresContent}
-                title={null}
-                trigger="click"
-                placement="topLeft"
-              >
-                <Button 
-                  type="link" 
-                  size="small" 
-                  style={{ padding: '2px 6px', height: 'auto', fontSize: '12px' }}
-                >
-                  +{features.length - 2}
-                </Button>
-              </Popover>
-            )}
-          </div>
+          <Popover
+            content={featuresContent}
+            title={null}
+            trigger="click"
+            placement="topLeft"
+          >
+            <Button 
+              type="link" 
+              size="small"
+              style={{ 
+                padding: '2px 6px', 
+                height: 'auto',
+                fontSize: '12px'
+              }}
+            >
+              Xem chi tiết
+            </Button>
+          </Popover>
         );
       },
     },
@@ -333,83 +336,14 @@ const PricingListPage: React.FC = () => {
           return <span className="text-gray-400">Chưa chọn màu</span>;
         }
 
-        // Mapping color names to hex codes
-        const colorMap: { [key: string]: string } = {
-          blue: '#3b82f6',
-          green: '#10b981',
-          purple: '#8b5cf6',
-          orange: '#f97316',
-          red: '#ef4444',
-          teal: '#14b8a6',
-          indigo: '#6366f1',
-          pink: '#ec4899',
-          yellow: '#eab308',
-          cyan: '#06b6d4',
-          lime: '#84cc16',
-          amber: '#f59e0b',
-          emerald: '#059669',
-          violet: '#7c3aed',
-          rose: '#f43f5e',
-          sky: '#0ea5e9',
-          slate: '#64748b',
-          zinc: '#71717a',
-          neutral: '#737373',
-          stone: '#78716c',
-          gray: '#6b7280',
-          'cool-gray': '#6b7280',
-          'warm-gray': '#78716c'
-        };
-
-        // Color name translations
-        const colorNames: { [key: string]: string } = {
-          blue: 'Xanh dương',
-          green: 'Xanh lá',
-          purple: 'Tím',
-          orange: 'Cam',
-          red: 'Đỏ',
-          teal: 'Xanh ngọc',
-          indigo: 'Chàm',
-          pink: 'Hồng',
-          yellow: 'Vàng',
-          cyan: 'Lục lam',
-          lime: 'Vàng chanh',
-          amber: 'Hổ phách',
-          emerald: 'Ngọc lục bảo',
-          violet: 'Tím violet',
-          rose: 'Hồng rose',
-          sky: 'Xanh sky',
-          slate: 'Xám slate',
-          zinc: 'Xám zinc',
-          neutral: 'Trung tính',
-          stone: 'Xám đá',
-          gray: 'Xám',
-          'cool-gray': 'Xám lạnh',
-          'warm-gray': 'Xám ấm'
-        };
-
-        const hexColor = colorMap[color] || color;
-        const colorName = colorNames[color] || color;
-
-        console.log('Mapped color:', { original: color, hex: hexColor, name: colorName });
+        const colorOption = colorOptions.find(option => option.value === color);
+        const colorName = colorOption ? colorOption.label : color;
 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div
-              style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '50%',
-                backgroundColor: hexColor,
-                border: '2px solid #d1d5db',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                minWidth: '24px',
-                minHeight: '24px'
-              }}
-              title={`${colorName} (${hexColor})`}
-            ></div>
-            <span style={{ fontSize: '11px', color: '#6b7280', textAlign: 'center' }}>
+            <Tag color={color} style={{ margin: 0, fontSize: '12px', fontWeight: 'bold' }}>
               {colorName}
-            </span>
+            </Tag>
           </div>
         );
       },
@@ -426,13 +360,7 @@ const PricingListPage: React.FC = () => {
         </Tag>
       ),
     },
-    {
-      title: "Thứ tự",
-      dataIndex: "order",
-      key: "order",
-      width: 80,
-      align: "center" as const,
-    },
+
     {
       title: "Thao tác",
       key: "actions",
@@ -463,7 +391,6 @@ const PricingListPage: React.FC = () => {
             cancelText="Không"
           >
             <Button
-              type="primary"
               danger
               icon={<DeleteOutlined />}
               size="small"
@@ -501,17 +428,7 @@ const PricingListPage: React.FC = () => {
               style={{ width: 300 }}
               prefix={<SearchOutlined />}
             />
-            <Select
-              placeholder="Lọc theo danh mục"
-              allowClear
-              style={{ width: 200 }}
-              onChange={handleCategoryChange}
-            >
-              <Option value="">Tất cả danh mục</Option>
-              <Option value="basic">Cơ bản</Option>
-              <Option value="premium">Cao cấp</Option>
-              <Option value="enterprise">Doanh nghiệp</Option>
-            </Select>
+
             <Select
               placeholder="Lọc theo trạng thái"
               allowClear
@@ -532,8 +449,6 @@ const PricingListPage: React.FC = () => {
               <Option value="createdAt-asc">Cũ nhất</Option>
               <Option value="title-asc">Tên A-Z</Option>
               <Option value="title-desc">Tên Z-A</Option>
-              <Option value="order-asc">Thứ tự tăng</Option>
-              <Option value="order-desc">Thứ tự giảm</Option>
             </Select>
           </div>
         </div>
@@ -560,12 +475,12 @@ const PricingListPage: React.FC = () => {
       {/* Preview Modal */}
       {selectedPricing && (
         <Modal
-          title="Xem chi tiết bảng giá"
           open={isPreviewModalVisible}
           onCancel={() => {
             setIsPreviewModalVisible(false);
             setSelectedPricing(null);
           }}
+          closeIcon={false}
           footer={[
             <Button key="close" onClick={() => {
               setIsPreviewModalVisible(false);
@@ -574,7 +489,7 @@ const PricingListPage: React.FC = () => {
               Đóng
             </Button>
           ]}
-          width={800}
+          width={450}
         >
           <PricingCard
             pricing={selectedPricing}
