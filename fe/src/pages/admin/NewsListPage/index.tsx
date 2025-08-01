@@ -1,36 +1,34 @@
-import React, { useState, useEffect } from "react";
 import {
-  Table,
-  Button,
-  Space,
-  Modal,
-  message,
-  Typography,
-  Card,
-  Row,
-  Col,
-  Input,
-  Image,
-  Tag,
-  Tooltip,
-} from "antd";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  EyeOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import {
-  getAllNewsEvents,
   deleteNewsEvent,
+  getAllNewsEvents,
   NewsEvent,
 } from "@/api/services/user/newsEvents";
 import Breadcrumb from "@/components/admin/Breadcrumb";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Col,
+  Image,
+  Input,
+  message,
+  Modal,
+  Row,
+  Space,
+  Table,
+  Tag,
+  Tooltip
+} from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 
-const { Title } = Typography;
 const { confirm } = Modal;
 
 const NewsListPage: React.FC = () => {
@@ -148,7 +146,7 @@ const NewsListPage: React.FC = () => {
       title: "Thao tác",
       key: "actions",
       width: 150,
-      render: (_: any, record: NewsEvent) => (
+      render: (_: unknown, record: NewsEvent) => (
         <Space size="small">
           <Tooltip title="Xem chi tiết">
             <Button

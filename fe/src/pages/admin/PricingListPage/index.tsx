@@ -6,8 +6,10 @@ import PricingCard from "@/components/PricingCard";
 import { ROUTERS } from "@/utils/constant";
 import {
     DeleteOutlined,
+    DownloadOutlined,
     EditOutlined,
     EyeOutlined,
+    FileTextOutlined,
     PlusOutlined,
     SearchOutlined,
 } from "@ant-design/icons";
@@ -17,6 +19,7 @@ import {
     Input,
     Modal,
     Popconfirm,
+    Popover,
     Select,
     Space,
     Spin,
@@ -24,7 +27,7 @@ import {
     Tag,
     notification,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 
@@ -53,7 +56,7 @@ const PricingListPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const fetchPricing = async () => {
+  const fetchPricing = useCallback(async () => {
     setLoading(true);
     try {
       const result = await pricingService.getAllPricing({
@@ -84,11 +87,12 @@ const PricingListPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination.current, pagination.pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchPricing();
-  }, [pagination.current, pagination.pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]);
+  }, [fetchPricing]);
 
   const handleDeletePricing = async (pricingId: string) => {
     confirm({
@@ -156,17 +160,32 @@ const PricingListPage: React.FC = () => {
       title: "Tiêu đề",
       dataIndex: "title",
       key: "title",
-      render: (text: string) => <span className="font-medium">{text}</span>,
+      width: 200,
+      render: (text: string) => (
+        <span 
+          className="font-medium block"
+          style={{ 
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+          title={text}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Danh mục",
       dataIndex: "category",
       key: "category",
+      width: 120,
     },
     {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",
+      width: 300,
       render: (text: string) => (
         <span className="text-gray-600">
           {text.length > 50 ? `${text.substring(0, 50)}...` : text}
@@ -177,45 +196,220 @@ const PricingListPage: React.FC = () => {
       title: "Tính năng",
       dataIndex: "features",
       key: "features",
-      render: (features: string[]) => (
-        <div className="flex flex-wrap gap-1">
-          {features?.slice(0, 2).map((feature, index) => (
-            <Tag key={index} color="blue">
-              {feature}
-            </Tag>
-          ))}
-          {features && features.length > 2 && (
-            <Tag color="gray">+{features.length - 2}</Tag>
-          )}
-        </div>
-      ),
+      width: 180,
+      render: (features: string[]) => {
+        if (!features || features.length === 0) {
+          return <span className="text-gray-400">Không có tính năng</span>;
+        }
+
+        const featuresContent = (
+          <div style={{ maxWidth: '300px' }}>
+            <div style={{ fontWeight: 'bold', marginBottom: 12, fontSize: '14px' }}>
+              Tất cả tính năng ({features.length})
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {features.map((feature, index) => (
+                <Tag key={index} color="blue" style={{ marginBottom: '4px' }}>
+                  {feature}
+                </Tag>
+              ))}
+            </div>
+          </div>
+        );
+
+        return (
+          <div className="flex flex-wrap items-center gap-1">
+            {features.slice(0, 2).map((feature, index) => (
+              <Tag key={index} color="blue">
+                {feature}
+              </Tag>
+            ))}
+            {features.length > 2 && (
+              <Popover
+                content={featuresContent}
+                title={null}
+                trigger="click"
+                placement="topLeft"
+              >
+                <Button 
+                  type="link" 
+                  size="small" 
+                  style={{ padding: '2px 6px', height: 'auto', fontSize: '12px' }}
+                >
+                  +{features.length - 2}
+                </Button>
+              </Popover>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: "Tài liệu",
       dataIndex: "documents",
       key: "documents",
-      render: (documents: { name: string; type: string; size: string; url: string }[]) => (
-        <span className="text-gray-600">{documents?.length || 0} tài liệu</span>
-      ),
+      width: 120,
+      render: (documents: { name: string; type: string; size: string; url: string }[]) => {
+        if (!documents || documents.length === 0) {
+          return <span className="text-gray-400">Không có tài liệu</span>;
+        }
+
+        const documentsContent = (
+          <div style={{ maxWidth: '350px' }}>
+            <div style={{ fontWeight: 'bold', marginBottom: 12, fontSize: '14px' }}>
+              Danh sách tài liệu ({documents.length})
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {documents.map((doc, index) => (
+                <div 
+                  key={index} 
+                  style={{ 
+                    padding: '8px 12px', 
+                    backgroundColor: '#f8f9fa', 
+                    borderRadius: '6px',
+                    border: '1px solid #e9ecef'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <Tag color="green" style={{ margin: 0 }}>
+                      {doc.type.toUpperCase()}
+                    </Tag>
+                    <span style={{ fontWeight: '500', fontSize: '13px' }}>
+                      {doc.name}
+                    </span>
+                  </div>
+                  {doc.size && (
+                    <div style={{ fontSize: '12px', color: '#6c757d', marginBottom: '4px' }}>
+                      Kích thước: {doc.size}
+                    </div>
+                  )}
+                  {doc.url && (
+                    <Button 
+                      type="link" 
+                      size="small" 
+                      icon={<DownloadOutlined />}
+                      href={doc.url}
+                      target="_blank"
+                      style={{ padding: 0, height: 'auto', fontSize: '12px' }}
+                    >
+                      Tải xuống
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+        return (
+          <div className="flex items-center gap-2">
+            <Popover
+              content={documentsContent}
+              title={null}
+              trigger="click"
+              placement="topLeft"
+            >
+              <Button 
+                type="link" 
+                size="small" 
+                icon={<FileTextOutlined />}
+                style={{ padding: '2px 6px', height: 'auto', fontSize: '12px' }}
+              >
+                Chi tiết
+              </Button>
+            </Popover>
+          </div>
+        );
+      },
     },
     {
       title: "Màu sắc",
       dataIndex: "color",
       key: "color",
-      render: (color: string) => (
-        <div className="flex items-center gap-2">
-          <div
-            className="w-4 h-4 rounded-full"
-            style={{ backgroundColor: color }}
-          ></div>
-          <span className="capitalize">{color}</span>
-        </div>
-      ),
+      width: 120,
+      align: "center" as const,
+      render: (color: string) => {
+        if (!color) {
+          return <span className="text-gray-400">Chưa chọn màu</span>;
+        }
+
+        // Mapping color names to hex codes
+        const colorMap: { [key: string]: string } = {
+          blue: '#3b82f6',
+          green: '#10b981',
+          purple: '#8b5cf6',
+          orange: '#f97316',
+          red: '#ef4444',
+          teal: '#14b8a6',
+          indigo: '#6366f1',
+          pink: '#ec4899',
+          yellow: '#eab308',
+          cyan: '#06b6d4',
+          lime: '#84cc16',
+          amber: '#f59e0b',
+          emerald: '#059669',
+          violet: '#7c3aed',
+          rose: '#f43f5e',
+          sky: '#0ea5e9',
+          slate: '#64748b',
+          zinc: '#71717a',
+          neutral: '#737373',
+          stone: '#78716c',
+          gray: '#6b7280',
+          'cool-gray': '#6b7280',
+          'warm-gray': '#78716c'
+        };
+
+        // Color name translations
+        const colorNames: { [key: string]: string } = {
+          blue: 'Xanh dương',
+          green: 'Xanh lá',
+          purple: 'Tím',
+          orange: 'Cam',
+          red: 'Đỏ',
+          teal: 'Xanh ngọc',
+          indigo: 'Chàm',
+          pink: 'Hồng',
+          yellow: 'Vàng',
+          cyan: 'Lục lam',
+          lime: 'Vàng chanh',
+          amber: 'Hổ phách',
+          emerald: 'Ngọc lục bảo',
+          violet: 'Tím violet',
+          rose: 'Hồng rose',
+          sky: 'Xanh sky',
+          slate: 'Xám slate',
+          zinc: 'Xám zinc',
+          neutral: 'Trung tính',
+          stone: 'Xám đá',
+          gray: 'Xám',
+          'cool-gray': 'Xám lạnh',
+          'warm-gray': 'Xám ấm'
+        };
+
+        const hexColor = colorMap[color] || color;
+        const colorName = colorNames[color] || color;
+
+        return (
+          <div className="flex flex-col items-center gap-1">
+            <div
+              className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
+              style={{ backgroundColor: hexColor }}
+              title={`${colorName} (${hexColor})`}
+            ></div>
+            <span className="text-xs text-gray-600 capitalize">
+              {colorName}
+            </span>
+          </div>
+        );
+      },
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      width: 120,
+      align: "center" as const,
       render: (status: string) => (
         <Tag color={status === "active" ? "green" : "red"}>
           {status === "active" ? "Hoạt động" : "Không hoạt động"}
@@ -226,10 +420,14 @@ const PricingListPage: React.FC = () => {
       title: "Thứ tự",
       dataIndex: "order",
       key: "order",
+      width: 80,
+      align: "center" as const,
     },
     {
       title: "Thao tác",
       key: "actions",
+      width: 150,
+      align: "center" as const,
       render: (_: unknown, record: PricingWithActions) => (
         <Space size="middle">
           <Button
