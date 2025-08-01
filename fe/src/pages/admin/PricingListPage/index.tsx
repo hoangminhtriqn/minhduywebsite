@@ -419,20 +419,19 @@ const PricingListPage: React.FC = () => {
           </Button>
         }
       >
-        <div className="mb-4 space-y-4">
-          <div className="flex flex-wrap gap-4">
+        <div className="mb-4">
+          <div className="flex flex-wrap items-center">
             <Input.Search
               placeholder="Tìm kiếm theo tiêu đề..."
               allowClear
               onSearch={handleSearch}
-              style={{ width: 300 }}
+              style={{ width: 300, marginRight: 16, marginBottom: 8 }}
               prefix={<SearchOutlined />}
             />
-
             <Select
               placeholder="Lọc theo trạng thái"
               allowClear
-              style={{ width: 150 }}
+              style={{ width: 150, marginRight: 16, marginBottom: 8 }}
               onChange={handleStatusChange}
             >
               <Option value="">Tất cả trạng thái</Option>
@@ -442,7 +441,7 @@ const PricingListPage: React.FC = () => {
             <Select
               placeholder="Sắp xếp"
               defaultValue="createdAt-desc"
-              style={{ width: 150 }}
+              style={{ width: 150, marginBottom: 8 }}
               onChange={handleSortChange}
             >
               <Option value="createdAt-desc">Mới nhất</Option>
