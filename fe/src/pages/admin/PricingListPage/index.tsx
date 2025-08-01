@@ -390,14 +390,24 @@ const PricingListPage: React.FC = () => {
         const hexColor = colorMap[color] || color;
         const colorName = colorNames[color] || color;
 
+        console.log('Mapped color:', { original: color, hex: hexColor, name: colorName });
+
         return (
-          <div className="flex flex-col items-center gap-1">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
             <div
-              className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
-              style={{ backgroundColor: hexColor }}
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: hexColor,
+                border: '2px solid #d1d5db',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                minWidth: '24px',
+                minHeight: '24px'
+              }}
               title={`${colorName} (${hexColor})`}
             ></div>
-            <span className="text-xs text-gray-600 capitalize">
+            <span style={{ fontSize: '11px', color: '#6b7280', textAlign: 'center' }}>
               {colorName}
             </span>
           </div>
