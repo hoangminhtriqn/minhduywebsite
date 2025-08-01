@@ -20,7 +20,7 @@ const EditServicePage: React.FC = () => {
           const fetchedService = await servicesApi.getServiceById(id);
           setService(fetchedService);
           form.setFieldsValue(fetchedService);
-        } catch (error) {
+        } catch {
           message.error('Không thể tải thông tin dịch vụ.');
         } finally {
           setLoading(false);
@@ -37,7 +37,7 @@ const EditServicePage: React.FC = () => {
         await servicesApi.updateService(id, values);
         message.success('Cập nhật dịch vụ thành công!');
         navigate('/admin/services');
-      } catch (error) {
+      } catch {
         message.error('Cập nhật dịch vụ thất bại.');
       } finally {
         setLoading(false);

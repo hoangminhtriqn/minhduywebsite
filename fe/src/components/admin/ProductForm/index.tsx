@@ -1,391 +1,906 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { CreateProductData, UpdateProductData, Category } from "@/api/types";
+import { categoryService } from "@/api/services/admin/categories";
 import { productService } from "@/api/services/user/product";
-import { toast } from "react-toastify";
-import { ProductStatus } from "@/types";
+import { uploadFile } from "@/api/services/admin/upload";
+import EditorCustom from "@/components/admin/EditorCustom";
+import {
+  CameraOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  InfoCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+  SaveOutlined,
+  ToolOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 
-interface ProductFormProps {
-  mode: "add" | "edit";
-  productId?: string;
-  initialData?: UpdateProductData;
-  onSubmit: (data: FormData) => Promise<void>;
-  loading: boolean;
+import {
+  Button,
+  Col,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  Modal,
+  notification,
+  Popconfirm,
+  Progress,
+  Row,
+  Select,
+  Space,
+  Tooltip,
+  Typography,
+  Upload,
+} from "antd";
+
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { ProductStatus } from "@/types";
+import styles from "./styles.module.scss";
+
+// Custom VND icon component
+const VNDIcon = () => (
+  <span style={{ fontSize: "14px", color: "#666" }}>₫</span>
+);
+
+const { Title, Text } = Typography;
+const { Option } = Select;
+
+interface ProductFormData {
+  Product_Name: string;
+  Description?: string;
+  Price: number;
+  ParentCategoryID?: string;
+  CategoryID: string;
+  Main_Image?: string;
+  List_Image?: string;
+  Specifications?: Array<{ key: string; value: string }>;
+  Status?: ProductStatus;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({
+interface UploadedFile {
+  uid: string;
+  name: string;
+  status: "done" | "uploading" | "error";
+  url?: string;
+  public_id?: string;
+}
+
+interface ProductUpsetFormProps {
+  mode: "add" | "edit";
+  productId?: string;
+  onSubmit?: (data: ProductFormData) => Promise<void>;
+}
+
+const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
   mode,
   productId,
-  initialData,
   onSubmit,
-  loading,
 }) => {
-  const [formData, setFormData] = useState<CreateProductData | UpdateProductData>({
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const isEditing = mode === "edit";
+
+  const [saving, setSaving] = useState(false);
+
+  const [parentCategories, setParentCategories] = useState<
+    { _id: string; Name: string }[]
+  >([]);
+  const [childCategories, setChildCategories] = useState<
+    { _id: string; Name: string; ParentID: { _id: string; Name: string } }[]
+  >([]);
+  const [selectedParentCategory, setSelectedParentCategory] =
+    useState<string>("");
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [mainImageFile, setMainImageFile] = useState<UploadedFile | null>(null);
+  const [listImageFiles, setListImageFiles] = useState<UploadedFile[]>([]);
+  const [mainImageUploading, setMainImageUploading] = useState(false);
+  const [listImagesUploading, setListImagesUploading] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [formData, setFormData] = useState<ProductFormData>({
     Product_Name: "",
+    Description: "",
+    Price: 0,
     CategoryID: "",
     Main_Image: "",
-    List_Image: [],
-    Specifications: {},
     Status: ProductStatus.ACTIVE,
-    Stock: 0,
-    Price: 0,
-    Description: "",
   });
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [existingImages, setExistingImages] = useState<string[]>([]);
 
-  // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await productService.getCategories();
-        setCategories(data);
-      } catch (err: any) {
-        toast.error(
-          "Lỗi khi tải danh mục: " +
-            (err.response?.data?.message || err.message)
-        );
+  const fetchProductData = useCallback(async (productId: string) => {
+    try {
+      const productData = await productService.getProductById(productId);
+      // Convert specifications object to array for Form.List
+      const specificationsArray = productData.Specifications
+        ? Object.entries(productData.Specifications).map(([key, value]) => ({
+            key: key,
+            value: value,
+          }))
+        : [];
+      // Set main image if exists
+      if (productData.Main_Image) {
+        setMainImageFile({
+          uid: `main-${Date.now()}`,
+          name: "Main Image",
+          status: "done",
+          url: productData.Main_Image,
+          public_id: `main-${Date.now()}`,
+        });
       }
-    };
+      // Set list images if exist
+      if (productData.List_Image && Array.isArray(productData.List_Image)) {
+        const listImageFiles = productData.List_Image.map(
+          (url: string, index: number) => ({
+            uid: `list-${index}-${Date.now()}`,
+            name: `List Image ${index + 1}`,
+            status: "done" as const,
+            url: url,
+            public_id: `list-${index}-${Date.now()}`,
+          })
+        );
+        setListImageFiles(listImageFiles);
+      }
+
+      // Tìm category tương ứng để set ParentCategoryID
+      const allCategories = [...parentCategories, ...childCategories];
+      const currentCategory = allCategories.find(
+        (cat) => cat._id === productData.CategoryID
+      );
+
+      let parentCategoryId = "";
+      if (currentCategory) {
+        // Kiểm tra xem category này có ParentID không (là category con)
+        const childCategory = childCategories.find(
+          (cat) => cat._id === productData.CategoryID
+        );
+        if (childCategory && childCategory.ParentID) {
+          parentCategoryId = childCategory.ParentID._id;
+        } else {
+          // Nếu là category cha, sử dụng chính nó
+          parentCategoryId = currentCategory._id;
+        }
+      }
+
+      // Chuyển đổi dữ liệu để phù hợp với form
+      const formData = {
+        Product_Name: productData.Product_Name,
+        Description: productData.Description || "",
+        Price: productData.Price,
+        Stock: productData.Stock,
+        ParentCategoryID: parentCategoryId,
+        CategoryID: productData.CategoryID,
+        Main_Image: productData.Main_Image || "",
+        List_Image: productData.List_Image?.join(",") || "",
+        Specifications: specificationsArray,
+        Status: productData.Status || ProductStatus.ACTIVE,
+      };
+
+      // Set selected parent category for dropdown
+      setSelectedParentCategory(parentCategoryId);
+
+      // Điền dữ liệu vào form
+      form.setFieldsValue(formData);
+      setFormData(formData as ProductFormData);
+    } catch {
+      notification.error({
+        message: "Lỗi",
+        description: "Không thể tải dữ liệu sản phẩm.",
+      });
+    }
+  }, [parentCategories, childCategories, form]);
+
+  const fetchCategories = async () => {
+    setCategoriesLoading(true);
+    try {
+      const response = await categoryService.getAllCategories();
+      const allCategories = response.categories || [];
+
+      // Phân loại categories thành cha và con
+      const parents = allCategories.filter(
+        (cat: { ParentID?: { _id: string; Name: string } | null }) =>
+          !cat.ParentID
+      );
+      const children = allCategories.filter(
+        (cat: { ParentID?: { _id: string; Name: string } | null }) =>
+          cat.ParentID
+      );
+
+      setParentCategories(parents);
+      setChildCategories(children);
+    } catch {
+      setParentCategories([]);
+      setChildCategories([]);
+      notification.error({
+        message: "Lỗi",
+        description: "Không thể tải danh sách danh mục.",
+      });
+    } finally {
+      setCategoriesLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchCategories();
   }, []);
 
-  // Initialize form data for edit mode
   useEffect(() => {
-    if (mode === "edit" && initialData) {
-      setFormData(initialData);
-      setExistingImages(initialData.List_Image || []);
+    if (isEditing && productId && !categoriesLoading && parentCategories.length > 0) {
+      fetchProductData(productId);
     }
-  }, [mode, initialData]);
+  }, [productId, isEditing, categoriesLoading, parentCategories, childCategories, fetchProductData]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  // Upload main image to cloudinary
+  const uploadMainImageToCloudinary = async (
+    file: File
+  ): Promise<UploadedFile> => {
+    const result = await uploadFile(file);
+
+    return {
+      uid: result.public_id,
+      name: result.original_filename,
+      status: "done",
+      url: result.url,
+      public_id: result.public_id,
+    };
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files) {
-      if (name === "Main_Image") {
-        setFormData((prev) => ({ ...prev, Main_Image: files[0] }));
-      } else if (name === "List_Image") {
-        setFormData((prev) => ({ ...prev, List_Image: Array.from(files) }));
-      }
-    }
+  // Upload list image to cloudinary
+  const uploadListImageToCloudinary = async (
+    file: File
+  ): Promise<UploadedFile> => {
+    const result = await uploadFile(file);
+
+    return {
+      uid: result.public_id,
+      name: result.original_filename,
+      status: "done",
+      url: result.url,
+      public_id: result.public_id,
+    };
   };
 
-  const handleSpecificationChange = (key: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      Specifications: {
-        ...prev.Specifications,
-        [key]: value,
-      },
-    }));
-  };
-
-  const handleRemoveExistingImage = (imageUrl: string) => {
-    setExistingImages((prev) => prev.filter((img) => img !== imageUrl));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const data = new FormData();
-    data.append("Product_Name", formData.Product_Name);
-    data.append("CategoryID", formData.CategoryID);
-    data.append("Price", formData.Price.toString());
-    data.append("Stock", formData.Stock.toString());
-    data.append("Status", formData.Status);
-    data.append("Description", formData.Description);
-    data.append("Specifications", JSON.stringify(formData.Specifications));
-
-    // Handle files
-    if (formData.Main_Image instanceof File) {
-      data.append("Main_Image", formData.Main_Image);
-    }
-
-    if (formData.List_Image && Array.isArray(formData.List_Image)) {
-      formData.List_Image.forEach((fileOrUrl) => {
-        if (fileOrUrl instanceof File) {
-          data.append("List_Image", fileOrUrl);
-        }
+  // Handle main image upload
+  const handleMainImageUpload = async (file: File) => {
+    setMainImageUploading(true);
+    try {
+      const uploadedFile = await uploadMainImageToCloudinary(file);
+      setMainImageFile(uploadedFile);
+      form.setFieldsValue({ Main_Image: uploadedFile.url });
+      notification.success({
+        message: "Thành công",
+        description: "Upload ảnh chính thành công!",
       });
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        (error as { message?: string })?.message ||
+        "Upload ảnh chính thất bại!";
+      notification.error({
+        message: "Lỗi",
+        description: errorMessage,
+      });
+    } finally {
+      setMainImageUploading(false);
     }
-
-    await onSubmit(data);
   };
 
-  const isEditMode = mode === "edit";
-  const title = isEditMode ? "Chỉnh sửa Sản phẩm" : "Thêm sản phẩm mới";
-  const submitText = loading ? "Đang xử lý..." : (isEditMode ? "Cập nhật sản phẩm" : "Thêm sản phẩm");
+  // Handle list images upload
+  const handleListImagesUpload = async (files: File[]) => {
+    setListImagesUploading(true);
+    try {
+      const uploadPromises = files.map((file) =>
+        uploadListImageToCloudinary(file)
+      );
+      const uploadedFiles = await Promise.all(uploadPromises);
+
+      const newListFiles = [...listImageFiles, ...uploadedFiles];
+      setListImageFiles(newListFiles);
+
+      // Update form with URLs
+      const urls = newListFiles.map((file) => file.url).join(",");
+      form.setFieldsValue({ List_Image: urls });
+
+      notification.success({
+        message: "Thành công",
+        description: `Upload ${files.length} ảnh phụ thành công!`,
+      });
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        (error as { message?: string })?.message ||
+        "Upload ảnh phụ thất bại!";
+      notification.error({
+        message: "Lỗi",
+        description: errorMessage,
+      });
+    } finally {
+      setListImagesUploading(false);
+    }
+  };
+
+  // Remove main image
+  const removeMainImage = () => {
+    setMainImageFile(null);
+    form.setFieldsValue({ Main_Image: "" });
+  };
+
+  // Remove list image
+  const removeListImage = (uid: string) => {
+    const newListFiles = listImageFiles.filter((file) => file.uid !== uid);
+    setListImageFiles(newListFiles);
+
+    const urls = newListFiles.map((file) => file.url).join(",");
+    form.setFieldsValue({ List_Image: urls });
+  };
+
+  // Preview image
+  const handlePreview = (file: UploadedFile) => {
+    setPreviewImage(file.url || "");
+    setPreviewVisible(true);
+  };
+
+  const onFinish = async (values: ProductFormData) => {
+    if (onSubmit) {
+      await onSubmit(values);
+      return;
+    }
+
+    setSaving(true);
+
+    // Convert specifications from array of objects to object
+    const specifications = values.Specifications
+      ? values.Specifications.reduce(
+          (
+            acc: Record<string, string>,
+            spec: { key: string; value: string }
+          ) => {
+            if (spec.key && spec.value) {
+              acc[spec.key] = spec.value;
+            }
+            return acc;
+          },
+          {}
+        )
+      : {};
+
+    // Only send required fields according to Product model
+    const dataToSend = {
+      Product_Name: values.Product_Name,
+      Description: values.Description || "",
+      Price: values.Price,
+      CategoryID: values.CategoryID,
+      Main_Image: values.Main_Image || "",
+      List_Image: values.List_Image
+        ? values.List_Image.split(",").map((url) => url.trim())
+        : [],
+      Specifications: specifications,
+      Status: values.Status || ProductStatus.ACTIVE,
+
+      Stock: form.getFieldValue("Stock") ?? 0,
+    };
+
+    try {
+      if (isEditing && productId) {
+        await productService.updateProduct(productId, dataToSend);
+        notification.success({
+          message: "Thành công",
+          description: "Cập nhật sản phẩm thành công.",
+        });
+      } else {
+        await productService.createProduct(dataToSend);
+        notification.success({
+          message: "Thành công",
+          description: "Thêm sản phẩm mới thành công.",
+        });
+      }
+      navigate("/admin/products");
+    } catch (error) {
+      const errorMessage =
+        (
+          error as {
+            response?: { data?: { message?: string } };
+            message?: string;
+          }
+        )?.response?.data?.message ||
+        (error as { message?: string })?.message ||
+        (isEditing
+          ? "Đã xảy ra lỗi khi cập nhật sản phẩm."
+          : "Đã xảy ra lỗi khi thêm sản phẩm.");
+      notification.error({
+        message: "Lỗi",
+        description: errorMessage,
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleFormChange = (
+    changedFields: ProductFormData,
+    allFields: ProductFormData
+  ) => {
+    setFormData(allFields);
+  };
 
   return (
-    <div className={`admin-${mode}-product-page`}>
-      <h1 className="text-2xl font-bold mb-6">{title}</h1>
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md"
+    <>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        onValuesChange={handleFormChange}
+        {...(!isEditing && {
+          initialValues: {
+            Price: 0,
+            Status: ProductStatus.ACTIVE,
+            IsFeatured: false,
+            IsNew: false,
+            autoSave: true,
+          },
+        })}
       >
-        {/* Product Name */}
-        <div className="mb-4">
-          <label
-            htmlFor="Product_Name"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Tên sản phẩm
-          </label>
-          <input
-            type="text"
-            id="Product_Name"
-            name="Product_Name"
-            value={formData.Product_Name || ""}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          />
-        </div>
+        <div className={styles.formContent}>
+          <Title level={4}>
+            <InfoCircleOutlined style={{ marginRight: 8 }} />
+            Thông tin cơ bản
+          </Title>
 
-        {/* Category */}
-        <div className="mb-4">
-          <label
-            htmlFor="CategoryID"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Danh mục
-          </label>
-          <select
-            id="CategoryID"
-            name="CategoryID"
-            value={formData.CategoryID || ""}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          >
-            <option value="">-- Chọn danh mục --</option>
-            {categories.map((category) => (
-              <option key={category._id} value={category._id}>
-                {category.Category_Name}
-              </option>
-            ))}
-          </select>
-        </div>
+          <Row gutter={[24, 16]}>
+            <Col span={24}>
+              <Form.Item
+                name="Product_Name"
+                label="Tên sản phẩm"
+                rules={[
+                  { required: true, message: "Vui lòng nhập tên sản phẩm!" },
+                ]}
+              >
+                <Input placeholder="Nhập tên sản phẩm" size="large" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Price */}
-        <div className="mb-4">
-          <label htmlFor="Price" className="block text-gray-700 font-bold mb-2">
-            Giá
-          </label>
-          <input
-            type="number"
-            id="Price"
-            name="Price"
-            value={formData.Price !== undefined ? formData.Price : ""}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-            min="0"
-          />
-        </div>
+          <Row gutter={[24, 16]}>
+            <Col span={12}>
+              <Form.Item
+                name="ParentCategoryID"
+                label="Danh mục cha"
+                rules={[
+                  { required: true, message: "Vui lòng chọn danh mục cha!" },
+                ]}
+              >
+                <Select
+                  placeholder={
+                    categoriesLoading
+                      ? "Đang tải danh mục..."
+                      : "Chọn danh mục cha"
+                  }
+                  size="large"
+                  showSearch
+                  loading={categoriesLoading}
+                  disabled={categoriesLoading}
+                  value={selectedParentCategory}
+                  onChange={(value) => {
+                    setSelectedParentCategory(value);
+                    form.setFieldsValue({ CategoryID: undefined }); // Reset child category
+                  }}
+                  filterOption={(input, option) =>
+                    (option?.label as string)
+                      ?.toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {!categoriesLoading &&
+                  parentCategories &&
+                  parentCategories.length > 0
+                    ? parentCategories.map((category) => (
+                        <Option key={category._id} value={category._id}>
+                          {category.Name}
+                        </Option>
+                      ))
+                    : null}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="CategoryID"
+                label="Danh mục con"
+                rules={[
+                  { required: true, message: "Vui lòng chọn danh mục con!" },
+                ]}
+              >
+                <Select
+                  placeholder={
+                    !selectedParentCategory
+                      ? "Chọn danh mục cha trước"
+                      : categoriesLoading
+                        ? "Đang tải danh mục..."
+                        : "Chọn danh mục con"
+                  }
+                  size="large"
+                  showSearch
+                  loading={categoriesLoading}
+                  disabled={categoriesLoading || !selectedParentCategory}
+                  filterOption={(input, option) =>
+                    (option?.label as string)
+                      ?.toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {!categoriesLoading &&
+                  selectedParentCategory &&
+                  childCategories &&
+                  childCategories.length > 0
+                    ? childCategories
+                        .filter(
+                          (category) =>
+                            category.ParentID &&
+                            category.ParentID._id === selectedParentCategory
+                        )
+                        .map((category) => (
+                          <Option key={category._id} value={category._id}>
+                            {category.Name}
+                          </Option>
+                        ))
+                    : null}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Stock */}
-        <div className="mb-4">
-          <label htmlFor="Stock" className="block text-gray-700 font-bold mb-2">
-            Tồn kho
-          </label>
-          <input
-            type="number"
-            id="Stock"
-            name="Stock"
-            value={formData.Stock !== undefined ? formData.Stock : ""}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-            min="0"
-          />
-        </div>
+          <Row gutter={[24, 16]}>
+            <Col span={12}>
+              <Form.Item
+                name="Price"
+                label="Giá sản phẩm"
+                rules={[
+                  { required: true, message: "Vui lòng nhập giá sản phẩm!" },
+                  {
+                    type: "number",
+                    min: 0,
+                    message: "Giá sản phẩm phải lớn hơn 0!",
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "100%" }}
+                  placeholder="VD: 2500000000"
+                  prefix={<VNDIcon />}
+                  size="large"
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  min={0}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="Status" label="Trạng thái">
+                <Select
+                  placeholder="Chọn trạng thái"
+                  size="large"
+                  value={formData.Status}
+                  disabled={!isEditing}
+                >
+                  <Option value={ProductStatus.ACTIVE}>Hoạt động</Option>
+                  <Option value={ProductStatus.INACTIVE}>Không hoạt động</Option>
+                  <Option value={ProductStatus.OUT_OF_STOCK}>Hết hàng</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-        {/* Status */}
-        <div className="mb-4">
-          <label
-            htmlFor="Status"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Trạng thái
-          </label>
-          <select
-            id="Status"
-            name="Status"
-            value={formData.Status || ProductStatus.ACTIVE}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-          >
-            <option value={ProductStatus.ACTIVE}>Hoạt động</option>
-            <option value={ProductStatus.INACTIVE}>Không hoạt động</option>
-            <option value={ProductStatus.OUT_OF_STOCK}>Hết hàng</option>
-          </select>
-        </div>
+          <Form.Item name="Description" label="Mô tả sản phẩm">
+            <EditorCustom
+              initialValue={formData.Description || ""}
+              placeholder="Mô tả chi tiết về sản phẩm, tính năng nổi bật, lợi ích..."
+              onEditorChange={(content: string) => {
+                form.setFieldsValue({ Description: content });
+              }}
+            />
+          </Form.Item>
 
-        {/* Description */}
-        <div className="mb-4">
-          <label
-            htmlFor="Description"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Mô tả
-          </label>
-          <textarea
-            id="Description"
-            name="Description"
-            value={formData.Description || ""}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32"
-            required
-          />
-        </div>
+          <Title level={4}>
+            <CameraOutlined style={{ marginRight: 8 }} />
+            Hình ảnh & Media
+          </Title>
 
-        {/* Main Image */}
-        <div className="mb-4">
-          <label
-            htmlFor="Main_Image"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Ảnh chính
-          </label>
-          {/* Display existing image in edit mode */}
-          {isEditMode && typeof formData.Main_Image === "string" && formData.Main_Image && (
-            <div className="mb-2">
-              <img
-                src={formData.Main_Image}
-                alt="Existing Main"
-                className="w-32 h-32 object-cover rounded"
-              />
-            </div>
-          )}
-          <input
-            type="file"
-            id="Main_Image"
-            name="Main_Image"
-            onChange={handleFileChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            accept="image/*"
-            required={!isEditMode || !formData.Main_Image}
-          />
-        </div>
-
-        {/* List Images */}
-        <div className="mb-4">
-          <label
-            htmlFor="List_Image"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Ảnh phụ {!isEditMode && "(Chọn nhiều file)"}
-          </label>
-          {/* Display existing images with remove option in edit mode */}
-          {isEditMode && existingImages.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
-              {existingImages.map((image, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={image}
-                    alt={`Existing ${index + 1}`}
-                    className="w-24 h-24 object-cover rounded"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveExistingImage(image)}
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs leading-none"
-                  >
-                    &times;
-                  </button>
+          <Row gutter={[24, 24]}>
+            <Col span={12}>
+              <Form.Item
+                name="Main_Image"
+                label={
+                  <span>
+                    Hình ảnh chính <span style={{ color: "#ff4d4f" }}>*</span>
+                    <Text
+                      type="secondary"
+                      style={{ fontSize: 12, marginLeft: 8 }}
+                    >
+                      (Ảnh đại diện cho sản phẩm)
+                    </Text>
+                  </span>
+                }
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng upload hình ảnh chính!",
+                  },
+                ]}
+                style={{ width: "100%" }}
+              >
+                <div className={styles.mainImageUploadNew}>
+                  {mainImageFile ? (
+                    <div className={styles.imagePreview}>
+                      <Image
+                        src={mainImageFile.url}
+                        alt="Main image"
+                        className={styles.mainImagePreview}
+                        preview={false}
+                      />
+                      <div className={styles.imageActions}>
+                        <Tooltip title="Xem ảnh">
+                          <Button
+                            type="primary"
+                            shape="circle"
+                            icon={<EyeOutlined />}
+                            onClick={() => handlePreview(mainImageFile)}
+                            size="middle"
+                            style={{ marginRight: 8 }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Xóa ảnh">
+                          <Button
+                            type="primary"
+                            danger
+                            shape="circle"
+                            icon={<DeleteOutlined />}
+                            onClick={removeMainImage}
+                            size="middle"
+                          />
+                        </Tooltip>
+                      </div>
+                    </div>
+                  ) : (
+                    <Upload
+                      accept="image/*"
+                      showUploadList={false}
+                      beforeUpload={(file) => {
+                        handleMainImageUpload(file);
+                        return false;
+                      }}
+                      disabled={mainImageUploading}
+                      key="main-image-upload"
+                    >
+                      <div className={styles.uploadDropAreaNew}>
+                        {mainImageUploading ? (
+                          <div className={styles.loadingSpinner}>
+                            <div className={styles.spinner}></div>
+                            <div className={styles.loadingText}>
+                              Đang upload ảnh chính...
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className={styles.uploadIcon}>
+                              <UploadOutlined />
+                            </div>
+                            <div className={styles.uploadText}>
+                              Chọn hoặc kéo thả ảnh đại diện
+                            </div>
+                            <div className={styles.uploadHint}>
+                              (Tối đa 1 ảnh, JPG/PNG, &lt; 5MB)
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </Upload>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-          <input
-            type="file"
-            id="List_Image"
-            name="List_Image"
-            onChange={handleFileChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            accept="image/*"
-            multiple
-          />
-          {formData.List_Image &&
-            Array.isArray(formData.List_Image) &&
-            formData.List_Image.length > 0 && (
-              <p className="text-gray-600 text-sm mt-1">
-                Selected: {formData.List_Image.length} file(s)
-              </p>
-            )}
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item name="List_Image" label="Hình ảnh phụ">
+                <div className={styles.listImagesUpload}>
+                  <div className={styles.listImagesContainer}>
+                    {listImageFiles.map((file) => (
+                      <div
+                        key={file.uid}
+                        className={styles.listImagePreviewContainer}
+                      >
+                        <Image
+                          src={file.url}
+                          alt={file.name}
+                          className={styles.listImagePreview}
+                        />
+                        <div className={styles.listImageActions}>
+                          <Tooltip title="Xem ảnh">
+                            <Button
+                              type="primary"
+                              shape="circle"
+                              icon={<EyeOutlined />}
+                              onClick={() => handlePreview(file)}
+                              size="small"
+                              style={{ marginRight: 4 }}
+                            />
+                          </Tooltip>
+                          <Tooltip title="Xóa ảnh">
+                            <Button
+                              type="primary"
+                              danger
+                              shape="circle"
+                              icon={<DeleteOutlined />}
+                              onClick={() => removeListImage(file.uid)}
+                              size="small"
+                            />
+                          </Tooltip>
+                        </div>
+                      </div>
+                    ))}
+                    {listImageFiles.length < 5 && (
+                      <Upload
+                        accept="image/*"
+                        showUploadList={false}
+                        beforeUpload={(file) => {
+                          handleListImagesUpload([file]);
+                          return false;
+                        }}
+                        disabled={listImagesUploading}
+                        key="list-images-upload"
+                      >
+                        <div className={styles.uploadDropAreaSmall}>
+                          {listImagesUploading ? (
+                            <div className={styles.loadingSpinner}>
+                              <div className={styles.spinner}></div>
+                              <div className={styles.loadingText}>
+                                Uploading...
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className={styles.uploadIcon}>
+                                <PlusOutlined />
+                              </div>
+                              <div className={styles.uploadText}>
+                                {listImagesUploading
+                                  ? "Đang upload..."
+                                  : "Thêm ảnh"}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </Upload>
+                    )}
+                  </div>
+                  <div className={styles.uploadInfo}>
+                    <Progress
+                      percent={(listImageFiles.length / 5) * 100}
+                      size="small"
+                      status={listImageFiles.length >= 5 ? "success" : "active"}
+                    />
+                    <Text type="secondary">
+                      Đã upload {listImageFiles.length}/5 ảnh phụ
+                    </Text>
+                  </div>
+                </div>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Title level={4}>
+            <ToolOutlined style={{ marginRight: 8 }} />
+            Thông số kỹ thuật
+          </Title>
+
+          <Form.Item name="Specifications" label="Thông số chi tiết">
+            <Form.List name="Specifications">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Row key={key} gutter={8} style={{ marginBottom: 12 }}>
+                      <Col span={11}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "key"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập tên thông số!",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="VD: Dòng thiết bị, Màu sắc, Kích thước..." />
+                        </Form.Item>
+                      </Col>
+                      <Col span={11}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "value"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập giá trị!",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Vui lòng nhập giá trị" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={1}>
+                        <Button
+                          type="text"
+                          danger
+                          icon={<MinusCircleOutlined />}
+                          onClick={() => remove(name)}
+                          style={{ marginTop: 4 }}
+                          title="Xóa thông số"
+                          size="small"
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                      size="large"
+                    >
+                      Thêm thông số
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </Form.Item>
         </div>
 
-        {/* Specifications */}
-        <div className="mb-4">
-          <h3 className="text-lg font-bold mb-2">Thông số kỹ thuật</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="spec-engine"
-                className="block text-gray-700 text-sm font-bold mb-2"
+        <div className={styles.formActions}>
+          <Space size="large">
+            <Popconfirm
+              title="Xác nhận lưu sản phẩm?"
+              description="Bạn có chắc chắn muốn lưu sản phẩm này?"
+              onConfirm={() => form.submit()}
+              okText="Có"
+              cancelText="Không"
+            >
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={saving}
+                icon={<SaveOutlined />}
+                size="large"
               >
-                Engine
-              </label>
-              <input
-                type="text"
-                id="spec-engine"
-                value={formData.Specifications?.Engine || ""}
-                onChange={(e) =>
-                  handleSpecificationChange("Engine", e.target.value)
-                }
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="spec-hp"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Horsepower
-              </label>
-              <input
-                type="text"
-                id="spec-hp"
-                value={formData.Specifications?.Horsepower || ""}
-                onChange={(e) =>
-                  handleSpecificationChange("Horsepower", e.target.value)
-                }
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-          </div>
-        </div>
+                {isEditing ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
+              </Button>
+            </Popconfirm>
 
-        {/* Submit Button */}
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-            disabled={loading}
-          >
-            {submitText}
-          </button>
-          <Link
-            to="/admin/products"
-            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-          >
-            Hủy
-          </Link>
+            <Button
+              onClick={() => navigate("/admin/products")}
+              size="large"
+            >
+              Hủy
+            </Button>
+          </Space>
         </div>
-      </form>
-    </div>
+      </Form>
+
+      {/* Image Preview Modal */}
+      <Modal
+        open={previewVisible}
+        title="Xem trước ảnh"
+        footer={null}
+        onCancel={() => setPreviewVisible(false)}
+        width={800}
+        centered
+      >
+        <img alt="preview" style={{ width: "100%" }} src={previewImage} />
+      </Modal>
+    </>
   );
 };
 
-export default ProductForm; 
+export default ProductUpsetForm; 
