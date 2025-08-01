@@ -2,7 +2,6 @@ import { Product } from "@/api/types";
 import { formatCurrency } from "@/utils/format";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ProductStatus } from "@/types";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -89,7 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
-  const unavailable = product.Status === ProductStatus.OUT_OF_STOCK;
+  // Remove status logic as it's not needed
 
   // Responsive CSS-in-JS Styles
   const cardStyle: React.CSSProperties = {
@@ -104,6 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     border: `1px solid ${theme.colors.surface.border}`,
     position: "relative",
     height: "100%",
+    width: "100%",
     display: "flex",
     flexDirection: "column",
   };
@@ -112,6 +112,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     position: "relative",
     overflow: "hidden",
     aspectRatio: "16/10",
+    width: "100%",
   };
 
   const imageStyle: React.CSSProperties = {
@@ -122,22 +123,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     transform: isHovered ? "scale(1.05)" : "scale(1)",
   };
 
-  const tagStyle: React.CSSProperties = {
-    position: "absolute",
-    top: isMobile ? "8px" : "12px",
-    right: isMobile ? "8px" : "12px",
-    background: "#ff4757",
-    color: "#ffffff",
-    padding: isMobile ? "4px 8px" : "6px 12px",
-    borderRadius: "20px",
-    fontSize: isMobile ? "11px" : "12px",
-    fontWeight: "600",
-    zIndex: 2,
-  };
-
   const infoStyle: React.CSSProperties = {
     padding: isMobile ? "12px" : isTablet ? "16px" : "20px",
     flex: 1,
+    width: "100%",
     display: "flex",
     flexDirection: "column",
   };
@@ -195,18 +184,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const consultationButtonStyle: React.CSSProperties = {
     flex: 1,
-    background: unavailable
-      ? theme.colors.text.muted
-      : theme.colors.palette.primary,
+    background: theme.colors.palette.primary,
     border: "none",
     color: theme.colors.text.white,
     padding: isMobile ? "8px 12px" : "10px 16px",
     borderRadius: "8px",
     fontSize: isMobile ? "13px" : "14px",
     fontWeight: "600",
-    cursor: unavailable ? "not-allowed" : "pointer",
+    cursor: "pointer",
     transition: "all 0.3s ease",
-    opacity: unavailable ? 0.6 : 1,
   };
 
   const productActionsStyle: React.CSSProperties = {
@@ -237,16 +223,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleConsultationHover = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!unavailable) {
-      e.currentTarget.style.background = theme.colors.palette.primaryDark;
-      e.currentTarget.style.transform = "translateY(-1px)";
-    }
+    e.currentTarget.style.background = theme.colors.palette.primaryDark;
+    e.currentTarget.style.transform = "translateY(-1px)";
   };
 
   const handleConsultationLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.background = unavailable
-      ? theme.colors.text.muted
-      : theme.colors.palette.primary;
+    e.currentTarget.style.background = theme.colors.palette.primary;
     e.currentTarget.style.transform = "translateY(0)";
   };
 
@@ -263,7 +245,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             alt={product.Product_Name}
             style={imageStyle}
           />
-          {unavailable && <div style={tagStyle}>Hết hàng</div>}
         </Link>
         <div style={productActionsStyle}>
           <Space>
@@ -423,7 +404,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <button
             style={consultationButtonStyle}
             onClick={handleContactConsultation}
-            disabled={unavailable}
             onMouseEnter={handleConsultationHover}
             onMouseLeave={handleConsultationLeave}
           >
