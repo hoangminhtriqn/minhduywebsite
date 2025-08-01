@@ -4,14 +4,23 @@ const { successResponse, errorResponse } = require("../utils/responseHandler");
 // Get all pricing items with pagination (public)
 const getAllPricing = async (req, res) => {
   try {
-    const { page = 1, limit = 6 } = req.query;
+    const { 
+      page = 1, 
+      limit = 6, 
+      sortBy = "createdAt", 
+      sortOrder = "desc" 
+    } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const limitNum = parseInt(limit);
 
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === "desc" ? -1 : 1;
+
     const [pricing, total] = await Promise.all([
       Pricing.find({ status: "active" })
-        .sort({ order: 1, createdAt: -1 })
+        .sort(sort)
         .skip(skip)
         .limit(limitNum),
       Pricing.countDocuments({ status: "active" }),
@@ -32,7 +41,7 @@ const getAllPricing = async (req, res) => {
       nextPage: parseInt(page) < totalPages ? parseInt(page) + 1 : null,
     };
 
-    return successResponse(res, "Lấy danh sách báo giá thành công", result);
+    return successResponse(res, result, "Lấy danh sách báo giá thành công");
   } catch (error) {
     console.error("Error getting pricing:", error);
     return errorResponse(res, "Lỗi khi lấy danh sách báo giá", 500);
@@ -93,7 +102,7 @@ const getAllPricingAdmin = async (req, res) => {
       totalPages,
     };
 
-    return successResponse(res, "Lấy danh sách báo giá thành công", result);
+    return successResponse(res, result, "Lấy danh sách báo giá thành công");
   } catch (error) {
     console.error("Error getting pricing admin:", error);
     return errorResponse(res, "Lỗi khi lấy danh sách báo giá", 500);
@@ -110,7 +119,7 @@ const getPricingById = async (req, res) => {
       return errorResponse(res, "Không tìm thấy báo giá", 404);
     }
 
-    return successResponse(res, "Lấy thông tin báo giá thành công", pricing);
+    return successResponse(res, pricing, "Lấy thông tin báo giá thành công");
   } catch (error) {
     console.error("Error getting pricing by ID:", error);
     return errorResponse(res, "Lỗi khi lấy thông tin báo giá", 500);
@@ -125,7 +134,7 @@ const createPricing = async (req, res) => {
     const pricing = new Pricing(pricingData);
     await pricing.save();
 
-    return successResponse(res, "Tạo báo giá thành công", pricing, 201);
+    return successResponse(res, pricing, "Tạo báo giá thành công", 201);
   } catch (error) {
     console.error("Error creating pricing:", error);
     return errorResponse(res, "Lỗi khi tạo báo giá", 500);
@@ -147,7 +156,7 @@ const updatePricing = async (req, res) => {
       return errorResponse(res, "Không tìm thấy báo giá", 404);
     }
 
-    return successResponse(res, "Cập nhật báo giá thành công", pricing);
+    return successResponse(res, pricing, "Cập nhật báo giá thành công");
   } catch (error) {
     console.error("Error updating pricing:", error);
     return errorResponse(res, "Lỗi khi cập nhật báo giá", 500);
@@ -164,7 +173,7 @@ const deletePricing = async (req, res) => {
       return errorResponse(res, "Không tìm thấy báo giá", 404);
     }
 
-    return successResponse(res, "Xóa báo giá thành công");
+    return successResponse(res, null, "Xóa báo giá thành công");
   } catch (error) {
     console.error("Error deleting pricing:", error);
     return errorResponse(res, "Lỗi khi xóa báo giá", 500);
@@ -178,8 +187,8 @@ const getPricingCategories = async (req, res) => {
 
     return successResponse(
       res,
-      "Lấy danh sách danh mục báo giá thành công",
-      categories
+      categories,
+      "Lấy danh sách danh mục báo giá thành công"
     );
   } catch (error) {
     console.error("Error getting pricing categories:", error);

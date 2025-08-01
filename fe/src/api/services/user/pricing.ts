@@ -27,7 +27,8 @@ export interface Pricing {
 
 export interface PricingResponse {
   success: boolean;
-  message: {
+  message: string;
+  data: {
     docs: Pricing[];
     totalDocs: number;
     limit: number;
@@ -39,7 +40,6 @@ export interface PricingResponse {
     prevPage: number | null;
     nextPage: number | null;
   };
-  data: string;
 }
 
 // Get all pricing items with pagination

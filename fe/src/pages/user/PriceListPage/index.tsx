@@ -43,11 +43,11 @@ const PriceListPage: React.FC = () => {
         limit: pagination.pageSize,
       });
 
-      // API returns data in response.message.docs
-      if (response.message && Array.isArray(response.message.docs)) {
-        setPricingData(response.message.docs);
-        setTotalItems(response.message.totalDocs);
-        updateTotal(response.message.totalDocs);
+      // API returns data in response.data.docs
+      if (response.data && Array.isArray(response.data.docs)) {
+        setPricingData(response.data.docs);
+        setTotalItems(response.data.totalDocs);
+        updateTotal(response.data.totalDocs);
       } else {
         setPricingData([]);
       }

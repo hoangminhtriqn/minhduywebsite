@@ -37,13 +37,12 @@ export const pricingService = {
     totalPages: number;
   }> => {
     const response = await api.get('/pricing', { params });
-    // Handle the reversed structure where data is in message and message is in data
     const responseData = response.data;
-    const pricingData = responseData.message || responseData.data;
+    const pricingData = responseData.data;
     
     return {
-      pricing: pricingData.docs || pricingData.pricing || [],
-      total: pricingData.totalDocs || pricingData.total || 0,
+      pricing: pricingData.docs || [],
+      total: pricingData.totalDocs || 0,
       page: pricingData.page || 1,
       limit: pricingData.limit || 10,
       totalPages: pricingData.totalPages || 1,
