@@ -36,7 +36,6 @@ export interface Product {
   Main_Image: string;
   List_Image: string[];
   Specifications: Record<string, string>;
-  Status: 'active' | 'inactive' | 'out_of_stock';
   Stock: number;
   createdAt: string;
   updatedAt: string;
@@ -96,7 +95,6 @@ export interface CreateProductData {
   Main_Image: File | string;
   List_Image?: (File | string)[];
   Specifications: Record<string, string>;
-  Status: 'active' | 'inactive' | 'out_of_stock';
   Stock: number;
   Price: number;
   Description: string;
@@ -108,7 +106,6 @@ export interface UpdateProductData {
   Main_Image?: File | string;
   List_Image?: (File | string)[];
   Specifications?: Record<string, string>;
-  Status?: 'active' | 'inactive' | 'out_of_stock';
   Stock?: number;
   Price?: number;
   Description?: string;

@@ -1,7 +1,7 @@
 import { productService as adminProductService } from "@/api/services/admin/product";
 import CustomPagination from "@/components/CustomPagination";
 import Breadcrumb from "@/components/admin/Breadcrumb";
-import { ProductStatus } from "@/types";
+
 import {
   DeleteOutlined,
   EditOutlined,
@@ -17,10 +17,10 @@ import {
   Space,
   Spin,
   Table,
-  Tag,
+
   notification,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 
@@ -44,7 +44,7 @@ interface Product {
   Main_Image?: string;
   List_Image?: string[];
   Specifications?: Record<string, string>;
-  Status?: string;
+
   createdAt: string;
   updatedAt: string;
   favoriteCount: number;
@@ -71,37 +71,32 @@ const ProductListPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+
   const [sortBy, setSortBy] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<string>("desc");
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: 0,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
   const [favoriteModalVisible, setFavoriteModalVisible] = useState(false);
   const [favoriteUsers, setFavoriteUsers] = useState<FavoriteUser[]>([]);
   const [favoriteProductName, setFavoriteProductName] = useState<string>("");
 
   const navigate = useNavigate();
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const products = await adminProductService.getAllProducts({
-        page: pagination.current,
-        limit: pagination.pageSize,
+        page: currentPage,
+        limit: pageSize,
         search: searchText,
         category: selectedCategory,
-        status: selectedStatus,
+
         sortBy,
         sortOrder,
       });
       setProducts(products.products);
-      setPagination({
-        ...pagination,
-        total: products.pagination.total,
-      });
+      setTotal(products.pagination.total);
     } catch (error) {
       console.error("Error fetching products:", error);
       notification.error({
@@ -111,9 +106,9 @@ const ProductListPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, pageSize, searchText, selectedCategory, sortBy, sortOrder]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await adminProductService.getCategories();
       setCategories(response.data);
@@ -124,20 +119,12 @@ const ProductListPage: React.FC = () => {
         description: "Không thể tải danh sách danh mục.",
       });
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, [
-    pagination.current,
-    pagination.pageSize,
-    searchText,
-    sortOrder,
-    sortBy,
-    selectedCategory,
-    selectedStatus,
-  ]);
+  }, [fetchProducts, fetchCategories]);
 
   const handleDeleteProduct = async (productId: string) => {
     confirm({
@@ -167,24 +154,21 @@ const ProductListPage: React.FC = () => {
 
   const handleSearch = (value: string) => {
     setSearchText(value);
-    setPagination({ ...pagination, current: 1 });
+    setCurrentPage(1);
   };
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
-    setPagination({ ...pagination, current: 1 });
+    setCurrentPage(1);
   };
 
-  const handleStatusChange = (value: string) => {
-    setSelectedStatus(value);
-    setPagination({ ...pagination, current: 1 });
-  };
+
 
   const handleSortChange = (value: string) => {
     const [sortField, order] = value.split("-");
     setSortBy(sortField);
     setSortOrder(order);
-    setPagination({ ...pagination, current: 1 });
+    setCurrentPage(1);
   };
 
   const columns = [
@@ -268,18 +252,7 @@ const ProductListPage: React.FC = () => {
         </span>
       ),
     },
-    {
-      title: <span style={{ fontWeight: 600 }}>Trạng thái</span>,
-      dataIndex: "Status",
-      key: "status",
-      render: (status: string) => (
-        <Tag color={status === ProductStatus.ACTIVE ? "green" : "red"}>
-          {status === ProductStatus.ACTIVE
-            ? "Còn kinh doanh"
-            : "Ngừng kinh doanh"}
-        </Tag>
-      ),
-    },
+
     {
       title: <span style={{ fontWeight: 600 }}>Ngày tạo</span>,
       dataIndex: "createdAt",
@@ -328,13 +301,11 @@ const ProductListPage: React.FC = () => {
 
   const handleTableChange = () => {};
 
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    const newPageSize = pageSize || pagination.pageSize;
-    setPagination({
-      ...pagination,
-      current: page,
-      pageSize: newPageSize,
-    });
+  const handlePaginationChange = (page: number, newPageSize?: number) => {
+    setCurrentPage(page);
+    if (newPageSize && newPageSize !== pageSize) {
+      setPageSize(newPageSize);
+    }
   };
 
   return (
@@ -384,16 +355,7 @@ const ProductListPage: React.FC = () => {
                 </OptGroup>
               ))}
           </Select>
-          <Select
-            placeholder="Trạng thái"
-            style={{ width: 120 }}
-            onChange={handleStatusChange}
-            allowClear
-          >
-            <Option value="">Tất cả trạng thái</Option>
-            <Option value="active">Còn kinh doanh</Option>
-            <Option value="inactive">Ngừng kinh doanh</Option>
-          </Select>
+
           <Select
             placeholder="Sắp xếp"
             style={{ width: 140 }}
@@ -420,9 +382,9 @@ const ProductListPage: React.FC = () => {
         />
         <div className={styles.paginationContainer}>
           <CustomPagination
-            current={pagination.current}
-            pageSize={pagination.pageSize}
-            total={pagination.total}
+            current={currentPage}
+            pageSize={pageSize}
+            total={total}
             onChange={handlePaginationChange}
             pageSizeOptions={["10", "20", "50", "100"]}
           />

@@ -1,5 +1,9 @@
-const Product = require('../models/Product');
-const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/responseHandler');
+const Product = require("../models/Product");
+const {
+  successResponse,
+  errorResponse,
+  HTTP_STATUS,
+} = require("../utils/responseHandler");
 
 // Lấy danh sách sản phẩm
 const getProducts = async (req, res) => {
@@ -7,11 +11,10 @@ const getProducts = async (req, res) => {
     const {
       page = 1,
       limit = 9,
-      search = '',
-      category = '',
-      status = '',
-      sortBy = 'createdAt',
-      sortOrder = 'desc',
+      search = "",
+      category = "",
+      sortBy = "createdAt",
+      sortOrder = "desc",
     } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const limitNum = parseInt(limit);
@@ -23,14 +26,16 @@ const getProducts = async (req, res) => {
     }
     // --- CATEGORY FILTER IMPROVED ---
     if (category) {
-      const Category = require('../models/Category');
-      const mongoose = require('mongoose');
+      const Category = require("../models/Category");
+      const mongoose = require("mongoose");
       // Tìm danh mục theo _id
       const selectedCategory = await Category.findById(category);
       if (selectedCategory) {
         if (!selectedCategory.ParentID) {
           // Nếu là cha, lấy tất cả _id con
-          const childCategories = await Category.find({ ParentID: selectedCategory._id });
+          const childCategories = await Category.find({
+            ParentID: selectedCategory._id,
+          });
           const childIds = childCategories.map((cat) => cat._id);
           if (childIds.length > 0) {
             filter.CategoryID = { $in: childIds };
@@ -44,14 +49,11 @@ const getProducts = async (req, res) => {
         }
       }
     }
-    if (status) {
-      filter.Status = status;
-    }
 
     // Build sort object
     let sort = {};
     if (sortBy) {
-      sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+      sort[sortBy] = sortOrder === "asc" ? 1 : -1;
     } else {
       sort = { createdAt: -1 };
     }
@@ -65,67 +67,72 @@ const getProducts = async (req, res) => {
       // Lookup category (child)
       {
         $lookup: {
-          from: 'categories',
-          localField: 'CategoryID',
-          foreignField: '_id',
-          as: 'categoryObj',
+          from: "categories",
+          localField: "CategoryID",
+          foreignField: "_id",
+          as: "categoryObj",
         },
       },
-      { $unwind: { path: '$categoryObj', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$categoryObj", preserveNullAndEmptyArrays: true } },
       // Lookup parent category
       {
         $lookup: {
-          from: 'categories',
-          localField: 'categoryObj.ParentID',
-          foreignField: '_id',
-          as: 'parentCategoryObj',
+          from: "categories",
+          localField: "categoryObj.ParentID",
+          foreignField: "_id",
+          as: "parentCategoryObj",
         },
       },
-      { $unwind: { path: '$parentCategoryObj', preserveNullAndEmptyArrays: true } },
+      {
+        $unwind: {
+          path: "$parentCategoryObj",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       // Lookup favorites
       {
         $lookup: {
-          from: 'favorites',
-          let: { productId: '$_id' },
+          from: "favorites",
+          let: { productId: "$_id" },
           pipeline: [
-            { $unwind: '$items' },
-            { $match: { $expr: { $eq: ['$items.ProductID', '$$productId'] } } },
+            { $unwind: "$items" },
+            { $match: { $expr: { $eq: ["$items.ProductID", "$$productId"] } } },
             // Join with user
             {
               $lookup: {
-                from: 'users',
-                localField: 'UserID',
-                foreignField: '_id',
-                as: 'userInfo',
+                from: "users",
+                localField: "UserID",
+                foreignField: "_id",
+                as: "userInfo",
               },
             },
-            { $unwind: '$userInfo' },
+            { $unwind: "$userInfo" },
             {
               $project: {
                 _id: 0,
                 user: {
-                  _id: '$userInfo._id',
-                  UserName: '$userInfo.UserName',
-                  FullName: '$userInfo.FullName',
-                  Email: '$userInfo.Email',
-                  Phone: '$userInfo.Phone',
+                  _id: "$userInfo._id",
+                  UserName: "$userInfo.UserName",
+                  FullName: "$userInfo.FullName",
+                  Email: "$userInfo.Email",
+                  Phone: "$userInfo.Phone",
                 },
               },
             },
           ],
-          as: 'favoritedUsers',
+          as: "favoritedUsers",
         },
       },
       // Add favorite count
       {
         $addFields: {
-          favoriteCount: { $size: '$favoritedUsers' },
+          favoriteCount: { $size: "$favoritedUsers" },
           CategoryID: {
-            _id: '$categoryObj._id',
-            Name: '$categoryObj.Name',
+            _id: "$categoryObj._id",
+            Name: "$categoryObj.Name",
             ParentID: {
-              _id: '$parentCategoryObj._id',
-              Name: '$parentCategoryObj.Name',
+              _id: "$parentCategoryObj._id",
+              Name: "$parentCategoryObj.Name",
             },
           },
         },
@@ -148,8 +155,8 @@ const getProducts = async (req, res) => {
         total,
         page: Number(page),
         limit: limitNum,
-        totalPages: Math.ceil(total / limitNum)
-      }
+        totalPages: Math.ceil(total / limitNum),
+      },
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -161,11 +168,20 @@ const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.productId);
     if (!product) {
-      return errorResponse(res, 'Không tìm thấy sản phẩm', HTTP_STATUS.NOT_FOUND);
+      return errorResponse(
+        res,
+        "Không tìm thấy sản phẩm",
+        HTTP_STATUS.NOT_FOUND
+      );
     }
     successResponse(res, product);
   } catch (error) {
-    errorResponse(res, 'Lỗi lấy thông tin sản phẩm', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi lấy thông tin sản phẩm",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -174,22 +190,45 @@ const createProduct = async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
-    successResponse(res, product, 'Tạo sản phẩm thành công', HTTP_STATUS.CREATED);
+    successResponse(
+      res,
+      product,
+      "Tạo sản phẩm thành công",
+      HTTP_STATUS.CREATED
+    );
   } catch (error) {
-    errorResponse(res, 'Lỗi tạo sản phẩm', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi tạo sản phẩm",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
 // Cập nhật sản phẩm
 const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.productId, req.body, { new: true });
+    const product = await Product.findByIdAndUpdate(
+      req.params.productId,
+      req.body,
+      { new: true }
+    );
     if (!product) {
-      return errorResponse(res, 'Không tìm thấy sản phẩm', HTTP_STATUS.NOT_FOUND);
+      return errorResponse(
+        res,
+        "Không tìm thấy sản phẩm",
+        HTTP_STATUS.NOT_FOUND
+      );
     }
-    successResponse(res, product, 'Cập nhật sản phẩm thành công');
+    successResponse(res, product, "Cập nhật sản phẩm thành công");
   } catch (error) {
-    errorResponse(res, 'Lỗi cập nhật sản phẩm', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi cập nhật sản phẩm",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -198,11 +237,20 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.productId);
     if (!product) {
-      return errorResponse(res, 'Không tìm thấy sản phẩm', HTTP_STATUS.NOT_FOUND);
+      return errorResponse(
+        res,
+        "Không tìm thấy sản phẩm",
+        HTTP_STATUS.NOT_FOUND
+      );
     }
-    successResponse(res, null, 'Xóa sản phẩm thành công');
+    successResponse(res, null, "Xóa sản phẩm thành công");
   } catch (error) {
-    errorResponse(res, 'Lỗi xóa sản phẩm', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi xóa sản phẩm",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -211,11 +259,15 @@ const getRelatedProducts = async (req, res) => {
   try {
     const { productId } = req.params;
     const { limit = 4 } = req.query;
-    
+
     // Tìm sản phẩm hiện tại
     const currentProduct = await Product.findById(productId);
     if (!currentProduct) {
-      return errorResponse(res, 'Không tìm thấy sản phẩm', HTTP_STATUS.NOT_FOUND);
+      return errorResponse(
+        res,
+        "Không tìm thấy sản phẩm",
+        HTTP_STATUS.NOT_FOUND
+      );
     }
 
     // Tìm sản phẩm liên quan cùng danh mục, loại trừ sản phẩm hiện tại
@@ -224,74 +276,78 @@ const getRelatedProducts = async (req, res) => {
         $match: {
           _id: { $ne: currentProduct._id },
           CategoryID: currentProduct.CategoryID,
-          Status: 'active'
-        }
+        },
       },
       { $limit: parseInt(limit) },
       // Lookup category (child)
       {
         $lookup: {
-          from: 'categories',
-          localField: 'CategoryID',
-          foreignField: '_id',
-          as: 'categoryObj',
+          from: "categories",
+          localField: "CategoryID",
+          foreignField: "_id",
+          as: "categoryObj",
         },
       },
-      { $unwind: { path: '$categoryObj', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$categoryObj", preserveNullAndEmptyArrays: true } },
       // Lookup parent category
       {
         $lookup: {
-          from: 'categories',
-          localField: 'categoryObj.ParentID',
-          foreignField: '_id',
-          as: 'parentCategoryObj',
+          from: "categories",
+          localField: "categoryObj.ParentID",
+          foreignField: "_id",
+          as: "parentCategoryObj",
         },
       },
-      { $unwind: { path: '$parentCategoryObj', preserveNullAndEmptyArrays: true } },
+      {
+        $unwind: {
+          path: "$parentCategoryObj",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       // Lookup favorites
       {
         $lookup: {
-          from: 'favorites',
-          let: { productId: '$_id' },
+          from: "favorites",
+          let: { productId: "$_id" },
           pipeline: [
-            { $unwind: '$items' },
-            { $match: { $expr: { $eq: ['$items.ProductID', '$$productId'] } } },
+            { $unwind: "$items" },
+            { $match: { $expr: { $eq: ["$items.ProductID", "$$productId"] } } },
             // Join with user
             {
               $lookup: {
-                from: 'users',
-                localField: 'UserID',
-                foreignField: '_id',
-                as: 'userInfo',
+                from: "users",
+                localField: "UserID",
+                foreignField: "_id",
+                as: "userInfo",
               },
             },
-            { $unwind: '$userInfo' },
+            { $unwind: "$userInfo" },
             {
               $project: {
                 _id: 0,
                 user: {
-                  _id: '$userInfo._id',
-                  UserName: '$userInfo.UserName',
-                  FullName: '$userInfo.FullName',
-                  Email: '$userInfo.Email',
-                  Phone: '$userInfo.Phone',
+                  _id: "$userInfo._id",
+                  UserName: "$userInfo.UserName",
+                  FullName: "$userInfo.FullName",
+                  Email: "$userInfo.Email",
+                  Phone: "$userInfo.Phone",
                 },
               },
             },
           ],
-          as: 'favoritedUsers',
+          as: "favoritedUsers",
         },
       },
       // Add favorite count
       {
         $addFields: {
-          favoriteCount: { $size: '$favoritedUsers' },
+          favoriteCount: { $size: "$favoritedUsers" },
           CategoryID: {
-            _id: '$categoryObj._id',
-            Name: '$categoryObj.Name',
+            _id: "$categoryObj._id",
+            Name: "$categoryObj.Name",
             ParentID: {
-              _id: '$parentCategoryObj._id',
-              Name: '$parentCategoryObj.Name',
+              _id: "$parentCategoryObj._id",
+              Name: "$parentCategoryObj.Name",
             },
           },
         },
@@ -307,7 +363,12 @@ const getRelatedProducts = async (req, res) => {
 
     successResponse(res, relatedProducts);
   } catch (error) {
-    errorResponse(res, 'Lỗi lấy sản phẩm liên quan', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi lấy sản phẩm liên quan",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -317,5 +378,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  getRelatedProducts
-}; 
+  getRelatedProducts,
+};

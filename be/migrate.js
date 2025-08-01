@@ -58,13 +58,11 @@ const sampleRoles = [
       "read:roles",
       "write:roles",
     ],
-    Status: "active",
   },
   {
     Role_Name: "user",
     Role_Description: "Người dùng thông thường",
     Permissions: ["read:products", "read:categories"],
-    Status: "active",
   },
 ];
 
@@ -76,7 +74,6 @@ const sampleGroupCategories = [
     Icon: "💻",
     Image:
       "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 1,
   },
   {
@@ -85,7 +82,6 @@ const sampleGroupCategories = [
     Icon: "🖥️",
     Image:
       "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 2,
   },
   {
@@ -94,7 +90,6 @@ const sampleGroupCategories = [
     Icon: "⌨️",
     Image:
       "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 3,
   },
   {
@@ -103,7 +98,6 @@ const sampleGroupCategories = [
     Icon: "🖨️",
     Image:
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 4,
   },
   {
@@ -112,7 +106,6 @@ const sampleGroupCategories = [
     Icon: "🌐",
     Image:
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 5,
   },
   {
@@ -121,7 +114,6 @@ const sampleGroupCategories = [
     Icon: "💾",
     Image:
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 6,
   },
   {
@@ -130,7 +122,6 @@ const sampleGroupCategories = [
     Icon: "🛡️",
     Image:
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 7,
   },
   {
@@ -139,7 +130,6 @@ const sampleGroupCategories = [
     Icon: "🔧",
     Image:
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-    Status: "active",
     Order: 8,
   },
 ];
@@ -154,7 +144,6 @@ const sampleUsers = [
     FullName: "Nguyễn Văn An",
     Address: "Hà Nội, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user2",
@@ -164,7 +153,6 @@ const sampleUsers = [
     FullName: "Trần Thị Bình",
     Address: "TP.HCM, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user3",
@@ -174,7 +162,6 @@ const sampleUsers = [
     FullName: "Lê Văn Cường",
     Address: "Đà Nẵng, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user4",
@@ -184,7 +171,6 @@ const sampleUsers = [
     FullName: "Phạm Thị Dung",
     Address: "Hải Phòng, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user5",
@@ -194,7 +180,6 @@ const sampleUsers = [
     FullName: "Hoàng Văn Em",
     Address: "Cần Thơ, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user6",
@@ -204,7 +189,6 @@ const sampleUsers = [
     FullName: "Vũ Thị Phương",
     Address: "Nha Trang, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user7",
@@ -214,7 +198,6 @@ const sampleUsers = [
     FullName: "Đỗ Văn Giang",
     Address: "Huế, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user8",
@@ -224,7 +207,6 @@ const sampleUsers = [
     FullName: "Ngô Thị Hoa",
     Address: "Vũng Tàu, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user9",
@@ -234,7 +216,6 @@ const sampleUsers = [
     FullName: "Lý Văn Inh",
     Address: "Bình Dương, Việt Nam",
     Role: "user",
-    Status: "active",
   },
   {
     UserName: "user10",
@@ -244,7 +225,6 @@ const sampleUsers = [
     FullName: "Trịnh Thị Kim",
     Address: "Đồng Nai, Việt Nam",
     Role: "user",
-    Status: "active",
   },
 ];
 
@@ -879,7 +859,6 @@ function generateSampleProducts() {
 
         Stock: Math.floor(Math.random() * 10) + 1,
         Specifications: product.specs,
-        Status: Math.random() < 0.85 ? "active" : "inactive", // 85% còn kinh doanh, 15% ngừng kinh doanh
         CategoryName: categoryName, // Thêm tên category để mapping sau này
       });
     });
@@ -892,70 +871,70 @@ const sampleProducts = generateSampleProducts();
 
 // Sample services data
 const sampleServices = [
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995515.png",
-      title: "Bảo Dưỡng Định Kỳ",
-      description:
-        "Thực hiện kiểm tra và bảo dưỡng theo định kỳ để đảm bảo xe luôn vận hành ổn định và an toàn.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995516.png",
-      title: "Sửa Chữa & Đồng Sơn",
-      description:
-        "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn Minh Duy.",
-      isFeatured: true,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995517.png",
-      title: "Nâng Cấp Hiệu Suất",
-      description:
-        "Cải thiện sức mạnh và khả năng vận hành của xe với các gói nâng cấp chính hãng.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995518.png",
-      title: "Thay Dầu & Lọc",
-      description:
-        "Thay dầu động cơ và bộ lọc theo tiêu chuẩn Minh Duy để đảm bảo hiệu suất tối ưu.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995519.png",
-      title: "Kiểm Tra Điện Tử",
-      description:
-        "Chẩn đoán và sửa chữa các vấn đề điện tử, hệ thống điều khiển với thiết bị chuyên dụng.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995520.png",
-      title: "Bảo Dưỡng Phanh",
-      description:
-        "Kiểm tra, bảo dưỡng và thay thế hệ thống phanh để đảm bảo an toàn tối đa.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995521.png",
-      title: "Lắp Đặt Phụ Kiện",
-      description:
-        "Lắp đặt các phụ kiện chính hãng Minh Duy với bảo hành và dịch vụ hậu mãi.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995522.png",
-      title: "Tư Vấn Kỹ Thuật",
-      description:
-        "Tư vấn chuyên sâu về kỹ thuật, bảo dưỡng và nâng cấp xe với đội ngũ chuyên gia.",
-      isFeatured: false,
-    },
-    {
-      icon: "https://cdn-icons-png.flaticon.com/512/1995/1995523.png",
-      title: "Dịch Vụ Khẩn Cấp",
-      description:
-        "Dịch vụ cứu hộ và sửa chữa khẩn cấp 24/7 cho các trường hợp cần thiết.",
-      isFeatured: false,
-    },
-  ];
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995515.png",
+    title: "Bảo Dưỡng Định Kỳ",
+    description:
+      "Thực hiện kiểm tra và bảo dưỡng theo định kỳ để đảm bảo xe luôn vận hành ổn định và an toàn.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995516.png",
+    title: "Sửa Chữa & Đồng Sơn",
+    description:
+      "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn Minh Duy.",
+    isFeatured: true,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995517.png",
+    title: "Nâng Cấp Hiệu Suất",
+    description:
+      "Cải thiện sức mạnh và khả năng vận hành của xe với các gói nâng cấp chính hãng.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995518.png",
+    title: "Thay Dầu & Lọc",
+    description:
+      "Thay dầu động cơ và bộ lọc theo tiêu chuẩn Minh Duy để đảm bảo hiệu suất tối ưu.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995519.png",
+    title: "Kiểm Tra Điện Tử",
+    description:
+      "Chẩn đoán và sửa chữa các vấn đề điện tử, hệ thống điều khiển với thiết bị chuyên dụng.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995520.png",
+    title: "Bảo Dưỡng Phanh",
+    description:
+      "Kiểm tra, bảo dưỡng và thay thế hệ thống phanh để đảm bảo an toàn tối đa.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995521.png",
+    title: "Lắp Đặt Phụ Kiện",
+    description:
+      "Lắp đặt các phụ kiện chính hãng Minh Duy với bảo hành và dịch vụ hậu mãi.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995522.png",
+    title: "Tư Vấn Kỹ Thuật",
+    description:
+      "Tư vấn chuyên sâu về kỹ thuật, bảo dưỡng và nâng cấp xe với đội ngũ chuyên gia.",
+    isFeatured: false,
+  },
+  {
+    icon: "https://cdn-icons-png.flaticon.com/512/1995/1995523.png",
+    title: "Dịch Vụ Khẩn Cấp",
+    description:
+      "Dịch vụ cứu hộ và sửa chữa khẩn cấp 24/7 cho các trường hợp cần thiết.",
+    isFeatured: false,
+  },
+];
 
 // Sample pricing data
 const samplePricing = [
@@ -1194,27 +1173,22 @@ const sampleServiceTypes = [
   {
     name: "Sửa chữa",
     description: "Dịch vụ sửa chữa máy tính, laptop, thiết bị điện tử",
-    status: "active",
   },
   {
     name: "Lắp đặt",
     description: "Dịch vụ lắp đặt hệ thống mạng, camera, thiết bị",
-    status: "active",
   },
   {
     name: "Thi công",
     description: "Dịch vụ thi công hệ thống công nghệ thông tin",
-    status: "active",
   },
   {
     name: "Bảo trì",
     description: "Dịch vụ bảo trì định kỳ hệ thống",
-    status: "active",
   },
   {
     name: "Nâng cấp",
     description: "Dịch vụ nâng cấp phần cứng và phần mềm",
-    status: "active",
   },
 ];
 
@@ -1388,7 +1362,6 @@ async function migrate() {
         FullName: "Administrator",
         Address: "Hà Nội, Việt Nam",
         Role: "admin",
-        Status: "active",
       });
       await adminUser.save();
       console.log("✅ Đã tạo admin user");
@@ -1406,7 +1379,6 @@ async function migrate() {
       await RoleUser.create({
         UserID: adminUser._id,
         RoleID: adminRole._id,
-        Status: "active",
       });
       console.log("✅ Đã tạo role-user relationship");
     } else {
@@ -1545,7 +1517,6 @@ async function migrate() {
             Name: subName,
             Description: `Sub-category ${subName} thuộc ${group.Name}`,
             ParentID: group._id,
-            Status: "active",
             Order: index + 1,
           });
         });

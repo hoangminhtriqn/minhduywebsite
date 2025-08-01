@@ -35,7 +35,7 @@ import {
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProductStatus } from "@/types";
+
 import styles from "./styles.module.scss";
 
 // Custom VND icon component
@@ -55,7 +55,6 @@ interface ProductFormData {
   Main_Image?: string;
   List_Image?: string;
   Specifications?: Array<{ key: string; value: string }>;
-  Status?: ProductStatus;
 }
 
 interface UploadedFile {
@@ -104,7 +103,6 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
     Price: 0,
     CategoryID: "",
     Main_Image: "",
-    Status: ProductStatus.ACTIVE,
   });
 
   const fetchProductData = useCallback(async (productId: string) => {
@@ -172,7 +170,6 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
         Main_Image: productData.Main_Image || "",
         List_Image: productData.List_Image?.join(",") || "",
         Specifications: specificationsArray,
-        Status: productData.Status || ProductStatus.ACTIVE,
       };
 
       // Set selected parent category for dropdown
@@ -376,8 +373,6 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
         ? values.List_Image.split(",").map((url) => url.trim())
         : [],
       Specifications: specifications,
-      Status: values.Status || ProductStatus.ACTIVE,
-
       Stock: form.getFieldValue("Stock") ?? 0,
     };
 
@@ -434,7 +429,6 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
         {...(!isEditing && {
           initialValues: {
             Price: 0,
-            Status: ProductStatus.ACTIVE,
             IsFeatured: false,
             IsNew: false,
             autoSave: true,
@@ -551,7 +545,7 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
           </Row>
 
           <Row gutter={[24, 16]}>
-            <Col span={12}>
+            <Col span={24}>
               <Form.Item
                 name="Price"
                 label="Giá sản phẩm"
@@ -574,20 +568,6 @@ const ProductUpsetForm: React.FC<ProductUpsetFormProps> = ({
                   }
                   min={0}
                 />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="Status" label="Trạng thái">
-                <Select
-                  placeholder="Chọn trạng thái"
-                  size="large"
-                  value={formData.Status}
-                  disabled={!isEditing}
-                >
-                  <Option value={ProductStatus.ACTIVE}>Hoạt động</Option>
-                  <Option value={ProductStatus.INACTIVE}>Không hoạt động</Option>
-                  <Option value={ProductStatus.OUT_OF_STOCK}>Hết hàng</Option>
-                </Select>
               </Form.Item>
             </Col>
           </Row>
