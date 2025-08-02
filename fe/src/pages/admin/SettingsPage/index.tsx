@@ -250,15 +250,12 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-        <Breadcrumb title="Cài đặt hệ thống" showAddButton={false} />
-      <div style={{ padding: "16px 24px 0 24px" }}>
-      </div>
-
-      <div style={{ flex: 1, padding: "0", overflow: "hidden" }}>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Breadcrumb title="Cài đặt hệ thống" showAddButton={false} />
+      <div>
         <Card
-          style={{ height: "100%", margin: 0, borderRadius: 0 }}
-          styles={{ body: { height: "calc(100% - 57px)", overflow: "hidden", padding: 0 } }}
+          style={{ margin: 0, borderTop: "none" }}
+          styles={{ body: { padding: 0 } }}
         >
           <Tabs
             defaultActiveKey="basic"

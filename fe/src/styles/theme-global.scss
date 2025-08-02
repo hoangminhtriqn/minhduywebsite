@@ -330,6 +330,25 @@ header:not([class*="header__"]),
   }
 }
 
+// Override Ant Design Tabs theme
+.ant-tabs {
+  &.ant-tabs-card {
+    .ant-tabs-tab {
+      &.ant-tabs-tab-active {
+        .ant-tabs-tab-btn {
+          color: var(--theme-primary, #{$color-primary}) !important;
+        }
+      }
+      
+      &:hover:not(.ant-tabs-tab-active) {
+        .ant-tabs-tab-btn {
+          color: var(--theme-primary, #{$color-primary}) !important;
+        }
+      }
+    }
+  }
+}
+
 // User Footer theme styles with maximum specificity
 html body footer.user-footer,
 html body .user-footer,
