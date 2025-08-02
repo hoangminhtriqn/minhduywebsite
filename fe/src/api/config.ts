@@ -61,6 +61,7 @@ export const API_ENDPOINTS = {
   // Admin Settings Management
   SETTINGS: '/settings',
   SETTINGS_LOCATIONS: '/settings/locations',
+  SETTINGS_SLIDES: '/settings/slides',
   
   // File Upload & Management
   FILES: '/files',

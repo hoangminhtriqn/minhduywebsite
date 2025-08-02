@@ -2,6 +2,7 @@ import {
   Category,
   getCategoriesHierarchy,
 } from "@/api/services/user/categories";
+import { getPublicSettings } from "@/api/services/admin/settings";
 import { Collapse, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,59 +10,57 @@ import styles from "./styles.module.scss";
 import HeroSectionSkeleton from "@/components/HeroSection/HeroSectionSkeleton";
 import { ROUTERS } from "@/utils/constant";
 
+interface Slide {
+  src: string;
+  alt: string;
+}
+
 const HeroSection: React.FC = () => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [loading, setLoading] = useState(true);
   const [navigating, setNavigating] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch categories from API
+  // Fetch categories and slides from API
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const categoriesData = await getCategoriesHierarchy();
+        const [categoriesData, settingsData] = await Promise.all([
+          getCategoriesHierarchy(),
+          getPublicSettings()
+        ]);
         setCategories(categoriesData);
+        
+        // Extract slides from settings
+        if (settingsData.slides) {
+          setSlides(settingsData.slides);
+        }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching data:", error);
         setCategories([]);
+        setSlides([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
-
-  const carouselImages = [
-    {
-      src: "/images/bmw-3840x2160.jpg",
-      alt: "Minh Duy Technology - Công ty công nghệ thiết bị vi tính hàng đầu",
-    },
-    {
-      src: "/images/bmw-x5m.jpg",
-      alt: "Laptop Gaming - Thiết bị công nghệ cao cấp tại Minh Duy",
-    },
-    {
-      src: "/images/bmw-service-center.jpg",
-      alt: "Trung tâm dịch vụ công nghệ Minh Duy - Sửa chữa bảo hành thiết bị",
-    },
-    {
-      src: "/images/bmw-service-hanoi.jpg",
-      alt: "Dịch vụ công nghệ tại Minh Duy - Đại lý thiết bị vi tính uy tín",
-    },
-  ];
 
   // Auto-rotate carousel
   useEffect(() => {
+    if (slides.length === 0) return;
+    
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+      setCurrentImageIndex((prev) => (prev + 1) % slides.length);
     }, 5000); // Change every 5 seconds
 
     return () => clearInterval(interval);
-  }, [carouselImages.length]);
+  }, [slides.length]);
 
   // Reset navigating state after navigation
   useEffect(() => {
@@ -96,12 +95,12 @@ const HeroSection: React.FC = () => {
 
   const handlePrevClick = () => {
     setCurrentImageIndex((prev) =>
-      prev === 0 ? carouselImages.length - 1 : prev - 1
+      prev === 0 ? slides.length - 1 : prev - 1
     );
   };
 
   const handleNextClick = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+    setCurrentImageIndex((prev) => (prev + 1) % slides.length);
   };
 
   // Handle sub category click
@@ -251,7 +250,7 @@ const HeroSection: React.FC = () => {
         {/* Right Side - Image Carousel */}
         <div className={styles.carouselSection}>
           <div className={styles.carousel}>
-            {carouselImages.map((image, index) => (
+            {slides.map((image, index) => (
               <div
                 key={index}
                 className={`${styles.carouselSlide} ${index === currentImageIndex ? styles.active : ""}`}
@@ -278,7 +277,7 @@ const HeroSection: React.FC = () => {
 
             {/* Carousel Dots */}
             <div className={styles.carouselDots}>
-              {carouselImages.map((_, index) => (
+              {slides.map((_, index) => (
                 <button
                   key={index}
                   className={`${styles.carouselDot} ${index === currentImageIndex ? styles.active : ""}`}

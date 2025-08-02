@@ -17,6 +17,7 @@ const Location = require("./models/Location");
 const Setting = require("./models/Setting");
 const Booking = require("./models/Booking");
 const ServiceType = require("./models/ServiceType");
+const Slide = require("./models/Slide");
 
 const sampleLocations = [
   {
@@ -39,6 +40,33 @@ const sampleLocations = [
     coordinates: "21.123456,105.123456",
     mapUrl: "https://maps.app.goo.gl/example3",
     isMainAddress: false,
+  },
+];
+
+const sampleSlides = [
+  {
+    src: "/images/bmw-3840x2160.jpg",
+    alt: "Minh Duy Technology - Công ty công nghệ thiết bị vi tính hàng đầu",
+    order: 1,
+    isActive: true,
+  },
+  {
+    src: "/images/bmw-x5m.jpg",
+    alt: "Laptop Gaming - Thiết bị công nghệ cao cấp tại Minh Duy",
+    order: 2,
+    isActive: true,
+  },
+  {
+    src: "/images/bmw-service-center.jpg",
+    alt: "Trung tâm dịch vụ công nghệ Minh Duy - Sửa chữa bảo hành thiết bị",
+    order: 3,
+    isActive: true,
+  },
+  {
+    src: "/images/bmw-service-hanoi.jpg",
+    alt: "Dịch vụ công nghệ tại Minh Duy - Đại lý thiết bị vi tính uy tín",
+    order: 4,
+    isActive: true,
   },
 ];
 
@@ -1740,6 +1768,15 @@ async function migrate() {
       console.log("✅ Đã tạo sample locations");
     } else {
       console.log("✅ Locations đã tồn tại");
+    }
+
+    // Tạo sample slides nếu chưa có
+    const existingSlides = await Slide.countDocuments();
+    if (existingSlides === 0) {
+      await Slide.insertMany(sampleSlides);
+      console.log("✅ Đã tạo sample slides");
+    } else {
+      console.log("✅ Slides đã tồn tại");
     }
 
     console.log("🔧 Tạo service types data...");

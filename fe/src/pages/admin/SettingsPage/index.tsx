@@ -7,6 +7,11 @@ import {
   createLocation,
   updateLocation,
   deleteLocation,
+  Slide,
+  getSlides,
+  createSlide,
+  updateSlide,
+  deleteSlide,
 } from "@/api/services/admin/settings";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import { SaveOutlined } from "@ant-design/icons";
@@ -20,6 +25,7 @@ import {
   Switch,
   Space,
   Modal,
+  InputNumber,
 } from "antd";
 import React, { useEffect, useState } from "react";
 
@@ -32,6 +38,12 @@ const SettingsPage: React.FC = () => {
     open: boolean;
     editingIndex: number | null;
     values: Partial<Location>;
+  }>({ open: false, editingIndex: null, values: {} });
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [slideModal, setSlideModal] = useState<{
+    open: boolean;
+    editingIndex: number | null;
+    values: Partial<Slide>;
   }>({ open: false, editingIndex: null, values: {} });
 
   useEffect(() => {
@@ -146,10 +158,93 @@ const SettingsPage: React.FC = () => {
     }));
   };
 
-  // Khi chuyển tab, nếu là tab 'locations' thì fetchLocations
+  const fetchSlides = async () => {
+    try {
+      setLoading(true);
+      const data = await getSlides();
+      setSlides(data);
+    } catch {
+      message.error("Lỗi khi tải danh sách slides");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditSlide = (index: number) => {
+    setSlideModal({
+      open: true,
+      editingIndex: index,
+      values: slides[index],
+    });
+  };
+
+  const handleAddSlide = () => {
+    setSlideModal({
+      open: true,
+      editingIndex: null,
+      values: {
+        src: "",
+        alt: "",
+        order: slides.length + 1,
+        isActive: true,
+      },
+    });
+  };
+
+  const handleDeleteSlide = async (index: number) => {
+    if (!slides[index]._id) return;
+    setLoading(true);
+    try {
+      await deleteSlide(slides[index]._id);
+      message.success("Xóa slide thành công");
+      await fetchSlides();
+    } catch {
+      message.error("Lỗi khi xóa slide");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSlideModalOk = async () => {
+    const { editingIndex, values } = slideModal;
+    setLoading(true);
+    try {
+      if (editingIndex !== null && slides[editingIndex]._id) {
+        await updateSlide(slides[editingIndex]._id, values as Slide);
+        message.success("Cập nhật slide thành công");
+      } else {
+        await createSlide(values as Slide);
+        message.success("Thêm slide thành công");
+      }
+      await fetchSlides();
+      setSlideModal({ open: false, editingIndex: null, values: {} });
+    } catch {
+      message.error("Lỗi khi lưu slide");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSlideModalCancel = () => {
+    setSlideModal({ open: false, editingIndex: null, values: {} });
+  };
+
+  const handleSlideFieldChange = (
+    field: keyof Slide,
+    value: string | number | boolean
+  ) => {
+    setSlideModal((prev) => ({
+      ...prev,
+      values: { ...prev.values, [field]: value },
+    }));
+  };
+
+  // Khi chuyển tab, nếu là tab 'locations' thì fetchLocations, nếu là 'slides' thì fetchSlides
   const handleTabChange = (key: string) => {
     if (key === "locations") {
       fetchLocations();
+    } else if (key === "slides") {
+      fetchSlides();
     }
   };
 
@@ -464,6 +559,127 @@ const SettingsPage: React.FC = () => {
                             checked={locationModal.values.isMainAddress}
                             onChange={(v) =>
                               handleLocationFieldChange("isMainAddress", v)
+                            }
+                          />
+                        </Form.Item>
+                      </Form>
+                    </Modal>
+                  </div>
+                ),
+              },
+              {
+                key: "slides",
+                label: "Slides",
+                children: (
+                  <div style={{ padding: "16px" }}>
+                    <Space style={{ marginBottom: 16 }}>
+                      <Button type="primary" onClick={handleAddSlide}>
+                        Thêm slide
+                      </Button>
+                    </Space>
+                    <div>
+                      {slides && slides.length > 0 ? (
+                        slides.map((slide: Slide, idx: number) => (
+                          <Card key={idx} style={{ marginBottom: 16 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <div style={{ flex: 1 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                                  <img 
+                                    src={slide.src} 
+                                    alt={slide.alt}
+                                    style={{ 
+                                      width: "100px", 
+                                      height: "60px", 
+                                      objectFit: "cover",
+                                      borderRadius: "4px"
+                                    }}
+                                  />
+                                  <div>
+                                    <b>Thứ tự: {slide.order}</b>{" "}
+                                    {slide.isActive && (
+                                      <span style={{ color: "green" }}>
+                                        (Đang hiển thị)
+                                      </span>
+                                    )}
+                                    <br />
+                                    <span>{slide.alt}</span>
+                                    <br />
+                                    <span style={{ fontSize: "12px", color: "#666" }}>
+                                      {slide.src}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <Space>
+                                <Button onClick={() => handleEditSlide(idx)}>
+                                  Sửa
+                                </Button>
+                                <Button
+                                  danger
+                                  onClick={() => handleDeleteSlide(idx)}
+                                >
+                                  Xóa
+                                </Button>
+                              </Space>
+                            </div>
+                          </Card>
+                        ))
+                      ) : (
+                        <div>Chưa có slide nào.</div>
+                      )}
+                    </div>
+                    <Modal
+                      title={
+                        slideModal.editingIndex !== null
+                          ? "Sửa slide"
+                          : "Thêm slide"
+                      }
+                      open={slideModal.open}
+                      onOk={handleSlideModalOk}
+                      onCancel={handleSlideModalCancel}
+                      okText={slideModal.editingIndex !== null ? "Cập nhật" : "Thêm"}
+                      cancelText="Hủy"
+                    >
+                      <Form layout="vertical">
+                        <Form.Item label="Link ảnh" required>
+                          <Input
+                            value={slideModal.values.src}
+                            onChange={(e) =>
+                              handleSlideFieldChange("src", e.target.value)
+                            }
+                            placeholder="Nhập đường dẫn ảnh"
+                          />
+                        </Form.Item>
+                        <Form.Item label="Mô tả ảnh (Alt text)" required>
+                          <Input
+                            value={slideModal.values.alt}
+                            onChange={(e) =>
+                              handleSlideFieldChange("alt", e.target.value)
+                            }
+                            placeholder="Nhập mô tả ảnh"
+                          />
+                        </Form.Item>
+                        <Form.Item label="Thứ tự hiển thị">
+                          <InputNumber
+                            value={slideModal.values.order}
+                            onChange={(value) =>
+                              handleSlideFieldChange("order", value || 1)
+                            }
+                            min={1}
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Hiển thị">
+                          <Switch
+                            checked={slideModal.values.isActive}
+                            onChange={(v) =>
+                              handleSlideFieldChange("isActive", v)
                             }
                           />
                         </Form.Item>

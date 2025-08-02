@@ -12,6 +12,14 @@ export interface Location {
   description?: string;
 }
 
+export interface Slide {
+  _id?: string;
+  src: string;
+  alt: string;
+  order: number;
+  isActive: boolean;
+}
+
 export interface Settings {
   companyName: string;
   phone: string;
@@ -27,6 +35,7 @@ export interface Settings {
   description: string;
   keywords: string;
   locations?: Location[];
+  slides?: Slide[];
 }
 
 export interface SettingsResponse {
@@ -85,5 +94,26 @@ export const updateLocation = async (id: string, data: Partial<Location>): Promi
 
 export const deleteLocation = async (id: string): Promise<Location> => {
   const res = await api.delete(`${API_ENDPOINTS.SETTINGS_LOCATIONS}/${id}`);
+  return res.data.data;
+};
+
+// Slides API
+export const getSlides = async (): Promise<Slide[]> => {
+  const res = await api.get(API_ENDPOINTS.SETTINGS_SLIDES);
+  return res.data.data;
+};
+
+export const createSlide = async (data: Omit<Slide, '_id'>): Promise<Slide> => {
+  const res = await api.post(API_ENDPOINTS.SETTINGS_SLIDES, data);
+  return res.data.data;
+};
+
+export const updateSlide = async (id: string, data: Partial<Slide>): Promise<Slide> => {
+  const res = await api.put(`${API_ENDPOINTS.SETTINGS_SLIDES}/${id}`, data);
+  return res.data.data;
+};
+
+export const deleteSlide = async (id: string): Promise<Slide> => {
+  const res = await api.delete(`${API_ENDPOINTS.SETTINGS_SLIDES}/${id}`);
   return res.data.data;
 }; 
