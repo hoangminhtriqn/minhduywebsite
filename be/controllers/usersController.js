@@ -1,6 +1,10 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/responseHandler');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const {
+  successResponse,
+  errorResponse,
+  HTTP_STATUS,
+} = require("../utils/responseHandler");
 
 // Đăng ký người dùng mới
 const register = async (req, res) => {
@@ -10,7 +14,11 @@ const register = async (req, res) => {
     // Kiểm tra user đã tồn tại
     const existingUser = await User.findOne({ $or: [{ UserName }, { Email }] });
     if (existingUser) {
-      return errorResponse(res, 'Tên đăng nhập hoặc email đã tồn tại', HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(
+        res,
+        "Tên đăng nhập hoặc email đã tồn tại",
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     // Tạo user mới
@@ -20,26 +28,29 @@ const register = async (req, res) => {
       Email,
       Phone,
       FullName,
-      Address
+      Address,
     });
 
     await user.save();
-    
+
     // Tạo access token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
     // Tạo refresh token (7 ngày)
     const refreshToken = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: "7d" }
     );
-    successResponse(res, { user, token, refreshToken }, 'Đăng ký thành công', HTTP_STATUS.CREATED);
+    successResponse(
+      res,
+      { user, token, refreshToken },
+      "Đăng ký thành công",
+      HTTP_STATUS.CREATED
+    );
   } catch (error) {
-    errorResponse(res, 'Lỗi đăng ký', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(res, "Lỗi đăng ký", HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
   }
 };
 
@@ -51,31 +62,51 @@ const login = async (req, res) => {
     // Tìm user
     const user = await User.findOne({ UserName });
     if (!user) {
-      return errorResponse(res, 'Tên đăng nhập không tồn tại', HTTP_STATUS.UNAUTHORIZED);
+      return errorResponse(
+        res,
+        "Tên đăng nhập không tồn tại",
+        HTTP_STATUS.UNAUTHORIZED
+      );
+    }
+
+    // Kiểm tra trạng thái tài khoản
+    if (user.Status !== "active") {
+      return errorResponse(
+        res,
+        "Tài khoản đã bị khóa",
+        HTTP_STATUS.UNAUTHORIZED
+      );
     }
 
     // Kiểm tra mật khẩu
     const isMatch = await user.comparePassword(Password);
     if (!isMatch) {
-      return errorResponse(res, 'Mật khẩu không đúng', HTTP_STATUS.UNAUTHORIZED);
+      return errorResponse(
+        res,
+        "Mật khẩu không đúng",
+        HTTP_STATUS.UNAUTHORIZED
+      );
     }
 
     // Tạo access token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || "24h",
+    });
     // Tạo refresh token (7 ngày)
     const refreshToken = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: "7d" }
     );
     const responseData = { user, token, refreshToken };
-    successResponse(res, responseData, 'Đăng nhập thành công');
+    successResponse(res, responseData, "Đăng nhập thành công");
   } catch (error) {
-    errorResponse(res, 'Lỗi đăng nhập', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi đăng nhập",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -83,9 +114,14 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   try {
     // Trong thực tế, bạn có thể thêm token vào blacklist
-    successResponse(res, null, 'Đăng xuất thành công');
+    successResponse(res, null, "Đăng xuất thành công");
   } catch (error) {
-    errorResponse(res, 'Lỗi đăng xuất', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi đăng xuất",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -94,38 +130,63 @@ const refreshToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
-      return errorResponse(res, 'Thiếu refresh token', HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(res, "Thiếu refresh token", HTTP_STATUS.BAD_REQUEST);
     }
     let decoded;
     try {
       decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
     } catch (err) {
-      return errorResponse(res, 'Refresh token không hợp lệ hoặc đã hết hạn', HTTP_STATUS.UNAUTHORIZED);
+      return errorResponse(
+        res,
+        "Refresh token không hợp lệ hoặc đã hết hạn",
+        HTTP_STATUS.UNAUTHORIZED
+      );
     }
+
+    // Kiểm tra trạng thái tài khoản
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return errorResponse(
+        res,
+        "Người dùng không tồn tại",
+        HTTP_STATUS.UNAUTHORIZED
+      );
+    }
+    if (user.Status !== "active") {
+      return errorResponse(
+        res,
+        "Tài khoản đã bị khóa",
+        HTTP_STATUS.UNAUTHORIZED
+      );
+    }
+
     // Tạo access token mới
-    const token = jwt.sign(
-      { userId: decoded.userId },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
-    );
-    successResponse(res, { token }, 'Làm mới access token thành công');
+    const token = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN || "24h",
+    });
+    successResponse(res, { token }, "Làm mới access token thành công");
   } catch (error) {
-    errorResponse(res, 'Lỗi refresh token', HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi refresh token",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
 // Get all users with pagination and search
 const getAllUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search = '', role = '' } = req.query;
+    const { page = 1, limit = 10, search = "", role = "" } = req.query;
     const query = {};
 
     // Search by username, email or phone
     if (search) {
       query.$or = [
-        { UserName: { $regex: search, $options: 'i' } },
-        { Email: { $regex: search, $options: 'i' } },
-        { Phone: { $regex: search, $options: 'i' } }
+        { UserName: { $regex: search, $options: "i" } },
+        { Email: { $regex: search, $options: "i" } },
+        { Phone: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -140,11 +201,11 @@ const getAllUsers = async (req, res) => {
     // Execute query
     const [users, total] = await Promise.all([
       User.find(query)
-        .select('-Password') // Exclude password from response
+        .select("-Password") // Exclude password from response
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(Number(limit)),
-      User.countDocuments(query)
+      User.countDocuments(query),
     ]);
 
     res.json({
@@ -153,8 +214,8 @@ const getAllUsers = async (req, res) => {
         total,
         page: Number(page),
         limit: Number(limit),
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -164,20 +225,25 @@ const getAllUsers = async (req, res) => {
 // Get user by ID
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId)
-      .select('-Password');
+    const user = await User.findById(req.params.userId).select("-Password");
 
     if (!user) {
-      return errorResponse(res, 'User not found', HTTP_STATUS.NOT_FOUND);
+      return errorResponse(res, "User not found", HTTP_STATUS.NOT_FOUND);
     }
 
     // Allow admin or the user themselves to get the user data
-    if (req.user.role !== 'admin' && req.params.userId !== req.user._id.toString()) {
-        return errorResponse(res, 'Không được phép truy cập thông tin người dùng này', HTTP_STATUS.FORBIDDEN);
+    if (
+      req.user.role !== "admin" &&
+      req.params.userId !== req.user._id.toString()
+    ) {
+      return errorResponse(
+        res,
+        "Không được phép truy cập thông tin người dùng này",
+        HTTP_STATUS.FORBIDDEN
+      );
     }
 
     successResponse(res, user);
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -192,7 +258,7 @@ const updateUser = async (req, res) => {
     const user = await User.findById(req.params.userId);
 
     if (!user) {
-      return errorResponse(res, 'User not found', HTTP_STATUS.NOT_FOUND);
+      return errorResponse(res, "User not found", HTTP_STATUS.NOT_FOUND);
     }
 
     // Update the user data
@@ -200,10 +266,9 @@ const updateUser = async (req, res) => {
       req.params.userId,
       updateData,
       { new: true, runValidators: true }
-    ).select('-Password');
-    
-    successResponse(res, updatedUser);
+    ).select("-Password");
 
+    successResponse(res, updatedUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -214,9 +279,9 @@ const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
-    res.json({ message: 'User deleted successfully' });
+    res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -230,5 +295,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  refreshToken
-}; 
+  refreshToken,
+};
