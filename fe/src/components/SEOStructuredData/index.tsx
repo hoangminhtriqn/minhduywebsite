@@ -2,7 +2,13 @@ import React from "react";
 
 interface SEOStructuredDataProps {
   type: "organization" | "carDealer" | "breadcrumb" | "product";
-  data: any;
+  data: {
+    currentPage?: string;
+    currentPath?: string;
+    name?: string;
+    description?: string;
+    price?: string;
+  };
 }
 
 const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({

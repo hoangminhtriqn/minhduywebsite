@@ -35,7 +35,7 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
     setCustomColor(theme.colors.palette.primary);
   }, [theme.colors.palette.primary]);
 
-  const handleCustomColorChange = (color: any) => {
+  const handleCustomColorChange = (color: string | { toHexString: () => string }) => {
     const hexColor = typeof color === "string" ? color : color.toHexString();
     setCustomColor(hexColor);
     updatePrimaryColor(hexColor);

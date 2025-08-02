@@ -20,7 +20,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   className,
 }) => {
   // Detect mobile screen size
-  const isMobile = window.innerWidth <= 768;
   const isSmallMobile = window.innerWidth <= 480;
 
   // Mobile-specific pagination settings
