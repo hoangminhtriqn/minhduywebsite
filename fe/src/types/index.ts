@@ -48,7 +48,6 @@ export interface Service {
   title: string;
   description: string;
   icon: string;
-  isFeatured: boolean;
   createdAt: string;
   updatedAt: string;
 }

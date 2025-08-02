@@ -905,63 +905,54 @@ const sampleServices = [
     title: "Bảo Dưỡng Định Kỳ",
     description:
       "Thực hiện kiểm tra và bảo dưỡng theo định kỳ để đảm bảo xe luôn vận hành ổn định và an toàn.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995516.png",
     title: "Sửa Chữa & Đồng Sơn",
     description:
       "Khắc phục các hư hỏng, làm mới ngoại hình xe với quy trình sửa chữa và sơn tiêu chuẩn Minh Duy.",
-    isFeatured: true,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995517.png",
     title: "Nâng Cấp Hiệu Suất",
     description:
       "Cải thiện sức mạnh và khả năng vận hành của xe với các gói nâng cấp chính hãng.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995518.png",
     title: "Thay Dầu & Lọc",
     description:
       "Thay dầu động cơ và bộ lọc theo tiêu chuẩn Minh Duy để đảm bảo hiệu suất tối ưu.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995519.png",
     title: "Kiểm Tra Điện Tử",
     description:
       "Chẩn đoán và sửa chữa các vấn đề điện tử, hệ thống điều khiển với thiết bị chuyên dụng.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995520.png",
     title: "Bảo Dưỡng Phanh",
     description:
       "Kiểm tra, bảo dưỡng và thay thế hệ thống phanh để đảm bảo an toàn tối đa.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995521.png",
     title: "Lắp Đặt Phụ Kiện",
     description:
       "Lắp đặt các phụ kiện chính hãng Minh Duy với bảo hành và dịch vụ hậu mãi.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995522.png",
     title: "Tư Vấn Kỹ Thuật",
     description:
       "Tư vấn chuyên sâu về kỹ thuật, bảo dưỡng và nâng cấp xe với đội ngũ chuyên gia.",
-    isFeatured: false,
   },
   {
     icon: "https://cdn-icons-png.flaticon.com/512/1995/1995523.png",
     title: "Dịch Vụ Khẩn Cấp",
     description:
       "Dịch vụ cứu hộ và sửa chữa khẩn cấp 24/7 cho các trường hợp cần thiết.",
-    isFeatured: false,
   },
 ];
 

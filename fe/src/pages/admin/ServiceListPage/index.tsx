@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Table, Button, Space, Popconfirm, message, Tag } from 'antd';
 import { servicesApi } from '@/api/services/admin/service';
 import Breadcrumb from '@/components/admin/Breadcrumb';
 import CustomPagination from '@/components/CustomPagination';
 import { Service } from '@/types';
+import { ROUTERS } from '@/utils/constant';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, message, Popconfirm, Space, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ServiceListPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -80,32 +82,33 @@ const ServiceListPage: React.FC = () => {
       key: 'description',
     },
     {
-      title: 'Nổi bật',
-      dataIndex: 'isFeatured',
-      key: 'isFeatured',
-      render: (isFeatured: boolean) => (
-        <Tag color={isFeatured ? 'green' : 'red'}>
-          {isFeatured ? 'Có' : 'Không'}
-        </Tag>
-      ),
-    },
-    {
-      title: 'Hành động',
-      key: 'action',
+      title: 'Thao tác',
+      key: 'actions',
+      width: 150,
+      align: 'center' as const,
       render: (_: unknown, record: Service) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => navigate(`/admin/services/edit/${record._id}`)}>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => navigate(`${ROUTERS.ADMIN.SERVICES_EDIT.replace(':id', record._id)}`)}
+          >
             Sửa
           </Button>
           <Popconfirm
-            title="Bạn có chắc muốn xóa dịch vụ này?"
+            title="Bạn có chắc chắn muốn xóa?"
             onConfirm={() => handleDelete(record._id)}
             okText="Có"
             cancelText="Không"
           >
-            <Button type="primary" danger>
-            Xóa
-          </Button>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              size="small"
+            >
+              Xóa
+            </Button>
           </Popconfirm>
         </Space>
       ),
