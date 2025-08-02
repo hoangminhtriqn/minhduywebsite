@@ -29,6 +29,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
+import { NewsStatus } from "@/types/enum";
 
 const { confirm } = Modal;
 
@@ -159,15 +160,13 @@ const NewsListPage: React.FC = () => {
       width: 120,
       render: (status: string) => {
         const statusConfig = {
-          active: { color: "green", text: "Hoạt động" },
-          inactive: { color: "red", text: "Không hoạt động" },
-          draft: { color: "orange", text: "Bản nháp" },
-          published: { color: "blue", text: "Đã xuất bản" },
-          archived: { color: "gray", text: "Đã lưu trữ" },
+          [NewsStatus.DRAFT]: { color: "blue", text: "Bản nháp" },
+          [NewsStatus.PUBLISHED]: { color: "green", text: "Đã xuất bản" },
+          [NewsStatus.LOCKED]: { color: "red", text: "Đã khóa" },
         };
         const config =
           statusConfig[status as keyof typeof statusConfig] ||
-          statusConfig.inactive;
+          statusConfig[NewsStatus.DRAFT];
         return <Tag color={config.color}>{config.text}</Tag>;
       },
     },

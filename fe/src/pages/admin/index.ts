@@ -19,5 +19,6 @@ export { default as CategoryListPage } from './CategoryListPage';
 export { default as ServiceListPage } from './ServiceListPage';
 export { default as BookingListPage } from './BookingListPage';
 export { default as NewsListPage } from './NewsListPage';
-export { default as NewsFormPage } from './NewsFormPage';
+export { default as AddNewsPage } from './AddNewsPage';
+export { default as EditNewsPage } from './EditNewsPage';
 export { default as SettingsPage } from './SettingsPage';

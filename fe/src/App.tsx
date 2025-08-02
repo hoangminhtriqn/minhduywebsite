@@ -28,7 +28,8 @@ import {
   AddServicePage,
   EditServicePage,
   NewsListPage,
-  NewsFormPage,
+  AddNewsPage,
+  EditNewsPage,
   SettingsPage,
   BookingListPage,
   // Pricing Management
@@ -181,12 +182,12 @@ const adminRoutes = [
   },
   {
     path: ROUTERS.ADMIN.NEWS_ADD,
-    element: NewsFormPage,
+    element: AddNewsPage,
     layout: AdminLayout,
   },
   {
     path: ROUTERS.ADMIN.NEWS_EDIT,
-    element: NewsFormPage,
+    element: EditNewsPage,
     layout: AdminLayout,
   },
   {

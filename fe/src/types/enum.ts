@@ -1,3 +1,10 @@
+// News Status Enum
+export enum NewsStatus {
+  DRAFT = "draft",
+  PUBLISHED = "published",
+  LOCKED = "locked"
+}
+
 // Product Status Enum
 export enum ProductStatus {
   ACTIVE = "active",

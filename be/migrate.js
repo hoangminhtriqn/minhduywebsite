@@ -10,6 +10,7 @@ const Product = require("./models/Product");
 const Category = require("./models/Category");
 const Service = require("./models/Service");
 const NewsEvent = require("./models/NewsEvent");
+const { NEWS_STATUS } = require("./utils/enums");
 
 const Pricing = require("./models/Pricing");
 const Location = require("./models/Location");
@@ -1103,7 +1104,7 @@ const sampleNewsEvents = [
     PublishDate: new Date("2024-09-01"),
     ImageUrl:
       "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop",
-    Status: "published",
+    Status: NEWS_STATUS.PUBLISHED,
   },
   {
     Title: "Minh Duy giới thiệu ứng dụng quản lý thiết bị",
@@ -1112,7 +1113,7 @@ const sampleNewsEvents = [
     PublishDate: new Date("2024-09-15"),
     ImageUrl:
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-    Status: "published",
+    Status: NEWS_STATUS.PUBLISHED,
   },
   {
     Title: "Minh Duy tổ chức sự kiện công nghệ gia đình",
@@ -1121,7 +1122,7 @@ const sampleNewsEvents = [
     PublishDate: new Date("2024-08-10"),
     ImageUrl:
       "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop",
-    Status: "published",
+    Status: NEWS_STATUS.PUBLISHED,
   },
   {
     Title: "Minh Duy khai trương trung tâm dịch vụ mới tại Hà Nội",
@@ -1130,7 +1131,7 @@ const sampleNewsEvents = [
     PublishDate: new Date("2024-08-20"),
     ImageUrl:
       "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop",
-    Status: "published",
+    Status: NEWS_STATUS.PUBLISHED,
   },
   {
     Title: "Minh Duy ra mắt dịch vụ thuê MacBook cao cấp",
@@ -1139,7 +1140,7 @@ const sampleNewsEvents = [
     PublishDate: new Date("2024-09-01"),
     ImageUrl:
       "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?w=800&h=600&fit=crop",
-    Status: "published",
+    Status: NEWS_STATUS.DRAFT,
   },
   {
     Title: "Minh Duy tổ chức workshop bảo mật dữ liệu miễn phí",
@@ -1148,7 +1149,7 @@ const sampleNewsEvents = [
     PublishDate: new Date("2024-09-10"),
     ImageUrl:
       "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=600&fit=crop",
-    Status: "published",
+    Status: NEWS_STATUS.LOCKED,
   },
 ];
 
