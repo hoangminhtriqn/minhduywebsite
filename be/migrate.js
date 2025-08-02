@@ -1317,7 +1317,7 @@ async function migrate() {
       await Category.deleteMany({});
       await Service.deleteMany({});
       await NewsEvent.deleteMany({});
-
+      await Setting.deleteMany({});
       await Location.deleteMany({});
       console.log("✅ Đã xóa dữ liệu cũ");
     }
@@ -1800,6 +1800,8 @@ async function migrate() {
       facebook: "https://www.facebook.com/minhduyqnam",
       youtube: "https://youtube.com",
       tiktok: "https://tiktok.com/@minhduy",
+      zaloUrl: "https://zalo.me/0123456333",
+      facebookMessengerUrl: "https://m.me/minhduyqnam",
       description:
         "Công ty thiết bị công nghệ hàng đầu tại Việt Nam, chuyên cung cấp thiết bị công nghệ chất lượng cao với dịch vụ bảo hành, bảo trì chuyên nghiệp. Trải nghiệm công nghệ tiên tiến với đội ngũ tư vấn chuyên nghiệp và giá cả cạnh tranh.",
       keywords: "laptop, máy tính, thiết bị công nghệ",

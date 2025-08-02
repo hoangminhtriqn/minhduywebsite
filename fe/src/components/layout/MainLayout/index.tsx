@@ -1,16 +1,16 @@
-import React from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import ThemeController from "@/components/ThemeController";
+import ZaloContact from "@/components/ZaloContact";
+import FacebookMessage from "@/components/FacebookMessage";
+import ScrollToTop from "@/components/ScrollToTop";
+import React from "react";
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const { user } = useAuth();
-
   // Simple layout structure
   const layoutStyle: React.CSSProperties = {
     display: "flex",
@@ -33,6 +33,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Header />
       <main style={mainContentStyle}>{children}</main>
       <Footer />
+      <ScrollToTop />
+      <FacebookMessage />
+      <ZaloContact />
       <ThemeController />
     </div>
   );

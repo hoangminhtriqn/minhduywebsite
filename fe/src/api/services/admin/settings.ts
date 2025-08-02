@@ -32,6 +32,9 @@ export interface Settings {
   instagram: string;
   twitter: string;
   linkedin: string;
+  tiktok: string;
+  zaloUrl: string;
+  facebookMessengerUrl: string;
   description: string;
   keywords: string;
   locations?: Location[];

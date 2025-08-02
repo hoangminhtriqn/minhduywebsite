@@ -354,6 +354,35 @@ const SettingsPage: React.FC = () => {
                         />
                       </Form.Item>
 
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "16px",
+                          marginTop: "16px",
+                        }}
+                      >
+                        <Form.Item
+                          label="Zalo URL"
+                          name="zaloUrl"
+                          rules={[
+                            { type: "url", message: "URL không hợp lệ" },
+                          ]}
+                        >
+                          <Input placeholder="https://zalo.me/0123456789" />
+                        </Form.Item>
+
+                        <Form.Item
+                          label="Facebook Messenger URL"
+                          name="facebookMessengerUrl"
+                          rules={[
+                            { type: "url", message: "URL không hợp lệ" },
+                          ]}
+                        >
+                          <Input placeholder="https://m.me/your-facebook-page" />
+                        </Form.Item>
+                      </div>
+
                       <Form.Item>
                         <Button
                           type="primary"

@@ -10,6 +10,8 @@ export interface PublicSettings {
   facebook: string;
   youtube: string;
   tiktok: string;
+  zaloUrl: string;
+  facebookMessengerUrl: string;
   description: string;
   keywords: string;
   locations: Location[];

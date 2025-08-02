@@ -75,6 +75,8 @@ const getPublicSettings = async (req, res) => {
       facebook: settings.facebook,
       youtube: settings.youtube,
       tiktok: settings.tiktok,
+      zaloUrl: settings.zaloUrl,
+      facebookMessengerUrl: settings.facebookMessengerUrl,
       description: settings.description,
       keywords: settings.keywords,
       locations, // thêm danh sách địa chỉ vào public settings

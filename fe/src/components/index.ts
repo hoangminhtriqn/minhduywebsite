@@ -22,4 +22,8 @@ export { default as PageSEO } from './SEO/PageSEO';
 export { default as SEOStructuredData } from './SEOStructuredData';
 
 // Theme Components
-export { default as ThemeController } from './ThemeController'; 
+export { default as ThemeController } from './ThemeController';
+
+// Contact Components
+export { default as ZaloContact } from './ZaloContact';
+export { default as FacebookMessage } from './FacebookMessage'; 
