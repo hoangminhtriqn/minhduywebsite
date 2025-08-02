@@ -5,7 +5,7 @@ import PricingForm from "@/components/admin/PricingForm";
 
 const AdminAddPricingPage: React.FC = () => {
   return (
-    <div style={{ padding: "24px" }}>
+    <div>
       <div style={{ marginBottom: "24px" }}>
         <Breadcrumb title="Thêm bảng giá mới" />
       </div>

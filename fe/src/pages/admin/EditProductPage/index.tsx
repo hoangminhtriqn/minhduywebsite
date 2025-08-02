@@ -9,7 +9,7 @@ const AdminEditProductPage: React.FC = () => {
 
   if (!id) {
     return (
-      <div style={{ padding: "24px" }}>
+      <div>
         <div style={{ textAlign: "center", color: "#ff4d4f", padding: "32px" }}>
           Không tìm thấy ID sản phẩm
         </div>
@@ -18,7 +18,7 @@ const AdminEditProductPage: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div>
       <div style={{ marginBottom: "24px" }}>
         <Breadcrumb title="Chỉnh sửa sản phẩm" />
       </div>

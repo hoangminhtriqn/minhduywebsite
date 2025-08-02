@@ -135,7 +135,7 @@ const ServiceTypeModal: React.FC<ServiceTypeModalProps> = ({ visible, onClose })
         title="Quản lý loại dịch vụ"
         open={visible}
         onCancel={onClose}
-        width={800}
+        width={900}
         footer={null}
       >
         <div className={styles.container}>

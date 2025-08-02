@@ -4,6 +4,7 @@ import {
   NewsEvent,
 } from "@/api/services/user/newsEvents";
 import Breadcrumb from "@/components/admin/Breadcrumb";
+import CustomPagination from "@/components/CustomPagination";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -38,12 +39,22 @@ const NewsListPage: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedNews, setSelectedNews] = useState<NewsEvent | null>(null);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   const fetchNews = async () => {
     setLoading(true);
     try {
       const response = await getAllNewsEvents();
-      setNews(response.data || []);
+      const newsData = response.data || [];
+      setNews(newsData);
+      setPagination(prev => ({
+        ...prev,
+        total: newsData.length,
+      }));
     } catch (error) {
       console.error("Error fetching news:", error);
       message.error("Không thể tải danh sách tin tức.");
@@ -88,6 +99,31 @@ const NewsListPage: React.FC = () => {
   const filteredNews = news.filter((item) =>
     item.Title.toLowerCase().includes(searchText.toLowerCase())
   );
+
+  // Get paginated data for display
+  const getPaginatedData = () => {
+    const startIndex = (pagination.current - 1) * pagination.pageSize;
+    const endIndex = startIndex + pagination.pageSize;
+    return filteredNews.slice(startIndex, endIndex);
+  };
+
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    const newPageSize = pageSize || pagination.pageSize;
+    setPagination({
+      ...pagination,
+      current: page,
+      pageSize: newPageSize,
+    });
+  };
+
+  // Update pagination total when filtered data changes
+  useEffect(() => {
+    setPagination(prev => ({
+      ...prev,
+      total: filteredNews.length,
+      current: 1, // Reset to first page when search changes
+    }));
+  }, [filteredNews.length]);
 
   const columns = [
     {
@@ -213,18 +249,22 @@ const NewsListPage: React.FC = () => {
 
         <Table
           columns={columns}
-          dataSource={filteredNews}
+          dataSource={getPaginatedData()}
           rowKey="_id"
           loading={loading}
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} của ${total} tin tức`,
-          }}
+          pagination={false}
           scroll={{ x: 800 }}
         />
+
+        <div style={{ marginTop: 16, textAlign: "center" }}>
+          <CustomPagination
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            onChange={handlePaginationChange}
+            pageSizeOptions={["10", "20", "50", "100"]}
+          />
+        </div>
       </Card>
 
       {/* Preview Modal */}

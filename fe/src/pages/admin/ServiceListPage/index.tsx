@@ -3,11 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Table, Button, Space, Popconfirm, message, Tag } from 'antd';
 import { servicesApi } from '@/api/services/admin/service';
 import Breadcrumb from '@/components/admin/Breadcrumb';
+import CustomPagination from '@/components/CustomPagination';
 import { Service } from '@/types';
 
 const ServiceListPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
   const navigate = useNavigate();
 
   const fetchServices = async () => {
@@ -15,6 +21,10 @@ const ServiceListPage: React.FC = () => {
     try {
       const fetchedServices = await servicesApi.getAllServices();
       setServices(fetchedServices);
+      setPagination(prev => ({
+        ...prev,
+        total: fetchedServices.length,
+      }));
     } catch {
       message.error('Không thể tải danh sách dịch vụ.');
     } finally {
@@ -22,9 +32,25 @@ const ServiceListPage: React.FC = () => {
     }
   };
 
+  // Get paginated data for display
+  const getPaginatedData = () => {
+    const startIndex = (pagination.current - 1) * pagination.pageSize;
+    const endIndex = startIndex + pagination.pageSize;
+    return services.slice(startIndex, endIndex);
+  };
+
   useEffect(() => {
     fetchServices();
   }, []);
+
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    const newPageSize = pageSize || pagination.pageSize;
+    setPagination({
+      ...pagination,
+      current: page,
+      pageSize: newPageSize,
+    });
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -95,10 +121,21 @@ const ServiceListPage: React.FC = () => {
       />
       <Table
         columns={columns}
-        dataSource={services}
+        dataSource={getPaginatedData()}
         rowKey="_id"
         loading={loading}
+        pagination={false}
       />
+      
+      <div style={{ marginTop: 16, textAlign: "center" }}>
+        <CustomPagination
+          current={pagination.current}
+          pageSize={pagination.pageSize}
+          total={pagination.total}
+          onChange={handlePaginationChange}
+          pageSizeOptions={["10", "20", "50", "100"]}
+        />
+      </div>
     </div>
   );
 };

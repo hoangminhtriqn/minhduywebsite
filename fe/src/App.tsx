@@ -103,6 +103,11 @@ const publicRoutes = [
     element: NewsDetailPage,
     layout: MainLayout,
   },
+  {
+    path: ROUTERS.USER.BOOKING,
+    element: BookingPage,
+    layout: MainLayout,
+  },
 ];
 
 const protectedRoutes = [
@@ -114,11 +119,6 @@ const protectedRoutes = [
   {
     path: ROUTERS.USER.FAVORITES,
     element: FavoritesPage,
-    layout: MainLayout,
-  },
-  {
-    path: ROUTERS.USER.BOOKING,
-    element: BookingPage,
     layout: MainLayout,
   },
 ];

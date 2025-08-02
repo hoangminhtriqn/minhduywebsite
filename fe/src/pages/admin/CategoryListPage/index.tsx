@@ -486,7 +486,7 @@ const CategoryListPage: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "12px", background: "#ffffff", minHeight: "100vh" }}>
+    <div>
       <Breadcrumb title="Quản lý danh mục" showAddButton={false} />
 
       <Row gutter={24} style={{ marginTop: "12px" }}>

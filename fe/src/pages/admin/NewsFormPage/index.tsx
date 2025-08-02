@@ -1,13 +1,20 @@
+import { API_BASE_URL } from "@/api/config";
+import {
+  createNewsEvent,
+  getNewsEventById,
+  updateNewsEvent
+} from "@/api/services/user/newsEvents";
+import Breadcrumb from "@/components/admin/Breadcrumb";
 import {
   CameraOutlined,
   DeleteOutlined,
   EyeOutlined,
   InfoCircleOutlined,
-  PlusOutlined,
   RollbackOutlined,
   SaveOutlined,
-  UploadOutlined,
+  UploadOutlined
 } from "@ant-design/icons";
+import { Editor } from "@tinymce/tinymce-react";
 import {
   Button,
   Card,
@@ -28,20 +35,10 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Editor } from "@tinymce/tinymce-react";
-import Breadcrumb from "@/components/admin/Breadcrumb";
-import {
-  getNewsEventById,
-  createNewsEvent,
-  updateNewsEvent,
-  NewsEvent,
-} from "@/api/services/user/newsEvents";
 import styles from "./styles.module.scss";
-import { API_BASE_URL } from "@/api/config";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
-const { TextArea } = Input;
 
 interface NewsFormData {
   Title: string;
@@ -70,7 +67,7 @@ const NewsFormPage: React.FC = () => {
   const [imageUploading, setImageUploading] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<NewsFormData>({} as NewsFormData);
   const [editorLoading, setEditorLoading] = useState(true);
 
   const fetchNewsData = async (newsId: string) => {

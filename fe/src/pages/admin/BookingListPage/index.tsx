@@ -231,7 +231,7 @@ const BookingListPage: React.FC = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div>
       <Breadcrumb title="Quản lý đặt lịch" showAddButton={false} />
 
       <div className="mb-4">

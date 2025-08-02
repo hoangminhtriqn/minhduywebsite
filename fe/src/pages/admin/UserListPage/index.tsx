@@ -226,7 +226,7 @@ const UserListPage: React.FC = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div>
       <Breadcrumb title="Quản lý người dùng" showAddButton={false} />
 
       <div className="mb-4">

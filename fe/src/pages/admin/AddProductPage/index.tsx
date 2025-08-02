@@ -5,7 +5,7 @@ import ProductUpsetForm from "@/components/admin/ProductForm";
 
 const AdminAddProductPage: React.FC = () => {
   return (
-    <div style={{ padding: "24px" }}>
+    <div>
       <div style={{ marginBottom: "24px" }}>
         <Breadcrumb title="Thêm sản phẩm mới" />
       </div>
