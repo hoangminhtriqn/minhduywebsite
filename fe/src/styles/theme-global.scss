@@ -311,6 +311,25 @@ header:not([class*="header__"]),
   box-shadow: 0 0 0 2px var(--theme-primary, #{$color-primary})25 !important;
 }
 
+// Override Ant Design Switch theme
+.ant-switch {
+  &.ant-switch-checked {
+    background: var(--theme-primary, #{$color-primary}) !important;
+    
+    &:hover:not(.ant-switch-disabled) {
+      background: var(--theme-primary-dark, #{$color-primary-dark}) !important;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 2px var(--theme-primary, #{$color-primary})25 !important;
+    }
+  }
+  
+  &:hover:not(.ant-switch-disabled):not(.ant-switch-checked) {
+    background: rgba(0, 0, 0, 0.25) !important;
+  }
+}
+
 // User Footer theme styles with maximum specificity
 html body footer.user-footer,
 html body .user-footer,

@@ -22,12 +22,13 @@ import {
   Input,
   message,
   Tabs,
-  Switch,
   Space,
-  Modal,
-  InputNumber,
+  Popconfirm,
 } from "antd";
 import React, { useEffect, useState } from "react";
+import LocationModal from "./LocationModal";
+import SlideModal from "./SlideModal";
+import "./styles.module.scss";
 
 const SettingsPage: React.FC = () => {
   const [form] = Form.useForm();
@@ -250,26 +251,26 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-      <div style={{ padding: "16px 24px 0 24px" }}>
         <Breadcrumb title="Cài đặt hệ thống" showAddButton={false} />
+      <div style={{ padding: "16px 24px 0 24px" }}>
       </div>
 
-      <div style={{ flex: 1, padding: "0", overflow: "auto" }}>
+      <div style={{ flex: 1, padding: "0", overflow: "hidden" }}>
         <Card
           style={{ height: "100%", margin: 0, borderRadius: 0 }}
-          styles={{ body: { height: "calc(100% - 57px)", overflow: "auto" } }}
+          styles={{ body: { height: "calc(100% - 57px)", overflow: "hidden", padding: 0 } }}
         >
           <Tabs
             defaultActiveKey="basic"
             type="card"
-            style={{ height: "100%" }}
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
             onChange={handleTabChange}
             items={[
               {
                 key: "basic",
                 label: "Thông tin cơ bản",
                 children: (
-                  <div style={{ padding: "16px" }}>
+                  <div style={{ padding: "16px", height: "100%", overflow: "auto" }}>
                     <Form
                       form={form}
                       layout="vertical"
@@ -375,7 +376,7 @@ const SettingsPage: React.FC = () => {
                 key: "social",
                 label: "Mạng xã hội",
                 children: (
-                  <div style={{ padding: "16px" }}>
+                  <div style={{ padding: "16px", height: "100%", overflow: "auto" }}>
                     <Form
                       form={form}
                       layout="vertical"
@@ -432,7 +433,7 @@ const SettingsPage: React.FC = () => {
                 key: "locations",
                 label: "Địa chỉ",
                 children: (
-                  <div style={{ padding: "16px" }}>
+                  <div style={{ padding: "16px", height: "100%", overflow: "auto" }}>
                     <Space style={{ marginBottom: 16 }}>
                       <Button type="primary" onClick={handleAddLocation}>
                         Thêm địa chỉ
@@ -473,12 +474,16 @@ const SettingsPage: React.FC = () => {
                                 <Button onClick={() => handleEditLocation(idx)}>
                                   Sửa
                                 </Button>
-                                <Button
-                                  danger
-                                  onClick={() => handleDeleteLocation(idx)}
+                                <Popconfirm
+                                  title="Bạn có chắc muốn xóa địa chỉ này?"
+                                  onConfirm={() => handleDeleteLocation(idx)}
+                                  okText="Có"
+                                  cancelText="Không"
                                 >
+                                  <Button danger>
                                   Xóa
                                 </Button>
+                                </Popconfirm>
                               </Space>
                             </div>
                           </Card>
@@ -487,83 +492,14 @@ const SettingsPage: React.FC = () => {
                         <div>Chưa có địa chỉ nào.</div>
                       )}
                     </div>
-                    <Modal
-                      title={
-                        locationModal.editingIndex !== null
-                          ? "Sửa địa chỉ"
-                          : "Thêm địa chỉ"
-                      }
+                    <LocationModal
                       open={locationModal.open}
+                      editingIndex={locationModal.editingIndex}
+                      values={locationModal.values}
                       onOk={handleLocationModalOk}
                       onCancel={handleLocationModalCancel}
-                      okText="Thêm"
-                      cancelText="Hủy"
-                    >
-                      <Form layout="vertical">
-                        <Form.Item label="Tên chi nhánh">
-                          <Input
-                            value={locationModal.values.name}
-                            onChange={(e) =>
-                              handleLocationFieldChange("name", e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Form.Item label="Địa chỉ">
-                          <Input
-                            value={locationModal.values.address}
-                            onChange={(e) =>
-                              handleLocationFieldChange(
-                                "address",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Form.Item>
-                        <Form.Item label="Tọa độ">
-                          <Input
-                            value={locationModal.values.coordinates}
-                            onChange={(e) =>
-                              handleLocationFieldChange(
-                                "coordinates",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Form.Item>
-                        <Form.Item label="Link bản đồ">
-                          <Input
-                            value={locationModal.values.mapUrl}
-                            onChange={(e) =>
-                              handleLocationFieldChange(
-                                "mapUrl",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </Form.Item>
-                        <Form.Item label="Mô tả">
-                          <Input.TextArea
-                            value={locationModal.values.description}
-                            onChange={(e) =>
-                              handleLocationFieldChange(
-                                "description",
-                                e.target.value
-                              )
-                            }
-                            rows={2}
-                            placeholder="Nhập mô tả chi nhánh (nếu có)"
-                          />
-                        </Form.Item>
-                        <Form.Item label="Địa chỉ chính">
-                          <Switch
-                            checked={locationModal.values.isMainAddress}
-                            onChange={(v) =>
-                              handleLocationFieldChange("isMainAddress", v)
-                            }
-                          />
-                        </Form.Item>
-                      </Form>
-                    </Modal>
+                      onFieldChange={handleLocationFieldChange}
+                    />
                   </div>
                 ),
               },
@@ -571,7 +507,7 @@ const SettingsPage: React.FC = () => {
                 key: "slides",
                 label: "Slides",
                 children: (
-                  <div style={{ padding: "16px" }}>
+                  <div style={{ padding: "16px", height: "100%", overflow: "auto" }}>
                     <Space style={{ marginBottom: 16 }}>
                       <Button type="primary" onClick={handleAddSlide}>
                         Thêm slide
@@ -620,12 +556,16 @@ const SettingsPage: React.FC = () => {
                                 <Button onClick={() => handleEditSlide(idx)}>
                                   Sửa
                                 </Button>
-                                <Button
-                                  danger
-                                  onClick={() => handleDeleteSlide(idx)}
+                                <Popconfirm
+                                  title="Bạn có chắc muốn xóa slide này?"
+                                  onConfirm={() => handleDeleteSlide(idx)}
+                                  okText="Có"
+                                  cancelText="Không"
                                 >
+                                  <Button danger>
                                   Xóa
                                 </Button>
+                                </Popconfirm>
                               </Space>
                             </div>
                           </Card>
@@ -634,57 +574,14 @@ const SettingsPage: React.FC = () => {
                         <div>Chưa có slide nào.</div>
                       )}
                     </div>
-                    <Modal
-                      title={
-                        slideModal.editingIndex !== null
-                          ? "Sửa slide"
-                          : "Thêm slide"
-                      }
+                    <SlideModal
                       open={slideModal.open}
+                      editingIndex={slideModal.editingIndex}
+                      values={slideModal.values}
                       onOk={handleSlideModalOk}
                       onCancel={handleSlideModalCancel}
-                      okText={slideModal.editingIndex !== null ? "Cập nhật" : "Thêm"}
-                      cancelText="Hủy"
-                    >
-                      <Form layout="vertical">
-                        <Form.Item label="Link ảnh" required>
-                          <Input
-                            value={slideModal.values.src}
-                            onChange={(e) =>
-                              handleSlideFieldChange("src", e.target.value)
-                            }
-                            placeholder="Nhập đường dẫn ảnh"
-                          />
-                        </Form.Item>
-                        <Form.Item label="Mô tả ảnh (Alt text)" required>
-                          <Input
-                            value={slideModal.values.alt}
-                            onChange={(e) =>
-                              handleSlideFieldChange("alt", e.target.value)
-                            }
-                            placeholder="Nhập mô tả ảnh"
-                          />
-                        </Form.Item>
-                        <Form.Item label="Thứ tự hiển thị">
-                          <InputNumber
-                            value={slideModal.values.order}
-                            onChange={(value) =>
-                              handleSlideFieldChange("order", value || 1)
-                            }
-                            min={1}
-                            style={{ width: "100%" }}
-                          />
-                        </Form.Item>
-                        <Form.Item label="Hiển thị">
-                          <Switch
-                            checked={slideModal.values.isActive}
-                            onChange={(v) =>
-                              handleSlideFieldChange("isActive", v)
-                            }
-                          />
-                        </Form.Item>
-                      </Form>
-                    </Modal>
+                      onFieldChange={handleSlideFieldChange}
+                    />
                   </div>
                 ),
               },
