@@ -24,14 +24,10 @@ export interface Settings {
   companyName: string;
   phone: string;
   email: string;
-  address: string;
   workingHours: string;
   logo: string;
   facebook: string;
   youtube: string;
-  instagram: string;
-  twitter: string;
-  linkedin: string;
   tiktok: string;
   zaloUrl: string;
   facebookMessengerUrl: string;
