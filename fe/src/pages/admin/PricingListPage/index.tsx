@@ -5,28 +5,28 @@ import CustomPagination from "@/components/CustomPagination";
 import PricingCard from "@/components/PricingCard";
 import { ROUTERS, colorOptions } from "@/utils/constant";
 import {
-    DeleteOutlined,
-    DownloadOutlined,
-    EditOutlined,
-    EyeOutlined,
-    FileTextOutlined,
-    PlusOutlined,
-    SearchOutlined,
+  DeleteOutlined,
+  DownloadOutlined,
+  EditOutlined,
+  EyeOutlined,
+  FileTextOutlined,
+  PlusOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import {
-    Button,
-    Card,
-    Input,
-    Modal,
-    Popconfirm,
-    Popover,
-    Select,
-    Space,
-    Spin,
-    Table,
-    Tag,
-    Tooltip,
-    notification,
+  Button,
+  Card,
+  Input,
+  Modal,
+  Popconfirm,
+  Popover,
+  Select,
+  Space,
+  Spin,
+  Table,
+  Tag,
+  Tooltip,
+  notification,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,8 +34,6 @@ import styles from "./styles.module.scss";
 
 const { confirm } = Modal;
 const { Option } = Select;
-
-
 
 interface PricingWithActions extends Pricing {
   key: string;
@@ -88,8 +86,15 @@ const PricingListPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination.current, pagination.pageSize, searchText, selectedStatus, sortBy, sortOrder]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    pagination.current,
+    pagination.pageSize,
+    searchText,
+    selectedStatus,
+    sortBy,
+    sortOrder,
+  ]);
 
   useEffect(() => {
     fetchPricing();
@@ -126,8 +131,6 @@ const PricingListPage: React.FC = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
-
-
   const handleStatusChange = (value: string) => {
     setSelectedStatus(value);
     setPagination((prev) => ({ ...prev, current: 1 }));
@@ -161,14 +164,14 @@ const PricingListPage: React.FC = () => {
       width: 200,
       render: (text: string) => (
         <Tooltip title={text} placement="topLeft">
-          <span 
+          <span
             className="font-medium block overflow-hidden"
             style={{
-              display: '-webkit-box',
+              display: "-webkit-box",
               WebkitLineClamp: 1,
-              WebkitBoxOrient: 'vertical',
-              lineHeight: '1.5em',
-              maxHeight: '1.5em'
+              WebkitBoxOrient: "vertical",
+              lineHeight: "1.5em",
+              maxHeight: "1.5em",
             }}
           >
             {text}
@@ -183,15 +186,18 @@ const PricingListPage: React.FC = () => {
       key: "description",
       width: 300,
       render: (text: string) => (
-        <Tooltip title={text.length > 50 ? text : undefined} placement="topLeft">
-          <span 
+        <Tooltip
+          title={text.length > 50 ? text : undefined}
+          placement="topLeft"
+        >
+          <span
             className="text-gray-600 block overflow-hidden"
             style={{
-              display: '-webkit-box',
+              display: "-webkit-box",
               WebkitLineClamp: 1,
-              WebkitBoxOrient: 'vertical',
-              lineHeight: '1.5em',
-              maxHeight: '1.5em'
+              WebkitBoxOrient: "vertical",
+              lineHeight: "1.5em",
+              maxHeight: "1.5em",
             }}
           >
             {text}
@@ -211,13 +217,15 @@ const PricingListPage: React.FC = () => {
         }
 
         const featuresContent = (
-          <div style={{ maxWidth: '300px' }}>
-            <div style={{ fontWeight: 'bold', marginBottom: 12, fontSize: '14px' }}>
+          <div style={{ maxWidth: "300px" }}>
+            <div
+              style={{ fontWeight: "bold", marginBottom: 12, fontSize: "14px" }}
+            >
               Danh sách tính năng ({features.length})
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
               {features.map((feature, index) => (
-                <Tag key={index} color="blue" style={{ marginBottom: '4px' }}>
+                <Tag key={index} color="blue" style={{ marginBottom: "4px" }}>
                   {feature}
                 </Tag>
               ))}
@@ -232,13 +240,13 @@ const PricingListPage: React.FC = () => {
             trigger="click"
             placement="topLeft"
           >
-            <Button 
-              type="link" 
+            <Button
+              type="link"
               size="small"
-              style={{ 
-                padding: '2px 6px', 
-                height: 'auto',
-                fontSize: '12px'
+              style={{
+                padding: "2px 6px",
+                height: "auto",
+                fontSize: "12px",
               }}
             >
               Xem chi tiết
@@ -252,48 +260,67 @@ const PricingListPage: React.FC = () => {
       dataIndex: "documents",
       key: "documents",
       width: 120,
-      render: (documents: { name: string; type: string; size: string; url: string }[]) => {
+      render: (
+        documents: { name: string; type: string; size: string; url: string }[]
+      ) => {
         if (!documents || documents.length === 0) {
           return <span className="text-gray-400">Không có tài liệu</span>;
         }
 
         const documentsContent = (
-          <div style={{ maxWidth: '350px' }}>
-            <div style={{ fontWeight: 'bold', marginBottom: 12, fontSize: '14px' }}>
+          <div style={{ maxWidth: "350px" }}>
+            <div
+              style={{ fontWeight: "bold", marginBottom: 12, fontSize: "14px" }}
+            >
               Danh sách tài liệu ({documents.length})
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+            >
               {documents.map((doc, index) => (
-                <div 
-                  key={index} 
-                  style={{ 
-                    padding: '8px 12px', 
-                    backgroundColor: '#f8f9fa', 
-                    borderRadius: '6px',
-                    border: '1px solid #e9ecef'
+                <div
+                  key={index}
+                  style={{
+                    padding: "8px 12px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "6px",
+                    border: "1px solid #e9ecef",
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      marginBottom: "4px",
+                    }}
+                  >
                     <Tag color="green" style={{ margin: 0 }}>
                       {doc.type.toUpperCase()}
                     </Tag>
-                    <span style={{ fontWeight: '500', fontSize: '13px' }}>
+                    <span style={{ fontWeight: "500", fontSize: "13px" }}>
                       {doc.name}
                     </span>
                   </div>
                   {doc.size && (
-                    <div style={{ fontSize: '12px', color: '#6c757d', marginBottom: '4px' }}>
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        color: "#6c757d",
+                        marginBottom: "4px",
+                      }}
+                    >
                       Kích thước: {doc.size}
                     </div>
                   )}
                   {doc.url && (
-                    <Button 
-                      type="link" 
-                      size="small" 
+                    <Button
+                      type="link"
+                      size="small"
                       icon={<DownloadOutlined />}
                       href={doc.url}
                       target="_blank"
-                      style={{ padding: 0, height: 'auto', fontSize: '12px' }}
+                      style={{ padding: 0, height: "auto", fontSize: "12px" }}
                     >
                       Tải xuống
                     </Button>
@@ -312,11 +339,11 @@ const PricingListPage: React.FC = () => {
               trigger="click"
               placement="topLeft"
             >
-              <Button 
-                type="link" 
-                size="small" 
+              <Button
+                type="link"
+                size="small"
                 icon={<FileTextOutlined />}
-                style={{ padding: '2px 6px', height: 'auto', fontSize: '12px' }}
+                style={{ padding: "2px 6px", height: "auto", fontSize: "12px" }}
               >
                 Chi tiết
               </Button>
@@ -336,12 +363,24 @@ const PricingListPage: React.FC = () => {
           return <span className="text-gray-400">Chưa chọn màu</span>;
         }
 
-        const colorOption = colorOptions.find(option => option.value === color);
+        const colorOption = colorOptions.find(
+          (option) => option.value === color
+        );
         const colorName = colorOption ? colorOption.label : color;
 
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <Tag color={color} style={{ margin: 0, fontSize: '12px', fontWeight: 'bold' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            <Tag
+              color={color}
+              style={{ margin: 0, fontSize: "12px", fontWeight: "bold" }}
+            >
               {colorName}
             </Tag>
           </div>
@@ -367,37 +406,43 @@ const PricingListPage: React.FC = () => {
       width: 150,
       align: "center" as const,
       render: (_: unknown, record: PricingWithActions) => (
-        <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EyeOutlined />}
-            size="small"
-            onClick={() => handleViewDetails(record)}
-          >
-            Xem
-          </Button>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            size="small"
-            onClick={() => navigate(ROUTERS.ADMIN.PRICE_LIST_EDIT.replace(':id', record._id))}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn xóa?"
-            onConfirm={() => handleDeletePricing(record._id)}
-            okText="Có"
-            cancelText="Không"
-          >
+        <Space size="small">
+          <Tooltip title="Xem chi tiết">
             <Button
-              danger
-              icon={<DeleteOutlined />}
+              type="primary"
+              icon={<EyeOutlined />}
               size="small"
+              onClick={() => handleViewDetails(record)}
             >
-              Xóa
+              Xem
             </Button>
-          </Popconfirm>
+          </Tooltip>
+          <Tooltip title="Chỉnh sửa">
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              size="small"
+              onClick={() =>
+                navigate(
+                  ROUTERS.ADMIN.PRICE_LIST_EDIT.replace(":id", record._id)
+                )
+              }
+            >
+              Sửa
+            </Button>
+          </Tooltip>
+          <Tooltip title="Xóa">
+            <Popconfirm
+              title="Bạn có chắc chắn muốn xóa?"
+              onConfirm={() => handleDeletePricing(record._id)}
+              okText="Có"
+              cancelText="Không"
+            >
+              <Button danger icon={<DeleteOutlined />} size="small">
+                Xóa
+              </Button>
+            </Popconfirm>
+          </Tooltip>
         </Space>
       ),
     },
@@ -481,23 +526,23 @@ const PricingListPage: React.FC = () => {
           }}
           closeIcon={false}
           footer={[
-            <Button key="close" onClick={() => {
-              setIsPreviewModalVisible(false);
-              setSelectedPricing(null);
-            }}>
+            <Button
+              key="close"
+              onClick={() => {
+                setIsPreviewModalVisible(false);
+                setSelectedPricing(null);
+              }}
+            >
               Đóng
-            </Button>
+            </Button>,
           ]}
           width={450}
         >
-          <PricingCard
-            pricing={selectedPricing}
-            variant="admin"
-          />
+          <PricingCard pricing={selectedPricing} variant="admin" />
         </Modal>
       )}
     </div>
   );
 };
 
-export default PricingListPage; 
+export default PricingListPage;
