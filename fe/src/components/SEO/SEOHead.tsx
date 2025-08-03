@@ -10,7 +10,13 @@ interface SEOHeadProps {
   ogType?: string;
   structuredData?: {
     type: "organization" | "carDealer" | "breadcrumb" | "product";
-    data: any;
+    data: {
+      currentPage?: string;
+      currentPath?: string;
+      name?: string;
+      description?: string;
+      price?: string;
+    };
   }[];
 }
 

@@ -24,7 +24,7 @@ import {
   Space,
   Table,
   Tag,
-  Tooltip
+  Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +52,7 @@ const NewsListPage: React.FC = () => {
       const response = await getAllNewsEvents();
       const newsData = response.data || [];
       setNews(newsData);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         total: newsData.length,
       }));
@@ -119,7 +119,7 @@ const NewsListPage: React.FC = () => {
 
   // Update pagination total when filtered data changes
   useEffect(() => {
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
       total: filteredNews.length,
       current: 1, // Reset to first page when search changes
