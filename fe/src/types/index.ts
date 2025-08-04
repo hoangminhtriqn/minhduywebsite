@@ -1,7 +1,28 @@
-import { ProductStatus, BookingStatus } from './enum';
+import { 
+  ProductStatus, 
+  BookingStatus, 
+  UserRole
+} from './enum';
 
 // Re-export enums for easy access
-export { ProductStatus, BookingStatus } from './enum';
+export { 
+  ProductStatus, 
+  BookingStatus, 
+  UserRole,
+  DashboardPermissions,
+  UserPermissions,
+  ProductPermissions,
+  CategoryPermissions,
+  ServicePermissions,
+  BookingPermissions,
+  NewsPermissions,
+  PricingPermissions,
+  SettingsPermissions,
+  PermissionManagementPermissions,
+  AllPermissions,
+  PermissionModules,
+  PermissionGroups
+} from './enum';
 
 // User Types
 export interface User {
@@ -11,10 +32,38 @@ export interface User {
   Phone: string;
   FullName?: string;
   Address?: string;
-  Role: 'user' | 'admin';
+  Role: UserRole;
   Status: 'active' | 'inactive';
   createdAt: string;
   updatedAt: string;
+}
+
+// Employee Types (extends User for admin management)
+export interface Employee extends User {
+  permissions?: string[];
+}
+
+// Permission Types
+export interface Permission {
+  key: string;
+  label: string;
+  group: string;
+  description?: string;
+}
+
+export interface PermissionGroup {
+  key: string;
+  label: string;
+  permissions: Permission[];
+}
+
+// Permission mapping for labels and groups
+export interface PermissionConfig {
+  [key: string]: {
+    label: string;
+    group: string;
+    description?: string;
+  };
 }
 
 // Product Types

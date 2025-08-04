@@ -272,7 +272,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *   
+ *
  *   put:
  *     summary: Update user
  *     tags: [Users]
@@ -336,7 +336,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *   
+ *
  *   delete:
  *     summary: Delete user (Admin only)
  *     tags: [Users]
@@ -383,26 +383,40 @@
  *               $ref: '#/components/schemas/Error'
  */
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { register, login, logout, getAllUsers, getUserById, updateUser, deleteUser } = require('../controllers/usersController');
-const { protect, authorize } = require('../middleware/authMiddleware');
-const { USER_ROLES } = require('../models/User');
+const {
+  register,
+  login,
+  logout,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} = require("../controllers/usersController");
+const {
+  protect,
+  authorize,
+  authorizeAdminPanel,
+  authorizeAdminOnly,
+} = require("../middleware/authMiddleware");
+const { USER_ROLES } = require("../models/User");
 
-router.post('/register', register);
-router.post('/login', login);
-router.post('/logout', logout);
-router.post('/refresh-token', require('../controllers/usersController').refreshToken);
+router.post("/register", register);
+router.post("/login", login);
+router.post("/logout", logout);
+router.post(
+  "/refresh-token",
+  require("../controllers/usersController").refreshToken
+);
 
 // User management routes (protected)
-router.route('/')
-  .get(protect, authorize('admin'), getAllUsers);
+router.route("/").get(protect, authorizeAdminPanel, getAllUsers);
 
-router.route('/:userId')
+router
+  .route("/:userId")
   .get(protect, getUserById)
   .put(protect, updateUser)
-  .delete(protect, authorize('admin'), deleteUser);
+  .delete(protect, authorizeAdminOnly, deleteUser);
 
-
-
-module.exports = router; 
+module.exports = router;

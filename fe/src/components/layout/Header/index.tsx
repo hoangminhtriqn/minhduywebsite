@@ -19,6 +19,7 @@ import {
   ShoppingOutlined,
 } from "@ant-design/icons";
 import { ROUTERS } from "@/utils/constant";
+import { UserRole } from "@/types/enum";
 
 // Hàm chuyển hex sang rgba
 function hexToRgba(hex: string, alpha: number) {
@@ -436,7 +437,9 @@ const Header: React.FC = () => {
   };
 
   const handleNavLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const cleanPath = getCleanPathFromHref(
+      e.currentTarget.getAttribute("href")
+    );
     const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.color = theme.colors.palette.primary;
@@ -447,7 +450,9 @@ const Header: React.FC = () => {
   };
 
   const handleNavLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const cleanPath = getCleanPathFromHref(
+      e.currentTarget.getAttribute("href")
+    );
     const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.color = theme.colors.text.primary;
@@ -458,7 +463,9 @@ const Header: React.FC = () => {
   };
 
   const handleMobileLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const cleanPath = getCleanPathFromHref(
+      e.currentTarget.getAttribute("href")
+    );
     const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
@@ -467,7 +474,9 @@ const Header: React.FC = () => {
   };
 
   const handleMobileLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const cleanPath = getCleanPathFromHref(e.currentTarget.getAttribute("href"));
+    const cleanPath = getCleanPathFromHref(
+      e.currentTarget.getAttribute("href")
+    );
     const isActive = isActiveRoute(cleanPath);
     if (!isActive) {
       e.currentTarget.style.backgroundColor = "transparent";
@@ -492,7 +501,8 @@ const Header: React.FC = () => {
                   >
                     {isMobile ? "Cá nhân" : "Thông tin cá nhân"}
                   </Link>
-                  {user.Role === "admin" && (
+                  {(user.Role === UserRole.ADMIN ||
+                    user.Role === UserRole.EMPLOYEE) && (
                     <Link
                       to={ROUTERS.ADMIN.DASHBOARD}
                       style={authLinkStyle}
@@ -775,7 +785,8 @@ const Header: React.FC = () => {
                 <UserOutlined />
                 Thông tin cá nhân
               </Link>
-              {user.Role === "admin" && (
+              {(user.Role === UserRole.ADMIN ||
+                user.Role === UserRole.EMPLOYEE) && (
                 <Link
                   to={ROUTERS.ADMIN.DASHBOARD}
                   style={{

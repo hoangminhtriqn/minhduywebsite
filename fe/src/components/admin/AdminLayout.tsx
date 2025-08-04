@@ -9,7 +9,8 @@ import {
   SettingOutlined,
   TagsOutlined,
   TeamOutlined,
-  UserOutlined
+  UnlockOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Layout, Menu, Space } from "antd";
 import React, { useEffect, useState } from "react";
@@ -19,15 +20,41 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ROUTERS } from "@/utils/constant";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./AdminLayout.module.css"; // Import CSS module
+import {
+  DashboardPermissions,
+  UserPermissions,
+  CategoryPermissions,
+  ProductPermissions,
+  BookingPermissions,
+  ServicePermissions,
+  PricingPermissions,
+  NewsPermissions,
+  PermissionManagementPermissions,
+  SettingsPermissions,
+} from "@/types/enum";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const isMobile = () => window.innerWidth < 992;
 
+// Define required permissions for each menu item using enums
+const MENU_PERMISSIONS = {
+  [ROUTERS.ADMIN.DASHBOARD]: [DashboardPermissions.VIEW],
+  [ROUTERS.ADMIN.USERS]: [UserPermissions.VIEW],
+  [ROUTERS.ADMIN.CATEGORIES]: [CategoryPermissions.VIEW],
+  [ROUTERS.ADMIN.PRODUCTS]: [ProductPermissions.VIEW],
+  [ROUTERS.ADMIN.BOOKINGS]: [BookingPermissions.VIEW],
+  [ROUTERS.ADMIN.SERVICES]: [ServicePermissions.VIEW],
+  [ROUTERS.ADMIN.PRICE_LIST]: [PricingPermissions.VIEW],
+  [ROUTERS.ADMIN.NEWS]: [NewsPermissions.VIEW],
+  [ROUTERS.ADMIN.PERMISSIONS]: [PermissionManagementPermissions.VIEW],
+  [ROUTERS.ADMIN.SETTINGS]: [SettingsPermissions.VIEW],
+};
+
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, hasAnyPermission, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileState, setIsMobileState] = useState(isMobile());
@@ -95,6 +122,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       ROUTERS.ADMIN.SETTINGS,
       ROUTERS.ADMIN.DASHBOARD,
       ROUTERS.ADMIN.PRICE_LIST,
+      ROUTERS.ADMIN.PERMISSIONS,
     ];
 
     // Find all routes that are a prefix of the current path
@@ -110,8 +138,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return ROUTERS.ADMIN.DASHBOARD; // Default to dashboard
   };
 
-  // Menu items configuration using new items API
-  const menuItems = [
+  // All menu items configuration
+  const allMenuItems = [
     {
       key: ROUTERS.ADMIN.DASHBOARD,
       icon: <DashboardOutlined />,
@@ -137,7 +165,6 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       icon: <CarryOutOutlined />,
       label: <Link to={ROUTERS.ADMIN.BOOKINGS}>Đặt lịch</Link>,
     },
-
     {
       key: ROUTERS.ADMIN.SERVICES,
       icon: <DashboardOutlined />,
@@ -154,11 +181,28 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       label: <Link to={ROUTERS.ADMIN.NEWS}>Tin tức</Link>,
     },
     {
+      key: ROUTERS.ADMIN.PERMISSIONS,
+      icon: <UnlockOutlined />,
+      label: <Link to={ROUTERS.ADMIN.PERMISSIONS}>Phân quyền</Link>,
+    },
+    {
       key: ROUTERS.ADMIN.SETTINGS,
       icon: <SettingOutlined />,
       label: <Link to={ROUTERS.ADMIN.SETTINGS}>Cài đặt</Link>,
     },
   ];
+
+  // Filter menu items based on permissions
+  const menuItems = allMenuItems.filter((item) => {
+    // Admin can see all menu items
+    if (isAdmin) return true;
+
+    // Check if user has required permissions for this menu item
+    const requiredPermissions = MENU_PERMISSIONS[item.key];
+    if (!requiredPermissions) return false;
+
+    return hasAnyPermission(requiredPermissions);
+  });
 
   return (
     <Layout className={styles.adminLayout}>

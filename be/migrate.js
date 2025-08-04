@@ -74,24 +74,97 @@ const sampleSlides = [
 const sampleRoles = [
   {
     Role_Name: "admin",
-    Role_Description: "Quản trị viên hệ thống",
+    Role_Description: "Quản trị viên hệ thống - Toàn quyền",
     Permissions: [
-      "read:products",
-      "write:products",
-      "read:categories",
-      "write:categories",
-      "read:users",
-      "write:users",
-      "read:orders",
-      "write:orders",
-      "read:roles",
-      "write:roles",
+      // Dashboard
+      "dashboard.view",
+      "dashboard.stats.view",
+
+      // Users
+      "users.view",
+      "users.search",
+      "users.edit",
+      "users.status.update",
+      "users.role.view",
+      "users.role.update",
+
+      // Products
+      "products.view",
+      "products.create",
+      "products.edit",
+      "products.delete",
+      "products.search",
+      "products.favorites.view",
+
+      // Categories
+      "categories.view",
+      "categories.create",
+      "categories.edit",
+      "categories.delete",
+      "categories.reorder",
+      "categories.visibility.toggle",
+      "categories.hierarchy.manage",
+
+      // Services
+      "services.view",
+      "services.create",
+      "services.edit",
+      "services.delete",
+      "services.media.upload",
+
+      // Bookings
+      "bookings.view",
+      "bookings.details.view",
+      "bookings.search",
+      "bookings.status.update",
+      "bookings.delete",
+      "bookings.service_types.manage",
+
+      // News
+      "news.view",
+      "news.create",
+      "news.edit",
+      "news.delete",
+      "news.preview",
+      "news.search",
+      "news.media.upload",
+
+      // Pricing
+      "pricing.view",
+      "pricing.create",
+      "pricing.edit",
+      "pricing.delete",
+      "pricing.details.view",
+      "pricing.features.manage",
+      "pricing.documents.manage",
+      "pricing.search",
+
+      // Settings
+      "settings.view",
+      "settings.update",
+      "settings.locations.manage",
+      "settings.slides.manage",
+      "settings.contact.update",
+      "settings.seo.update",
+
+      // Permissions
+      "permissions.view",
+      "permissions.create",
+      "permissions.edit",
+      "permissions.delete",
+      "permissions.assign",
+      "permissions.revoke",
     ],
   },
   {
     Role_Name: "user",
-    Role_Description: "Người dùng thông thường",
-    Permissions: ["read:products", "read:categories"],
+    Role_Description: "Người dùng thông thường - Chỉ truy cập frontend",
+    Permissions: [],
+  },
+  {
+    Role_Name: "employee",
+    Role_Description: "Nhân viên - Quyền hạn được cấp bởi Admin",
+    Permissions: [],
   },
 ];
 
@@ -165,6 +238,7 @@ const sampleGroupCategories = [
 
 // Sample users data
 const sampleUsers = [
+  // Sample regular users
   {
     UserName: "user1",
     Password: "password123",
@@ -183,77 +257,33 @@ const sampleUsers = [
     Address: "TP.HCM, Việt Nam",
     Role: "user",
   },
+  // Sample employees
   {
-    UserName: "user3",
+    UserName: "employee1",
     Password: "password123",
-    Email: "user3@example.com",
-    Phone: "0123456783",
-    FullName: "Lê Văn Cường",
-    Address: "Đà Nẵng, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user4",
-    Password: "password123",
-    Email: "user4@example.com",
-    Phone: "0123456784",
-    FullName: "Phạm Thị Dung",
-    Address: "Hải Phòng, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user5",
-    Password: "password123",
-    Email: "user5@example.com",
-    Phone: "0123456785",
-    FullName: "Hoàng Văn Em",
-    Address: "Cần Thơ, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user6",
-    Password: "password123",
-    Email: "user6@example.com",
-    Phone: "0123456786",
-    FullName: "Vũ Thị Phương",
-    Address: "Nha Trang, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user7",
-    Password: "password123",
-    Email: "user7@example.com",
-    Phone: "0123456787",
-    FullName: "Đỗ Văn Giang",
-    Address: "Huế, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user8",
-    Password: "password123",
-    Email: "user8@example.com",
-    Phone: "0123456788",
-    FullName: "Ngô Thị Hoa",
-    Address: "Vũng Tàu, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user9",
-    Password: "password123",
-    Email: "user9@example.com",
-    Phone: "0123456789",
-    FullName: "Lý Văn Inh",
-    Address: "Bình Dương, Việt Nam",
-    Role: "user",
-  },
-  {
-    UserName: "user10",
-    Password: "password123",
-    Email: "user10@example.com",
+    Email: "employee1@minhduy.com",
     Phone: "0123456790",
-    FullName: "Trịnh Thị Kim",
-    Address: "Đồng Nai, Việt Nam",
-    Role: "user",
+    FullName: "Lê Thị Nhân Viên",
+    Address: "Đà Nẵng, Việt Nam",
+    Role: "employee",
+  },
+  {
+    UserName: "employee2",
+    Password: "password123",
+    Email: "employee2@minhduy.com",
+    Phone: "0123456791",
+    FullName: "Phạm Văn Quản Lý",
+    Address: "Hà Nội, Việt Nam",
+    Role: "employee",
+  },
+  {
+    UserName: "employee3",
+    Password: "password123",
+    Email: "employee3@minhduy.com",
+    Phone: "0123456792",
+    FullName: "Nguyễn Thị Hỗ Trợ",
+    Address: "TP.HCM, Việt Nam",
+    Role: "employee",
   },
 ];
 
@@ -1353,6 +1383,9 @@ async function migrate() {
 
     const adminRole = createdRoles.find((role) => role.Role_Name === "admin");
     const userRole = createdRoles.find((role) => role.Role_Name === "user");
+    const employeeRole = createdRoles.find(
+      (role) => role.Role_Name === "employee"
+    );
 
     console.log("👤 Tạo admin user...");
     // Create admin user only if it doesn't exist
@@ -1373,20 +1406,20 @@ async function migrate() {
       console.log("✅ Admin user đã tồn tại");
     }
 
-    console.log("🔗 Tạo role-user relationship...");
+    console.log("🔗 Tạo role-user relationship cho admin...");
     // Create role-user relationship for admin only if it doesn't exist
-    const existingRoleUser = await RoleUser.findOne({
+    const existingAdminRoleUser = await RoleUser.findOne({
       UserID: adminUser._id,
       RoleID: adminRole._id,
     });
-    if (!existingRoleUser) {
+    if (!existingAdminRoleUser) {
       await RoleUser.create({
         UserID: adminUser._id,
         RoleID: adminRole._id,
       });
-      console.log("✅ Đã tạo role-user relationship");
+      console.log("✅ Đã tạo admin role-user relationship");
     } else {
-      console.log("✅ Role-user relationship đã tồn tại");
+      console.log("✅ Admin role-user relationship đã tồn tại");
     }
 
     console.log("📂 Tạo group categories...");
@@ -1737,6 +1770,32 @@ async function migrate() {
     if (existingUsers === 0) {
       createdUsers = await User.insertMany(sampleUsers);
       console.log("✅ Đã tạo users");
+
+      // Create role-user relationships for sample users
+      console.log("🔗 Tạo role-user relationships cho sample users...");
+      for (const user of createdUsers) {
+        let roleToAssign;
+        if (user.Role === "user") {
+          roleToAssign = userRole;
+        } else if (user.Role === "employee") {
+          roleToAssign = employeeRole;
+        }
+
+        if (roleToAssign) {
+          const existingRoleUser = await RoleUser.findOne({
+            UserID: user._id,
+            RoleID: roleToAssign._id,
+          });
+
+          if (!existingRoleUser) {
+            await RoleUser.create({
+              UserID: user._id,
+              RoleID: roleToAssign._id,
+            });
+          }
+        }
+      }
+      console.log("✅ Đã tạo role-user relationships cho sample users");
     } else {
       createdUsers = await User.find({ UserName: { $ne: "admin" } });
       console.log("✅ Users đã tồn tại");

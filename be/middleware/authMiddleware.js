@@ -78,7 +78,41 @@ const authorize = (...roles) => {
   };
 };
 
+// Middleware to authorize admin panel access (admin or employee)
+const authorizeAdminPanel = (req, res, next) => {
+  // req.user is attached by the protect middleware
+  if (
+    !req.user ||
+    (req.user.Role !== USER_ROLES.ADMIN &&
+      req.user.Role !== USER_ROLES.EMPLOYEE)
+  ) {
+    return errorResponse(
+      res,
+      `Người dùng với vai trò ${
+        req.user ? req.user.Role : "không xác định"
+      } không được phép truy cập admin panel`,
+      HTTP_STATUS.FORBIDDEN
+    );
+  }
+  next(); // User has admin panel access, move to the next middleware/route handler
+};
+
+// Middleware to authorize admin only access
+const authorizeAdminOnly = (req, res, next) => {
+  // req.user is attached by the protect middleware
+  if (!req.user || req.user.Role !== USER_ROLES.ADMIN) {
+    return errorResponse(
+      res,
+      `Chỉ admin mới được phép truy cập tài nguyên này`,
+      HTTP_STATUS.FORBIDDEN
+    );
+  }
+  next(); // User is admin, move to the next middleware/route handler
+};
+
 module.exports = {
   protect,
   authorize,
+  authorizeAdminPanel,
+  authorizeAdminOnly,
 };

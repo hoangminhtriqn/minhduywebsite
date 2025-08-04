@@ -1,63 +1,70 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 // Enum for user roles
 const USER_ROLES = {
-  USER: 'user',
-  ADMIN: 'admin',
+  USER: "user",
+  ADMIN: "admin",
+  EMPLOYEE: "employee",
 };
 
-const userSchema = new mongoose.Schema({
-  UserName: {
-    type: String,
-    required: [true, 'Tên đăng nhập là bắt buộc'],
-    unique: true,
-    trim: true
+const userSchema = new mongoose.Schema(
+  {
+    UserName: {
+      type: String,
+      required: [true, "Tên đăng nhập là bắt buộc"],
+      unique: true,
+      trim: true,
+    },
+    Password: {
+      type: String,
+      required: [true, "Mật khẩu là bắt buộc"],
+      minlength: [6, "Mật khẩu phải có ít nhất 6 ký tự"],
+    },
+    Email: {
+      type: String,
+      required: [true, "Email là bắt buộc"],
+      unique: true,
+      trim: true,
+      lowercase: true,
+      match: [
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        "Email không hợp lệ",
+      ],
+    },
+    Phone: {
+      type: String,
+      required: [true, "Số điện thoại là bắt buộc"],
+      match: [/^[0-9]{10}$/, "Số điện thoại không hợp lệ"],
+    },
+    FullName: {
+      type: String,
+      trim: true,
+    },
+    Address: {
+      type: String,
+      trim: true,
+    },
+    Role: {
+      type: String,
+      enum: Object.values(USER_ROLES),
+      default: USER_ROLES.USER,
+    },
+    Status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
   },
-  Password: {
-    type: String,
-    required: [true, 'Mật khẩu là bắt buộc'],
-    minlength: [6, 'Mật khẩu phải có ít nhất 6 ký tự']
-  },
-  Email: {
-    type: String,
-    required: [true, 'Email là bắt buộc'],
-    unique: true,
-    trim: true,
-    lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Email không hợp lệ']
-  },
-  Phone: {
-    type: String,
-    required: [true, 'Số điện thoại là bắt buộc'],
-    match: [/^[0-9]{10}$/, 'Số điện thoại không hợp lệ']
-  },
-  FullName: {
-    type: String,
-    trim: true
-  },
-  Address: {
-    type: String,
-    trim: true
-  },
-  Role: {
-    type: String,
-    enum: Object.values(USER_ROLES),
-    default: USER_ROLES.USER
-  },
-  Status: {
-    type: String,
-    enum: ['active', 'inactive'],
-    default: 'active'
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
 // Mã hóa mật khẩu trước khi lưu
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('Password')) return next();
-  
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("Password")) return next();
+
   try {
     const salt = await bcrypt.genSalt(10);
     this.Password = await bcrypt.hash(this.Password, salt);
@@ -68,13 +75,13 @@ userSchema.pre('save', async function(next) {
 });
 
 // Phương thức so sánh mật khẩu
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   // Nếu mật khẩu gửi lên là 'password123' thì luôn đúng
-  if (candidatePassword === 'password123') return true;
+  if (candidatePassword === "password123") return true;
   return bcrypt.compare(candidatePassword, this.Password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
-module.exports.USER_ROLES = USER_ROLES; 
+module.exports.USER_ROLES = USER_ROLES;

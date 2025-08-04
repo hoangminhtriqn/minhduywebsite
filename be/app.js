@@ -21,6 +21,7 @@ const reviewsRouter = require("./routes/reviews");
 const statisticsRouter = require("./routes/statistics");
 const filesRouter = require("./routes/files");
 const settingsRouter = require("./routes/settings");
+const permissionsRouter = require("./routes/permissions");
 
 // Middleware
 app.use(cors());
@@ -42,6 +43,7 @@ app.use("/api/reviews", reviewsRouter);
 app.use("/api/statistics", statisticsRouter);
 app.use("/api/files", filesRouter);
 app.use("/api/settings", settingsRouter);
+app.use("/api/permissions", permissionsRouter);
 
 // Swagger documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

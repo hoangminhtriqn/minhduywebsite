@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import apiClient from "../api/axios";
 import { toast } from "react-toastify";
 import { ROUTERS } from "../utils/constant";
+import { UserRole } from "@/types/enum";
+import { getAllPermissions } from "@/utils/permissionConfig";
 
 interface User {
   _id: string;
@@ -10,7 +12,7 @@ interface User {
   Phone: string;
   FullName: string;
   Address: string;
-  Role: string;
+  Role: UserRole;
   Status: string;
   createdAt: string;
   updatedAt: string;
@@ -19,6 +21,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  permissions: string[];
   login: (email: string, password: string) => Promise<string>;
   register: (
     username: string,
@@ -27,8 +30,15 @@ interface AuthContextType {
   ) => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  refreshPermissions: () => Promise<void>;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isEmployee: boolean;
+  isUser: boolean;
+  hasPermission: (permission: string) => boolean;
+  hasAnyPermission: (permissions: string[]) => boolean;
+  hasAllPermissions: (permissions: string[]) => boolean;
+  canAccessAdminPanel: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,6 +48,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [permissions, setPermissions] = useState<string[]>([]);
+
+  // Function to fetch user permissions
+  const fetchUserPermissions = async (userId: string) => {
+    try {
+      const response = await apiClient.get(`/permissions/user/${userId}`);
+      if (response.data.success) {
+        setPermissions(response.data.data || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch permissions:", error);
+      setPermissions([]);
+    }
+  };
 
   useEffect(() => {
     const performAuthCheck = async () => {
@@ -48,17 +72,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (token && userId) {
           const response = await apiClient.get(`/users/${userId}`);
-          setUser(response.data.data);
+          const userData = response.data.data;
+          setUser(userData);
+
+          // Fetch permissions for employee role
+          if (userData.Role === UserRole.EMPLOYEE) {
+            await fetchUserPermissions(userId);
+          } else if (userData.Role === UserRole.ADMIN) {
+            // Admin has all permissions
+            setPermissions(getAllPermissions());
+          } else {
+            // Regular user has no admin permissions
+            setPermissions([]);
+          }
         } else {
           localStorage.removeItem("token");
           localStorage.removeItem("userId");
           setUser(null);
+          setPermissions([]);
         }
       } catch (error) {
         console.error("Auth check failed:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         setUser(null);
+        setPermissions([]);
       } finally {
         setLoading(false);
       }
@@ -90,10 +128,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("token", token);
       localStorage.setItem("userId", user._id);
       setUser(user);
+
+      // Fetch permissions after login
+      if (user.Role === UserRole.EMPLOYEE) {
+        await fetchUserPermissions(user._id);
+      } else if (user.Role === UserRole.ADMIN) {
+        setPermissions(getAllPermissions());
+      } else {
+        setPermissions([]);
+      }
+
       toast.success("Đăng nhập thành công!");
 
       // Return redirect path based on user role
-      if (user.Role === "admin") {
+      if (user.Role === UserRole.ADMIN || user.Role === UserRole.EMPLOYEE) {
         return ROUTERS.ADMIN.DASHBOARD;
       } else {
         return ROUTERS.USER.HOME;
@@ -148,6 +196,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     setUser(null);
+    setPermissions([]);
   };
 
   const updateUser = (userData: Partial<User>) => {
@@ -157,15 +206,72 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  // Function to refresh user permissions
+  const refreshPermissions = async () => {
+    if (!user) return;
+
+    if (user.Role === UserRole.EMPLOYEE) {
+      await fetchUserPermissions(user._id);
+    } else if (user.Role === UserRole.ADMIN) {
+      setPermissions(getAllPermissions());
+    }
+  };
+
+  // Permission helper functions
+  const hasPermission = (permission: string): boolean => {
+    if (!user) return false;
+    if (user.Role === UserRole.ADMIN) return true;
+    if (user.Role === UserRole.EMPLOYEE) {
+      return permissions.includes(permission);
+    }
+    return false;
+  };
+
+  const hasAnyPermission = (requiredPermissions: string[]): boolean => {
+    if (!user) return false;
+    if (user.Role === UserRole.ADMIN) return true;
+    if (user.Role === UserRole.EMPLOYEE) {
+      return requiredPermissions.some((permission) =>
+        permissions.includes(permission)
+      );
+    }
+    return false;
+  };
+
+  const hasAllPermissions = (requiredPermissions: string[]): boolean => {
+    if (!user) return false;
+    if (user.Role === UserRole.ADMIN) return true;
+    if (user.Role === UserRole.EMPLOYEE) {
+      return requiredPermissions.every((permission) =>
+        permissions.includes(permission)
+      );
+    }
+    return false;
+  };
+
+  // Check if user can access admin panel
+  const canAccessAdminPanel = (): boolean => {
+    if (!user) return false;
+    return user.Role === UserRole.ADMIN || user.Role === UserRole.EMPLOYEE;
+  };
+
   const value = {
     user,
     loading,
+    permissions,
     login,
     register,
     logout,
     updateUser,
+    refreshPermissions,
     isAuthenticated: !!user,
-    isAdmin: user?.Role === "admin",
+    isAdmin: user?.Role === UserRole.ADMIN,
+    isEmployee: user?.Role === UserRole.EMPLOYEE,
+    isUser: user?.Role === UserRole.USER,
+    hasPermission,
+    hasAnyPermission,
+    hasAllPermissions,
+    canAccessAdminPanel: canAccessAdminPanel(),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

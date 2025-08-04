@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getDashboard } = require('../controllers/dashboardController');
-const { auth } = require('../middleware/auth');
+const { getDashboard } = require("../controllers/dashboardController");
+const { auth, adminPanelAuth } = require("../middleware/auth");
 
 /**
  * @swagger
@@ -77,6 +77,6 @@ const { auth } = require('../middleware/auth');
  */
 
 // Get dashboard statistics
-router.get('/', auth, getDashboard);
+router.get("/", adminPanelAuth, getDashboard);
 
-module.exports = router; 
+module.exports = router;

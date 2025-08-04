@@ -14,25 +14,69 @@ const {
   deleteSlide,
 } = require("../controllers/settingsController");
 const { auth, adminAuth } = require("../middleware/auth");
+const {
+  requirePermissions,
+  requireAdminPanelAccess,
+} = require("../middleware/permissionMiddleware");
 const { USER_ROLES } = require("../models/User");
 
 // Public route để lấy settings cho frontend
 router.get("/public", getPublicSettings);
 
-// Admin routes (cần authentication)
-router.get("/", auth, adminAuth, getSettings);
-router.put("/", auth, adminAuth, updateSettings);
+// Admin routes (cần authentication và permissions)
+router.get("/", auth, requirePermissions("settings.view"), getSettings);
+router.put("/", auth, requirePermissions("settings.update"), updateSettings);
 
 // Địa chỉ (locations) - quản trị
-router.get("/locations", auth, adminAuth, getAllLocations);
-router.post("/locations", auth, adminAuth, createLocation);
-router.put("/locations/:id", auth, adminAuth, updateLocation);
-router.delete("/locations/:id", auth, adminAuth, deleteLocation);
+router.get(
+  "/locations",
+  auth,
+  requirePermissions("settings.locations.manage"),
+  getAllLocations
+);
+router.post(
+  "/locations",
+  auth,
+  requirePermissions("settings.locations.manage"),
+  createLocation
+);
+router.put(
+  "/locations/:id",
+  auth,
+  requirePermissions("settings.locations.manage"),
+  updateLocation
+);
+router.delete(
+  "/locations/:id",
+  auth,
+  requirePermissions("settings.locations.manage"),
+  deleteLocation
+);
 
 // Slides - quản trị
-router.get("/slides", auth, adminAuth, getAllSlides);
-router.post("/slides", auth, adminAuth, createSlide);
-router.put("/slides/:id", auth, adminAuth, updateSlide);
-router.delete("/slides/:id", auth, adminAuth, deleteSlide);
+router.get(
+  "/slides",
+  auth,
+  requirePermissions("settings.slides.manage"),
+  getAllSlides
+);
+router.post(
+  "/slides",
+  auth,
+  requirePermissions("settings.slides.manage"),
+  createSlide
+);
+router.put(
+  "/slides/:id",
+  auth,
+  requirePermissions("settings.slides.manage"),
+  updateSlide
+);
+router.delete(
+  "/slides/:id",
+  auth,
+  requirePermissions("settings.slides.manage"),
+  deleteSlide
+);
 
 module.exports = router;

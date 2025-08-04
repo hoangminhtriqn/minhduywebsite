@@ -33,6 +33,7 @@ export const ROUTERS = {
   PRICE_LIST: "/admin/price-list",
   PRICE_LIST_ADD: "/admin/price-list/add",
   PRICE_LIST_EDIT: "/admin/price-list/edit/:id",
+  PERMISSIONS: "/admin/permissions",
  },
 };
 

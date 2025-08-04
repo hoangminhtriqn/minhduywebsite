@@ -90,7 +90,6 @@ const favoritesRoutes = require("./routes/favorites"); // Favorites routes
 const servicesApis = require("./routes/services"); // Services API
 const newsEventsApis = require("./routes/newsEvents"); // News & Events API
 
-
 const bookingsRouter = require("./routes/bookings");
 const serviceTypesRouter = require("./routes/serviceTypes");
 const userServiceTypesRouter = require("./routes/userServiceTypes");
@@ -98,12 +97,13 @@ const filesRouter = require("./routes/files");
 const settingsRouter = require("./routes/settings");
 const pricingRouter = require("./routes/pricing");
 const dashboardRouter = require("./routes/dashboard");
+const permissionsRouter = require("./routes/permissions");
 
 // Mount API routes FIRST (before Swagger)
-app.use("/api/users", userRoutes); 
+app.use("/api/users", userRoutes);
 app.use("/api/admin/users", userRoutes);
-app.use("/api/roles", roleRoutes); 
-app.use("/api/role-users", roleUserRoutes); 
+app.use("/api/roles", roleRoutes);
+app.use("/api/role-users", roleUserRoutes);
 
 // Mount category routes
 app.use("/api/categories", categoryRoutes);
@@ -114,7 +114,6 @@ app.use("/api/favorites", favoritesRoutes);
 app.use("/api/services", servicesApis);
 app.use("/api/news-events", newsEventsApis);
 
-
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/service-types", serviceTypesRouter);
 app.use("/api/user/service-types", userServiceTypesRouter);
@@ -122,6 +121,7 @@ app.use("/api/files", filesRouter);
 app.use("/api/settings", settingsRouter);
 app.use("/api/pricing", pricingRouter);
 app.use("/api/dashboard", dashboardRouter);
+app.use("/api/permissions", permissionsRouter);
 
 // Swagger Documentation - Mount AFTER API routes
 app.use(

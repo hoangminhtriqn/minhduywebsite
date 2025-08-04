@@ -1,5 +1,7 @@
 import CustomPagination from "@/components/CustomPagination";
 import Breadcrumb from "@/components/admin/Breadcrumb";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import usePermissions from "@/hooks/usePermissions";
 import { EditOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -22,6 +24,29 @@ import {
 } from "@/api/services/admin/user";
 const { Option } = Select;
 
+// Enum cho User Roles
+enum UserRole {
+  USER = "user",
+  EMPLOYEE = "employee",
+  ADMIN = "admin",
+}
+
+// Config cho roles
+const ROLE_CONFIG = {
+  [UserRole.USER]: {
+    label: "Người dùng",
+    color: "blue",
+  },
+  [UserRole.EMPLOYEE]: {
+    label: "Nhân viên",
+    color: "orange",
+  },
+  [UserRole.ADMIN]: {
+    label: "Quản trị viên",
+    color: "red",
+  },
+};
+
 interface User {
   _id: string;
   UserName: string;
@@ -38,6 +63,7 @@ interface User {
 const UserListPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+  const { canEditUsers, hasPermission } = usePermissions();
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -154,11 +180,11 @@ const UserListPage: React.FC = () => {
       title: "Vai trò",
       dataIndex: "Role",
       key: "Role",
-      render: (role: string) => (
-        <Tag color={role === "admin" ? "red" : "blue"}>
-          {role === "admin" ? "Quản trị viên" : "Người dùng"}
-        </Tag>
-      ),
+      render: (role: string) => {
+        const config =
+          ROLE_CONFIG[role as UserRole] || ROLE_CONFIG[UserRole.USER];
+        return <Tag color={config.color}>{config.label}</Tag>;
+      },
     },
     {
       title: "Trạng thái",
@@ -187,38 +213,44 @@ const UserListPage: React.FC = () => {
       key: "action",
       render: (_: unknown, record: User) => (
         <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
-            size="small"
-          >
-            Sửa
-          </Button>
-          {record.Status === "active" ? (
-            <Popconfirm
-              title="Xác nhận khóa người dùng?"
-              onConfirm={() => handleStatusChange(record._id, "inactive")}
-              okText="Khóa"
-              cancelText="Hủy"
-              okType="danger"
+          {canEditUsers() && (
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
+              size="small"
             >
-              <Button danger icon={<LockOutlined />} size="small">
-                Khóa
-              </Button>
-            </Popconfirm>
-          ) : (
-            <Popconfirm
-              title="Xác nhận mở khóa người dùng?"
-              onConfirm={() => handleStatusChange(record._id, "active")}
-              okText="Mở khóa"
-              cancelText="Hủy"
-              okType="primary"
-            >
-              <Button type="primary" icon={<UnlockOutlined />} size="small">
-                Mở khóa
-              </Button>
-            </Popconfirm>
+              Sửa
+            </Button>
+          )}
+          {hasPermission("users.status.update") && (
+            <>
+              {record.Status === "active" ? (
+                <Popconfirm
+                  title="Xác nhận khóa người dùng?"
+                  onConfirm={() => handleStatusChange(record._id, "inactive")}
+                  okText="Khóa"
+                  cancelText="Hủy"
+                  okType="danger"
+                >
+                  <Button danger icon={<LockOutlined />} size="small">
+                    Khóa
+                  </Button>
+                </Popconfirm>
+              ) : (
+                <Popconfirm
+                  title="Xác nhận mở khóa người dùng?"
+                  onConfirm={() => handleStatusChange(record._id, "active")}
+                  okText="Mở khóa"
+                  cancelText="Hủy"
+                  okType="primary"
+                >
+                  <Button type="primary" icon={<UnlockOutlined />} size="small">
+                    Mở khóa
+                  </Button>
+                </Popconfirm>
+              )}
+            </>
           )}
         </Space>
       ),
@@ -245,8 +277,11 @@ const UserListPage: React.FC = () => {
             }
           >
             <Option value="">Tất cả vai trò</Option>
-            <Option value="user">Người dùng</Option>
-            <Option value="admin">Quản trị viên</Option>
+            {Object.entries(ROLE_CONFIG).map(([role, config]) => (
+              <Option key={role} value={role}>
+                {config.label}
+              </Option>
+            ))}
           </Select>
         </Space>
       </div>
@@ -306,11 +341,14 @@ const UserListPage: React.FC = () => {
               placeholder="Chọn vai trò"
               disabled={
                 editingUser?._id === localStorage.getItem("userId") &&
-                editingUser?.Role === "admin"
+                editingUser?.Role === UserRole.ADMIN
               }
             >
-              <Option value="user">Người dùng</Option>
-              <Option value="admin">Quản trị viên</Option>
+              {Object.entries(ROLE_CONFIG).map(([role, config]) => (
+                <Option key={role} value={role}>
+                  {config.label}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
         </Form>
@@ -319,4 +357,12 @@ const UserListPage: React.FC = () => {
   );
 };
 
-export default UserListPage;
+const ProtectedUserListPage: React.FC = () => {
+  return (
+    <ProtectedRoute requiredPermissions={["users.view"]}>
+      <UserListPage />
+    </ProtectedRoute>
+  );
+};
+
+export default ProtectedUserListPage;

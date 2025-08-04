@@ -68,4 +68,9 @@ export const API_ENDPOINTS = {
   FILES_UPLOAD: '/files/upload',
   FILES_UPLOAD_MULTIPLE: '/files/upload-multiple',
   FILES_SEARCH: '/files/search',
+  
+  // Permission Management
+  PERMISSIONS: '/permissions',
+  PERMISSIONS_EMPLOYEES: '/permissions/employees',
+  PERMISSIONS_AVAILABLE: '/permissions/available',
 } as const; 

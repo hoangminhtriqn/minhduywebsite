@@ -8,7 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import MainLayout from "@/components/layout/MainLayout";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -36,6 +36,8 @@ import {
   PricingListPage,
   AddPricingPage,
   EditPricingPage,
+  // Permission Management
+  PermissionListPage,
 } from "@/pages/admin";
 
 // Public Pages
@@ -211,6 +213,11 @@ const adminRoutes = [
     element: EditPricingPage,
     layout: AdminLayout,
   },
+  {
+    path: ROUTERS.ADMIN.PERMISSIONS,
+    element: PermissionListPage,
+    layout: AdminLayout,
+  },
 ];
 
 const App: React.FC = () => {
@@ -272,7 +279,7 @@ const App: React.FC = () => {
                           key={route.path}
                           path={route.path}
                           element={
-                            <ProtectedRoute requireAdmin>
+                            <ProtectedRoute requireEmployee={true}>
                               <route.layout>
                                 <route.element />
                               </route.layout>
