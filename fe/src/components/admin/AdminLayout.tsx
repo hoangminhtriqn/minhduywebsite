@@ -10,7 +10,6 @@ import {
   TagsOutlined,
   TeamOutlined,
   UnlockOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Layout, Menu, Space } from "antd";
 import React, { useEffect, useState } from "react";
@@ -36,6 +35,13 @@ import {
 const { Header, Content, Footer, Sider } = Layout;
 
 const isMobile = () => window.innerWidth < 992;
+
+const getInitials = (name?: string) => {
+  if (!name) return "";
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
 
 // Define required permissions for each menu item using enums
 const MENU_PERMISSIONS = {
@@ -287,7 +293,17 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 >
                   <Space>
                     <div className={styles.userAvatar}>
-                      <UserOutlined />
+                      {user.Avatar ? (
+                        <img
+                          src={user.Avatar}
+                          alt="Avatar"
+                          className={styles.avatarImage}
+                        />
+                      ) : (
+                        <span className={styles.avatarInitials}>
+                          {getInitials(user.FullName)}
+                        </span>
+                      )}
                     </div>
                     <span className={styles.userName}>{user.UserName}</span>
                   </Space>
