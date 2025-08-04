@@ -2,6 +2,7 @@ import { authService } from "@/api/services/user/auth";
 import { useAuth } from "@/contexts/AuthContext";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import AvatarUpload from "./AvatarUpload";
 import styles from "./styles.module.scss";
 
 const getInitials = (name?: string) => {
@@ -19,6 +20,7 @@ const ProfilePage: React.FC = () => {
     FullName: user?.FullName || "",
     Phone: user?.Phone || "",
     Address: user?.Address || "",
+    Avatar: user?.Avatar || "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,8 +62,16 @@ const ProfilePage: React.FC = () => {
       FullName: user?.FullName || "",
       Phone: user?.Phone || "",
       Address: user?.Address || "",
+      Avatar: user?.Avatar || "",
     });
     setIsEditing(false);
+  };
+
+  const handleAvatarChange = (url: string) => {
+    setEditForm((prev) => ({
+      ...prev,
+      Avatar: url,
+    }));
   };
 
   if (loading) {
@@ -85,10 +95,26 @@ const ProfilePage: React.FC = () => {
     <div className={styles.profileWrapper}>
       <div className={styles.profileCard}>
         <div className={styles.avatarSection}>
-          <div className={styles.avatar}>
-            {/* Luôn dùng ký tự đầu tên làm avatar */}
-            <span>{getInitials(user.FullName)}</span>
-          </div>
+          {isEditing ? (
+            <AvatarUpload
+              value={editForm.Avatar}
+              onChange={handleAvatarChange}
+              fullName={user.FullName}
+              className={styles.avatarUploadWrapper}
+            />
+          ) : (
+            <div className={styles.avatar}>
+              {user.Avatar ? (
+                <img
+                  src={user.Avatar}
+                  alt="Avatar"
+                  className={styles.avatarImage}
+                />
+              ) : (
+                <span>{getInitials(user.FullName)}</span>
+              )}
+            </div>
+          )}
           <h2 className={styles.fullName}>{user.FullName}</h2>
           <div className={styles.role}>
             {user.Role === "admin" ? "Quản trị viên" : "Khách hàng"}

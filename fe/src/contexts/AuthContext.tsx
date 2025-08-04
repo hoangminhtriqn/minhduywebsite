@@ -14,6 +14,7 @@ interface User {
   Address: string;
   Role: UserRole;
   Status: string;
+  Avatar?: string;
   createdAt: string;
   updatedAt: string;
 }

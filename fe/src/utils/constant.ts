@@ -3,7 +3,7 @@ export const ROUTERS = {
   HOME: "/",
   LOGIN: "/dang-nhap",
   REGISTER: "/register",
-  PROFILE: "/profile",
+  PROFILE: "/thong-tin-ca-nhan",
   PRODUCTS: "/san-pham",
   PRODUCTS_DETAIL: "/san-pham/:id",
   SERVICE: "/dich-vu",

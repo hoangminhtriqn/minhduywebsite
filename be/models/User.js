@@ -55,6 +55,11 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
+    Avatar: {
+      type: String,
+      trim: true,
+      default: null,
+    },
   },
   {
     timestamps: true,
