@@ -112,12 +112,8 @@ const NewsPage: React.FC = () => {
               <div key={newsEvent._id} className="news-item">
                 <div className="news-item__image">
                   <img
-                    src={newsEvent.ImageUrl || "/images/default-news-image.jpg"}
+                    src={newsEvent.ImageUrl}
                     alt={newsEvent.Title}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/images/default-news-image.jpg";
-                    }}
                   />
                 </div>
                 <div className="news-item__content">
@@ -164,9 +160,6 @@ const NewsPage: React.FC = () => {
                 pageSize={pagination.pageSize}
                 total={total}
                 onChange={handlePageChange}
-                showSizeChanger={false}
-                showQuickJumper={false}
-                showTotal={true}
                 pageSizeOptions={["10", "20", "50"]}
               />
             </div>

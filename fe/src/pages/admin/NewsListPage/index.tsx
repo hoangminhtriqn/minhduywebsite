@@ -134,12 +134,11 @@ const NewsListPage: React.FC = () => {
       width: 100,
       render: (image: string) => (
         <Image
-          src={image || "/images/default-news-image.jpg"}
+          src={image}
           alt="News"
           width={60}
           height={40}
           style={{ objectFit: "cover", borderRadius: "4px" }}
-          fallback="/images/default-news-image.jpg"
         />
       ),
     },
@@ -281,7 +280,7 @@ const NewsListPage: React.FC = () => {
         {selectedNews && (
           <div>
             <Image
-              src={selectedNews.ImageUrl || "/images/default-news-image.jpg"}
+              src={selectedNews.ImageUrl}
               alt={selectedNews.Title}
               style={{ width: "100%", marginBottom: 16 }}
             />

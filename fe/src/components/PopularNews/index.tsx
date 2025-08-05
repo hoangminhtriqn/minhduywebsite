@@ -77,7 +77,7 @@ const PopularNews: React.FC = () => {
             >
               <div className={styles.newsImage}>
                 <img
-                  src={newsItem.ImageUrl || "/images/default-news-image.jpg"}
+                  src={newsItem.ImageUrl}
                   alt={newsItem.Title}
                 />
               </div>
