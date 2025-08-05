@@ -155,8 +155,6 @@ const RegisterPage: React.FC = () => {
           />
           <h1 className={styles["register__logo-text"]}>MINH DUY</h1>
         </div>
-
-        <h2 className={styles.register__title}>Đăng ký tài khoản mới</h2>
         <form onSubmit={handleSubmit} className={styles.register__form}>
           {/* Tên đăng nhập */}
           <div className={styles["register__form-group"]}>

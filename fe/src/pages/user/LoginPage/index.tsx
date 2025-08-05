@@ -73,10 +73,6 @@ const LoginPage: React.FC = () => {
           <h1 className={styles["login__logo-text"]}>MINH DUY</h1>
         </div>
 
-        <h2 className={styles.login__title}>Đăng nhập</h2>
-        {/* You can add an Alert component here for displaying errors if needed */}
-        {/* {error && <div className="alert alert-danger">{error}</div>} */}
-
         <form onSubmit={handleSubmit} className={styles.login__form}>
           <div className={styles["login__form-group"]}>
             {/* Visually hidden label */}
