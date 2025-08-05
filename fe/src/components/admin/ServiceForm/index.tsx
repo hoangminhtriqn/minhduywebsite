@@ -131,9 +131,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
   const handleImageUpload = async (file: File) => {
     setImageUploading(true);
     try {
-      console.log("Starting upload for file:", file.name, file.size);
       const uploadedFile = await uploadFileToCloudinary(file);
-      console.log("Upload successful:", uploadedFile);
       uploadedFile.file = file; // Store the original file
       setImageFile(uploadedFile);
       form.setFieldsValue({ icon: uploadedFile.url });
@@ -175,19 +173,13 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
         icon: imageFile?.url || "",
       };
 
-      console.log("Form values:", values);
-      console.log("Image file:", imageFile);
-      console.log("Service data to send:", serviceData);
-
       if (isEditing && serviceId) {
-        console.log("Updating service with ID:", serviceId);
         await servicesApi.updateService(serviceId, serviceData);
         notification.success({
           message: "Thành công",
           description: "Cập nhật dịch vụ thành công.",
         });
       } else {
-        console.log("Creating new service");
         await servicesApi.createService(serviceData);
         notification.success({
           message: "Thành công",

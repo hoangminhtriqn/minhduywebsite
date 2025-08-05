@@ -393,6 +393,7 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  changePassword,
 } = require("../controllers/usersController");
 const {
   protect,
@@ -409,6 +410,9 @@ router.post(
   "/refresh-token",
   require("../controllers/usersController").refreshToken
 );
+
+// Change password route (protected)
+router.put("/change-password", protect, changePassword);
 
 // User management routes (protected)
 router.route("/").get(protect, authorizeAdminPanel, getAllUsers);

@@ -56,6 +56,9 @@ import {
   NewsDetailPage,
   NotFoundPage,
 } from "@/pages/user";
+
+// Auth Pages
+import AuthSuccess from "@/pages/AuthSuccess";
 import "./styles/main.scss";
 import { ROUTERS } from "@/utils/constant";
 
@@ -109,6 +112,11 @@ const publicRoutes = [
   {
     path: ROUTERS.USER.BOOKING,
     element: BookingPage,
+    layout: MainLayout,
+  },
+  {
+    path: ROUTERS.AUTH.SUCCESS,
+    element: AuthSuccess,
     layout: MainLayout,
   },
 ];

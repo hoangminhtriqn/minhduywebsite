@@ -4,6 +4,7 @@ require("dotenv").config();
 
 // Import all models
 const User = require("./models/User");
+const { USER_ROLES, LOGIN_PROVIDERS } = require("./models/User");
 const Role = require("./models/Role");
 const RoleUser = require("./models/RoleUser");
 const Product = require("./models/Product");
@@ -73,7 +74,7 @@ const sampleSlides = [
 // Sample data
 const sampleRoles = [
   {
-    Role_Name: "admin",
+    Role_Name: USER_ROLES.ADMIN,
     Role_Description: "Quản trị viên hệ thống - Toàn quyền",
     Permissions: [
       // Dashboard
@@ -157,12 +158,12 @@ const sampleRoles = [
     ],
   },
   {
-    Role_Name: "user",
+    Role_Name: USER_ROLES.USER,
     Role_Description: "Người dùng thông thường - Chỉ truy cập frontend",
     Permissions: [],
   },
   {
-    Role_Name: "employee",
+    Role_Name: USER_ROLES.EMPLOYEE,
     Role_Description: "Nhân viên - Quyền hạn được cấp bởi Admin",
     Permissions: [],
   },
@@ -241,49 +242,54 @@ const sampleUsers = [
   // Sample regular users
   {
     UserName: "user1",
-    Password: "password123",
+    Password: "user123",
     Email: "user1@example.com",
     Phone: "0123456781",
     FullName: "Nguyễn Văn An",
     Address: "Hà Nội, Việt Nam",
-    Role: "user",
+    Role: USER_ROLES.USER,
+    LoginProvider: LOGIN_PROVIDERS.LOCAL,
   },
   {
     UserName: "user2",
-    Password: "password123",
+    Password: "user123",
     Email: "user2@example.com",
     Phone: "0123456782",
     FullName: "Trần Thị Bình",
     Address: "TP.HCM, Việt Nam",
-    Role: "user",
+    Role: USER_ROLES.USER,
+    LoginProvider: LOGIN_PROVIDERS.LOCAL,
   },
   // Sample employees
   {
     UserName: "employee1",
-    Password: "password123",
+    Password: "employee123",
     Email: "employee1@minhduy.com",
     Phone: "0123456790",
     FullName: "Lê Thị Nhân Viên",
     Address: "Đà Nẵng, Việt Nam",
-    Role: "employee",
+    Role: USER_ROLES.EMPLOYEE,
+    LoginProvider: LOGIN_PROVIDERS.LOCAL,
   },
   {
     UserName: "employee2",
-    Password: "password123",
+    Password: "employee123",
     Email: "employee2@minhduy.com",
     Phone: "0123456791",
     FullName: "Phạm Văn Quản Lý",
     Address: "Hà Nội, Việt Nam",
-    Role: "employee",
+    Role: USER_ROLES.EMPLOYEE,
+    LoginProvider: LOGIN_PROVIDERS.LOCAL,
   },
   {
     UserName: "employee3",
-    Password: "password123",
+    Password: "employee123",
     Email: "employee3@minhduy.com",
     Phone: "0123456792",
     FullName: "Nguyễn Thị Hỗ Trợ",
     Address: "TP.HCM, Việt Nam",
-    Role: "employee",
+    Role: USER_ROLES.EMPLOYEE,
+    LoginProvider: LOGIN_PROVIDERS.LOCAL,
   },
 ];
 
@@ -1288,16 +1294,13 @@ const sampleBookings = [
 // Migration function
 async function migrate() {
   try {
-    console.log("🚀 Bắt đầu migration...");
 
     // Kiểm tra environment variables
     if (!process.env.MONGO_URI) {
       console.error("❌ MONGO_URI chưa được cấu hình");
-      console.log("💡 Hãy thêm MONGO_URI vào environment variables");
       return;
     }
 
-    console.log("📡 Kết nối MongoDB...");
 
     // Retry logic cho kết nối MongoDB
     let connected = false;
@@ -1312,7 +1315,6 @@ async function migrate() {
           serverSelectionTimeoutMS: 10000,
           socketTimeoutMS: 45000,
         });
-        console.log("✅ Kết nối MongoDB thành công");
         connected = true;
         break;
       } catch (error) {
@@ -1325,7 +1327,6 @@ async function migrate() {
           console.error("🔍 Chi tiết lỗi:", error);
           return;
         }
-        console.log(`⏳ Chờ ${retryDelay / 1000}s trước khi thử lại...`);
         await new Promise((resolve) => setTimeout(resolve, retryDelay));
       }
     }
@@ -1338,7 +1339,6 @@ async function migrate() {
     const forceReset = process.argv.includes("--force");
 
     if (forceReset) {
-      console.log("🗑️  Xóa dữ liệu cũ...");
       // Clear existing data
       await User.deleteMany({});
       await Role.deleteMany({});
@@ -1349,7 +1349,6 @@ async function migrate() {
       await NewsEvent.deleteMany({});
       await Setting.deleteMany({});
       await Location.deleteMany({});
-      console.log("✅ Đã xóa dữ liệu cũ");
     }
 
     // Kiểm tra xem dữ liệu đã tồn tại chưa
@@ -1363,31 +1362,23 @@ async function migrate() {
       existingProducts > 0 &&
       !forceReset
     ) {
-      console.log("✅ Dữ liệu đã tồn tại, bỏ qua migration");
-      console.log(
-        `📊 Dữ liệu hiện có: ${existingRoles} roles, ${existingUsers} users, ${existingProducts} products`
-      );
       return;
     }
 
-    console.log("👥 Tạo roles...");
     // Create roles only if they don't exist
     let createdRoles = [];
     if (existingRoles === 0) {
       createdRoles = await Role.insertMany(sampleRoles);
-      console.log("✅ Đã tạo roles");
     } else {
       createdRoles = await Role.find({});
-      console.log("✅ Roles đã tồn tại");
     }
 
-    const adminRole = createdRoles.find((role) => role.Role_Name === "admin");
-    const userRole = createdRoles.find((role) => role.Role_Name === "user");
+    const adminRole = createdRoles.find((role) => role.Role_Name === USER_ROLES.ADMIN);
+    const userRole = createdRoles.find((role) => role.Role_Name === USER_ROLES.USER);
     const employeeRole = createdRoles.find(
-      (role) => role.Role_Name === "employee"
+      (role) => role.Role_Name === USER_ROLES.EMPLOYEE
     );
 
-    console.log("👤 Tạo admin user...");
     // Create admin user only if it doesn't exist
     let adminUser = await User.findOne({ UserName: "admin" });
     if (!adminUser) {
@@ -1398,15 +1389,13 @@ async function migrate() {
         Phone: "0123456789",
         FullName: "Administrator",
         Address: "Hà Nội, Việt Nam",
-        Role: "admin",
+        Role: USER_ROLES.ADMIN,
+        LoginProvider: LOGIN_PROVIDERS.LOCAL,
       });
       await adminUser.save();
-      console.log("✅ Đã tạo admin user");
     } else {
-      console.log("✅ Admin user đã tồn tại");
     }
 
-    console.log("🔗 Tạo role-user relationship cho admin...");
     // Create role-user relationship for admin only if it doesn't exist
     const existingAdminRoleUser = await RoleUser.findOne({
       UserID: adminUser._id,
@@ -1417,12 +1406,9 @@ async function migrate() {
         UserID: adminUser._id,
         RoleID: adminRole._id,
       });
-      console.log("✅ Đã tạo admin role-user relationship");
     } else {
-      console.log("✅ Admin role-user relationship đã tồn tại");
     }
 
-    console.log("📂 Tạo group categories...");
     // Create group categories only if they don't exist
     let createdGroupCategories = [];
     const existingGroupCategories = await Category.countDocuments({
@@ -1430,13 +1416,10 @@ async function migrate() {
     });
     if (existingGroupCategories === 0) {
       createdGroupCategories = await Category.insertMany(sampleGroupCategories);
-      console.log("✅ Đã tạo group categories");
     } else {
       createdGroupCategories = await Category.find({ ParentID: null });
-      console.log("✅ Group categories đã tồn tại");
     }
 
-    console.log("📁 Tạo sub categories...");
     // Create sub categories with proper ParentID mapping
     let createdSubCategories = [];
     const existingSubCategories = await Category.countDocuments({
@@ -1562,17 +1545,13 @@ async function migrate() {
       // Xóa sub-categories cũ nếu force reset
       if (forceReset && existingSubCategories > 0) {
         await Category.deleteMany({ ParentID: { $ne: null } });
-        console.log("🗑️ Đã xóa sub-categories cũ");
       }
 
       createdSubCategories = await Category.insertMany(subCategoriesWithParent);
-      console.log("✅ Đã tạo sub categories");
     } else {
       createdSubCategories = await Category.find({ ParentID: { $ne: null } });
-      console.log("✅ Sub categories đã tồn tại");
     }
 
-    console.log("💻 Tạo products...");
     // Create products only if they don't exist
     let dbProducts = [];
     if (existingProducts === 0) {
@@ -1736,48 +1715,42 @@ async function migrate() {
       });
 
       await Product.insertMany(productsWithCategories);
-      console.log("✅ Đã tạo products");
     } else {
-      console.log("✅ Products đã tồn tại");
     }
 
     // Lấy lại danh sách sản phẩm từ DB
     dbProducts = await Product.find({});
 
-    console.log("🔧 Tạo services...");
     // Create services only if they don't exist
     const existingServices = await Service.countDocuments();
     if (existingServices === 0) {
       await Service.insertMany(sampleServices);
-      console.log("✅ Đã tạo services");
     } else {
-      console.log("✅ Services đã tồn tại");
     }
 
-    console.log("📰 Tạo news events...");
     // Create news events only if they don't exist
     const existingNewsEvents = await NewsEvent.countDocuments();
     if (existingNewsEvents === 0) {
       await NewsEvent.insertMany(sampleNewsEvents);
-      console.log("✅ Đã tạo news events");
     } else {
-      console.log("✅ News events đã tồn tại");
     }
 
-    console.log("👥 Tạo users...");
     // Create users only if they don't exist
     let createdUsers = [];
     if (existingUsers === 0) {
-      createdUsers = await User.insertMany(sampleUsers);
-      console.log("✅ Đã tạo users");
+      // Tạo từng user một để trigger pre-save middleware (hash password)
+      for (const userData of sampleUsers) {
+        const user = new User(userData);
+        await user.save();
+        createdUsers.push(user);
+      }
 
       // Create role-user relationships for sample users
-      console.log("🔗 Tạo role-user relationships cho sample users...");
       for (const user of createdUsers) {
         let roleToAssign;
-        if (user.Role === "user") {
+        if (user.Role === USER_ROLES.USER) {
           roleToAssign = userRole;
-        } else if (user.Role === "employee") {
+        } else if (user.Role === USER_ROLES.EMPLOYEE) {
           roleToAssign = employeeRole;
         }
 
@@ -1795,58 +1768,43 @@ async function migrate() {
           }
         }
       }
-      console.log("✅ Đã tạo role-user relationships cho sample users");
     } else {
       createdUsers = await User.find({ UserName: { $ne: "admin" } });
-      console.log("✅ Users đã tồn tại");
     }
 
-    console.log("💰 Tạo pricing data...");
     // Create pricing data only if they don't exist
     const existingPricing = await Pricing.countDocuments();
     if (existingPricing === 0) {
       await Pricing.insertMany(samplePricing);
-      console.log("✅ Đã tạo pricing data");
     } else {
-      console.log("✅ Pricing data đã tồn tại");
     }
 
     // Tạo sample locations nếu chưa có
     const existingLocations = await Location.countDocuments();
     if (existingLocations === 0) {
       await Location.insertMany(sampleLocations);
-      console.log("✅ Đã tạo sample locations");
     } else {
-      console.log("✅ Locations đã tồn tại");
     }
 
     // Tạo sample slides nếu chưa có
     const existingSlides = await Slide.countDocuments();
     if (existingSlides === 0) {
       await Slide.insertMany(sampleSlides);
-      console.log("✅ Đã tạo sample slides");
     } else {
-      console.log("✅ Slides đã tồn tại");
     }
 
-    console.log("🔧 Tạo service types data...");
     // Create service types data only if they don't exist
     const existingServiceTypes = await ServiceType.countDocuments();
     if (existingServiceTypes === 0) {
       await ServiceType.insertMany(sampleServiceTypes);
-      console.log("✅ Đã tạo service types data");
     } else {
-      console.log("✅ Service types data đã tồn tại");
     }
 
-    console.log("📅 Tạo booking data...");
     // Create booking data only if they don't exist
     const existingBookings = await Booking.countDocuments();
     if (existingBookings === 0) {
       await Booking.insertMany(sampleBookings);
-      console.log("✅ Đã tạo booking data");
     } else {
-      console.log("✅ Booking data đã tồn tại");
     }
 
     // Tạo/cập nhật settings mẫu
@@ -1868,56 +1826,22 @@ async function migrate() {
     const existingSetting = await Setting.findOne();
     if (!existingSetting) {
       await Setting.create(settingsData);
-      console.log("✅ Đã tạo settings mẫu");
     } else {
       Object.assign(existingSetting, settingsData);
       await existingSetting.save();
-      console.log("✅ Đã cập nhật settings mẫu");
     }
 
-    console.log("🎉 Migration hoàn thành thành công!");
-    console.log("📊 Dữ liệu đã được tạo:");
-    console.log(`   - ${createdRoles.length} roles`);
-    console.log(`   - ${createdGroupCategories.length} group categories`);
-    console.log(`   - ${createdSubCategories.length} sub categories`);
-    console.log(`   - ${dbProducts.length} products`);
-    console.log(`   - ${sampleServices.length} services`);
-    console.log(`   - ${sampleNewsEvents.length} news events`);
-    console.log(`   - ${createdUsers.length} users`);
 
-    console.log(
-      `   - ${
-        existingPricing === 0 ? samplePricing.length : existingPricing
-      } pricing items`
-    );
-    console.log(
-      `   - ${
-        existingServiceTypes === 0
-          ? sampleServiceTypes.length
-          : existingServiceTypes
-      } service types`
-    );
-    console.log(
-      `   - ${
-        existingBookings === 0 ? sampleBookings.length : existingBookings
-      } booking items`
-    );
+
   } catch (error) {
     console.error("❌ Lỗi trong quá trình migration:", error.message);
     console.error("🔍 Chi tiết lỗi:", error);
 
     if (error.message.includes("MONGO_URI")) {
-      console.log("\n💡 Hướng dẫn sửa lỗi:");
-      console.log("1. Kiểm tra file .env có tồn tại không");
-      console.log("2. Đảm bảo MONGO_URI được cấu hình đúng");
-      console.log(
-        "3. Ví dụ: MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database"
-      );
     }
   } finally {
     if (mongoose.connection.readyState === 1) {
       await mongoose.disconnect();
-      console.log("🔌 Đã ngắt kết nối MongoDB");
     }
   }
 }

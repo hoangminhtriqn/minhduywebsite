@@ -12,6 +12,10 @@ dotenv.config();
 // Khởi tạo Express app
 const app = express();
 
+// Import và cấu hình passport (phải import trước khi sử dụng)
+const passport = require('passport');
+require('./config/passport'); // Load passport configuration
+
 // CORS configuration
 app.use(
   cors({
@@ -51,6 +55,9 @@ app.use(
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Initialize Passport middleware (thêm sau express middleware)
+app.use(passport.initialize());
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -99,6 +106,9 @@ const pricingRouter = require("./routes/pricing");
 const dashboardRouter = require("./routes/dashboard");
 const permissionsRouter = require("./routes/permissions");
 
+// Import Google Auth routes
+const googleAuthRouter = require("./routes/googleAuth");
+
 // Mount API routes FIRST (before Swagger)
 app.use("/api/users", userRoutes);
 app.use("/api/admin/users", userRoutes);
@@ -122,6 +132,9 @@ app.use("/api/settings", settingsRouter);
 app.use("/api/pricing", pricingRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/permissions", permissionsRouter);
+
+// Mount Google Auth routes
+app.use("/api/auth", googleAuthRouter);
 
 // Swagger Documentation - Mount AFTER API routes
 app.use(

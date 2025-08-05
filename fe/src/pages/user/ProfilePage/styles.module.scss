@@ -33,7 +33,7 @@
   border-radius: var(--theme-border-radius-xl, $border-radius-xl);
   box-shadow: var(--theme-shadow-lg, $shadow-lg);
   padding: 2.5rem 2rem 2rem 2rem;
-  max-width: 420px;
+  max-width: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -402,3 +402,114 @@ html body .profileWrapper .profileCard .actionButtons .cancelButton {
     background: var(--theme-text-light, $color-text-secondary) !important;
   }
 } 
+// Password Change Modal Styles
+.passwordChangeButton {
+
+  &:hover:not(:disabled) {
+  }
+
+  &:disabled {
+  }
+}
+
+// Antd Modal Customization
+:global(.ant-modal) {
+  &.passwordModal {
+    .ant-modal-header {
+      border-bottom: 1px solid var(--theme-border-light, #e5e5e5);
+      padding: 24px 24px 16px;
+    }
+
+    .ant-modal-body {
+      padding: 24px;
+    }
+
+    .ant-modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--theme-text-primary, #1a1a1a);
+    }
+  }
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.passwordForm {
+  .modalInput {
+    &:focus {
+      border-color: var(--theme-primary, #059669);
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+    }
+  }
+
+  :global(.ant-form-item-extra) {
+    font-size: 12px;
+    color: var(--theme-text-muted, #666);
+    margin-top: 4px;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-end;
+
+  .submitButton {
+    background: var(--theme-primary, #059669);
+    border-color: var(--theme-primary, #059669);
+
+    &:hover {
+      background: var(--theme-primary-dark, #047857);
+      border-color: var(--theme-primary-dark, #047857);
+    }
+  }
+
+  .cancelButton {
+    background: var(--theme-bg-secondary, #f5f5f5);
+    color: var(--theme-text-secondary, #666);
+    border-color: var(--theme-border-light, #e5e5e5);
+
+    &:hover {
+      background: var(--theme-bg-hover, #e5e5e5);
+      border-color: var(--theme-border-light, #e5e5e5);
+      color: var(--theme-text-secondary, #666);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .passwordChangeButton {
+  }
+
+  .modalActions {
+    flex-direction: column-reverse;
+    gap: 8px;
+
+    .submitButton,
+    .cancelButton {
+      width: 100%;
+    }
+  }
+
+  :global(.ant-modal) {
+    &.passwordModal {
+      .ant-modal-header {
+        padding: 20px 20px 12px;
+      }
+
+      .ant-modal-body {
+        padding: 20px;
+      }
+
+      .ant-modal-title {
+        font-size: 16px;
+      }
+    }
+  }
+}

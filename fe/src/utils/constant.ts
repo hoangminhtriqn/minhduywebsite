@@ -13,6 +13,9 @@ export const ROUTERS = {
   NEWS_DETAIL: "/tin-tuc-su-kien/:id",
   BOOKING: "/dat-lich",
  },
+ AUTH: {
+  SUCCESS: "/dang-nhap/thanh-cong",
+},
  ADMIN: {
   DASHBOARD: "/admin",
   PRODUCTS: "/admin/products",

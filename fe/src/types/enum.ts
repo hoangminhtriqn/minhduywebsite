@@ -27,6 +27,12 @@ export enum UserRole {
   EMPLOYEE = 'employee'
 }
 
+// Login Provider Enum
+export enum LoginProvider {
+  LOCAL = 'local',
+  GOOGLE = 'google'
+}
+
 // Permission Enums - Organized by modules
 export enum DashboardPermissions {
   VIEW = "dashboard.view",

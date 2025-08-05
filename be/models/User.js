@@ -8,17 +8,27 @@ const USER_ROLES = {
   EMPLOYEE: "employee",
 };
 
+const LOGIN_PROVIDERS = {
+  LOCAL: "local",
+  GOOGLE: "google",
+};
+
 const userSchema = new mongoose.Schema(
   {
     UserName: {
       type: String,
-      required: [true, "Tên đăng nhập là bắt buộc"],
+      required: function() {
+        return this.LoginProvider === LOGIN_PROVIDERS.LOCAL;
+      },
       unique: true,
+      sparse: true, // Allows null/undefined values but ensures uniqueness when present
       trim: true,
     },
     Password: {
       type: String,
-      required: [true, "Mật khẩu là bắt buộc"],
+      required: function() {
+        return this.LoginProvider === LOGIN_PROVIDERS.LOCAL;
+      },
       minlength: [6, "Mật khẩu phải có ít nhất 6 ký tự"],
     },
     Email: {
@@ -34,8 +44,13 @@ const userSchema = new mongoose.Schema(
     },
     Phone: {
       type: String,
-      required: [true, "Số điện thoại là bắt buộc"],
+      required: function() {
+        return this.LoginProvider === LOGIN_PROVIDERS.LOCAL;
+      },
       match: [/^[0-9]{10}$/, "Số điện thoại không hợp lệ"],
+      default: function() {
+        return this.LoginProvider === LOGIN_PROVIDERS.GOOGLE ? '0000000000' : undefined;
+      }
     },
     FullName: {
       type: String,
@@ -60,6 +75,17 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: null,
     },
+    // Google OAuth fields
+    GoogleId: {
+      type: String,
+      sparse: true, // Allows null values but ensures uniqueness when present
+      unique: true,
+    },
+    LoginProvider: {
+      type: String,
+      enum: Object.values(LOGIN_PROVIDERS),
+      default: LOGIN_PROVIDERS.LOCAL,
+    },
   },
   {
     timestamps: true,
@@ -68,7 +94,11 @@ const userSchema = new mongoose.Schema(
 
 // Mã hóa mật khẩu trước khi lưu
 userSchema.pre("save", async function (next) {
+  // Only skip if password is not modified
   if (!this.isModified("Password")) return next();
+
+  // Skip hashing if password is already hashed (starts with $2b$ bcrypt hash)
+  if (this.Password && this.Password.startsWith('$2b$')) return next();
 
   try {
     const salt = await bcrypt.genSalt(10);
@@ -81,8 +111,10 @@ userSchema.pre("save", async function (next) {
 
 // Phương thức so sánh mật khẩu
 userSchema.methods.comparePassword = async function (candidatePassword) {
-  // Nếu mật khẩu gửi lên là 'password123' thì luôn đúng
-  if (candidatePassword === "password123") return true;
+  // If user doesn't have a password set, return false
+  if (!this.Password) return false;
+  
+  // Compare with hashed password
   return bcrypt.compare(candidatePassword, this.Password);
 };
 
@@ -90,3 +122,4 @@ const User = mongoose.model("User", userSchema);
 
 module.exports = User;
 module.exports.USER_ROLES = USER_ROLES;
+module.exports.LOGIN_PROVIDERS = LOGIN_PROVIDERS;

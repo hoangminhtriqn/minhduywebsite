@@ -2,7 +2,9 @@ import { authService } from "@/api/services/user/auth";
 import { useAuth } from "@/contexts/AuthContext";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { LockOutlined } from "@ant-design/icons";
 import AvatarUpload from "./AvatarUpload";
+import PasswordChangeModal from "./PasswordChangeModal";
 import styles from "./styles.module.scss";
 
 const getInitials = (name?: string) => {
@@ -16,6 +18,7 @@ const ProfilePage: React.FC = () => {
   const { user, loading, isAuthenticated, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({
     FullName: user?.FullName || "",
     Phone: user?.Phone || "",
@@ -244,15 +247,30 @@ const ProfilePage: React.FC = () => {
               </button>
             </>
           ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className={styles.editButton}
-            >
-              Chỉnh sửa thông tin
-            </button>
+            <>
+              <button
+                onClick={() => setIsEditing(true)}
+                className={styles.editButton}
+              >
+                Chỉnh sửa thông tin
+              </button>
+              <button
+                onClick={() => setIsPasswordModalOpen(true)}
+                className={styles.passwordChangeButton}
+              >
+                <LockOutlined />
+                Thay đổi mật khẩu
+              </button>
+            </>
           )}
         </div>
       </div>
+
+      {/* Password Change Modal */}
+      <PasswordChangeModal 
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
     </div>
   );
 };

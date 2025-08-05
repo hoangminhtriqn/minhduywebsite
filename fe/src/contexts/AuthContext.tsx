@@ -2,12 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import apiClient from "../api/axios";
 import { toast } from "react-toastify";
 import { ROUTERS } from "../utils/constant";
-import { UserRole } from "@/types/enum";
+import { UserRole, LoginProvider } from "@/types/enum";
 import { getAllPermissions } from "@/utils/permissionConfig";
 
 interface User {
   _id: string;
-  UserName: string;
+  UserName?: string; // Optional for Google users
   Email: string;
   Phone: string;
   FullName: string;
@@ -15,6 +15,8 @@ interface User {
   Role: UserRole;
   Status: string;
   Avatar?: string;
+  LoginProvider?: LoginProvider;
+  GoogleId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -24,6 +26,7 @@ interface AuthContextType {
   loading: boolean;
   permissions: string[];
   login: (email: string, password: string) => Promise<string>;
+  googleLogin: () => Promise<void>;
   register: (
     username: string,
     email: string,
@@ -88,6 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         } else {
           localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
           localStorage.removeItem("userId");
           setUser(null);
           setPermissions([]);
@@ -95,6 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } catch (error) {
         console.error("Auth check failed:", error);
         localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
         localStorage.removeItem("userId");
         setUser(null);
         setPermissions([]);
@@ -124,9 +129,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         throw new Error("Invalid response structure from server");
       }
 
-      const { token, user } = response.data.data;
+      const { token, user, refreshToken } = response.data.data;
 
       localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refreshToken); // Thêm refreshToken
       localStorage.setItem("userId", user._id);
       setUser(user);
 
@@ -173,6 +179,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const googleLogin = async (): Promise<void> => {
+    try {
+      setLoading(true);
+      // Redirect to backend Google OAuth endpoint
+      const backendURL = import.meta.env.VITE_API_URL || 'http://localhost:9201/api';
+      window.location.href = `${backendURL}/auth/google`;
+    } catch (error) {
+      console.error('Google login error:', error);
+      setLoading(false);
+      throw new Error('Google login failed');
+    }
+  };
+
   const register = async (
     username: string,
     email: string,
@@ -184,8 +203,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email,
         password,
       });
-      const { token, user } = response.data.data;
+      const { token, user, refreshToken } = response.data.data;
       localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refreshToken); // Thêm refreshToken
+      localStorage.setItem("userId", user._id); // Thêm userId
       setUser(user);
     } catch (error) {
       console.error("Registration failed:", error);
@@ -195,6 +216,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken"); // Thêm clear refreshToken
     localStorage.removeItem("userId");
     setUser(null);
     setPermissions([]);
@@ -202,7 +224,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateUser = (userData: Partial<User>) => {
     setUser((prevUser) => {
-      if (!prevUser) return null;
+      if (!prevUser) {
+        // Nếu chưa có user (Google OAuth), set userData trực tiếp
+        return userData as User;
+      }
       return { ...prevUser, ...userData } as User;
     });
   };
@@ -261,6 +286,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     loading,
     permissions,
     login,
+    googleLogin,
     register,
     logout,
     updateUser,

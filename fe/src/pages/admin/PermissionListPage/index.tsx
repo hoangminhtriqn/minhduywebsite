@@ -39,7 +39,7 @@ const PermissionListPage: React.FC = () => {
   const [employees, setEmployees] = useState<EmployeeWithActions[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  console.log("Current search text:", searchText); // TODO: Remove when implementing search
+  // TODO: Implement search functionality
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,

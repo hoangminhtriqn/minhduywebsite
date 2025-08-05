@@ -73,6 +73,14 @@
 
   &__form-group {
     margin-bottom: 0;
+    width: 100%;
+    display: block;
+  }
+
+  &__google-group {
+    margin-top: 12px;
+    width: 100%;
+    display: block;
   }
 
   &__input-group {
@@ -221,28 +229,72 @@
     }
   }
 
-  &__button {
-    display: block;
-    width: 100%;
-    padding: 12px 0;
-    background: #059669;
-    border: none;
-    color: #ffffff;
+  &__button, &__google_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    padding: 0 20px;
     font-size: 16px;
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     text-align: center;
+    height: 52px;
+    box-sizing: border-box;
+    border: 1px solid;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__button {
+    background: #059669;
+    border-color: #059669;
+    color: #ffffff;
 
     &:hover:not(:disabled) {
       background: #047857;
+      border-color: #047857;
     }
 
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
+  }
+
+  &__google_button {
+    background: #ffffff !important;
+    border-color: #dadce0 !important;
+    color: #3c4043 !important;
+    gap: 12px;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.30), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+
+    &:hover {
+      background: #f8f9fa !important;
+      border-color: #dadce0 !important;
+      box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.30), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+    }
+
+    &:active {
+      background: #f1f3f4 !important;
+      border-color: #dadce0 !important;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.30), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+    }
+  }
+
+  &__google-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__register-text {
