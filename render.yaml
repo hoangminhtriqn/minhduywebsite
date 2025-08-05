@@ -30,4 +30,4 @@ services:
       - key: FRONTEND_URL
         sync: false
       - key: ALLOWED_ORIGINS
-        value: "https://minhduydanang.com,https://www.minhduydanang.com,http://localhost:3000,http://localhost:9200"
+        sync: false
