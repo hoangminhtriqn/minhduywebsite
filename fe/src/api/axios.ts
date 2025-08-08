@@ -79,8 +79,8 @@ apiClient.interceptors.response.use(
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('userId');
-          if (window.location.pathname !== ROUTERS.USER.LOGIN) {
-            window.location.href = ROUTERS.USER.LOGIN;
+          if (window.location.hash !== `#${ROUTERS.USER.LOGIN}`) {
+            window.location.href = `/#${ROUTERS.USER.LOGIN}`;
           }
           return Promise.reject(refreshError);
         } finally {
@@ -90,15 +90,15 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userId');
-        if (window.location.pathname !== ROUTERS.USER.LOGIN) {
-          window.location.href = ROUTERS.USER.LOGIN;
+        if (window.location.hash !== `#${ROUTERS.USER.LOGIN}`) {
+          window.location.href = `/#${ROUTERS.USER.LOGIN}`;
         }
       }
     }
     if (error.response?.status === 403) {
-      window.location.href = '/';
+      window.location.href = '/#/';
     }
-    if (!(error.response?.status === 401 && window.location.pathname === ROUTERS.USER.LOGIN)) {
+    if (!(error.response?.status === 401 && window.location.hash === `#${ROUTERS.USER.LOGIN}`)) {
       const message = error.response?.data?.message || 'Có lỗi xảy ra';
       toast.error(message);
     }

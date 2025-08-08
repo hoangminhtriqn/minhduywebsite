@@ -5,7 +5,7 @@ const { successResponse, errorResponse, HTTP_STATUS } = require('../utils/respon
 const googleAuthSuccess = async (req, res) => {
   try {
     if (!req.user) {
-      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:9200'}/login?error=auth_failed`);
+      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:9200'}/#/dang-nhap?error=auth_failed`);
     }
 
     // Tạo JWT token giống như login thông thường
@@ -27,7 +27,7 @@ const googleAuthSuccess = async (req, res) => {
           const redirectURL = `${frontendURL}/#/dang-nhap/thanh-cong?token=${token}&refreshToken=${refreshToken}`;
     
     res.redirect(redirectURL);
-  } catch (error) {http://localhost:9200/dang-nhap/thanh-cong?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxODliNWU3YWU0Yjc4MWZhMDJiMTIiLCJpYXQiOjE3NTQzNzAxMTQsImV4cCI6MTc2MjE0NjExNH0.-uuvhzNO9sTj9qZNlWz_Sin0nQgso6hilJpwy-SOa1o&refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODkxODliNWU3YWU0Yjc4MWZhMDJiMTIiLCJpYXQiOjE3NTQzNzAxMTQsImV4cCI6MTc1NDk3NDkxNH0.ZNbyxhlTjX2c8OOZDppXiPppMImWozDK_NugHYkG0Ew
+  } catch (error) {
     console.error('Google Auth Success Error:', error);
     const frontendURL = process.env.FRONTEND_URL || 'http://localhost:9200';
     res.redirect(`${frontendURL}/#/dang-nhap?error=server_error`);
