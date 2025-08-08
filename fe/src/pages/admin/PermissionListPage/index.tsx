@@ -20,6 +20,7 @@ import {
   notification,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 // import { useNavigate } from "react-router-dom";
 // import { ROUTERS } from "@/utils/constant";
 import {
@@ -39,6 +40,8 @@ const PermissionListPage: React.FC = () => {
   const [employees, setEmployees] = useState<EmployeeWithActions[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const { user: authUser } = useAuth();
+  const currentUserId = authUser?._id || localStorage.getItem("userId");
   // TODO: Implement search functionality
   const [pagination, setPagination] = useState({
     current: 1,
@@ -119,6 +122,13 @@ const PermissionListPage: React.FC = () => {
   }, [fetchAvailablePermissions, fetchEmployees]);
 
   const handleDeleteEmployee = async (employeeId: string) => {
+    if (employeeId === currentUserId) {
+      notification.warning({
+        message: "Không được phép",
+        description: "Bạn không thể xóa tài khoản của chính mình",
+      });
+      return;
+    }
     try {
       const result = await permissionService.deleteEmployee(employeeId);
       if (result.success) {
@@ -158,11 +168,25 @@ const PermissionListPage: React.FC = () => {
   };
 
   const handleEditEmployee = (employee: EmployeeType) => {
+    if (employee._id === currentUserId) {
+      notification.warning({
+        message: "Không được phép",
+        description: "Bạn không thể sửa thông tin tài khoản của chính mình",
+      });
+      return;
+    }
     setSelectedEmployee(employee);
     setIsEditModalVisible(true);
   };
 
   const handleManagePermissions = (employee: EmployeeType) => {
+    if (employee._id === currentUserId) {
+      notification.warning({
+        message: "Không được phép",
+        description: "Bạn không thể chỉnh sửa quyền của chính tài khoản bạn",
+      });
+      return;
+    }
     setSelectedEmployee(employee);
     setSelectedPermissions(employee.permissions || []);
     setIsPermissionModalVisible(true);
@@ -327,38 +351,42 @@ const PermissionListPage: React.FC = () => {
       align: "center" as const,
       render: (_: unknown, record: EmployeeWithActions) => (
         <Space size="small">
-          <Tooltip title="Chỉnh sửa thông tin">
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              size="small"
-              onClick={() => handleEditEmployee(record)}
-            >
-              Sửa
-            </Button>
-          </Tooltip>
-          <Tooltip title="Cấp quyền">
-            <Button
-              type="default"
-              icon={<SettingOutlined />}
-              size="small"
-              onClick={() => handleManagePermissions(record)}
-            >
-              Phân quyền
-            </Button>
-          </Tooltip>
-          <Tooltip title="Xóa nhân viên">
-            <Popconfirm
-              title="Bạn có chắc chắn muốn xóa nhân viên này?"
-              onConfirm={() => handleDeleteEmployee(record._id)}
-              okText="Có"
-              cancelText="Không"
-            >
-              <Button danger icon={<DeleteOutlined />} size="small">
-                Xóa
-              </Button>
-            </Popconfirm>
-          </Tooltip>
+          {record._id !== currentUserId && (
+            <>
+              <Tooltip title="Chỉnh sửa thông tin">
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  size="small"
+                  onClick={() => handleEditEmployee(record)}
+                >
+                  Sửa
+                </Button>
+              </Tooltip>
+              <Tooltip title="Cấp quyền">
+                <Button
+                  type="default"
+                  icon={<SettingOutlined />}
+                  size="small"
+                  onClick={() => handleManagePermissions(record)}
+                >
+                  Phân quyền
+                </Button>
+              </Tooltip>
+              <Tooltip title="Xóa nhân viên">
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn xóa nhân viên này?"
+                  onConfirm={() => handleDeleteEmployee(record._id)}
+                  okText="Có"
+                  cancelText="Không"
+                >
+                  <Button danger icon={<DeleteOutlined />} size="small">
+                    Xóa
+                  </Button>
+                </Popconfirm>
+              </Tooltip>
+            </>
+          )}
         </Space>
       ),
     },

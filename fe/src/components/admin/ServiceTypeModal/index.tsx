@@ -155,6 +155,7 @@ const ServiceTypeModal: React.FC<ServiceTypeModalProps> = ({ visible, onClose })
             rowKey="_id"
             loading={loading}
             pagination={false}
+            scroll={{ x: "max-content" }}
           />
         </div>
       </Modal>

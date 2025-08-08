@@ -273,6 +273,7 @@ const BookingListPage: React.FC = () => {
         loading={loading}
         pagination={false}
         onChange={handleTableChange}
+        scroll={{ x: "max-content" }}
       />
       
       <div style={{ marginTop: 16, textAlign: "center" }}>

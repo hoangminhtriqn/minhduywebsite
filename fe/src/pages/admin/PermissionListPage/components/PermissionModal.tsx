@@ -366,7 +366,7 @@ const PermissionModal: React.FC<PermissionModalProps> = ({
         })}
         size="small"
         className={styles.permissionTable}
-        scroll={{ y: 500 }}
+        scroll={{ y: 500, x: "max-content" }}
         components={{
           body: {
             row: (props: {

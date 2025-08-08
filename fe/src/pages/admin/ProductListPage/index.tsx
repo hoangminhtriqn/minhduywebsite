@@ -379,6 +379,7 @@ const ProductListPage: React.FC = () => {
           rowKey="_id"
           pagination={false}
           onChange={handleTableChange}
+          scroll={{ x: "max-content" }}
         />
         <div className={styles.paginationContainer}>
           <CustomPagination
@@ -415,6 +416,7 @@ const ProductListPage: React.FC = () => {
               { title: "Số điện thoại", dataIndex: "Phone", key: "Phone" },
             ]}
             size="small"
+            scroll={{ x: "max-content" }}
           />
         )}
       </Modal>

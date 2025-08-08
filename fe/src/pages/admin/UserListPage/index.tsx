@@ -22,6 +22,7 @@ import {
   updateUser,
   updateUserStatus,
 } from "@/api/services/admin/user";
+import { useAuth } from "@/contexts/AuthContext";
 const { Option } = Select;
 
 // Enum cho User Roles
@@ -67,6 +68,8 @@ const UserListPage: React.FC = () => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const { user: authUser } = useAuth();
+  const currentUserId = authUser?._id || localStorage.getItem("userId");
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -133,6 +136,10 @@ const UserListPage: React.FC = () => {
   };
 
   const handleStatusChange = async (userId: string, newStatus: string) => {
+    if (userId === currentUserId) {
+      message.warning("Không thể cập nhật trạng thái tài khoản của chính bạn");
+      return;
+    }
     try {
       await updateUserStatus(userId, newStatus);
       message.success("Cập nhật trạng thái người dùng thành công");
@@ -213,7 +220,7 @@ const UserListPage: React.FC = () => {
       key: "action",
       render: (_: unknown, record: User) => (
         <Space size="middle">
-          {canEditUsers() && (
+          {canEditUsers() && record._id !== currentUserId && (
             <Button
               type="primary"
               icon={<EditOutlined />}
@@ -223,7 +230,7 @@ const UserListPage: React.FC = () => {
               Sửa
             </Button>
           )}
-          {hasPermission("users.status.update") && (
+          {hasPermission("users.status.update") && record._id !== currentUserId && (
             <>
               {record.Status === "active" ? (
                 <Popconfirm
@@ -293,6 +300,7 @@ const UserListPage: React.FC = () => {
         loading={loading}
         pagination={false}
         onChange={handleTableChange}
+        scroll={{ x: "max-content" }}
       />
       <div style={{ marginTop: 16, textAlign: "center" }}>
         <CustomPagination
@@ -337,10 +345,10 @@ const UserListPage: React.FC = () => {
             label="Vai trò"
             rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}
           >
-            <Select
+              <Select
               placeholder="Chọn vai trò"
               disabled={
-                editingUser?._id === localStorage.getItem("userId") &&
+                editingUser?._id === currentUserId &&
                 editingUser?.Role === UserRole.ADMIN
               }
             >

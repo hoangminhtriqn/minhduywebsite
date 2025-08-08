@@ -128,6 +128,7 @@ const ServiceListPage: React.FC = () => {
         rowKey="_id"
         loading={loading}
         pagination={false}
+        scroll={{ x: "max-content" }}
       />
       
       <div style={{ marginTop: 16, textAlign: "center" }}>
