@@ -58,7 +58,7 @@ import {
 } from "@/pages/user";
 
 // Auth Pages
-import AuthSuccess from "@/pages/AuthSuccess";
+import AuthSuccess from "@/pages/user/AuthSuccess";
 import "./styles/main.scss";
 import { ROUTERS } from "@/utils/constant";
 

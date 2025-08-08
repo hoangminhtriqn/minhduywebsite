@@ -42,13 +42,13 @@ const AuthSuccess: React.FC = () => {
               errorMessage = 'Có lỗi xảy ra trong quá trình đăng nhập';
           }
           toast.error(errorMessage);
-          navigate('/login');
+          navigate(ROUTERS.USER.LOGIN);
           return;
         }
 
         if (!token || !refreshToken) {
           toast.error('Thiếu thông tin xác thực');
-          navigate('/login');
+          navigate(ROUTERS.USER.LOGIN);
           return;
         }
 
@@ -62,7 +62,7 @@ const AuthSuccess: React.FC = () => {
 
         if (!userId) {
           toast.error('Token không hợp lệ');
-          navigate('/login');
+          navigate(ROUTERS.USER.LOGIN);
           return;
         }
 
@@ -98,7 +98,7 @@ const AuthSuccess: React.FC = () => {
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userId');
         
-        navigate('/login');
+        navigate(ROUTERS.USER.LOGIN);
       }
     };
 
@@ -108,7 +108,7 @@ const AuthSuccess: React.FC = () => {
     return () => {
       hasProcessed.current = false;
     };
-  }, [searchParams]); // Chỉ depend vào searchParams để tránh re-run
+  }, [searchParams, navigate, refreshPermissions, updateUser]); // Chỉ depend vào các giá trị được sử dụng
 
   return (
     <div style={{ 
