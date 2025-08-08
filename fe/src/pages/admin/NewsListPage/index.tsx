@@ -146,6 +146,8 @@ const NewsListPage: React.FC = () => {
       title: "Tiêu đề",
       dataIndex: "Title",
       key: "title",
+      ellipsis: true,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (title: string) => (
         <div style={{ maxWidth: 300 }}>
           <div style={{ fontWeight: 500, marginBottom: 4 }}>{title}</div>
@@ -254,7 +256,7 @@ const NewsListPage: React.FC = () => {
           rowKey="_id"
           loading={loading}
           pagination={false}
-          scroll={{ x: 800 }}
+          scroll={{ x: "max-content" }}
         />
 
         <div style={{ marginTop: 16, textAlign: "center" }}>

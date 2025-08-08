@@ -4,6 +4,7 @@ import { API_ENDPOINTS } from '@/api/config';
 export interface UserStats {
   totalUsers: number;
   adminCount: number;
+  employeeCount: number;
   userCount: number;
 }
 

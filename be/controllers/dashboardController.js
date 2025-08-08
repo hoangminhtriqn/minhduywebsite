@@ -28,15 +28,17 @@ const getDashboard = async (req, res) => {
     };
 
     // User stats
-    const [totalUsers, adminCount, userCount] = await Promise.all([
+    const [totalUsers, adminCount, employeeCount, userCount] = await Promise.all([
       User.countDocuments(),
       User.countDocuments({ Role: 'admin' }),
+      User.countDocuments({ Role: 'employee' }),
       User.countDocuments({ Role: 'user' })
     ]);
     
     const userStats = { 
       totalUsers, 
       adminCount, 
+      employeeCount,
       userCount 
     };
 

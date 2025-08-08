@@ -2958,3 +2958,19 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
+// Ensure admin table headers are single-line (avoid wrapping to 2 lines)
+.admin-layout {
+  .ant-table {
+    thead > tr > th,
+    .ant-table-thead .ant-table-cell {
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+    .ant-table-thead .ant-table-cell .ant-table-column-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

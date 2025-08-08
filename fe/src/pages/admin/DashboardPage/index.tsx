@@ -3,7 +3,7 @@ import {
   BookingStats,
   UserStats,
 } from "@/api/services/admin/dashboard";
-import { UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { UserOutlined, UserSwitchOutlined, TeamOutlined } from "@ant-design/icons";
 import { Alert, Card, Col, Row, Spin, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
@@ -17,6 +17,7 @@ const DashboardPage: React.FC = () => {
   const [userStats, setUserStats] = useState<UserStats>({
     totalUsers: 0,
     adminCount: 0,
+    employeeCount: 0,
     userCount: 0,
   });
   const [bookingStats, setBookingStats] = useState<BookingStats>({
@@ -80,7 +81,7 @@ const DashboardPage: React.FC = () => {
           Thống kê người dùng
         </Title>
         <Row gutter={[24, 24]}>
-          <Col xs={24} sm={8}>
+          <Col xs={24} sm={6}>
             <Card className={styles.statCard} style={{ background: "#fff" }}>
               <div
                 style={{
@@ -116,7 +117,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </Card>
           </Col>
-          <Col xs={24} sm={8}>
+          <Col xs={24} sm={6}>
             <Card className={styles.statCard} style={{ background: "#fff" }}>
               <div
                 style={{
@@ -152,7 +153,43 @@ const DashboardPage: React.FC = () => {
               </div>
             </Card>
           </Col>
-          <Col xs={24} sm={8}>
+          <Col xs={24} sm={6}>
+            <Card className={styles.statCard} style={{ background: "#fff" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 80,
+                }}
+              >
+                <TeamOutlined
+                  style={{ color: "#722ed1", fontSize: 44, marginRight: 12 }}
+                />
+                <span
+                  style={{
+                    color: "#722ed1",
+                    fontWeight: 800,
+                    fontSize: 44,
+                    lineHeight: 1,
+                  }}
+                >
+                  {userStats.employeeCount || 0}
+                </span>
+              </div>
+              <div
+                style={{
+                  textAlign: "center",
+                  color: "#222",
+                  fontWeight: 600,
+                  marginTop: 8,
+                }}
+              >
+                Nhân viên
+              </div>
+            </Card>
+          </Col>
+          <Col xs={24} sm={6}>
             <Card className={styles.statCard} style={{ background: "#fff" }}>
               <div
                 style={{

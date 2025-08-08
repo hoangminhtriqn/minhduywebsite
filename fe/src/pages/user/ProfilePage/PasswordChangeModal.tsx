@@ -9,6 +9,7 @@ import {
   EyeInvisibleOutlined
 } from '@ant-design/icons';
 import styles from './styles.module.scss';
+import { getPasswordRules, getUsernameRules, makeConfirmPasswordRule } from '@/utils/validation';
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
@@ -109,10 +110,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           <Form.Item
             name="username"
             label="Tên đăng nhập"
-            rules={[
-              { required: true, message: 'Vui lòng nhập tên đăng nhập' },
-              { min: 3, message: 'Tên đăng nhập phải có ít nhất 3 ký tự' }
-            ]}
+            rules={getUsernameRules()}
             extra="Sau khi thiết lập, bạn có thể đăng nhập bằng tên đăng nhập này"
           >
             <Input 
@@ -128,9 +126,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           <Form.Item
             name="currentPassword"
             label="Mật khẩu hiện tại"
-            rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu hiện tại' }
-            ]}
+            rules={getPasswordRules()}
           >
             <Input.Password 
               placeholder="Nhập mật khẩu hiện tại"
@@ -145,10 +141,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
         <Form.Item
           name="newPassword"
           label="Mật khẩu mới"
-          rules={[
-            { required: true, message: 'Vui lòng nhập mật khẩu mới' },
-            { min: 6, message: 'Mật khẩu mới phải có ít nhất 6 ký tự' }
-          ]}
+          rules={getPasswordRules()}
         >
           <Input.Password 
             placeholder="Nhập mật khẩu mới"
@@ -165,14 +158,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           dependencies={['newPassword']}
           rules={[
             { required: true, message: 'Vui lòng xác nhận mật khẩu mới' },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('newPassword') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('Xác nhận mật khẩu không khớp'));
-              }
-            })
+            ({ getFieldValue }) => ({ ...makeConfirmPasswordRule(getFieldValue) })
           ]}
         >
           <Input.Password 

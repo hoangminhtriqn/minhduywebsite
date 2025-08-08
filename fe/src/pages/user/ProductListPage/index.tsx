@@ -19,6 +19,7 @@ import {
   Col,
   Drawer,
   Empty,
+  Select,
   notification,
   Row,
   Skeleton,
@@ -520,26 +521,27 @@ const ProductListPage: React.FC = () => {
             </span>
             Danh mục
           </div>
-          <select
-            style={selectInputStyle}
-            multiple
+          <Select
+            mode="multiple"
             value={filters.category}
-            onChange={(e) => {
-              const selectedOptions = Array.from(
-                e.target.selectedOptions,
-                (option) => option.value
-              );
-              handleCategoryChange(selectedOptions);
-            }}
-            onFocus={handleSelectFocus}
-            onBlur={handleSelectBlur}
-          >
-            {categories.map((category) => (
-              <option key={category._id} value={category._id}>
-                {category.Name}
-              </option>
-            ))}
-          </select>
+            onChange={(values) => handleCategoryChange(values as string[])}
+            style={{ width: "100%" }}
+            placeholder="Chọn danh mục"
+            maxTagCount="responsive"
+            options={categories.map((c) => ({
+              value: c._id,
+              label: (
+                <Tooltip title={c.Name} placement="right">
+                  <span style={{ display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {c.Name}
+                  </span>
+                </Tooltip>
+              ),
+            }))}
+            dropdownStyle={{ maxHeight: 240, overflow: "auto" }}
+            onFocus={handleSelectFocus as unknown as React.FocusEventHandler}
+            onBlur={handleSelectBlur as unknown as React.FocusEventHandler}
+          />
         </div>
 
         {/* Price Range */}
@@ -947,8 +949,6 @@ const ProductListPage: React.FC = () => {
                   pageSize={pagination.pageSize}
                   total={pagination.total}
                   onChange={handlePageChange}
-                  showTotal
-                  totalText="{start}-{end} của {total} sản phẩm"
                 />
               )}
             </Col>

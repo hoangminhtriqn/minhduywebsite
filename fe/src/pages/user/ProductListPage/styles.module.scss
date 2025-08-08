@@ -162,6 +162,11 @@
               cursor: pointer;
               transition: all 0.3s ease;
               font-weight: 500;
+              display: block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
               
               &:hover {
                 background: var(--primary-light);
@@ -995,6 +1000,11 @@
                 cursor: pointer !important;
                 transition: all 0.3s ease !important;
                 font-weight: 500 !important;
+                display: block !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-width: 100% !important;
                 
                 &:hover {
                   background: var(--primary-light) !important;

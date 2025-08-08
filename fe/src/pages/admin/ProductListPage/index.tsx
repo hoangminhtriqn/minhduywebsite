@@ -176,6 +176,7 @@ const ProductListPage: React.FC = () => {
       title: <span style={{ fontWeight: 600 }}>Hình ảnh</span>,
       dataIndex: "Main_Image",
       key: "image",
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (image: string) => (
         <img
           src={image}
@@ -188,6 +189,8 @@ const ProductListPage: React.FC = () => {
       title: <span style={{ fontWeight: 600 }}>Tên sản phẩm</span>,
       dataIndex: "Product_Name",
       key: "name",
+      ellipsis: true,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       sorter: (a: Product, b: Product) =>
         a.Product_Name.localeCompare(b.Product_Name),
     },
@@ -195,12 +198,14 @@ const ProductListPage: React.FC = () => {
       title: <span style={{ fontWeight: 600 }}>Giá thuê</span>,
       dataIndex: "Price",
       key: "price",
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (price: number) => price.toLocaleString("vi-VN") + " đ",
       sorter: (a: Product, b: Product) => a.Price - b.Price,
     },
     {
       title: <span style={{ fontWeight: 600 }}>Danh mục</span>,
       key: "category",
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (_: unknown, record: Product) => {
         const cat = record.CategoryID as {
           Name?: string;
@@ -227,6 +232,7 @@ const ProductListPage: React.FC = () => {
       title: <span style={{ fontWeight: 600 }}>Yêu thích</span>,
       key: "favoriteCount",
       align: "center" as const,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (
         _: unknown,
         record: {
@@ -257,6 +263,7 @@ const ProductListPage: React.FC = () => {
       title: <span style={{ fontWeight: 600 }}>Ngày tạo</span>,
       dataIndex: "createdAt",
       key: "createdAt",
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (date: string) => {
         const dateObj = new Date(date);
         return dateObj.toLocaleString("vi-VN", {
@@ -274,6 +281,7 @@ const ProductListPage: React.FC = () => {
     {
       title: <span style={{ fontWeight: 600 }}>Thao tác</span>,
       key: "action",
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (_: unknown, record: Product) => (
         <Space size="middle">
           <Button

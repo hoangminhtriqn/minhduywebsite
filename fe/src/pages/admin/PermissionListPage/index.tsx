@@ -287,6 +287,8 @@ const PermissionListPage: React.FC = () => {
       dataIndex: "UserName",
       key: "UserName",
       width: 150,
+      ellipsis: true,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (text: string) => (
         <Tooltip title={text} placement="topLeft">
           <span className="font-medium">{text}</span>
@@ -298,6 +300,8 @@ const PermissionListPage: React.FC = () => {
       dataIndex: "FullName",
       key: "FullName",
       width: 200,
+      ellipsis: true,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (text: string) => (
         <Tooltip title={text} placement="topLeft">
           <span className="font-medium">{text}</span>
@@ -309,6 +313,8 @@ const PermissionListPage: React.FC = () => {
       dataIndex: "Email",
       key: "Email",
       width: 200,
+      ellipsis: true,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (text: string) => (
         <Tooltip title={text} placement="topLeft">
           <span className="text-gray-600">{text}</span>
@@ -321,6 +327,7 @@ const PermissionListPage: React.FC = () => {
       key: "Phone",
       width: 120,
       align: "center" as const,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
     },
     {
       title: "Quyền hạn",
@@ -328,6 +335,7 @@ const PermissionListPage: React.FC = () => {
       key: "permissions",
       width: 150,
       align: "center" as const,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (permissions: string[]) => (
         <Tag color="blue">{permissions?.length || 0} quyền</Tag>
       ),
@@ -338,6 +346,7 @@ const PermissionListPage: React.FC = () => {
       key: "Status",
       width: 120,
       align: "center" as const,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (status: string) => (
         <Tag color={status === "active" ? "green" : "red"}>
           {status === "active" ? "Hoạt động" : "Không hoạt động"}
@@ -349,6 +358,7 @@ const PermissionListPage: React.FC = () => {
       key: "actions",
       width: 200,
       align: "center" as const,
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (_: unknown, record: EmployeeWithActions) => (
         <Space size="small">
           {record._id !== currentUserId && (
@@ -425,7 +435,7 @@ const PermissionListPage: React.FC = () => {
             columns={columns}
             dataSource={employees}
             pagination={false}
-            scroll={{ x: 1200 }}
+            scroll={{ x: "max-content" }}
           />
         </Spin>
 
