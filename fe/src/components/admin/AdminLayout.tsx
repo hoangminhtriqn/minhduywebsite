@@ -10,8 +10,9 @@ import {
   TagsOutlined,
   TeamOutlined,
   UnlockOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Layout, Menu, Space } from "antd";
+import { Badge, Dropdown, Layout, List, Menu, Space } from "antd";
 import React, { useEffect, useState } from "react";
 
 import ThemeController from "@/components/ThemeController";
@@ -31,6 +32,7 @@ import {
   PermissionManagementPermissions,
   SettingsPermissions,
 } from "@/types/enum";
+import { getBookings } from "@/api/services/admin/bookings";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -281,6 +283,9 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
           </div>
           <div className={styles.headerUser}>
+            {(isAdmin || hasAnyPermission([BookingPermissions.VIEW])) && (
+              <AdminNotificationsBell />
+            )}
             {user && (
               <Dropdown
                 menu={{ items: userMenuItems, onClick: handleMenuClick }}
@@ -325,3 +330,185 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default AdminLayout;
+
+// Lightweight notifications bell: uses pending bookings as notification source
+const AdminNotificationsBell: React.FC = () => {
+  const { isAdmin, hasAnyPermission } = useAuth();
+  const canViewBookings =
+    isAdmin || hasAnyPermission([BookingPermissions.VIEW]);
+  const [pendingCount, setPendingCount] = useState<number>(0);
+  const [items, setItems] = useState<
+    { _id: string; title: string; subtitle: string; createdAt: string }[]
+  >([]);
+  const READ_KEY = "md_admin_read_booking_ids";
+  const [readIds, setReadIds] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem(READ_KEY);
+      const parsed = raw ? (JSON.parse(raw) as string[]) : [];
+      return new Set(parsed);
+    } catch {
+      return new Set();
+    }
+  });
+
+  const persistRead = (next: Set<string>) => {
+    setReadIds(new Set(next));
+    try {
+      localStorage.setItem(READ_KEY, JSON.stringify(Array.from(next)));
+    } catch {
+      // no-op
+    }
+  };
+  const [open, setOpen] = useState(false);
+
+  const fetchPending = async () => {
+    if (!canViewBookings) return;
+    try {
+      const res = await getBookings({
+        page: 1,
+        limit: 8,
+        search: "",
+        status: "pending",
+      });
+      const bookings = res.data.data.bookings || [];
+      setPendingCount(res.data.data.pagination?.total ?? bookings.length);
+      setItems(
+        bookings.map((b: import("@/api/services/admin/bookings").Booking) => ({
+          _id: b._id,
+          title: b.FullName || "Khách hàng",
+          subtitle:
+            `${b.BookingTime || ""} ${b.BookingDate ? new Date(b.BookingDate).toLocaleDateString("vi-VN") : ""}`.trim(),
+          createdAt: b.createdAt,
+        }))
+      );
+    } catch {
+      // ignore silently
+    }
+  };
+
+  useEffect(() => {
+    fetchPending();
+    const id = window.setInterval(fetchPending, 60000);
+    return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canViewBookings]);
+
+  if (!canViewBookings) return null;
+
+  const markItemRead = (id: string) => {
+    if (!id) return;
+    const next = new Set(readIds);
+    next.add(id);
+    persistRead(next);
+  };
+
+  // const markAllVisibleRead = () => {
+  //   const next = new Set(readIds);
+  //   items.forEach((i) => next.add(i._id));
+  //   persistRead(next);
+  // };
+
+  const readCountInVisible = items.reduce(
+    (acc, i) => acc + (readIds.has(i._id) ? 1 : 0),
+    0
+  );
+  const badgeCount = Math.max(
+    (pendingCount || items.length) - readCountInVisible,
+    0
+  );
+
+  const overlay = (
+    <div
+      style={{
+        width: 340,
+        padding: 10,
+        background: "var(--theme-bg-paper)",
+        border: "1px solid var(--theme-border-light)",
+        borderRadius: 12,
+        boxShadow: "0 8px 24px var(--theme-shadow)",
+        maxHeight: 420,
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 6,
+        }}
+      >
+        <span style={{ fontWeight: 700, color: "var(--theme-text-primary)" }}>
+          Thông báo đặt lịch
+        </span>
+      </div>
+      <div style={{ overflowY: "auto", maxHeight: 356, paddingRight: 2 }}>
+        {items.length === 0 ? (
+          <div style={{ padding: 12, color: "var(--theme-text-secondary)" }}>
+            Không có thông báo mới
+          </div>
+        ) : (
+          <List
+            size="small"
+            dataSource={items}
+            split={true}
+            renderItem={(item) => (
+              <List.Item
+                style={{
+                  cursor: "pointer",
+                  paddingLeft: 4,
+                  paddingRight: 4,
+                  opacity: readIds.has(item._id) ? 0.6 : 1,
+                }}
+                onClick={() => {
+                  markItemRead(item._id);
+                  // navigate to bookings page with query to open modal
+                  window.location.hash = `#${ROUTERS.ADMIN.BOOKINGS}?openBooking=${item._id}`;
+                  setOpen(false);
+                }}
+              >
+                <List.Item.Meta
+                  title={
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color: "var(--theme-text-primary)",
+                      }}
+                    >
+                      {item.title}
+                    </span>
+                  }
+                  description={
+                    <span style={{ color: "var(--theme-text-secondary)" }}>
+                      {item.subtitle}
+                    </span>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        )}
+      </div>
+    </div>
+  );
+
+  if (badgeCount === 0) return null;
+
+  return (
+    <Dropdown
+      dropdownRender={() => overlay}
+      placement="bottomRight"
+      trigger={["click"]}
+      open={open}
+      onOpenChange={setOpen}
+      arrow={false}
+      getPopupContainer={() => document.body}
+    >
+      <a onClick={(e) => e.preventDefault()} style={{ marginRight: 0 }}>
+        <Badge count={badgeCount} offset={[-2, 2]}>
+          <BellOutlined style={{ fontSize: 18 }} />
+        </Badge>
+      </a>
+    </Dropdown>
+  );
+};

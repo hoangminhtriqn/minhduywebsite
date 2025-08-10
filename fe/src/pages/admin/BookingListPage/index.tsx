@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Input,
@@ -25,8 +25,10 @@ import {
   getBookings,
   updateBookingStatus,
   deleteBooking,
+  getBooking,
   Booking as ApiBooking,
 } from "@/api/services/admin/bookings";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BookingStatus } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -113,9 +115,39 @@ const BookingListPage: React.FC = () => {
     setLoading(false);
   };
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchBookings();
   }, [pagination.current, pagination.pageSize, searchTerm, selectedStatus]);
+
+  // Open modal if URL contains ?openBooking=<id>
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("openBooking");
+    if (!id) return;
+    (async () => {
+      try {
+        const res = await getBooking(id);
+        const payload: any = res?.data?.data;
+        const booking = payload?.booking ?? payload;
+        if (booking) {
+          setSelectedBooking(booking as ApiBooking);
+          setIsModalVisible(true);
+          return;
+        }
+      } catch {
+        // ignore network/permission errors
+      }
+      // Fallback: try to find in current list
+      const local = bookings.find((b) => b._id === id);
+      if (local) {
+        setSelectedBooking(local);
+        setIsModalVisible(true);
+      }
+    })();
+  }, [location.search, bookings]);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     fetchBookings(pagination.current!, pagination.pageSize!);
@@ -182,9 +214,12 @@ const BookingListPage: React.FC = () => {
       title: "Dịch vụ",
       dataIndex: "ServiceTypes",
       key: "ServiceTypes",
-      render: (id: string) => {
-        const match = bookings.find((b) => b.ServiceTypes === id);
-        return match ? match.ServiceTypes : id;
+      render: (_: unknown, record: ApiBooking) => {
+        const st = record.ServiceTypes as ApiBooking["ServiceTypes"];
+        if (st && typeof st === "object" && "name" in st)
+          return (st as any).name;
+        if (typeof st === "string") return st;
+        return "";
       },
     },
     {
@@ -325,6 +360,15 @@ const BookingListPage: React.FC = () => {
         onCancel={() => {
           setIsModalVisible(false);
           setSelectedBooking(null);
+          // remove ?openBooking from URL if present
+          const params = new URLSearchParams(location.search);
+          if (params.has("openBooking")) {
+            params.delete("openBooking");
+            navigate({
+              pathname: location.pathname,
+              search: params.toString(),
+            });
+          }
         }}
         footer={null}
         width={600}
@@ -349,7 +393,15 @@ const BookingListPage: React.FC = () => {
             </div>
             <div className={styles.detailRow}>
               <strong>Dịch vụ:</strong>
-              <span>{selectedBooking.ServiceTypes}</span>
+              <span>
+                {typeof selectedBooking.ServiceTypes === "object" &&
+                selectedBooking.ServiceTypes &&
+                "name" in selectedBooking.ServiceTypes
+                  ? (selectedBooking.ServiceTypes as any).name
+                  : typeof selectedBooking.ServiceTypes === "string"
+                    ? selectedBooking.ServiceTypes
+                    : ""}
+              </span>
             </div>
             <div className={styles.detailRow}>
               <strong>Ngày đặt lịch:</strong>
