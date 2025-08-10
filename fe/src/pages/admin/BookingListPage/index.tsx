@@ -1,13 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Modal, Select, Space, Table, Tag, Popconfirm, App } from "antd";
-import { DeleteOutlined, EyeOutlined, SettingOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Popconfirm,
+  App,
+} from "antd";
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import type { TablePaginationConfig } from "antd/es/table";
 import dayjs from "dayjs";
 
 import CustomPagination from "@/components/CustomPagination";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import ServiceTypeModal from "@/components/admin/ServiceTypeModal";
-import { getBookings, updateBookingStatus, deleteBooking, Booking as ApiBooking } from "@/api/services/admin/bookings";
+import {
+  getBookings,
+  updateBookingStatus,
+  deleteBooking,
+  Booking as ApiBooking,
+} from "@/api/services/admin/bookings";
 import { BookingStatus } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -16,43 +35,45 @@ const { Option } = Select;
 // Booking Status Configuration
 const BOOKING_STATUS_CONFIG = {
   [BookingStatus.PENDING]: {
-    text: 'Chờ xác nhận',
-    color: '#fa8c16', // Orange text
-    bgColor: '#fff7e6',
-    borderColor: '#ffd591'
+    text: "Chờ xác nhận",
+    color: "#fa8c16", // Orange text
+    bgColor: "#fff7e6",
+    borderColor: "#ffd591",
   },
   [BookingStatus.CONFIRMED]: {
-    text: 'Đã xác nhận',
-    color: '#1890ff', // Blue text
-    bgColor: '#e6f7ff',
-    borderColor: '#91d5ff'
+    text: "Đã xác nhận",
+    color: "#1890ff", // Blue text
+    bgColor: "#e6f7ff",
+    borderColor: "#91d5ff",
   },
   [BookingStatus.COMPLETED]: {
-    text: 'Hoàn thành',
-    color: '#52c41a', // Green text
-    bgColor: '#f6ffed',
-    borderColor: '#b7eb8f'
+    text: "Hoàn thành",
+    color: "#52c41a", // Green text
+    bgColor: "#f6ffed",
+    borderColor: "#b7eb8f",
   },
   [BookingStatus.CANCELLED]: {
-    text: 'Đã hủy',
-    color: '#ff4d4f', // Red text
-    bgColor: '#fff2f0',
-    borderColor: '#ffccc7'
-  }
+    text: "Đã hủy",
+    color: "#ff4d4f", // Red text
+    bgColor: "#fff2f0",
+    borderColor: "#ffccc7",
+  },
 } as const;
 
 const BOOKING_STATUS_OPTIONS = [
-  { value: BookingStatus.PENDING, label: 'Chờ xác nhận' },
-  { value: BookingStatus.CONFIRMED, label: 'Đã xác nhận' },
-  { value: BookingStatus.COMPLETED, label: 'Hoàn thành' },
-  { value: BookingStatus.CANCELLED, label: 'Đã hủy' }
+  { value: BookingStatus.PENDING, label: "Chờ xác nhận" },
+  { value: BookingStatus.CONFIRMED, label: "Đã xác nhận" },
+  { value: BookingStatus.COMPLETED, label: "Hoàn thành" },
+  { value: BookingStatus.CANCELLED, label: "Đã hủy" },
 ];
 
 const BookingListPage: React.FC = () => {
   const { message } = App.useApp();
   const [bookings, setBookings] = useState<ApiBooking[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<ApiBooking | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<ApiBooking | null>(
+    null
+  );
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [serviceTypeModalVisible, setServiceTypeModalVisible] = useState(false);
   const [pagination, setPagination] = useState({
@@ -61,7 +82,9 @@ const BookingListPage: React.FC = () => {
     total: 0,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(
+    undefined
+  );
 
   const fetchBookings = async (
     page: number = pagination.current,
@@ -133,7 +156,10 @@ const BookingListPage: React.FC = () => {
   };
 
   const getStatusConfig = (status: string) => {
-    return BOOKING_STATUS_CONFIG[status as BookingStatus] || BOOKING_STATUS_CONFIG[BookingStatus.PENDING];
+    return (
+      BOOKING_STATUS_CONFIG[status as BookingStatus] ||
+      BOOKING_STATUS_CONFIG[BookingStatus.PENDING]
+    );
   };
 
   const columns = [
@@ -154,19 +180,23 @@ const BookingListPage: React.FC = () => {
     },
     {
       title: "Dịch vụ",
-      dataIndex: "CarModel",
-      key: "CarModel",
+      dataIndex: "ServiceTypes",
+      key: "ServiceTypes",
+      render: (id: string) => {
+        const match = bookings.find((b) => b.ServiceTypes === id);
+        return match ? match.ServiceTypes : id;
+      },
     },
     {
       title: "Ngày đặt lịch",
-      dataIndex: "TestDriveDate",
-      key: "TestDriveDate",
-      render: (date: string) => dayjs(date).format('DD/MM/YYYY'),
+      dataIndex: "BookingDate",
+      key: "BookingDate",
+      render: (date: string) => dayjs(date).format("DD/MM/YYYY"),
     },
     {
       title: "Thời gian",
-      dataIndex: "TestDriveTime",
-      key: "TestDriveTime",
+      dataIndex: "BookingTime",
+      key: "BookingTime",
     },
     {
       title: "Trạng thái",
@@ -179,19 +209,22 @@ const BookingListPage: React.FC = () => {
           onChange={(value) => handleStatusChange(record._id, value)}
           size="small"
         >
-                     {BOOKING_STATUS_OPTIONS.map(option => {
-             const statusConfig = BOOKING_STATUS_CONFIG[option.value as BookingStatus];
-             return (
-               <Option key={option.value} value={option.value}>
-                 <span style={{ 
-                   color: statusConfig.color,
-                   fontWeight: '500'
-                 }}>
-                   {option.label}
-                 </span>
-               </Option>
-             );
-           })}
+          {BOOKING_STATUS_OPTIONS.map((option) => {
+            const statusConfig =
+              BOOKING_STATUS_CONFIG[option.value as BookingStatus];
+            return (
+              <Option key={option.value} value={option.value}>
+                <span
+                  style={{
+                    color: statusConfig.color,
+                    fontWeight: "500",
+                  }}
+                >
+                  {option.label}
+                </span>
+              </Option>
+            );
+          })}
         </Select>
       ),
     },
@@ -199,7 +232,7 @@ const BookingListPage: React.FC = () => {
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date: string) => dayjs(date).format('DD/MM/YYYY HH:mm'),
+      render: (date: string) => dayjs(date).format("DD/MM/YYYY HH:mm"),
     },
     {
       title: "Thao tác",
@@ -250,7 +283,7 @@ const BookingListPage: React.FC = () => {
             }
           >
             <Option value="">Tất cả trạng thái</Option>
-            {BOOKING_STATUS_OPTIONS.map(option => (
+            {BOOKING_STATUS_OPTIONS.map((option) => (
               <Option key={option.value} value={option.value}>
                 {option.label}
               </Option>
@@ -275,7 +308,7 @@ const BookingListPage: React.FC = () => {
         onChange={handleTableChange}
         scroll={{ x: "max-content" }}
       />
-      
+
       <div style={{ marginTop: 16, textAlign: "center" }}>
         <CustomPagination
           current={pagination.current}
@@ -316,36 +349,38 @@ const BookingListPage: React.FC = () => {
             </div>
             <div className={styles.detailRow}>
               <strong>Dịch vụ:</strong>
-              <span>{selectedBooking.CarModel}</span>
+              <span>{selectedBooking.ServiceTypes}</span>
             </div>
             <div className={styles.detailRow}>
               <strong>Ngày đặt lịch:</strong>
-              <span>{dayjs(selectedBooking.TestDriveDate).format('DD/MM/YYYY')}</span>
+              <span>
+                {dayjs(selectedBooking.BookingDate).format("DD/MM/YYYY")}
+              </span>
             </div>
             <div className={styles.detailRow}>
               <strong>Thời gian:</strong>
-              <span>{selectedBooking.TestDriveTime}</span>
+              <span>{selectedBooking.BookingTime}</span>
             </div>
-                         <div className={styles.detailRow}>
-               <strong>Trạng thái:</strong>
-               <span>
-                 {(() => {
-                   const statusConfig = getStatusConfig(selectedBooking.Status);
-                   return (
-                     <Tag 
-                       style={{
-                         color: statusConfig.color,
-                         backgroundColor: statusConfig.bgColor,
-                         borderColor: statusConfig.borderColor,
-                         border: '1px solid'
-                       }}
-                     >
-                       {statusConfig.text}
-                     </Tag>
-                   );
-                 })()}
-               </span>
-             </div>
+            <div className={styles.detailRow}>
+              <strong>Trạng thái:</strong>
+              <span>
+                {(() => {
+                  const statusConfig = getStatusConfig(selectedBooking.Status);
+                  return (
+                    <Tag
+                      style={{
+                        color: statusConfig.color,
+                        backgroundColor: statusConfig.bgColor,
+                        borderColor: statusConfig.borderColor,
+                        border: "1px solid",
+                      }}
+                    >
+                      {statusConfig.text}
+                    </Tag>
+                  );
+                })()}
+              </span>
+            </div>
             {selectedBooking.Notes && (
               <div className={styles.detailRow}>
                 <strong>Ghi chú:</strong>
@@ -354,11 +389,15 @@ const BookingListPage: React.FC = () => {
             )}
             <div className={styles.detailRow}>
               <strong>Ngày tạo:</strong>
-              <span>{dayjs(selectedBooking.createdAt).format('DD/MM/YYYY HH:mm')}</span>
+              <span>
+                {dayjs(selectedBooking.createdAt).format("DD/MM/YYYY HH:mm")}
+              </span>
             </div>
             <div className={styles.detailRow}>
               <strong>Cập nhật cuối:</strong>
-              <span>{dayjs(selectedBooking.updatedAt).format('DD/MM/YYYY HH:mm')}</span>
+              <span>
+                {dayjs(selectedBooking.updatedAt).format("DD/MM/YYYY HH:mm")}
+              </span>
             </div>
           </div>
         )}

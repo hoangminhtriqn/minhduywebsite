@@ -20,23 +20,23 @@ const bookingSchema = new mongoose.Schema(
     Phone: {
       type: String,
       required: true,
-      match: [/(84|0[3|5|7|8|9])+([0-9]{8})\b/, "Số điện thoại không hợp lệ"],
+      match: [/^\d{6,15}$/, "Số điện thoại không hợp lệ"],
     },
     Address: {
       type: String,
       required: true,
       trim: true,
     },
-    CarModel: {
-      type: String,
+    ServiceTypes: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ServiceType",
       required: true,
-      trim: true,
     },
-    TestDriveDate: {
+    BookingDate: {
       type: Date,
       required: true,
     },
-    TestDriveTime: {
+    BookingTime: {
       type: String,
       required: true,
       enum: [

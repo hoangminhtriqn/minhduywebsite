@@ -3,7 +3,8 @@ import type { Rule, RuleObject } from 'antd/es/form';
 // Common regex patterns (kept relaxed to avoid breaking current behavior)
 export const USERNAME_ALLOWED_CHARS_REGEX = /^[a-zA-Z0-9._-]+$/;
 export const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-export const PHONE_VN_REGEX = /^(84|0[3|5|7|8|9])[0-9]{8}$/;
+// Allow digits only, 6-15 characters to support regional hotlines and international formats
+export const PHONE_VN_REGEX = /^\d{6,15}$/;
 
 // Return reusable AntD rules for username
 export const getUsernameRules = (options?: {
@@ -93,4 +94,87 @@ export const makeConfirmPasswordRule = (
   },
 });
 
+// Lightweight anti-spam validators
+export const NO_HTML_REGEX = /<[^>]+>/;
+export const REPEATED_CHAR_REGEX = /(.)\1{3,}/; // any char repeated 4+ times
+
+// Basic URL/email-like detection (kept simple)
+export const URL_LIKE_REGEX = /https?:\/\/|www\.|@[\w.-]+|\.(com|net|org|vn|io|co|info|biz)(\b|\s)/i;
+
+export const makeNoUrlRule = (message = 'Không cho phép chèn liên kết/địa chỉ email'):
+  RuleObject => ({
+    validator: (_, value) => {
+      if (!value) return Promise.resolve();
+      return URL_LIKE_REGEX.test(String(value))
+        ? Promise.reject(new Error(message))
+        : Promise.resolve();
+    },
+  });
+
+export const makeNoHtmlRule = (message = 'Không cho phép chèn thẻ HTML'):
+  RuleObject => ({
+    validator: (_, value) => {
+      if (!value) return Promise.resolve();
+      return NO_HTML_REGEX.test(String(value))
+        ? Promise.reject(new Error(message))
+        : Promise.resolve();
+    },
+  });
+
+export const makeNoRepeatedCharsRule = (
+  options?: { limit?: number },
+  message: string = 'Không cho phép lặp một ký tự quá nhiều lần'
+): RuleObject => {
+  const { limit = 3 } = options || {};
+  const regex = new RegExp(`(.)\\1{${limit},}`);
+  return {
+    validator: (_, value) => {
+      if (!value) return Promise.resolve();
+      return regex.test(String(value))
+        ? Promise.reject(new Error(message))
+        : Promise.resolve();
+    },
+  };
+};
+
+// Full name rules: allow unicode letters, spaces, apostrophes, dashes
+export const getFullNameRules = (options?: { required?: boolean; min?: number; max?: number; }): Rule[] => {
+  const { required = true, min = 2, max = 64 } = options || {};
+  // Allow basic Latin + Vietnamese range, spaces, apostrophes and dashes (hyphen placed first to avoid range)
+  const NAME_REGEX = /^[-' A-Za-zÀ-ỹ]+$/;
+  return [
+    required && { required: true, message: 'Vui lòng nhập họ và tên' },
+    { min, message: `Họ và tên phải có ít nhất ${min} ký tự` },
+    { max, message: `Họ và tên tối đa ${max} ký tự` },
+    { pattern: NAME_REGEX, message: 'Chỉ cho phép chữ, khoảng trắng, dấu nháy và gạch nối' },
+    makeNoRepeatedCharsRule({ limit: 3 }),
+  ].filter(Boolean) as Rule[];
+};
+
+// Address rules: allow letters (with accents), digits, spaces and , . - / #
+export const getAddressRules = (options?: { required?: boolean; min?: number; max?: number; }): Rule[] => {
+  const { required = true, min = 6, max = 255 } = options || {};
+  // Allow letters (incl. Vietnamese range), digits, spaces and common punctuation , . - / # ( )
+  const ADDRESS_REGEX = /^[A-Za-zÀ-ỹ0-9\s,./#()-]+$/;
+  return [
+    required && { required: true, message: 'Vui lòng nhập địa chỉ' },
+    { min, message: `Địa chỉ phải có ít nhất ${min} ký tự` },
+    { max, message: `Địa chỉ tối đa ${max} ký tự` },
+    { pattern: ADDRESS_REGEX, message: 'Địa chỉ chỉ cho phép chữ, số và ký tự , . - / # ( )' },
+    makeNoUrlRule('Không cho phép chèn liên kết/email trong địa chỉ'),
+    makeNoRepeatedCharsRule({ limit: 3 }),
+  ].filter(Boolean) as Rule[];
+};
+
+// Notes rules: optional, max length, block urls/html/repeats
+export const getNotesRules = (options?: { required?: boolean; max?: number; }): Rule[] => {
+  const { required = false, max = 500 } = options || {};
+  return [
+    required && { required: true, message: 'Vui lòng nhập ghi chú' },
+    { max, message: `Ghi chú tối đa ${max} ký tự` },
+    makeNoUrlRule('Không cho phép liên kết/email trong ghi chú'),
+    makeNoHtmlRule(),
+    makeNoRepeatedCharsRule({ limit: 3 }),
+  ].filter(Boolean) as Rule[];
+};
 

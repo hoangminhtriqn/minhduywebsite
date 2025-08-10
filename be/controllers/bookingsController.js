@@ -30,6 +30,7 @@ const getAllBookings = async (req, res) => {
 
     const bookings = await Booking.find(query)
       .sort({ createdAt: -1 })
+      .populate("ServiceTypes", "name")
       .skip(skip)
       .limit(parseInt(limit));
 
@@ -56,7 +57,10 @@ const getAllBookings = async (req, res) => {
 // Lấy thông tin booking theo ID
 const getBookingById = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.bookingId);
+    const booking = await Booking.findById(req.params.bookingId).populate(
+      "ServiceTypes",
+      "name"
+    );
     if (!booking) {
       return errorResponse(
         res,
@@ -137,9 +141,9 @@ const createBooking = async (req, res) => {
       Email,
       Phone,
       Address,
-      CarModel,
-      TestDriveDate,
-      TestDriveTime,
+      ServiceTypes,
+      BookingDate,
+      BookingTime,
       Notes,
     } = req.body;
 
@@ -148,9 +152,9 @@ const createBooking = async (req, res) => {
       Email,
       Phone,
       Address,
-      CarModel,
-      TestDriveDate,
-      TestDriveTime,
+      ServiceTypes,
+      BookingDate,
+      BookingTime,
       Notes,
     });
 

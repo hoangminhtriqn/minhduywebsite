@@ -3,6 +3,14 @@ import { Slider } from "antd";
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 
+// Shared price display unit to avoid hardcoding magic numbers
+const PRICE_DISPLAY_UNIT = 1_000_000; // 1M VND
+const PRICE_DISPLAY_SUFFIX = "M VNĐ";
+const formatPriceDisplay = (value?: number | null) =>
+  typeof value === "number" && !Number.isNaN(value)
+    ? `${Math.round(value / PRICE_DISPLAY_UNIT)}${PRICE_DISPLAY_SUFFIX}`
+    : "";
+
 interface Category {
   _id: string;
   Name: string;
@@ -123,8 +131,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 }
               }}
               tooltip={{
-                formatter: (value) =>
-                  value ? `${Math.round(value / 1000000)}M VNĐ` : "",
+                formatter: (value) => formatPriceDisplay(value as number),
               }}
               trackStyle={[{ backgroundColor: "var(--primary-color)" }]}
               handleStyle={[
@@ -143,7 +150,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             />
             <div className={styles.priceRange}>
               <div className={styles.priceText}>
-                {`${Math.round(debouncedPriceRange[0] / 1000000)}M - ${Math.round(debouncedPriceRange[1] / 1000000)}M VNĐ`}
+                {`${formatPriceDisplay(debouncedPriceRange[0])} - ${formatPriceDisplay(debouncedPriceRange[1])}`}
               </div>
             </div>
           </div>

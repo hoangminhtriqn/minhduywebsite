@@ -128,9 +128,9 @@ export interface Booking {
   Email: string;
   Phone: string;
   Address: string;
-  CarModel: string;
-  TestDriveDate: string;
-  TestDriveTime: string;
+  ServiceTypes: string; // ServiceType _id
+  BookingDate: string;
+  BookingTime: string;
   Notes?: string;
   Status: BookingStatus;
   createdAt: string;

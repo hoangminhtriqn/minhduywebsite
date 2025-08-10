@@ -110,23 +110,23 @@ const ProductListPage: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: [],
-    priceRange: [0, 1000000000],
+    priceRange: [0, 100000000],
     status: [],
     sortBy: "createdAt",
     sortOrder: "desc",
   });
 
   const [priceRange, setPriceRange] = useState<[number, number]>([
-    0, 1000000000,
+    0, 100000000,
   ]);
-  const [maxPrice, setMaxPrice] = useState(1000000000);
+  const [maxPrice, setMaxPrice] = useState(100000000);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Debounce states
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [debouncedPriceRange, setDebouncedPriceRange] = useState<
     [number, number]
-  >([0, 1000000000]);
+  >([0, 100000000]);
 
   // Initialize filters from URL parameters
   useEffect(() => {
@@ -241,7 +241,7 @@ const ProductListPage: React.FC = () => {
   const fetchMaxPrice = async () => {
     try {
       // Tạm thời sử dụng giá trị mặc định vì API chưa có endpoint max-price
-      const max = 1000000000; // 1 tỷ VNĐ
+      const max = 100000000; // 100 triệu VNĐ
       setMaxPrice(max);
       setPriceRange([0, max]);
       setFilters((prev) => ({ ...prev, priceRange: [0, max] }));
@@ -532,7 +532,14 @@ const ProductListPage: React.FC = () => {
               value: c._id,
               label: (
                 <Tooltip title={c.Name} placement="right">
-                  <span style={{ display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
                     {c.Name}
                   </span>
                 </Tooltip>
@@ -572,7 +579,9 @@ const ProductListPage: React.FC = () => {
               }}
               tooltip={{
                 formatter: (value) =>
-                  value ? `${Math.round(value / 1000000)}M VNĐ` : "",
+                  value
+                    ? `${Math.round((value as number) / 1_000_000)}M VNĐ`
+                    : "",
               }}
               trackStyle={[{ backgroundColor: "var(--primary-color)" }]}
               handleStyle={[
@@ -591,7 +600,7 @@ const ProductListPage: React.FC = () => {
             />
             <div style={priceRangeStyle}>
               <div style={priceTextStyle}>
-                {`${Math.round(priceRange[0] / 1000000)}M - ${Math.round(priceRange[1] / 1000000)}M VNĐ`}
+                {`${Math.round(priceRange[0] / 1_000_000)}M - ${Math.round(priceRange[1] / 1_000_000)}M VNĐ`}
               </div>
             </div>
           </div>

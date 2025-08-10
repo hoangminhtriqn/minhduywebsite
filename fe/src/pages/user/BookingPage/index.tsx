@@ -1,7 +1,22 @@
 import React from "react";
 import useScrollToTop from "@/hooks/useScrollToTop";
-import { message, DatePicker, Form, Input, Select, Button, Modal } from "antd";
-import { getEmailRules, getPhoneRules } from "@/utils/validation";
+import {
+  message,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  Button,
+  Modal,
+  Typography,
+} from "antd";
+import {
+  getEmailRules,
+  getPhoneRules,
+  getFullNameRules,
+  getAddressRules,
+  getNotesRules,
+} from "@/utils/validation";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { createBooking } from "@/api/services/user/booking";
@@ -108,13 +123,14 @@ const BookingPage = () => {
 
   // Form validation rules (shared helpers)
   const formRules = {
-    FullName: [{ required: true, message: "Vui lòng nhập họ và tên" }],
+    FullName: getFullNameRules(),
     Email: getEmailRules(),
     Phone: getPhoneRules(),
-    Address: [{ required: true, message: "Vui lòng nhập địa chỉ" }],
-    CarModel: [{ required: true, message: "Vui lòng chọn dịch vụ" }],
-    TestDriveDate: [{ required: true, message: "Vui lòng chọn ngày đặt lịch" }],
-    TestDriveTime: [{ required: true, message: "Vui lòng chọn thời gian" }],
+    Address: getAddressRules(),
+    ServiceTypes: [{ required: true, message: "Vui lòng chọn dịch vụ" }],
+    BookingDate: [{ required: true, message: "Vui lòng chọn ngày đặt lịch" }],
+    BookingTime: [{ required: true, message: "Vui lòng chọn thời gian" }],
+    Notes: getNotesRules(),
   };
 
   // Timeline steps data
@@ -154,33 +170,35 @@ const BookingPage = () => {
     Email: string;
     Phone: string;
     Address: string;
-    CarModel: string;
-    TestDriveDate: dayjs.Dayjs;
-    TestDriveTime: string;
+    ServiceTypes: string; // ServiceType _id
+    BookingDate: dayjs.Dayjs;
+    BookingTime: string;
     Notes?: string;
   }) => {
     setSubmitting(true);
     try {
       // Validate date is not in the past
-      if (
-        values.TestDriveDate &&
-        values.TestDriveDate.isBefore(dayjs(), "day")
-      ) {
+      if (values.BookingDate && values.BookingDate.isBefore(dayjs(), "day")) {
         message.error("Ngày đặt lịch không được trong quá khứ.");
         setSubmitting(false);
         return;
       }
 
+      // Sanitize before submit (avoid trimming while typing)
+      const sanitizedFullName = values.FullName?.trim();
+      const sanitizedAddress = values.Address?.trim();
+      const sanitizedNotes = values.Notes?.trim();
+
       // Call API to create booking
       await createBooking({
-        FullName: values.FullName,
-        Email: values.Email,
-        Phone: values.Phone,
-        Address: values.Address,
-        CarModel: values.CarModel,
-        TestDriveDate: values.TestDriveDate.toISOString(),
-        TestDriveTime: values.TestDriveTime,
-        Notes: values.Notes,
+        FullName: sanitizedFullName,
+        Email: values.Email?.trim(),
+        Phone: values.Phone?.trim(),
+        Address: sanitizedAddress,
+        ServiceTypes: values.ServiceTypes,
+        BookingDate: values.BookingDate.toISOString(),
+        BookingTime: values.BookingTime,
+        Notes: sanitizedNotes,
       });
 
       message.success("Đăng ký đặt lịch thành công!");
@@ -217,36 +235,54 @@ const BookingPage = () => {
       className={styles.testDriveForm__form}
     >
       <Form.Item label="Họ và tên" name="FullName" rules={formRules.FullName}>
-        <Input placeholder="Nhập họ và tên" />
+        <Input placeholder="Nhập họ và tên" maxLength={64} />
       </Form.Item>
 
       <Form.Item label="Email" name="Email" rules={formRules.Email}>
-        <Input placeholder="Nhập địa chỉ email" />
+        <Input placeholder="Nhập địa chỉ email" maxLength={100} />
       </Form.Item>
 
       <Form.Item label="Số điện thoại" name="Phone" rules={formRules.Phone}>
-        <Input placeholder="Nhập số điện thoại" />
+        <Input placeholder="Nhập số điện thoại" maxLength={15} />
       </Form.Item>
 
       <Form.Item label="Địa chỉ" name="Address" rules={formRules.Address}>
-        <Input placeholder="Nhập địa chỉ cụ thể (tỉnh/thành phố, quận/huyện, ...)" />
+        <Input
+          placeholder="Nhập địa chỉ cụ thể (tỉnh/thành phố, quận/huyện, ...)"
+          maxLength={255}
+        />
       </Form.Item>
 
       <Form.Item
-        label="Dịch vụ quan tâm"
-        name="CarModel"
-        rules={formRules.CarModel}
+        label={
+          <div>
+            <span>Dịch vụ quan tâm</span>
+            <Typography.Text
+              type="secondary"
+              style={{
+                fontSize: 10,
+                display: "block",
+              }}
+            >
+              Không thấy dịch vụ phù hợp? Ghi chú thêm ở mục &quot;Ghi chú&quot;
+              bên dưới.
+            </Typography.Text>
+          </div>
+        }
+        name="ServiceTypes"
+        rules={formRules.ServiceTypes}
       >
         <Select
           placeholder="Chọn dịch vụ"
           loading={loadingServiceTypes}
           showSearch
           optionFilterProp="children"
+          allowClear
         >
           {serviceTypes.map((serviceType) => (
             <Select.Option
               key={serviceType._id}
-              value={serviceType.name}
+              value={serviceType._id}
               title={serviceType.description || serviceType.name}
             >
               {serviceType.name}
@@ -257,8 +293,8 @@ const BookingPage = () => {
 
       <Form.Item
         label="Ngày đặt lịch"
-        name="TestDriveDate"
-        rules={formRules.TestDriveDate}
+        name="BookingDate"
+        rules={formRules.BookingDate}
       >
         <DatePicker
           style={{ width: "100%" }}
@@ -271,8 +307,8 @@ const BookingPage = () => {
 
       <Form.Item
         label="Thời gian đặt lịch"
-        name="TestDriveTime"
-        rules={formRules.TestDriveTime}
+        name="BookingTime"
+        rules={formRules.BookingTime}
       >
         <Select placeholder="Chọn thời gian">
           <Select.Option value="08:00">Sáng (8:00)</Select.Option>
@@ -290,8 +326,12 @@ const BookingPage = () => {
         </Select>
       </Form.Item>
 
-      <Form.Item label="Ghi chú" name="Notes">
-        <Input.TextArea rows={3} placeholder="Nhập ghi chú (nếu có)" />
+      <Form.Item label="Ghi chú" name="Notes" rules={formRules.Notes}>
+        <Input.TextArea
+          rows={3}
+          placeholder="Nhập ghi chú (nếu có)"
+          maxLength={500}
+        />
       </Form.Item>
 
       <Form.Item>

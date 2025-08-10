@@ -1232,16 +1232,16 @@ const sampleServiceTypes = [
   },
 ];
 
-// Sample booking data
+// Sample booking data (renamed fields) - reference by serviceTypeName, later mapped to ObjectId
 const sampleBookings = [
   {
     FullName: "Nguyễn Văn An",
     Email: "nguyenvanan@email.com",
     Phone: "0901234567",
     Address: "123 Đường ABC, Quận 1, TP.HCM",
-    CarModel: "Sửa chữa",
-    TestDriveDate: new Date("2024-12-20"),
-    TestDriveTime: "09:00",
+    serviceTypeName: "Sửa chữa",
+    BookingDate: new Date("2024-12-20"),
+    BookingTime: "09:00",
     Notes: "Cần sửa chữa máy tính bàn",
     Status: "pending",
   },
@@ -1250,9 +1250,9 @@ const sampleBookings = [
     Email: "tranthibinh@email.com",
     Phone: "0912345678",
     Address: "456 Đường XYZ, Quận 3, TP.HCM",
-    CarModel: "Lắp đặt",
-    TestDriveDate: new Date("2024-12-21"),
-    TestDriveTime: "14:00",
+    serviceTypeName: "Lắp đặt",
+    BookingDate: new Date("2024-12-21"),
+    BookingTime: "14:00",
     Notes: "Lắp đặt hệ thống mạng cho văn phòng",
     Status: "confirmed",
   },
@@ -1261,9 +1261,9 @@ const sampleBookings = [
     Email: "levancuong@email.com",
     Phone: "0923456789",
     Address: "789 Đường DEF, Quận 5, TP.HCM",
-    CarModel: "Thi công",
-    TestDriveDate: new Date("2024-12-22"),
-    TestDriveTime: "10:00",
+    serviceTypeName: "Thi công",
+    BookingDate: new Date("2024-12-22"),
+    BookingTime: "10:00",
     Notes: "Thi công hệ thống camera giám sát",
     Status: "completed",
   },
@@ -1272,9 +1272,9 @@ const sampleBookings = [
     Email: "phamthidung@email.com",
     Phone: "0934567890",
     Address: "321 Đường GHI, Quận 7, TP.HCM",
-    CarModel: "Sửa chữa",
-    TestDriveDate: new Date("2024-12-23"),
-    TestDriveTime: "16:00",
+    serviceTypeName: "Sửa chữa",
+    BookingDate: new Date("2024-12-23"),
+    BookingTime: "16:00",
     Notes: "Sửa chữa laptop bị hỏng màn hình",
     Status: "pending",
   },
@@ -1283,9 +1283,9 @@ const sampleBookings = [
     Email: "hoangvanem@email.com",
     Phone: "0945678901",
     Address: "654 Đường JKL, Quận 10, TP.HCM",
-    CarModel: "Lắp đặt",
-    TestDriveDate: new Date("2024-12-24"),
-    TestDriveTime: "11:00",
+    serviceTypeName: "Lắp đặt",
+    BookingDate: new Date("2024-12-24"),
+    BookingTime: "11:00",
     Notes: "Lắp đặt máy in và máy scan cho công ty",
     Status: "confirmed",
   },
@@ -1294,13 +1294,11 @@ const sampleBookings = [
 // Migration function
 async function migrate() {
   try {
-
     // Kiểm tra environment variables
     if (!process.env.MONGO_URI) {
       console.error("❌ MONGO_URI chưa được cấu hình");
       return;
     }
-
 
     // Retry logic cho kết nối MongoDB
     let connected = false;
@@ -1337,8 +1335,23 @@ async function migrate() {
     }
 
     const forceReset = process.argv.includes("--force");
+    const seededCounts = {
+      roles: 0,
+      users: 0,
+      groupCategories: 0,
+      subCategories: 0,
+      products: 0,
+      services: 0,
+      newsEvents: 0,
+      pricing: 0,
+      locations: 0,
+      slides: 0,
+      serviceTypes: 0,
+      bookings: 0,
+    };
 
     if (forceReset) {
+      console.log("[MIGRATE] --force detected → clearing collections...");
       // Clear existing data
       await User.deleteMany({});
       await Role.deleteMany({});
@@ -1349,6 +1362,8 @@ async function migrate() {
       await NewsEvent.deleteMany({});
       await Setting.deleteMany({});
       await Location.deleteMany({});
+      await Booking.deleteMany({});
+      console.log("[MIGRATE] Collections cleared.");
     }
 
     // Kiểm tra xem dữ liệu đã tồn tại chưa
@@ -1369,12 +1384,18 @@ async function migrate() {
     let createdRoles = [];
     if (existingRoles === 0) {
       createdRoles = await Role.insertMany(sampleRoles);
+      seededCounts.roles = createdRoles.length;
+      console.log(`[MIGRATE] Seeded roles: ${seededCounts.roles}`);
     } else {
       createdRoles = await Role.find({});
     }
 
-    const adminRole = createdRoles.find((role) => role.Role_Name === USER_ROLES.ADMIN);
-    const userRole = createdRoles.find((role) => role.Role_Name === USER_ROLES.USER);
+    const adminRole = createdRoles.find(
+      (role) => role.Role_Name === USER_ROLES.ADMIN
+    );
+    const userRole = createdRoles.find(
+      (role) => role.Role_Name === USER_ROLES.USER
+    );
     const employeeRole = createdRoles.find(
       (role) => role.Role_Name === USER_ROLES.EMPLOYEE
     );
@@ -1416,6 +1437,10 @@ async function migrate() {
     });
     if (existingGroupCategories === 0) {
       createdGroupCategories = await Category.insertMany(sampleGroupCategories);
+      seededCounts.groupCategories = createdGroupCategories.length;
+      console.log(
+        `[MIGRATE] Seeded group categories: ${seededCounts.groupCategories}`
+      );
     } else {
       createdGroupCategories = await Category.find({ ParentID: null });
     }
@@ -1548,6 +1573,10 @@ async function migrate() {
       }
 
       createdSubCategories = await Category.insertMany(subCategoriesWithParent);
+      seededCounts.subCategories = createdSubCategories.length;
+      console.log(
+        `[MIGRATE] Seeded sub-categories: ${seededCounts.subCategories}`
+      );
     } else {
       createdSubCategories = await Category.find({ ParentID: { $ne: null } });
     }
@@ -1715,6 +1744,8 @@ async function migrate() {
       });
 
       await Product.insertMany(productsWithCategories);
+      seededCounts.products = productsWithCategories.length;
+      console.log(`[MIGRATE] Seeded products: ${seededCounts.products}`);
     } else {
     }
 
@@ -1724,14 +1755,18 @@ async function migrate() {
     // Create services only if they don't exist
     const existingServices = await Service.countDocuments();
     if (existingServices === 0) {
-      await Service.insertMany(sampleServices);
+      const svc = await Service.insertMany(sampleServices);
+      seededCounts.services = svc.length;
+      console.log(`[MIGRATE] Seeded services: ${seededCounts.services}`);
     } else {
     }
 
     // Create news events only if they don't exist
     const existingNewsEvents = await NewsEvent.countDocuments();
     if (existingNewsEvents === 0) {
-      await NewsEvent.insertMany(sampleNewsEvents);
+      const ne = await NewsEvent.insertMany(sampleNewsEvents);
+      seededCounts.newsEvents = ne.length;
+      console.log(`[MIGRATE] Seeded news events: ${seededCounts.newsEvents}`);
     } else {
     }
 
@@ -1744,6 +1779,8 @@ async function migrate() {
         await user.save();
         createdUsers.push(user);
       }
+      seededCounts.users = createdUsers.length;
+      console.log(`[MIGRATE] Seeded users: ${seededCounts.users}`);
 
       // Create role-user relationships for sample users
       for (const user of createdUsers) {
@@ -1775,35 +1812,101 @@ async function migrate() {
     // Create pricing data only if they don't exist
     const existingPricing = await Pricing.countDocuments();
     if (existingPricing === 0) {
-      await Pricing.insertMany(samplePricing);
+      const pr = await Pricing.insertMany(samplePricing);
+      seededCounts.pricing = pr.length;
+      console.log(`[MIGRATE] Seeded pricing: ${seededCounts.pricing}`);
     } else {
     }
 
     // Tạo sample locations nếu chưa có
     const existingLocations = await Location.countDocuments();
     if (existingLocations === 0) {
-      await Location.insertMany(sampleLocations);
+      const loc = await Location.insertMany(sampleLocations);
+      seededCounts.locations = loc.length;
+      console.log(`[MIGRATE] Seeded locations: ${seededCounts.locations}`);
     } else {
     }
 
     // Tạo sample slides nếu chưa có
     const existingSlides = await Slide.countDocuments();
     if (existingSlides === 0) {
-      await Slide.insertMany(sampleSlides);
+      const slides = await Slide.insertMany(sampleSlides);
+      seededCounts.slides = slides.length;
+      console.log(`[MIGRATE] Seeded slides: ${seededCounts.slides}`);
     } else {
     }
 
     // Create service types data only if they don't exist
     const existingServiceTypes = await ServiceType.countDocuments();
     if (existingServiceTypes === 0) {
-      await ServiceType.insertMany(sampleServiceTypes);
+      const st = await ServiceType.insertMany(sampleServiceTypes);
+      seededCounts.serviceTypes = st.length;
+      console.log(
+        `[MIGRATE] Seeded service types: ${seededCounts.serviceTypes}`
+      );
     } else {
+    }
+
+    // One-time migration: rename old fields if exist
+    try {
+      await Booking.updateMany([
+        {
+          $set: {
+            BookingDate: { $ifNull: ["$BookingDate", "$TestDriveDate"] },
+            BookingTime: { $ifNull: ["$BookingTime", "$TestDriveTime"] },
+          },
+        },
+        { $unset: ["TestDriveDate", "TestDriveTime"] },
+      ]);
+    } catch (e) {
+      // ignore if MongoDB version doesn't support pipeline updates
+    }
+
+    // Map CarModel text to ServiceTypes ObjectId when possible
+    try {
+      const allServiceTypes = await ServiceType.find({});
+      const nameToId = new Map(allServiceTypes.map((s) => [s.name, s._id]));
+      const docs = await Booking.find({
+        ServiceTypes: { $exists: false },
+        CarModel: { $exists: true },
+      });
+      for (const doc of docs) {
+        const id = nameToId.get(doc.CarModel);
+        if (id) {
+          doc.ServiceTypes = id;
+          doc.CarModel = undefined;
+          await doc.save();
+        }
+      }
+      // Cleanup leftover CarModel field if any
+      await Booking.updateMany(
+        { CarModel: { $exists: true } },
+        { $unset: { CarModel: "" } }
+      );
+    } catch (e) {
+      // best-effort migration
     }
 
     // Create booking data only if they don't exist
     const existingBookings = await Booking.countDocuments();
     if (existingBookings === 0) {
-      await Booking.insertMany(sampleBookings);
+      const serviceTypesForSeed = await ServiceType.find({});
+      const nameToIdForSeed = new Map(
+        serviceTypesForSeed.map((s) => [s.name, s._id])
+      );
+      const fallbackId = serviceTypesForSeed[0]?._id || null;
+      const sampleBookingsMapped = sampleBookings
+        .map(({ serviceTypeName, ...rest }) => ({
+          ...rest,
+          ServiceTypes: nameToIdForSeed.get(serviceTypeName) || fallbackId,
+        }))
+        .filter((b) => !!b.ServiceTypes);
+
+      if (sampleBookingsMapped.length > 0) {
+        await Booking.insertMany(sampleBookingsMapped);
+        seededCounts.bookings = sampleBookingsMapped.length;
+        console.log(`[MIGRATE] Seeded bookings: ${seededCounts.bookings}`);
+      }
     } else {
     }
 
@@ -1831,8 +1934,46 @@ async function migrate() {
       await existingSetting.save();
     }
 
-
-
+    // Summary
+    const [
+      rolesCount,
+      usersCount,
+      serviceTypesCount,
+      bookingsCount,
+      productsCount,
+      categoriesCount,
+    ] = await Promise.all([
+      Role.countDocuments(),
+      User.countDocuments(),
+      ServiceType.countDocuments(),
+      Booking.countDocuments(),
+      Product.countDocuments(),
+      Category.countDocuments(),
+    ]);
+    console.log(
+      `[MIGRATE] Seeded counts → roles=${seededCounts.roles}, users=${
+        seededCounts.users
+      }, serviceTypes=${seededCounts.serviceTypes}, bookings=${
+        seededCounts.bookings
+      }, products=${seededCounts.products}, categories(group+sub)=${
+        seededCounts.groupCategories + seededCounts.subCategories
+      }, services=${seededCounts.services}, newsEvents=${
+        seededCounts.newsEvents
+      }, pricing=${seededCounts.pricing}, locations=${
+        seededCounts.locations
+      }, slides=${seededCounts.slides}`
+    );
+    console.log(
+      `[MIGRATE] Summary (DB totals) → roles=${rolesCount}, users=${usersCount}, serviceTypes=${serviceTypesCount}, bookings=${bookingsCount}, products=${productsCount}, categories=${categoriesCount}`
+    );
+    const bookingBreakdown = await Booking.aggregate([
+      { $group: { _id: "$Status", count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ]);
+    console.log(
+      `[MIGRATE] Bookings by status: ${JSON.stringify(bookingBreakdown)}`
+    );
+    // end
   } catch (error) {
     console.error("❌ Lỗi trong quá trình migration:", error.message);
     console.error("🔍 Chi tiết lỗi:", error);
