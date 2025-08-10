@@ -25,6 +25,7 @@ import {
   Space,
   Popconfirm,
 } from "antd";
+import { getEmailRules, getPhoneRules } from "@/utils/validation";
 import React, { useEffect, useState, useCallback } from "react";
 import LocationModal from "./LocationModal";
 import SlideModal from "./SlideModal";
@@ -297,12 +298,7 @@ const SettingsPage: React.FC = () => {
                 <Form.Item
                   label="Số điện thoại"
                   name="phone"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng nhập số điện thoại",
-                    },
-                  ]}
+                  rules={getPhoneRules()}
                 >
                   <Input placeholder="Nhập số điện thoại" />
                 </Form.Item>
@@ -316,14 +312,7 @@ const SettingsPage: React.FC = () => {
                   marginTop: "16px",
                 }}
               >
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[
-                    { required: true, message: "Vui lòng nhập email" },
-                    { type: "email", message: "Email không hợp lệ" },
-                  ]}
-                >
+                <Form.Item label="Email" name="email" rules={getEmailRules()}>
                   <Input placeholder="Nhập email" />
                 </Form.Item>
 

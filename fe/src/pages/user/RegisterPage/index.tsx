@@ -8,6 +8,12 @@ import styles from "./styles.module.scss";
 import { RegisterData } from "@/api/types";
 import { ROUTERS } from "@/utils/constant";
 import {
+  USERNAME_ALLOWED_CHARS_REGEX,
+  EMAIL_REGEX,
+  PHONE_VN_REGEX,
+  getPasswordRules,
+} from "@/utils/validation";
+import {
   UserOutlined,
   MailOutlined,
   PhoneOutlined,
@@ -60,23 +66,43 @@ const RegisterPage: React.FC = () => {
       return;
     }
 
-    // Basic Email format validation
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    if (!emailRegex.test(formData.Email)) {
+    // Username validation
+    if (formData.UserName.length < 3) {
+      toast.error("Tên đăng nhập phải có ít nhất 3 ký tự.");
+      return;
+    }
+    if (formData.UserName.length > 32) {
+      toast.error("Tên đăng nhập tối đa 32 ký tự.");
+      return;
+    }
+    if (!USERNAME_ALLOWED_CHARS_REGEX.test(formData.UserName)) {
+      toast.error(
+        "Chỉ cho phép chữ, số, dấu chấm (.), gạch dưới (_) và gạch nối (-) cho tên đăng nhập."
+      );
+      return;
+    }
+
+    // Basic Email format validation (shared)
+    if (!EMAIL_REGEX.test(formData.Email)) {
       toast.error("Email không hợp lệ.");
       return;
     }
 
-    // Basic Phone number validation (10 digits)
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(formData.Phone)) {
-      toast.error("Số điện thoại không hợp lệ (chỉ chấp nhận 10 chữ số).");
+    // Basic Phone number validation (shared VN pattern)
+    if (!PHONE_VN_REGEX.test(formData.Phone)) {
+      toast.error("Số điện thoại không hợp lệ.");
       return;
     }
 
-    // Password minimum length validation (matching backend schema if possible)
-    if (formData.Password.length < 6) {
-      toast.error("Mật khẩu phải có ít nhất 6 ký tự.");
+    // Password minimum length validation (shared default min 6)
+    const pwdRules = getPasswordRules();
+    const minRule = pwdRules.find((r) => "min" in r) as
+      | { min?: number; message?: string }
+      | undefined;
+    if (minRule?.min && formData.Password.length < minRule.min) {
+      toast.error(
+        minRule.message || `Mật khẩu phải có ít nhất ${minRule.min} ký tự.`
+      );
       return;
     }
 
@@ -175,6 +201,7 @@ const RegisterPage: React.FC = () => {
                 placeholder="Tên đăng nhập"
                 className={styles.register__input}
                 autoComplete="username"
+                maxLength={32}
               />
             </div>
           </div>

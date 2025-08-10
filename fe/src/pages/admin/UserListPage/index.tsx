@@ -23,6 +23,7 @@ import {
   updateUserStatus,
 } from "@/api/services/admin/user";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUsernameRules, getEmailRules } from "@/utils/validation";
 const { Option } = Select;
 
 // Enum cho User Roles
@@ -230,35 +231,40 @@ const UserListPage: React.FC = () => {
               Sửa
             </Button>
           )}
-          {hasPermission("users.status.update") && record._id !== currentUserId && (
-            <>
-              {record.Status === "active" ? (
-                <Popconfirm
-                  title="Xác nhận khóa người dùng?"
-                  onConfirm={() => handleStatusChange(record._id, "inactive")}
-                  okText="Khóa"
-                  cancelText="Hủy"
-                  okType="danger"
-                >
-                  <Button danger icon={<LockOutlined />} size="small">
-                    Khóa
-                  </Button>
-                </Popconfirm>
-              ) : (
-                <Popconfirm
-                  title="Xác nhận mở khóa người dùng?"
-                  onConfirm={() => handleStatusChange(record._id, "active")}
-                  okText="Mở khóa"
-                  cancelText="Hủy"
-                  okType="primary"
-                >
-                  <Button type="primary" icon={<UnlockOutlined />} size="small">
-                    Mở khóa
-                  </Button>
-                </Popconfirm>
-              )}
-            </>
-          )}
+          {hasPermission("users.status.update") &&
+            record._id !== currentUserId && (
+              <>
+                {record.Status === "active" ? (
+                  <Popconfirm
+                    title="Xác nhận khóa người dùng?"
+                    onConfirm={() => handleStatusChange(record._id, "inactive")}
+                    okText="Khóa"
+                    cancelText="Hủy"
+                    okType="danger"
+                  >
+                    <Button danger icon={<LockOutlined />} size="small">
+                      Khóa
+                    </Button>
+                  </Popconfirm>
+                ) : (
+                  <Popconfirm
+                    title="Xác nhận mở khóa người dùng?"
+                    onConfirm={() => handleStatusChange(record._id, "active")}
+                    okText="Mở khóa"
+                    cancelText="Hủy"
+                    okType="primary"
+                  >
+                    <Button
+                      type="primary"
+                      icon={<UnlockOutlined />}
+                      size="small"
+                    >
+                      Mở khóa
+                    </Button>
+                  </Popconfirm>
+                )}
+              </>
+            )}
         </Space>
       ),
     },
@@ -326,18 +332,11 @@ const UserListPage: React.FC = () => {
           <Form.Item
             name="UserName"
             label="Tên đăng nhập"
-            rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập" }]}
+            rules={getUsernameRules()}
           >
-            <Input />
+            <Input maxLength={32} />
           </Form.Item>
-          <Form.Item
-            name="Email"
-            label="Email"
-            rules={[
-              { required: true, message: "Vui lòng nhập email" },
-              { type: "email", message: "Email không hợp lệ" },
-            ]}
-          >
+          <Form.Item name="Email" label="Email" rules={getEmailRules()}>
             <Input />
           </Form.Item>
           <Form.Item
@@ -345,7 +344,7 @@ const UserListPage: React.FC = () => {
             label="Vai trò"
             rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}
           >
-              <Select
+            <Select
               placeholder="Chọn vai trò"
               disabled={
                 editingUser?._id === currentUserId &&

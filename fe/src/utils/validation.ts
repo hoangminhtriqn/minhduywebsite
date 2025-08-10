@@ -2,6 +2,8 @@ import type { Rule, RuleObject } from 'antd/es/form';
 
 // Common regex patterns (kept relaxed to avoid breaking current behavior)
 export const USERNAME_ALLOWED_CHARS_REGEX = /^[a-zA-Z0-9._-]+$/;
+export const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+export const PHONE_VN_REGEX = /^(84|0[3|5|7|8|9])[0-9]{8}$/;
 
 // Return reusable AntD rules for username
 export const getUsernameRules = (options?: {
@@ -51,6 +53,30 @@ export const getPasswordRules = (options?: {
   }
 
   return rules;
+};
+
+// Return reusable AntD rules for email
+export const getEmailRules = (options?: {
+  required?: boolean;
+  pattern?: RegExp;
+}): Rule[] => {
+  const { required = true, pattern = EMAIL_REGEX } = options || {};
+  return [
+    required && { required: true, message: 'Vui lòng nhập email' },
+    { pattern, message: 'Email không hợp lệ' },
+  ].filter(Boolean) as Rule[];
+};
+
+// Return reusable AntD rules for phone (Vietnam format)
+export const getPhoneRules = (options?: {
+  required?: boolean;
+  pattern?: RegExp;
+}): Rule[] => {
+  const { required = true, pattern = PHONE_VN_REGEX } = options || {};
+  return [
+    required && { required: true, message: 'Vui lòng nhập số điện thoại' },
+    { pattern, message: 'Số điện thoại không hợp lệ' },
+  ].filter(Boolean) as Rule[];
 };
 
 // Confirm password validator rule

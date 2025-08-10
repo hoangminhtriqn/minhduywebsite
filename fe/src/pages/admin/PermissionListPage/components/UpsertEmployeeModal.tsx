@@ -6,6 +6,12 @@ import {
   UpdateEmployeeData,
 } from "@/api/services/admin/permission";
 import styles from "../styles.module.scss";
+import {
+  getUsernameRules,
+  getEmailRules,
+  getPhoneRules,
+  getPasswordRules,
+} from "@/utils/validation";
 
 interface UpsertEmployeeModalProps {
   visible: boolean;
@@ -66,17 +72,15 @@ const UpsertEmployeeModal: React.FC<UpsertEmployeeModalProps> = ({
             <Form.Item
               name="UserName"
               label="Tên đăng nhập"
-              rules={[
-                { required: true, message: "Vui lòng nhập tên đăng nhập!" },
-              ]}
+              rules={getUsernameRules()}
             >
-              <Input placeholder="Nhập tên đăng nhập" />
+              <Input placeholder="Nhập tên đăng nhập" maxLength={32} />
             </Form.Item>
 
             <Form.Item
               name="Password"
               label="Mật khẩu"
-              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+              rules={getPasswordRules()}
             >
               <Input.Password placeholder="Nhập mật khẩu" />
             </Form.Item>
@@ -91,22 +95,11 @@ const UpsertEmployeeModal: React.FC<UpsertEmployeeModalProps> = ({
           <Input placeholder="Nhập họ và tên" />
         </Form.Item>
 
-        <Form.Item
-          name="Email"
-          label="Email"
-          rules={[
-            { required: true, message: "Vui lòng nhập email!" },
-            { type: "email", message: "Email không hợp lệ!" },
-          ]}
-        >
+        <Form.Item name="Email" label="Email" rules={getEmailRules()}>
           <Input placeholder="Nhập email" />
         </Form.Item>
 
-        <Form.Item
-          name="Phone"
-          label="Số điện thoại"
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-        >
+        <Form.Item name="Phone" label="Số điện thoại" rules={getPhoneRules()}>
           <Input placeholder="Nhập số điện thoại" />
         </Form.Item>
 

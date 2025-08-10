@@ -1,10 +1,14 @@
 import React from "react";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import { message, DatePicker, Form, Input, Select, Button, Modal } from "antd";
+import { getEmailRules, getPhoneRules } from "@/utils/validation";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { createBooking } from "@/api/services/user/booking";
-import { getActiveServiceTypes, ServiceType } from "@/api/services/user/serviceTypes";
+import {
+  getActiveServiceTypes,
+  ServiceType,
+} from "@/api/services/user/serviceTypes";
 
 import {
   FormOutlined,
@@ -102,20 +106,11 @@ const BookingPage = () => {
     fetchServiceTypes();
   }, []);
 
-  // Form validation rules
+  // Form validation rules (shared helpers)
   const formRules = {
     FullName: [{ required: true, message: "Vui lòng nhập họ và tên" }],
-    Email: [
-      { required: true, message: "Vui lòng nhập email" },
-      { type: "email" as const, message: "Email không hợp lệ" },
-    ],
-    Phone: [
-      { required: true, message: "Vui lòng nhập số điện thoại" },
-      {
-        pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
-        message: "Số điện thoại không hợp lệ",
-      },
-    ],
+    Email: getEmailRules(),
+    Phone: getPhoneRules(),
     Address: [{ required: true, message: "Vui lòng nhập địa chỉ" }],
     CarModel: [{ required: true, message: "Vui lòng chọn dịch vụ" }],
     TestDriveDate: [{ required: true, message: "Vui lòng chọn ngày đặt lịch" }],
@@ -185,7 +180,7 @@ const BookingPage = () => {
         CarModel: values.CarModel,
         TestDriveDate: values.TestDriveDate.toISOString(),
         TestDriveTime: values.TestDriveTime,
-        Notes: values.Notes
+        Notes: values.Notes,
       });
 
       message.success("Đăng ký đặt lịch thành công!");
@@ -242,14 +237,14 @@ const BookingPage = () => {
         name="CarModel"
         rules={formRules.CarModel}
       >
-        <Select 
-          placeholder="Chọn dịch vụ" 
+        <Select
+          placeholder="Chọn dịch vụ"
           loading={loadingServiceTypes}
           showSearch
           optionFilterProp="children"
         >
           {serviceTypes.map((serviceType) => (
-            <Select.Option 
+            <Select.Option
               key={serviceType._id}
               value={serviceType.name}
               title={serviceType.description || serviceType.name}
