@@ -5,7 +5,6 @@ import {
   Form,
   Input,
   notification,
-
   Upload,
   Image,
   Tooltip,
@@ -67,42 +66,44 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
 
+  const fetchServiceData = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      try {
+        const serviceData = await servicesApi.getServiceById(id);
 
-  const fetchServiceData = useCallback(async (id: string) => {
-    setLoading(true);
-    try {
-      const serviceData = await servicesApi.getServiceById(id);
+        // Set image if exists
+        if (serviceData.icon) {
+          setImageFile({
+            uid: `icon-${Date.now()}`,
+            name: "Service Icon",
+            status: "done",
+            url: serviceData.icon,
+            public_id: `icon-${Date.now()}`,
+          });
+        }
 
-      // Set image if exists
-      if (serviceData.icon) {
-        setImageFile({
-          uid: `icon-${Date.now()}`,
-          name: "Service Icon",
-          status: "done",
-          url: serviceData.icon,
-          public_id: `icon-${Date.now()}`,
+        // Chuyển đổi dữ liệu để phù hợp với form
+        const formData = {
+          title: serviceData.title,
+          description: serviceData.description || "",
+          icon: serviceData.icon || "",
+        };
+
+        // Điền dữ liệu vào form
+        form.setFieldsValue(formData);
+      } catch (error) {
+        console.error("Error fetching service data:", error);
+        notification.error({
+          message: "Lỗi",
+          description: "Không thể tải dữ liệu dịch vụ.",
         });
+      } finally {
+        setLoading(false);
       }
-
-      // Chuyển đổi dữ liệu để phù hợp với form
-      const formData = {
-        title: serviceData.title,
-        description: serviceData.description || "",
-        icon: serviceData.icon || "",
-      };
-
-      // Điền dữ liệu vào form
-      form.setFieldsValue(formData);
-    } catch (error) {
-      console.error("Error fetching service data:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể tải dữ liệu dịch vụ.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [form]);
+    },
+    [form]
+  );
 
   useEffect(() => {
     if (isEditing && serviceId) {
@@ -143,7 +144,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
       console.error("Image upload error:", error);
       notification.error({
         message: "Lỗi",
-        description: `Upload icon thất bại! ${error instanceof Error ? error.message : 'Unknown error'}`,
+        description: `Upload icon thất bại! ${error instanceof Error ? error.message : "Unknown error"}`,
       });
     } finally {
       setImageUploading(false);
@@ -204,8 +205,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
     }
   };
 
-
-
   const renderFormContent = () => {
     return (
       <div className={styles.formContent}>
@@ -215,7 +214,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
             <Form.Item
               name="icon"
               label="Icon dịch vụ"
-              rules={[{ required: true, message: "Vui lòng tải lên icon dịch vụ!" }]}
+              rules={[
+                { required: true, message: "Vui lòng tải lên icon dịch vụ!" },
+              ]}
             >
               <div className={styles.imageUpload}>
                 {imageFile ? (
@@ -298,10 +299,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
                 { required: true, message: "Vui lòng nhập tên dịch vụ!" },
               ]}
             >
-              <Input
-                placeholder="Vui lòng nhập tên dịch vụ"
-                size="large"
-              />
+              <Input placeholder="Vui lòng nhập tên dịch vụ" size="large" />
             </Form.Item>
 
             <Form.Item
@@ -318,8 +316,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
             </Form.Item>
           </Col>
         </Row>
-
-
       </div>
     );
   };
@@ -338,7 +334,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
         form={form}
         layout="vertical"
         onFinish={onFinish}
-
         {...(!isEditing && {
           initialValues: {
             isFeatured: false,
@@ -349,13 +344,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
 
         <div className={styles.formActions}>
           <Space size="large">
-            <Popconfirm
-              title="Xác nhận lưu dịch vụ?"
-              description="Bạn có chắc chắn muốn lưu dịch vụ này?"
-              onConfirm={() => form.submit()}
-              okText="Có"
-              cancelText="Không"
-            >
+            {isEditing ? (
               <Button
                 type="primary"
                 htmlType="submit"
@@ -363,9 +352,27 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ mode, serviceId }) => {
                 icon={<SaveOutlined />}
                 size="large"
               >
-                {isEditing ? "Cập nhật dịch vụ" : "Thêm dịch vụ"}
+                Cập nhật dịch vụ
               </Button>
-            </Popconfirm>
+            ) : (
+              <Popconfirm
+                title="Xác nhận lưu dịch vụ?"
+                description="Bạn có chắc chắn muốn lưu dịch vụ này?"
+                onConfirm={() => form.submit()}
+                okText="Có"
+                cancelText="Không"
+              >
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={saving}
+                  icon={<SaveOutlined />}
+                  size="large"
+                >
+                  Thêm dịch vụ
+                </Button>
+              </Popconfirm>
+            )}
 
             <Button
               onClick={() => navigate("/admin/services")}

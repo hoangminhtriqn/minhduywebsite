@@ -1,7 +1,7 @@
 import {
   createNewsEvent,
   getNewsEventById,
-  updateNewsEvent
+  updateNewsEvent,
 } from "@/api/services/user/newsEvents";
 import { uploadFile } from "@/api/services/admin/upload";
 import EditorCustom from "@/components/admin/EditorCustom";
@@ -13,7 +13,7 @@ import {
   InfoCircleOutlined,
   RollbackOutlined,
   SaveOutlined,
-  UploadOutlined
+  UploadOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -23,7 +23,6 @@ import {
   Input,
   Modal,
   notification,
-  Popconfirm,
   Row,
   Select,
   Space,
@@ -81,43 +80,46 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [formData, setFormData] = useState<NewsFormData>({} as NewsFormData);
 
-  const fetchNewsData = useCallback(async (id: string) => {
-    setLoading(true);
-    try {
-      const newsData = await getNewsEventById(id);
+  const fetchNewsData = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      try {
+        const newsData = await getNewsEventById(id);
 
-      // Set image if exists
-      if (newsData.ImageUrl) {
-        setImageFile({
-          uid: `image-${Date.now()}`,
-          name: "News Image",
-          status: "done",
-          url: newsData.ImageUrl,
-          public_id: `image-${Date.now()}`,
+        // Set image if exists
+        if (newsData.ImageUrl) {
+          setImageFile({
+            uid: `image-${Date.now()}`,
+            name: "News Image",
+            status: "done",
+            url: newsData.ImageUrl,
+            public_id: `image-${Date.now()}`,
+          });
+        }
+
+        // Chuyển đổi dữ liệu để phù hợp với form
+        const formData = {
+          Title: newsData.Title,
+          Content: newsData.Content || "",
+          Image: newsData.ImageUrl || "",
+          Status: newsData.Status || "active",
+        };
+
+        // Điền dữ liệu vào form
+        form.setFieldsValue(formData);
+        setFormData(formData);
+      } catch (error) {
+        console.error("Error fetching news data:", error);
+        notification.error({
+          message: "Lỗi",
+          description: "Không thể tải dữ liệu tin tức.",
         });
+      } finally {
+        setLoading(false);
       }
-
-      // Chuyển đổi dữ liệu để phù hợp với form
-      const formData = {
-        Title: newsData.Title,
-        Content: newsData.Content || "",
-        Image: newsData.ImageUrl || "",
-        Status: newsData.Status || "active",
-      };
-
-      // Điền dữ liệu vào form
-      form.setFieldsValue(formData);
-      setFormData(formData);
-    } catch (error) {
-      console.error("Error fetching news data:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể tải dữ liệu tin tức.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [form]);
+    },
+    [form]
+  );
 
   useEffect(() => {
     if (isEditing && newsId) {
@@ -227,7 +229,26 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
     }
   };
 
-  const handleFormChange = (_changedFields: unknown, allFields: NewsFormData) => {
+  const onFinishFailed = (errorInfo: {
+    values: unknown;
+    errorFields: Array<{ name: (string | number)[]; errors: string[] }>;
+    outOfDate: boolean;
+  }) => {
+    if (errorInfo?.errorFields?.length > 0) {
+      const firstErrorName = errorInfo.errorFields[0].name;
+      if (firstErrorName && firstErrorName.length > 0) {
+        form.scrollToField(firstErrorName, {
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  };
+
+  const handleFormChange = (
+    _changedFields: unknown,
+    allFields: NewsFormData
+  ) => {
     setFormData(allFields);
   };
 
@@ -338,10 +359,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
                 { required: true, message: "Vui lòng nhập tiêu đề tin tức!" },
               ]}
             >
-              <Input
-                placeholder="Vui lòng nhập tiêu đề tin tức"
-                size="large"
-              />
+              <Input placeholder="Vui lòng nhập tiêu đề tin tức" size="large" />
             </Form.Item>
 
             <Form.Item name="Status" label="Trạng thái">
@@ -354,7 +372,11 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
           </Col>
         </Row>
 
-        <Form.Item name="Content" label="Nội dung tin tức" style={{ marginTop: 24 }}>
+        <Form.Item
+          name="Content"
+          label="Nội dung tin tức"
+          style={{ marginTop: 24 }}
+        >
           <EditorCustom
             initialValue={formData.Content || ""}
             placeholder="Nhập nội dung tin tức chi tiết..."
@@ -381,6 +403,8 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
         form={form}
         layout="vertical"
         onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        scrollToFirstError={{ behavior: "smooth", block: "center" }}
         onValuesChange={handleFormChange}
         {...(!isEditing && {
           initialValues: {
@@ -392,23 +416,15 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
 
         <div className={styles.formActions}>
           <Space size="large">
-            <Popconfirm
-              title="Xác nhận lưu tin tức?"
-              description="Bạn có chắc chắn muốn lưu tin tức này?"
-              onConfirm={() => form.submit()}
-              okText="Có"
-              cancelText="Không"
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={saving}
+              icon={<SaveOutlined />}
+              size="large"
             >
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={saving}
-                icon={<SaveOutlined />}
-                size="large"
-              >
-                {isEditing ? "Cập nhật tin tức" : "Thêm tin tức"}
-              </Button>
-            </Popconfirm>
+              {isEditing ? "Cập nhật tin tức" : "Thêm tin tức"}
+            </Button>
 
             <Button
               onClick={() => navigate("/admin/news")}
