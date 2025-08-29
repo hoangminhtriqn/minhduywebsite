@@ -284,7 +284,9 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
           <div className={styles.headerUser}>
             {(isAdmin || hasAnyPermission([BookingPermissions.VIEW])) && (
-              <AdminNotificationsBell />
+              <div className={styles.notificationsWrapper}>
+                <AdminNotificationsBell />
+              </div>
             )}
             {user && (
               <Dropdown

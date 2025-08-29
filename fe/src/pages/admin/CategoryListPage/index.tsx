@@ -6,6 +6,7 @@ import {
   EditOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
+  InfoCircleOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import {
@@ -24,7 +25,9 @@ import {
   Tooltip,
   Tree,
   Typography,
+  Popover,
 } from "antd";
+import styles from "./styles.module.scss";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -586,7 +589,7 @@ const CategoryListPage: React.FC = () => {
               </Form.Item>
 
               <Form.Item label="Icon">
-                <div style={{ position: "relative" }} ref={emojiPickerRef}>
+                <div className={styles.emojiField} ref={emojiPickerRef}>
                   <Input
                     value={selectedEmoji}
                     placeholder="Chọn emoji hoặc paste emoji từ bên ngoài"
@@ -604,10 +607,7 @@ const CategoryListPage: React.FC = () => {
                         setSelectedEmoji(value);
                       }
                     }}
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: "white",
-                    }}
+                    className={styles.emojiInput}
                     disabled={false}
                     suffix={
                       <Button
@@ -615,46 +615,21 @@ const CategoryListPage: React.FC = () => {
                         size="small"
                         disabled={false}
                         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                        className={styles.emojiSuffixBtn}
                       >
                         {showEmojiPicker ? "✕" : "😊"}
                       </Button>
                     }
                   />
                   {showEmojiPicker && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        zIndex: 1000,
-                        top: "100%",
-                        left: 0,
-                        backgroundColor: "white",
-                        border: "1px solid #d9d9d9",
-                        borderRadius: "6px",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                        padding: "8px",
-                        width: "100%",
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(6, 1fr)",
-                          gap: "4px",
-                        }}
-                      >
+                    <div className={styles.emojiPicker}>
+                      <div className={styles.emojiGrid}>
                         {EMOJI_LIST.map((emoji, index) => (
                           <Button
                             key={index}
                             type="text"
                             size="small"
-                            style={{
-                              fontSize: "20px",
-                              padding: "4px",
-                              minWidth: "32px",
-                              height: "32px",
-                            }}
+                            className={styles.emojiBtn}
                             onClick={() => {
                               setSelectedEmoji(emoji);
                               setShowEmojiPicker(false);
@@ -667,6 +642,38 @@ const CategoryListPage: React.FC = () => {
                     </div>
                   )}
                 </div>
+                <Popover
+                  trigger="click"
+                  placement="right"
+                  content={
+                    <div className={styles.moreLinksContent}>
+                      <ul className={styles.moreLinksList}>
+                        <li className={styles.moreLinkItem}>
+                          <a
+                            href="https://getemoji.com/"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            getemoji.com
+                          </a>
+                        </li>
+                        <li className={styles.moreLinkItem}>
+                          <a
+                            href="https://emojicopy.com/"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            emojicopy.com
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  }
+                >
+                  <span className={styles.moreLinksTrigger}>
+                    Xem thêm <InfoCircleOutlined />
+                  </span>
+                </Popover>
               </Form.Item>
 
               <Form.Item name="Description" label="Mô tả">
@@ -699,14 +706,14 @@ const CategoryListPage: React.FC = () => {
                   label="Trạng thái"
                   initialValue="active"
                 >
-                  <Select size="large">
-                    <Select.Option value="active">
+                  <Select size="large" optionLabelProp="label">
+                    <Select.Option value="active" label="Hoạt động">
                       <Space>
                         <EyeOutlined style={{ color: "#52c41a" }} />
                         <span>Hoạt động</span>
                       </Space>
                     </Select.Option>
-                    <Select.Option value="inactive">
+                    <Select.Option value="inactive" label="Không hoạt động">
                       <Space>
                         <EyeInvisibleOutlined style={{ color: "#ff4d4f" }} />
                         <span>Không hoạt động</span>
@@ -715,23 +722,22 @@ const CategoryListPage: React.FC = () => {
                   </Select>
                 </Form.Item>
               ) : (
-                <Form.Item
-                  name="Status"
-                  label="Trạng thái"
-                  initialValue="active"
-                >
-                  <Input
-                    value="Hoạt động"
-                    readOnly
-                    size="large"
-                    style={{
-                      backgroundColor: "#f6ffed",
-                      borderColor: "#b7eb8f",
-                      color: "#52c41a",
-                    }}
-                    suffix={<EyeOutlined style={{ color: "#52c41a" }} />}
-                  />
-                </Form.Item>
+                <>
+                  <Form.Item name="Status" initialValue="active" hidden>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Trạng thái">
+                    <Tag
+                      color="#f6ffed"
+                      style={{ color: "#52c41a", borderColor: "#b7eb8f" }}
+                    >
+                      <Space>
+                        <EyeOutlined style={{ color: "#52c41a" }} />
+                        <span>Hoạt động</span>
+                      </Space>
+                    </Tag>
+                  </Form.Item>
+                </>
               )}
 
               <div style={{ marginTop: "24px" }}>

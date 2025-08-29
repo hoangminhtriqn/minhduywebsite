@@ -144,6 +144,11 @@
   height: 64px;
 }
 
+.notificationsWrapper {
+  margin-right: 16px;
+  margin-top: 10px;
+}
+
 .userDropdownLink {
   color: var(--theme-text-primary) !important;
   text-decoration: none !important;

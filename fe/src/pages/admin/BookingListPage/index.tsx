@@ -1,35 +1,35 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Input,
-  Modal,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Popconfirm,
-  App,
-} from "antd";
 import {
   DeleteOutlined,
   EyeOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import {
+  App,
+  Button,
+  Input,
+  Modal,
+  Popconfirm,
+  Select,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 import type { TablePaginationConfig } from "antd/es/table";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 
+import {
+  Booking as ApiBooking,
+  deleteBooking,
+  getBooking,
+  getBookings,
+  updateBookingStatus,
+} from "@/api/services/admin/bookings";
 import CustomPagination from "@/components/CustomPagination";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import ServiceTypeModal from "@/components/admin/ServiceTypeModal";
-import {
-  getBookings,
-  updateBookingStatus,
-  deleteBooking,
-  getBooking,
-  Booking as ApiBooking,
-} from "@/api/services/admin/bookings";
-import { useLocation, useNavigate } from "react-router-dom";
 import { BookingStatus } from "@/types";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 
 const { Option } = Select;
@@ -130,10 +130,9 @@ const BookingListPage: React.FC = () => {
     (async () => {
       try {
         const res = await getBooking(id);
-        const payload: any = res?.data?.data;
-        const booking = payload?.booking ?? payload;
+        const booking = res?.data?.data?.booking as ApiBooking | undefined;
         if (booking) {
-          setSelectedBooking(booking as ApiBooking);
+          setSelectedBooking(booking);
           setIsModalVisible(true);
           return;
         }
@@ -217,7 +216,7 @@ const BookingListPage: React.FC = () => {
       render: (_: unknown, record: ApiBooking) => {
         const st = record.ServiceTypes as ApiBooking["ServiceTypes"];
         if (st && typeof st === "object" && "name" in st)
-          return (st as any).name;
+          return (st as { _id: string; name: string }).name;
         if (typeof st === "string") return st;
         return "";
       },
@@ -397,7 +396,12 @@ const BookingListPage: React.FC = () => {
                 {typeof selectedBooking.ServiceTypes === "object" &&
                 selectedBooking.ServiceTypes &&
                 "name" in selectedBooking.ServiceTypes
-                  ? (selectedBooking.ServiceTypes as any).name
+                  ? (
+                      selectedBooking.ServiceTypes as {
+                        _id: string;
+                        name: string;
+                      }
+                    ).name
                   : typeof selectedBooking.ServiceTypes === "string"
                     ? selectedBooking.ServiceTypes
                     : ""}
