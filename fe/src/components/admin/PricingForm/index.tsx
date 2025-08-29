@@ -7,7 +7,6 @@ import {
   Form,
   Input,
   notification,
-  Popconfirm,
   Row,
   Select,
   Space,
@@ -140,12 +139,30 @@ const PricingForm: React.FC<PricingFormProps> = ({
     }
   };
 
+  const onFinishFailed = (errorInfo: {
+    values: unknown;
+    errorFields: Array<{ name: (string | number)[]; errors: string[] }>;
+    outOfDate: boolean;
+  }) => {
+    if (errorInfo?.errorFields?.length > 0) {
+      const firstErrorName = errorInfo.errorFields[0].name;
+      if (firstErrorName && firstErrorName.length > 0) {
+        form.scrollToField(firstErrorName, {
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  };
+
   return (
     <>
       <Form
         form={form}
         layout="vertical"
         onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        scrollToFirstError={{ behavior: "smooth", block: "center" }}
         initialValues={{
           color: "blue",
           status: "active",
@@ -373,23 +390,15 @@ const PricingForm: React.FC<PricingFormProps> = ({
               Hủy
             </Button>
 
-            <Popconfirm
-              title="Xác nhận lưu bảng giá?"
-              description="Bạn có chắc chắn muốn lưu bảng giá này?"
-              onConfirm={() => form.submit()}
-              okText="Có"
-              cancelText="Không"
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={saving}
+              icon={<SaveOutlined />}
+              size="large"
             >
-              <Button
-                type="primary"
-                loading={saving}
-                icon={<SaveOutlined />}
-                size="large"
-                onClick={(e) => e.preventDefault()}
-              >
-                {isEditing ? "Cập nhật bảng giá" : "Thêm bảng giá"}
-              </Button>
-            </Popconfirm>
+              {isEditing ? "Cập nhật bảng giá" : "Thêm bảng giá"}
+            </Button>
           </Space>
         </div>
       </Form>
