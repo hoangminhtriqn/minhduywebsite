@@ -1,11 +1,11 @@
 import React from "react";
+import { Spin } from "antd";
 import styles from "./styles.module.scss";
 
 const LoadingSpinner: React.FC = () => {
   return (
     <div className={styles.loadingContainer}>
-      <div className={styles.spinner}></div>
-      <p className={styles.loadingText}>Đang tải...</p>
+      <Spin size="large" />
     </div>
   );
 };

@@ -71,6 +71,14 @@ const bookingSchema = new mongoose.Schema(
         message: "Trạng thái không hợp lệ",
       },
     },
+    Deleted: {
+      type: Boolean,
+      default: false,
+    },
+    DeletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

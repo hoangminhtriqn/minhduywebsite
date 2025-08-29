@@ -13,8 +13,8 @@ dotenv.config();
 const app = express();
 
 // Import và cấu hình passport (phải import trước khi sử dụng)
-const passport = require('passport');
-require('./config/passport'); // Load passport configuration
+const passport = require("passport");
+require("./config/passport"); // Load passport configuration
 
 // CORS configuration
 app.use(
@@ -105,6 +105,7 @@ const settingsRouter = require("./routes/settings");
 const pricingRouter = require("./routes/pricing");
 const dashboardRouter = require("./routes/dashboard");
 const permissionsRouter = require("./routes/permissions");
+const auditLogsRouter = require("./routes/auditLogs");
 
 // Import Google Auth routes
 const googleAuthRouter = require("./routes/googleAuth");
@@ -132,6 +133,7 @@ app.use("/api/settings", settingsRouter);
 app.use("/api/pricing", pricingRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/permissions", permissionsRouter);
+app.use("/api/audit-logs", auditLogsRouter);
 
 // Mount Google Auth routes
 app.use("/api/auth", googleAuthRouter);

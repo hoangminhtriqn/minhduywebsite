@@ -4,6 +4,13 @@ const {
   errorResponse,
   HTTP_STATUS,
 } = require("../utils/responseHandler");
+const auditLogger = require("../utils/auditLogger");
+const {
+  AUDIT_EVENTS,
+  AUDIT_TEMPLATES,
+  AUDIT_ENTITY_TYPES,
+  AUDIT_MODULES,
+} = require("../utils/enums");
 
 // Lấy danh sách booking
 const getAllBookings = async (req, res) => {
@@ -27,6 +34,9 @@ const getAllBookings = async (req, res) => {
     }
 
     const skip = (page - 1) * limit;
+
+    // Exclude soft-deleted by default
+    query.Deleted = { $ne: true };
 
     const bookings = await Booking.find(query)
       .sort({ createdAt: -1 })
@@ -101,10 +111,42 @@ const updateBookingStatus = async (req, res) => {
       );
     }
 
+    const previousStatus = booking.Status;
     booking.Status = status;
     await booking.save();
 
     successResponse(res, booking, "Cập nhật trạng thái booking thành công");
+
+    // Audit (non-blocking)
+    const targetStr = `${booking.FullName || "Khách"}${
+      booking.Phone ? " - " + booking.Phone : ""
+    }`;
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.BOOKINGS,
+      event: AUDIT_EVENTS.BOOKING_STATUS_CHANGED,
+      entityType: AUDIT_ENTITY_TYPES.BOOKING,
+      entityId: booking._id,
+      entityName: targetStr,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.BOOKING_STATUS_CHANGED],
+      messageParams: {
+        actor: (req.user && req.user.UserName) || "system",
+        target: targetStr,
+        status,
+      },
+      metadata: {
+        previousStatus,
+        nextStatus: status,
+        FullName: booking.FullName,
+        Phone: booking.Phone,
+        BookingDate: booking.BookingDate,
+        BookingTime: booking.BookingTime,
+      },
+    });
   } catch (error) {
     console.error("Error updating booking status:", error);
     errorResponse(
@@ -118,7 +160,7 @@ const updateBookingStatus = async (req, res) => {
 // Xóa booking
 const deleteBooking = async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndDelete(req.params.bookingId);
+    const booking = await Booking.findById(req.params.bookingId);
     if (!booking) {
       return errorResponse(
         res,
@@ -126,7 +168,34 @@ const deleteBooking = async (req, res) => {
         HTTP_STATUS.NOT_FOUND
       );
     }
-    successResponse(res, null, "Xóa booking thành công");
+    // Soft delete
+    booking.Deleted = true;
+    booking.DeletedAt = new Date();
+    await booking.save();
+
+    successResponse(res, null, "Đã chuyển booking vào thùng rác");
+
+    // Audit (non-blocking)
+    const targetStrDel = `${booking.FullName || "Khách"}${
+      booking.Phone ? " - " + booking.Phone : ""
+    }`;
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.BOOKINGS,
+      event: AUDIT_EVENTS.BOOKING_DELETED,
+      entityType: AUDIT_ENTITY_TYPES.BOOKING,
+      entityId: booking._id,
+      entityName: targetStrDel,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.BOOKING_DELETED],
+      messageParams: {
+        actor: (req.user && req.user.UserName) || "system",
+        target: targetStrDel,
+      },
+    });
   } catch (error) {
     console.error("Error deleting booking:", error);
     errorResponse(res, "Lỗi xóa booking", HTTP_STATUS.INTERNAL_SERVER_ERROR);

@@ -23,3 +23,4 @@ export { default as AddNewsPage } from './AddNewsPage';
 export { default as EditNewsPage } from './EditNewsPage';
 export { default as SettingsPage } from './SettingsPage';
 export { default as PermissionListPage } from './PermissionListPage';
+export { default as AuditLogPage } from './AuditLogPage';

@@ -5,6 +5,14 @@ const {
   errorResponse,
   HTTP_STATUS,
 } = require("../utils/responseHandler");
+const AuditLog = require("../models/AuditLog");
+const auditLogger = require("../utils/auditLogger");
+const {
+  AUDIT_EVENTS,
+  AUDIT_MODULES,
+  AUDIT_TEMPLATES,
+} = require("../utils/enums");
+const { AUDIT_ENTITY_TYPES } = require("../utils/enums");
 
 // Đăng ký người dùng mới
 const register = async (req, res) => {
@@ -32,6 +40,26 @@ const register = async (req, res) => {
     });
 
     await user.save();
+
+    // Create audit log (non-blocking)
+    auditLogger.log({
+      actor: {
+        id: (req.user && req.user._id) || user._id,
+        userName: (req.user && req.user.UserName) || user.UserName,
+        role: (req.user && req.user.Role) || user.Role,
+      },
+      module: AUDIT_MODULES.USERS,
+      event: AUDIT_EVENTS.USER_CREATED,
+      entityType: AUDIT_ENTITY_TYPES.USER,
+      entityId: user._id,
+      entityName: user.UserName || user.Email,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.USER_CREATED],
+      messageParams: {
+        actor: (req.user && req.user.UserName) || user.UserName,
+        target: user.UserName || user.Email,
+      },
+      metadata: { body: { UserName, Email, Phone, FullName, Address } },
+    });
 
     // Tạo access token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -268,6 +296,64 @@ const updateUser = async (req, res) => {
       { new: true, runValidators: true }
     ).select("-Password");
 
+    // Audit (non-blocking) with detailed changes and status lock/unlock
+    const toText = (v) => (v === undefined || v === null ? "" : String(v));
+    const changes = [];
+    const fieldsToDescribe = [
+      "UserName",
+      "Email",
+      "Phone",
+      "FullName",
+      "Address",
+      "Role",
+      "Status",
+    ];
+    for (const f of fieldsToDescribe) {
+      if (Object.prototype.hasOwnProperty.call(updateData, f)) {
+        const before = toText(user && user[f]);
+        const after = toText(updatedUser && updatedUser[f]);
+        if (before !== after) {
+          changes.push(`${f}: '${before}' -> '${after}'`);
+        }
+      }
+    }
+
+    const isStatusChange = Object.prototype.hasOwnProperty.call(
+      updateData,
+      "Status"
+    );
+    const isLock = isStatusChange && updateData.Status === "inactive";
+    const isUnlock = isStatusChange && updateData.Status === "active";
+
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.USERS,
+      event: isLock
+        ? AUDIT_EVENTS.USER_STATUS_CHANGED
+        : isUnlock
+        ? AUDIT_EVENTS.USER_STATUS_CHANGED
+        : AUDIT_EVENTS.USER_UPDATED,
+      entityType: AUDIT_ENTITY_TYPES.USER,
+      entityId: updatedUser && updatedUser._id,
+      entityName:
+        (updatedUser && (updatedUser.UserName || updatedUser.Email)) ||
+        undefined,
+      messageTemplate: isStatusChange
+        ? AUDIT_TEMPLATES[AUDIT_EVENTS.USER_STATUS_CHANGED]
+        : AUDIT_TEMPLATES[AUDIT_EVENTS.USER_UPDATED],
+      messageParams: {
+        actor: req.user && req.user.UserName,
+        target: updatedUser && (updatedUser.UserName || updatedUser.Email),
+        status: isStatusChange ? updateData.Status : undefined,
+        changes: changes.join(", ") || "-",
+      },
+      metadata: { updateData, changes },
+    });
+
     successResponse(res, updatedUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -281,6 +367,24 @@ const deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    // Audit (non-blocking)
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.USERS,
+      event: AUDIT_EVENTS.USER_DELETED,
+      entityType: AUDIT_ENTITY_TYPES.USER,
+      entityId: user && user._id,
+      entityName: (user && (user.UserName || user.Email)) || undefined,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.USER_DELETED],
+      messageParams: {
+        actor: req.user && req.user.UserName,
+        target: user && (user.UserName || user.Email),
+      },
+    });
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -429,6 +533,25 @@ const changePassword = async (req, res) => {
 
     await user.save();
 
+    // Audit (non-blocking)
+    auditLogger.log({
+      actor: {
+        id: req.user && (req.user.id || req.user._id),
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.USERS,
+      event: AUDIT_EVENTS.USER_PASSWORD_RESET,
+      entityType: AUDIT_ENTITY_TYPES.USER,
+      entityId: user && user._id,
+      entityName: (user && (user.UserName || user.Email)) || undefined,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.USER_PASSWORD_RESET],
+      messageParams: {
+        actor: (req.user && req.user.UserName) || "system",
+        target: user && (user.UserName || user.Email),
+      },
+    });
+
     successResponse(
       res,
       {
@@ -510,6 +633,25 @@ const adminResetPassword = async (req, res) => {
 
     user.Password = newPassword;
     await user.save();
+
+    // Audit (non-blocking)
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.USERS,
+      event: AUDIT_EVENTS.USER_PASSWORD_RESET,
+      entityType: AUDIT_ENTITY_TYPES.USER,
+      entityId: user && user._id,
+      entityName: (user && (user.UserName || user.Email)) || undefined,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.USER_PASSWORD_RESET],
+      messageParams: {
+        actor: req.user && req.user.UserName,
+        target: user && (user.UserName || user.Email),
+      },
+    });
 
     return successResponse(
       res,

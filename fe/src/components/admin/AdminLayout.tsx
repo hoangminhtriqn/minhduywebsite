@@ -1,4 +1,5 @@
 import {
+  BellOutlined,
   CalendarOutlined,
   CarryOutOutlined,
   DashboardOutlined,
@@ -10,29 +11,28 @@ import {
   TagsOutlined,
   TeamOutlined,
   UnlockOutlined,
-  BellOutlined,
 } from "@ant-design/icons";
 import { Badge, Dropdown, Layout, List, Menu, Space } from "antd";
 import React, { useEffect, useState } from "react";
 
+import { getBookings } from "@/api/services/admin/bookings";
 import ThemeController from "@/components/ThemeController";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  BookingPermissions,
+  CategoryPermissions,
+  DashboardPermissions,
+  NewsPermissions,
+  PermissionManagementPermissions,
+  PricingPermissions,
+  ProductPermissions,
+  ServicePermissions,
+  SettingsPermissions,
+  UserPermissions,
+} from "@/types/enum";
 import { ROUTERS } from "@/utils/constant";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./AdminLayout.module.scss"; // Import CSS module
-import {
-  DashboardPermissions,
-  UserPermissions,
-  CategoryPermissions,
-  ProductPermissions,
-  BookingPermissions,
-  ServicePermissions,
-  PricingPermissions,
-  NewsPermissions,
-  PermissionManagementPermissions,
-  SettingsPermissions,
-} from "@/types/enum";
-import { getBookings } from "@/api/services/admin/bookings";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -46,7 +46,8 @@ const getInitials = (name?: string) => {
 };
 
 // Define required permissions for each menu item using enums
-const MENU_PERMISSIONS = {
+type PermissionKey = string;
+const MENU_PERMISSIONS: Record<string, PermissionKey[]> = {
   [ROUTERS.ADMIN.DASHBOARD]: [DashboardPermissions.VIEW],
   [ROUTERS.ADMIN.USERS]: [UserPermissions.VIEW],
   [ROUTERS.ADMIN.CATEGORIES]: [CategoryPermissions.VIEW],
@@ -131,6 +132,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       ROUTERS.ADMIN.DASHBOARD,
       ROUTERS.ADMIN.PRICE_LIST,
       ROUTERS.ADMIN.PERMISSIONS,
+      ROUTERS.ADMIN.AUDIT_LOGS,
     ];
 
     // Find all routes that are a prefix of the current path
@@ -147,7 +149,14 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   // All menu items configuration
-  const allMenuItems = [
+  type MenuItemConfig = {
+    key: string;
+    icon: React.ReactNode;
+    label: React.ReactNode;
+    adminOnly?: boolean;
+  };
+
+  const allMenuItems: MenuItemConfig[] = [
     {
       key: ROUTERS.ADMIN.DASHBOARD,
       icon: <DashboardOutlined />,
@@ -193,6 +202,14 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       icon: <UnlockOutlined />,
       label: <Link to={ROUTERS.ADMIN.PERMISSIONS}>Phân quyền</Link>,
     },
+    // Admin-only item: Nhật ký hệ thống
+    {
+      key: ROUTERS.ADMIN.AUDIT_LOGS,
+      icon: <FileTextOutlined />,
+      label: <Link to={ROUTERS.ADMIN.AUDIT_LOGS}>Nhật ký</Link>,
+      // Visible only for admins regardless of permission flags
+      adminOnly: true,
+    },
     {
       key: ROUTERS.ADMIN.SETTINGS,
       icon: <SettingOutlined />,
@@ -201,14 +218,13 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   ];
 
   // Filter menu items based on permissions
-  const menuItems = allMenuItems.filter((item) => {
-    // Admin can see all menu items
+  const menuItems = allMenuItems.filter((item: MenuItemConfig) => {
+    // Admin sees all (including admin-only items)
     if (isAdmin) return true;
-
-    // Check if user has required permissions for this menu item
+    // Hide admin-only items for non-admins
+    if (item.adminOnly) return false;
     const requiredPermissions = MENU_PERMISSIONS[item.key];
     if (!requiredPermissions) return false;
-
     return hasAnyPermission(requiredPermissions);
   });
 
@@ -252,6 +268,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, isAdmin, hasAnyPermission]);
+
+  // Loading is handled by outer ProtectedRoute to avoid double spinners
 
   return (
     <Layout className={styles.adminLayout}>

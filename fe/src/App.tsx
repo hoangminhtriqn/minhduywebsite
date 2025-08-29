@@ -42,6 +42,7 @@ import {
   EditPricingPage,
   // Permission Management
   PermissionListPage,
+  AuditLogPage,
 } from "@/pages/admin";
 
 // Public Pages
@@ -228,6 +229,11 @@ const adminRoutes = [
   {
     path: ROUTERS.ADMIN.PERMISSIONS,
     element: PermissionListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: ROUTERS.ADMIN.AUDIT_LOGS,
+    element: AuditLogPage,
     layout: AdminLayout,
   },
 ];

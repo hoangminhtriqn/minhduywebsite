@@ -2,6 +2,13 @@ const User = require("../models/User");
 const Role = require("../models/Role");
 const RoleUser = require("../models/RoleUser");
 const { USER_ROLES } = require("../models/User");
+const auditLogger = require("../utils/auditLogger");
+const {
+  AUDIT_EVENTS,
+  AUDIT_TEMPLATES,
+  AUDIT_ENTITY_TYPES,
+  AUDIT_MODULES,
+} = require("../utils/enums");
 
 // Get all employees (users with role 'employee')
 const getAllEmployees = async (req, res) => {
@@ -113,6 +120,26 @@ const createEmployee = async (req, res) => {
       data: employeeResponse,
       message: "Đã tạo nhân viên thành công",
     });
+
+    // Audit (non-blocking)
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.PERMISSIONS,
+      event: AUDIT_EVENTS.EMPLOYEE_CREATED,
+      entityType: AUDIT_ENTITY_TYPES.EMPLOYEE,
+      entityId: employee._id,
+      entityName: employee.FullName || employee.UserName || employee.Email,
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.EMPLOYEE_CREATED],
+      messageParams: {
+        actor: (req.user && req.user.UserName) || "system",
+        target: employee.FullName || employee.UserName || employee.Email,
+      },
+      metadata: { body: { UserName, Email, Phone, FullName, Address } },
+    });
   } catch (error) {
     console.error("Error creating employee:", error);
     res.status(500).json({
@@ -160,6 +187,50 @@ const updateEmployee = async (req, res) => {
       success: true,
       data: updatedEmployee,
       message: "Đã cập nhật nhân viên thành công",
+    });
+
+    // Audit (non-blocking)
+    const toText = (v) => (v === undefined || v === null ? "" : String(v));
+    const changes = [];
+    const fields = ["FullName", "Email", "Phone", "Address", "Status"];
+    for (const f of fields) {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          { FullName, Email, Phone, Address, Status },
+          f
+        )
+      ) {
+        const before = toText(employee && employee[f]);
+        const after = toText(updatedEmployee && updatedEmployee[f]);
+        if (before !== after) changes.push(`${f}: '${before}' -> '${after}'`);
+      }
+    }
+    auditLogger.log({
+      actor: {
+        id: req.user && req.user._id,
+        userName: req.user && req.user.UserName,
+        role: req.user && req.user.Role,
+      },
+      module: AUDIT_MODULES.PERMISSIONS,
+      event: AUDIT_EVENTS.EMPLOYEE_UPDATED,
+      entityType: AUDIT_ENTITY_TYPES.EMPLOYEE,
+      entityId: updatedEmployee && updatedEmployee._id,
+      entityName:
+        updatedEmployee &&
+        (updatedEmployee.FullName ||
+          updatedEmployee.UserName ||
+          updatedEmployee.Email),
+      messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.EMPLOYEE_UPDATED],
+      messageParams: {
+        actor: req.user && req.user.UserName,
+        target:
+          updatedEmployee &&
+          (updatedEmployee.FullName ||
+            updatedEmployee.UserName ||
+            updatedEmployee.Email),
+        changes: changes.join(", ") || "-",
+      },
+      metadata: { changes },
     });
   } catch (error) {
     console.error("Error updating employee:", error);
@@ -233,9 +304,48 @@ const updateEmployeePermissions = async (req, res) => {
       });
       await employeeRole.save();
     } else {
-      // Update existing custom role
-      employeeRole.Permissions = permissions || [];
+      // Update existing custom role, compute delta for audit
+      const prevPermissions = Array.isArray(employeeRole.Permissions)
+        ? employeeRole.Permissions
+        : [];
+      const nextPermissions = Array.isArray(permissions) ? permissions : [];
+      const prevSet = new Set(prevPermissions);
+      const nextSet = new Set(nextPermissions);
+      const added = nextPermissions.filter((p) => !prevSet.has(p));
+      const removed = prevPermissions.filter((p) => !nextSet.has(p));
+      employeeRole.Permissions = nextPermissions;
       await employeeRole.save();
+
+      // Audit permission delta (non-blocking)
+      auditLogger.log({
+        actor: {
+          id: req.user && req.user._id,
+          userName: req.user && req.user.UserName,
+          role: req.user && req.user.Role,
+        },
+        module: AUDIT_MODULES.PERMISSIONS,
+        event: AUDIT_EVENTS.PERMISSIONS_ASSIGNED,
+        entityType: AUDIT_ENTITY_TYPES.EMPLOYEE,
+        entityId: employee && employee._id,
+        entityName:
+          employee &&
+          (employee.FullName || employee.UserName || employee.Email),
+        messageTemplate: AUDIT_TEMPLATES[AUDIT_EVENTS.PERMISSIONS_ASSIGNED],
+        messageParams: {
+          actor: req.user && req.user.UserName,
+          target:
+            employee &&
+            (employee.FullName || employee.UserName || employee.Email),
+          added: added.join(", ") || "-",
+          removed: removed.join(", ") || "-",
+        },
+        metadata: {
+          added,
+          removed,
+          previous: prevPermissions,
+          next: nextPermissions,
+        },
+      });
     }
 
     // Update role-user relationship

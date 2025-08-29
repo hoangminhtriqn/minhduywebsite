@@ -73,4 +73,8 @@ export const API_ENDPOINTS = {
   PERMISSIONS: '/permissions',
   PERMISSIONS_EMPLOYEES: '/permissions/employees',
   PERMISSIONS_AVAILABLE: '/permissions/available',
+
+  // Audit Logs (Admin)
+  AUDIT_LOGS: '/audit-logs',
+  AUDIT_LOGS_MARK_READ: '/audit-logs/mark-read',
 } as const; 
