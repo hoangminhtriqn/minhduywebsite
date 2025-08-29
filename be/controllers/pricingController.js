@@ -7,6 +7,7 @@ const getAllPricing = async (req, res) => {
     const {
       page = 1,
       limit = 6,
+      search = "",
       sortBy = "createdAt",
       sortOrder = "desc",
     } = req.query;
@@ -14,13 +15,27 @@ const getAllPricing = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const limitNum = parseInt(limit);
 
+    // Build filter object (public only shows active)
+    const filter = { status: "active" };
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { features: { $elemMatch: { $regex: search, $options: "i" } } },
+        { "documents.name": { $regex: search, $options: "i" } },
+        { "documents.type": { $regex: search, $options: "i" } },
+        { color: { $regex: search, $options: "i" } },
+      ];
+    }
+
     // Build sort object
     const sort = {};
     sort[sortBy] = sortOrder === "desc" ? -1 : 1;
 
     const [pricing, total] = await Promise.all([
-      Pricing.find({ status: "active" }).sort(sort).skip(skip).limit(limitNum),
-      Pricing.countDocuments({ status: "active" }),
+      Pricing.find(filter).sort(sort).skip(skip).limit(limitNum),
+      Pricing.countDocuments(filter),
     ]);
 
     const totalPages = Math.ceil(total / limitNum);
@@ -67,6 +82,11 @@ const getAllPricingAdmin = async (req, res) => {
       filter.$or = [
         { title: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
+        { features: { $elemMatch: { $regex: search, $options: "i" } } },
+        { "documents.name": { $regex: search, $options: "i" } },
+        { "documents.type": { $regex: search, $options: "i" } },
+        { color: { $regex: search, $options: "i" } },
+        { status: { $regex: search, $options: "i" } },
       ];
     }
 

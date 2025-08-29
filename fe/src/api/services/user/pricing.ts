@@ -42,6 +42,7 @@ export interface PricingResponse {
 export const getAllPricing = async (params?: {
   page?: number;
   limit?: number;
+  search?: string;
 }): Promise<PricingResponse> => {
   const response = await api.get(API_ENDPOINTS.PRICING, { params });
   return response.data;

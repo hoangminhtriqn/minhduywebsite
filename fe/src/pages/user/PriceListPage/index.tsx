@@ -1,8 +1,8 @@
 import PageBanner from "@/components/PageBanner";
 import { PaginationWrapper, usePagination } from "@/components/pagination";
 
-import { notification, Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import { Input, notification, Spin } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getAllPricing, Pricing } from "@/api/services/user/pricing";
 import PricingCard from "@/components/PricingCard";
 import styles from "./styles.module.scss";
@@ -11,6 +11,7 @@ const PriceListPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [pricingData, setPricingData] = useState<Pricing[]>([]);
   const [totalItems, setTotalItems] = useState(0);
+  const [searchText, setSearchText] = useState("");
 
   const { pagination, handlePageChange, updateTotal } = usePagination({
     initialPageSize: 6,
@@ -33,12 +34,15 @@ const PriceListPage: React.FC = () => {
   };
 
   // Fetch pricing data from API
-  const fetchPricingData = async () => {
+  const { current, pageSize } = pagination;
+
+  const fetchPricingData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getAllPricing({
-        page: pagination.current,
-        limit: pagination.pageSize,
+        page: current,
+        limit: pageSize,
+        search: searchText || undefined,
       });
 
       // API returns data in response.data.docs
@@ -58,16 +62,33 @@ const PriceListPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [current, pageSize, searchText, updateTotal]);
 
   // Initialize data
   useEffect(() => {
     fetchPricingData();
-  }, [pagination.current, pagination.pageSize]);
+  }, [fetchPricingData]);
 
   // Handle page change
   const handlePageChangeWithScroll = (page: number, pageSize?: number) => {
     handlePageChange(page, pageSize);
+  };
+
+  // Debounced change handler
+  const debounceDelay = 400;
+  const debouncedSetSearch = useMemo(() => {
+    let timeout: number | undefined;
+    return (value: string) => {
+      if (timeout) window.clearTimeout(timeout);
+      timeout = window.setTimeout(() => {
+        setSearchText(value.trim());
+        handlePageChange(1, pagination.pageSize);
+      }, debounceDelay);
+    };
+  }, [pagination.pageSize, handlePageChange]);
+
+  const handleSearch = (value: string) => {
+    debouncedSetSearch(value);
   };
 
   return (
@@ -81,6 +102,17 @@ const PriceListPage: React.FC = () => {
       {/* Pricing Section */}
       <section className={styles["pricing-section"]}>
         <div className={styles["pricing-section__container"]}>
+          <div className={styles["search-bar"]}>
+            <Input.Search
+              placeholder="Tìm kiếm bảng giá"
+              allowClear
+              enterButton
+              onSearch={handleSearch}
+              onChange={(e) => handleSearch(e.target.value)}
+              defaultValue={searchText}
+              className={styles["pricing-search-input"]}
+            />
+          </div>
           {/* Pricing Cards */}
           <div className={styles["pricing-cards"]}>
             <Spin spinning={loading}>
@@ -104,11 +136,6 @@ const PriceListPage: React.FC = () => {
                 pageSize={pagination.pageSize}
                 total={totalItems}
                 onChange={handlePageChangeWithScroll}
-                showSizeChanger
-                showQuickJumper
-                showTotal
-                pageSizeOptions={["6", "12", "18", "24"]}
-                totalText="{start}-{end} của {total} dịch vụ"
               />
             )}
           </div>

@@ -6,12 +6,176 @@
 
 // Pricing Section
 .pricing-section {
-  padding: 4rem 0;
+  padding: 1.25rem 0 3rem;
   
   &__container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+  }
+}
+
+// Search Bar Styling
+.pricing-search {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+
+  .ant-input-search {
+    width: auto !important;
+    max-width: none !important;
+    flex: 0 0 auto;
+  }
+
+  .ant-input-affix-wrapper,
+  .ant-input,
+  .ant-input-group-wrapper,
+  .ant-input-search {
+    height: 40px;
+    border-radius: 10px !important;
+    border-color: var(--theme-border-color);
+  }
+
+  .ant-input-affix-wrapper:hover,
+  .ant-input-affix-wrapper-focused {
+    border-color: var(--theme-primary) !important;
+  }
+
+  .ant-btn-primary {
+    border-radius: 10px !important;
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: var(--theme-primary-text) !important;
+  }
+
+  .ant-btn-primary:hover,
+  .ant-btn-primary:focus {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+  }
+
+  .pricing-search-input {
+    width: 240px !important;
+    max-width: 240px !important;
+    min-width: 240px !important;
+    display: inline-block !important;
+  }
+}
+
+// New compact centered search bar
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 20px;
+
+  .pricing-search-input {
+    width: 320px !important;
+    max-width: 90vw;
+  }
+
+  .ant-input-group-wrapper,
+  .ant-input-search {
+    width: auto !important;
+  }
+
+  /* Unified pill border container */
+  .ant-input-group-wrapper {
+    border: 2px solid var(--theme-primary) !important;
+    border-radius: 999px !important;
+    padding: 2px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden; // ensure children clip to outer pill
+  }
+
+  .ant-input-group-wrapper:hover,
+  .ant-input-group-wrapper:focus-within {
+    border-color: var(--theme-primary-dark) !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08), 0 0 0 2px var(--theme-primary-light) !important;
+  }
+
+  .ant-input-affix-wrapper {
+    height: 38px; // outer (42) - padding (2*2)
+    border-radius: 999px !important;
+    background: #ffffff;
+    border: none !important;
+    box-shadow: none !important;
+    transition: all var(--theme-transition-base);
+    outline: none !important;
+  }
+
+  .ant-input-affix-wrapper:hover,
+  .ant-input-affix-wrapper:focus,
+  .ant-input-affix-wrapper:focus-within,
+  .ant-input-affix-wrapper-focused,
+  :global(.ant-input-affix-wrapper-focused) {
+    border-color: var(--theme-primary) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06), 0 0 0 2px var(--theme-primary-light) !important;
+    outline: none !important;
+  }
+
+  .ant-input::placeholder {
+    color: var(--theme-text-muted);
+    opacity: 0.9;
+  }
+
+  .ant-input-group-addon {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .ant-input-search-button {
+    height: 38px;
+    line-height: 38px;
+    border-radius: 999px !important;
+    background-color: var(--theme-primary) !important;
+    background-image: none !important;
+    border: none !important; // remove inner seam
+    color: var(--theme-primary-text) !important;
+    outline: none !important;
+  }
+
+  .ant-input-search-button:hover,
+  .ant-input-search-button:focus {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: var(--theme-primary-text) !important;
+  }
+
+  // Force theme color on nested input element when focused
+  .ant-input:focus,
+  .ant-input-focused {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  // Stronger global overrides (CSS Modules safe)
+  :global(.ant-input-affix-wrapper),
+  :global(.ant-input-affix-wrapper:hover),
+  :global(.ant-input-affix-wrapper-focused),
+  :global(.ant-input-affix-wrapper:focus),
+  :global(.ant-input-affix-wrapper:focus-within) {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  :global(input.ant-input),
+  :global(input.ant-input:focus),
+  :global(input.ant-input:focus-visible) {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  :global(button.ant-input-search-button),
+  :global(button.ant-input-search-button:focus),
+  :global(button.ant-input-search-button:focus-visible) {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    box-shadow: 0 0 0 1px var(--theme-primary-light) !important;
+    outline: none !important;
   }
 }
 
