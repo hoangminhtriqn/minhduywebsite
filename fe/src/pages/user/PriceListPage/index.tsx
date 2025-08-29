@@ -1,7 +1,6 @@
 import PageBanner from "@/components/PageBanner";
 import { PaginationWrapper, usePagination } from "@/components/pagination";
 
-
 import { notification, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { getAllPricing, Pricing } from "@/api/services/user/pricing";
@@ -18,7 +17,6 @@ const PriceListPage: React.FC = () => {
   });
 
   // Get document icon
-
 
   // Handle document download
   const handleDownload = (document: {
@@ -67,9 +65,8 @@ const PriceListPage: React.FC = () => {
     fetchPricingData();
   }, [pagination.current, pagination.pageSize]);
 
-  // Handle page change with scroll to top
+  // Handle page change
   const handlePageChangeWithScroll = (page: number, pageSize?: number) => {
-    window.scrollTo(0, 0);
     handlePageChange(page, pageSize);
   };
 

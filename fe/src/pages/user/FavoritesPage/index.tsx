@@ -1,7 +1,7 @@
 import PageBanner from "@/components/PageBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import useScrollToTop from "@/hooks/useScrollToTop";
+
 import { ROUTERS } from "@/utils/constant";
 import {
   DeleteOutlined,
@@ -29,7 +29,6 @@ const { Title, Text } = Typography;
 
 const FavoritesPage: React.FC = () => {
   // Use scroll to top hook
-  useScrollToTop();
 
   const navigate = useNavigate();
   const { user } = useAuth();

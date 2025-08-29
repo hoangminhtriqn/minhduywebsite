@@ -17,7 +17,7 @@ import { productService } from "@/api/services/user/product";
 import PageBanner from "@/components/PageBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import useScrollToTop from "@/hooks/useScrollToTop";
+
 import { ROUTERS } from "@/utils/constant";
 import { formatCurrency } from "@/utils/format";
 import { HeartOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
@@ -28,7 +28,6 @@ const { Title, Paragraph } = Typography;
 
 const ProductDetailPage: React.FC = () => {
   // Use scroll to top hook
-  useScrollToTop();
 
   const { notification } = App.useApp();
   const { id } = useParams<{ id: string }>();

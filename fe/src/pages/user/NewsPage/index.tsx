@@ -20,11 +20,6 @@ const NewsPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Scroll to top when page changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pagination.current, pagination.pageSize]);
-
   useEffect(() => {
     const fetchNewsEvents = async () => {
       setLoading(true);
@@ -111,10 +106,7 @@ const NewsPage: React.FC = () => {
             newsEvents.map((newsEvent) => (
               <div key={newsEvent._id} className="news-item">
                 <div className="news-item__image">
-                  <img
-                    src={newsEvent.ImageUrl}
-                    alt={newsEvent.Title}
-                  />
+                  <img src={newsEvent.ImageUrl} alt={newsEvent.Title} />
                 </div>
                 <div className="news-item__content">
                   <h3 className="news-item__title">{newsEvent.Title}</h3>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageBanner from "@/components/PageBanner";
-import useScrollToTop from "@/hooks/useScrollToTop";
+
 import { ROUTERS } from "@/utils/constant";
 import { CheckCircleOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import ServiceCard from "./ServiceCard";
 import { useSettings } from "@/contexts/SettingsContext";
-import { serviceApi } from "@/api/services/user/service"; 
+import { serviceApi } from "@/api/services/user/service";
 import styles from "./styles.module.scss";
 
 interface Service {
@@ -18,7 +18,6 @@ interface Service {
 }
 
 const ServicePage: React.FC = () => {
-  useScrollToTop();
   const navigate = useNavigate();
   const { locations } = useSettings();
   const [services, setServices] = useState<Service[]>([]);
