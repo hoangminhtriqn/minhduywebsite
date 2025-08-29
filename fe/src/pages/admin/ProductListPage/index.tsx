@@ -17,12 +17,12 @@ import {
   Space,
   Spin,
   Table,
-
   notification,
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
+import usePermissions from "@/hooks/usePermissions";
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -82,6 +82,11 @@ const ProductListPage: React.FC = () => {
   const [favoriteProductName, setFavoriteProductName] = useState<string>("");
 
   const navigate = useNavigate();
+  const { hasPermission } = usePermissions();
+  const canCreateProducts = hasPermission("products.create");
+  const canEditProducts = hasPermission("products.edit");
+  const canDeleteProducts = hasPermission("products.delete");
+  const canViewFavorites = hasPermission("products.favorites.view");
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -162,8 +167,6 @@ const ProductListPage: React.FC = () => {
     setCurrentPage(1);
   };
 
-
-
   const handleSortChange = (value: string) => {
     const [sortField, order] = value.split("-");
     setSortBy(sortField);
@@ -228,36 +231,7 @@ const ProductListPage: React.FC = () => {
         }
       },
     },
-    {
-      title: <span style={{ fontWeight: 600 }}>Yêu thích</span>,
-      key: "favoriteCount",
-      align: "center" as const,
-      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
-      render: (
-        _: unknown,
-        record: {
-          favoriteCount: number;
-          favoritedUsers: { user: FavoriteUser }[];
-          Product_Name: string;
-        }
-      ) => (
-        <span
-          style={{
-            color: "#faad14",
-            cursor: record.favoriteCount > 0 ? "pointer" : "default",
-          }}
-          onClick={() => {
-            if (record.favoriteCount > 0) {
-              setFavoriteUsers(record.favoritedUsers.map((u) => u.user));
-              setFavoriteProductName(record.Product_Name);
-              setFavoriteModalVisible(true);
-            }
-          }}
-        >
-          <span style={{ fontWeight: 600 }}>{record.favoriteCount}</span>
-        </span>
-      ),
-    },
+    // Yêu thích column will be conditionally included below
 
     {
       title: <span style={{ fontWeight: 600 }}>Ngày tạo</span>,
@@ -284,28 +258,64 @@ const ProductListPage: React.FC = () => {
       onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
       render: (_: unknown, record: Product) => (
         <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => navigate(`/admin/products/edit/${record._id}`)}
-            size="small"
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn xóa sản phẩm này?"
-            onConfirm={() => handleDeleteProduct(record._id)}
-            okText="Có"
-            cancelText="Không"
-          >
-            <Button danger icon={<DeleteOutlined />} size="small">
-              Xóa
+          {canEditProducts && (
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => navigate(`/admin/products/edit/${record._id}`)}
+              size="small"
+            >
+              Sửa
             </Button>
-          </Popconfirm>
+          )}
+          {canDeleteProducts && (
+            <Popconfirm
+              title="Bạn có chắc chắn muốn xóa sản phẩm này?"
+              onConfirm={() => handleDeleteProduct(record._id)}
+              okText="Có"
+              cancelText="Không"
+            >
+              <Button danger icon={<DeleteOutlined />} size="small">
+                Xóa
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
   ];
+
+  if (canViewFavorites) {
+    columns.splice(4, 0, {
+      title: <span style={{ fontWeight: 600 }}>Yêu thích</span>,
+      key: "favoriteCount",
+      onHeaderCell: () => ({ style: { whiteSpace: "nowrap" } }),
+      render: (
+        _: unknown,
+        record: {
+          favoriteCount: number;
+          favoritedUsers: { user: FavoriteUser }[];
+          Product_Name: string;
+        }
+      ) => (
+        <span
+          style={{
+            color: "#faad14",
+            cursor: record.favoriteCount > 0 ? "pointer" : "default",
+          }}
+          onClick={() => {
+            if (record.favoriteCount > 0) {
+              setFavoriteUsers(record.favoritedUsers.map((u) => u.user));
+              setFavoriteProductName(record.Product_Name);
+              setFavoriteModalVisible(true);
+            }
+          }}
+        >
+          <span style={{ fontWeight: 600 }}>{record.favoriteCount}</span>
+        </span>
+      ),
+    });
+  }
 
   const handleTableChange = () => {};
 
@@ -320,13 +330,15 @@ const ProductListPage: React.FC = () => {
     <div className={styles.productListPage}>
       <Breadcrumb
         title="Quản lý sản phẩm"
-        showAddButton={true}
+        showAddButton={canCreateProducts}
         addButtonText="Thêm sản phẩm"
-        onAddClick={() => navigate("/admin/products/add")}
+        onAddClick={
+          canCreateProducts ? () => navigate("/admin/products/add") : undefined
+        }
       />
 
       <Card className={styles.filterCard}>
-        <Space size="large">
+        <Space size="small">
           <Input
             placeholder="Tìm kiếm sản phẩm"
             prefix={<SearchOutlined />}

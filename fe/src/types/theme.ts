@@ -124,6 +124,7 @@ export interface Theme {
 export interface ThemeContextType {
   theme: Theme;
   themeName: string;
+  setTheme: (theme: ThemeName) => void;
   updatePrimaryColor: (color: string) => void;
   resetTheme: () => void;
 }

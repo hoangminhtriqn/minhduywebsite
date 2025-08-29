@@ -22,7 +22,6 @@ const roleSchema = new mongoose.Schema(
 
           // Users
           "users.view",
-          "users.search",
           "users.edit",
           "users.status.update",
           "users.role.view",
@@ -33,7 +32,6 @@ const roleSchema = new mongoose.Schema(
           "products.create",
           "products.edit",
           "products.delete",
-          "products.search",
           "products.favorites.view",
 
           // Categories
@@ -55,7 +53,6 @@ const roleSchema = new mongoose.Schema(
           // Bookings
           "bookings.view",
           "bookings.details.view",
-          "bookings.search",
           "bookings.status.update",
           "bookings.delete",
           "bookings.service_types.manage",
@@ -66,7 +63,6 @@ const roleSchema = new mongoose.Schema(
           "news.edit",
           "news.delete",
           "news.preview",
-          "news.search",
           "news.media.upload",
 
           // Pricing
@@ -77,7 +73,6 @@ const roleSchema = new mongoose.Schema(
           "pricing.details.view",
           "pricing.features.manage",
           "pricing.documents.manage",
-          "pricing.search",
 
           // Settings
           "settings.view",

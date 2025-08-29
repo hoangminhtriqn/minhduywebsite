@@ -270,11 +270,9 @@ const getAvailablePermissions = async (req, res) => {
     const availablePermissions = [
       // Dashboard
       "dashboard.view",
-      "dashboard.stats.view",
 
       // Users
       "users.view",
-      "users.search",
       "users.edit",
       "users.status.update",
       "users.role.view",
@@ -285,7 +283,6 @@ const getAvailablePermissions = async (req, res) => {
       "products.create",
       "products.edit",
       "products.delete",
-      "products.search",
       "products.favorites.view",
 
       // Categories
@@ -307,7 +304,6 @@ const getAvailablePermissions = async (req, res) => {
       // Bookings
       "bookings.view",
       "bookings.details.view",
-      "bookings.search",
       "bookings.status.update",
       "bookings.delete",
       "bookings.service_types.manage",
@@ -318,7 +314,6 @@ const getAvailablePermissions = async (req, res) => {
       "news.edit",
       "news.delete",
       "news.preview",
-      "news.search",
       "news.media.upload",
 
       // Pricing
@@ -329,7 +324,6 @@ const getAvailablePermissions = async (req, res) => {
       "pricing.details.view",
       "pricing.features.manage",
       "pricing.documents.manage",
-      "pricing.search",
 
       // Settings
       "settings.view",
@@ -435,10 +429,8 @@ const getUserPermissions = async (req, res) => {
       const availablePermissions = [
         // Dashboard
         "dashboard.view",
-        "dashboard.stats.view",
         // Users
         "users.view",
-        "users.search",
         "users.edit",
         "users.status.update",
         "users.role.view",
@@ -448,7 +440,6 @@ const getUserPermissions = async (req, res) => {
         "products.create",
         "products.edit",
         "products.delete",
-        "products.search",
         "products.favorites.view",
         // Categories
         "categories.view",
@@ -467,7 +458,6 @@ const getUserPermissions = async (req, res) => {
         // Bookings
         "bookings.view",
         "bookings.details.view",
-        "bookings.search",
         "bookings.status.update",
         "bookings.delete",
         "bookings.service_types.manage",
@@ -477,7 +467,6 @@ const getUserPermissions = async (req, res) => {
         "news.edit",
         "news.delete",
         "news.preview",
-        "news.search",
         "news.media.upload",
         // Pricing
         "pricing.view",
@@ -487,7 +476,6 @@ const getUserPermissions = async (req, res) => {
         "pricing.details.view",
         "pricing.features.manage",
         "pricing.documents.manage",
-        "pricing.search",
         // Settings
         "settings.view",
         "settings.update",

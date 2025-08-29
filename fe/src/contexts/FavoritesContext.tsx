@@ -1,13 +1,12 @@
+import { FavoriteItem, favoritesService } from "@/api/services/user/favorites";
+import { useAuth } from "@/contexts/AuthContext";
 import React, {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
-import { notification } from "antd";
-import { useAuth } from "@/contexts/AuthContext";
-import { favoritesService, FavoriteItem } from "@/api/services/user/favorites";
 
 interface FavoritesContextType {
   favorites: FavoriteItem[];

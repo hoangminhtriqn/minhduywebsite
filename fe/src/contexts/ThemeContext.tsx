@@ -1,18 +1,12 @@
+import { createCustomTheme, defaultTheme, getTheme } from "@/styles/themes";
+import { Theme, ThemeContextType } from "@/types/theme";
 import React, {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
-import { ConfigProvider, theme } from "antd";
-import { Theme, ThemeContextType } from "@/types/theme";
-import {
-  themeConfig,
-  defaultTheme,
-  getTheme,
-  createCustomTheme,
-} from "@/styles/themes";
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

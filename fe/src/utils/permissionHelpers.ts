@@ -153,3 +153,9 @@ export const getPermissionCategory = (permission: string): string | null => {
   
   return null;
 };
+
+// Expand implied or legacy permissions to current equivalents
+export const expandImpliedPermissions = (rawPermissions: string[]): string[] => {
+  // No legacy mappings; just ensure uniqueness
+  return Array.from(new Set(rawPermissions));
+};

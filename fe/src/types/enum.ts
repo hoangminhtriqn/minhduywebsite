@@ -36,12 +36,10 @@ export enum LoginProvider {
 // Permission Enums - Organized by modules
 export enum DashboardPermissions {
   VIEW = "dashboard.view",
-  STATS_VIEW = "dashboard.stats.view"
 }
 
 export enum UserPermissions {
   VIEW = "users.view",
-  SEARCH = "users.search",
   EDIT = "users.edit",
   STATUS_UPDATE = "users.status.update",
   ROLE_VIEW = "users.role.view",
@@ -53,7 +51,6 @@ export enum ProductPermissions {
   CREATE = "products.create",
   EDIT = "products.edit",
   DELETE = "products.delete",
-  SEARCH = "products.search",
   FAVORITES_VIEW = "products.favorites.view"
 }
 
@@ -78,7 +75,6 @@ export enum ServicePermissions {
 export enum BookingPermissions {
   VIEW = "bookings.view",
   DETAILS_VIEW = "bookings.details.view",
-  SEARCH = "bookings.search",
   STATUS_UPDATE = "bookings.status.update",
   DELETE = "bookings.delete",
   SERVICE_TYPES_MANAGE = "bookings.service_types.manage"
@@ -90,7 +86,6 @@ export enum NewsPermissions {
   EDIT = "news.edit",
   DELETE = "news.delete",
   PREVIEW = "news.preview",
-  SEARCH = "news.search",
   MEDIA_UPLOAD = "news.media.upload"
 }
 
@@ -101,8 +96,7 @@ export enum PricingPermissions {
   DELETE = "pricing.delete",
   DETAILS_VIEW = "pricing.details.view",
   FEATURES_MANAGE = "pricing.features.manage",
-  DOCUMENTS_MANAGE = "pricing.documents.manage",
-  SEARCH = "pricing.search"
+  DOCUMENTS_MANAGE = "pricing.documents.manage"
 }
 
 export enum SettingsPermissions {

@@ -87,6 +87,8 @@ const UserListPage: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
     undefined
   );
+  const canViewUserRole = hasPermission("users.role.view");
+  const canUpdateUserRole = hasPermission("users.role.update");
 
   const [resetPasswordEnabled, setResetPasswordEnabled] = useState(false);
 
@@ -182,6 +184,9 @@ const UserListPage: React.FC = () => {
         const rest = { ...(values as Record<string, unknown>) };
         delete (rest as Record<string, unknown>).newPassword;
         delete (rest as Record<string, unknown>).confirmPassword;
+        if (!canUpdateUserRole) {
+          delete (rest as Record<string, unknown>).Role;
+        }
         await updateUser(editingUser._id, rest);
         message.success("Cập nhật thông tin người dùng thành công");
       }
@@ -213,16 +218,7 @@ const UserListPage: React.FC = () => {
       dataIndex: "Email",
       key: "Email",
     },
-    {
-      title: "Vai trò",
-      dataIndex: "Role",
-      key: "Role",
-      render: (role: string) => {
-        const config =
-          ROLE_CONFIG[role as UserRole] || ROLE_CONFIG[UserRole.USER];
-        return <Tag color={config.color}>{config.label}</Tag>;
-      },
-    },
+    // Role column will be conditionally included below
     {
       title: "Trạng thái",
       dataIndex: "Status",
@@ -299,6 +295,19 @@ const UserListPage: React.FC = () => {
     },
   ];
 
+  if (canViewUserRole) {
+    columns.splice(4, 0, {
+      title: "Vai trò",
+      dataIndex: "Role",
+      key: "Role",
+      render: (role: string) => {
+        const config =
+          ROLE_CONFIG[role as UserRole] || ROLE_CONFIG[UserRole.USER];
+        return <Tag color={config.color}>{config.label}</Tag>;
+      },
+    });
+  }
+
   return (
     <div>
       <Breadcrumb title="Quản lý người dùng" showAddButton={false} />
@@ -310,21 +319,23 @@ const UserListPage: React.FC = () => {
             onSearch={(value) => setSearchTerm(value)}
             style={{ width: 300 }}
           />
-          <Select
-            placeholder="Lọc theo vai trò"
-            allowClear
-            style={{ width: 150 }}
-            onChange={(value) =>
-              setSelectedRole(value === "" ? undefined : value)
-            }
-          >
-            <Option value="">Tất cả vai trò</Option>
-            {Object.entries(ROLE_CONFIG).map(([role, config]) => (
-              <Option key={role} value={role}>
-                {config.label}
-              </Option>
-            ))}
-          </Select>
+          {canViewUserRole && (
+            <Select
+              placeholder="Lọc theo vai trò"
+              allowClear
+              style={{ width: 150 }}
+              onChange={(value) =>
+                setSelectedRole(value === "" ? undefined : value)
+              }
+            >
+              <Option value="">Tất cả vai trò</Option>
+              {Object.entries(ROLE_CONFIG).map(([role, config]) => (
+                <Option key={role} value={role}>
+                  {config.label}
+                </Option>
+              ))}
+            </Select>
+          )}
         </Space>
       </div>
 
@@ -357,7 +368,7 @@ const UserListPage: React.FC = () => {
           setEditingUser(null);
         }}
       >
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" scrollToFirstError>
           {authUser?.Role === UserRole.ADMIN &&
             editingUser?._id !== currentUserId &&
             editingUser?.Role !== UserRole.ADMIN && (
@@ -424,8 +435,9 @@ const UserListPage: React.FC = () => {
             <Select
               placeholder="Chọn vai trò"
               disabled={
-                editingUser?._id === currentUserId &&
-                editingUser?.Role === UserRole.ADMIN
+                !canUpdateUserRole ||
+                (editingUser?._id === currentUserId &&
+                  editingUser?.Role === UserRole.ADMIN)
               }
             >
               {[UserRole.USER, UserRole.EMPLOYEE].map((role) => (

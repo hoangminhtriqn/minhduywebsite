@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ROUTERS } from "../utils/constant";
 import { UserRole, LoginProvider } from "@/types/enum";
 import { getAllPermissions } from "@/utils/permissionConfig";
+import { expandImpliedPermissions } from "@/utils/permissionHelpers";
 
 interface User {
   _id: string;
@@ -54,12 +55,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
   const [permissions, setPermissions] = useState<string[]>([]);
 
+  const normalizePermissions = (rawPermissions: string[]): string[] => {
+    return expandImpliedPermissions(rawPermissions);
+  };
+
   // Function to fetch user permissions
   const fetchUserPermissions = async (userId: string) => {
     try {
       const response = await apiClient.get(`/permissions/user/${userId}`);
       if (response.data.success) {
-        setPermissions(response.data.data || []);
+        setPermissions(normalizePermissions(response.data.data || []));
       }
     } catch (error) {
       console.error("Failed to fetch permissions:", error);
@@ -183,12 +188,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setLoading(true);
       // Redirect to backend Google OAuth endpoint
-      const backendURL = import.meta.env.VITE_API_URL || 'http://localhost:9201/api';
+      const backendURL =
+        import.meta.env.VITE_API_URL || "http://localhost:9201/api";
       window.location.href = `${backendURL}/auth/google`;
     } catch (error) {
-      console.error('Google login error:', error);
+      console.error("Google login error:", error);
       setLoading(false);
-      throw new Error('Google login failed');
+      throw new Error("Google login failed");
     }
   };
 
@@ -239,7 +245,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (user.Role === UserRole.EMPLOYEE) {
       await fetchUserPermissions(user._id);
     } else if (user.Role === UserRole.ADMIN) {
-      setPermissions(getAllPermissions());
+      setPermissions(normalizePermissions(getAllPermissions()));
     }
   };
 

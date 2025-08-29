@@ -66,7 +66,12 @@ const UpsertEmployeeModal: React.FC<UpsertEmployeeModalProps> = ({
       width={600}
       className={styles.permissionModal}
     >
-      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        scrollToFirstError
+      >
         {!isEditMode && (
           <>
             <Form.Item

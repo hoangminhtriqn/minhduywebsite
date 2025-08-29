@@ -79,11 +79,9 @@ const sampleRoles = [
     Permissions: [
       // Dashboard
       "dashboard.view",
-      "dashboard.stats.view",
 
       // Users
       "users.view",
-      "users.search",
       "users.edit",
       "users.status.update",
       "users.role.view",
@@ -94,7 +92,6 @@ const sampleRoles = [
       "products.create",
       "products.edit",
       "products.delete",
-      "products.search",
       "products.favorites.view",
 
       // Categories
@@ -116,7 +113,6 @@ const sampleRoles = [
       // Bookings
       "bookings.view",
       "bookings.details.view",
-      "bookings.search",
       "bookings.status.update",
       "bookings.delete",
       "bookings.service_types.manage",
@@ -127,7 +123,6 @@ const sampleRoles = [
       "news.edit",
       "news.delete",
       "news.preview",
-      "news.search",
       "news.media.upload",
 
       // Pricing
@@ -138,7 +133,6 @@ const sampleRoles = [
       "pricing.details.view",
       "pricing.features.manage",
       "pricing.documents.manage",
-      "pricing.search",
 
       // Settings
       "settings.view",

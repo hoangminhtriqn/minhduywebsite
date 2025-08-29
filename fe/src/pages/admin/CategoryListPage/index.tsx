@@ -577,7 +577,7 @@ const CategoryListPage: React.FC = () => {
               },
             }}
           >
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" scrollToFirstError>
               <Form.Item
                 name="Name"
                 label="Tên danh mục"

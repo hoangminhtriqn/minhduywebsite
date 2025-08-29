@@ -18,26 +18,17 @@ import { PermissionConfig } from '@/types';
 export const PERMISSION_LABELS: PermissionConfig = {
   // Dashboard
   [DashboardPermissions.VIEW]: { 
-    label: "Xem Bảng Điều Khiển", 
+    label: "Xem thống kê", 
     group: PermissionGroups.DASHBOARD,
-    description: "Quyền xem trang bảng điều khiển chính"
+    description: "Quyền quản lý thống kê"
   },
-  [DashboardPermissions.STATS_VIEW]: { 
-    label: "Xem Thống Kê", 
-    group: PermissionGroups.DASHBOARD,
-    description: "Quyền xem các thống kê và báo cáo"
-  },
+  // Note: dashboard.stats.view merged into dashboard.view
 
   // Users
   [UserPermissions.VIEW]: {
     label: "Xem Danh Sách Người Dùng",
     group: PermissionGroups.USERS,
     description: "Quyền xem danh sách tất cả người dùng"
-  },
-  [UserPermissions.SEARCH]: { 
-    label: "Tìm Kiếm Người Dùng", 
-    group: PermissionGroups.USERS,
-    description: "Quyền tìm kiếm và lọc người dùng"
   },
   [UserPermissions.EDIT]: { 
     label: "Chỉnh Sửa Người Dùng", 
@@ -80,11 +71,6 @@ export const PERMISSION_LABELS: PermissionConfig = {
     label: "Xóa Sản Phẩm", 
     group: PermissionGroups.PRODUCTS,
     description: "Quyền xóa sản phẩm khỏi hệ thống"
-  },
-  [ProductPermissions.SEARCH]: { 
-    label: "Tìm Kiếm Sản Phẩm", 
-    group: PermissionGroups.PRODUCTS,
-    description: "Quyền tìm kiếm và lọc sản phẩm"
   },
   [ProductPermissions.FAVORITES_VIEW]: {
     label: "Xem Sản Phẩm Yêu Thích",
@@ -167,11 +153,6 @@ export const PERMISSION_LABELS: PermissionConfig = {
     group: PermissionGroups.BOOKINGS,
     description: "Quyền xem thông tin chi tiết của đặt chỗ"
   },
-  [BookingPermissions.SEARCH]: { 
-    label: "Tìm Kiếm Đặt Chỗ", 
-    group: PermissionGroups.BOOKINGS,
-    description: "Quyền tìm kiếm và lọc đặt chỗ"
-  },
   [BookingPermissions.STATUS_UPDATE]: {
     label: "Cập Nhật Trạng Thái Đặt Chỗ",
     group: PermissionGroups.BOOKINGS,
@@ -214,11 +195,6 @@ export const PERMISSION_LABELS: PermissionConfig = {
     group: PermissionGroups.NEWS,
     description: "Quyền xem trước bài viết trước khi xuất bản"
   },
-  [NewsPermissions.SEARCH]: { 
-    label: "Tìm Kiếm Tin Tức", 
-    group: PermissionGroups.NEWS,
-    description: "Quyền tìm kiếm và lọc tin tức"
-  },
   [NewsPermissions.MEDIA_UPLOAD]: {
     label: "Tải Lên Phương Tiện Tin Tức",
     group: PermissionGroups.NEWS,
@@ -260,11 +236,6 @@ export const PERMISSION_LABELS: PermissionConfig = {
     label: "Quản Lý Tài Liệu Bảng Giá",
     group: PermissionGroups.PRICING,
     description: "Quyền quản lý tài liệu đính kèm bảng giá"
-  },
-  [PricingPermissions.SEARCH]: { 
-    label: "Tìm Kiếm Bảng Giá", 
-    group: PermissionGroups.PRICING,
-    description: "Quyền tìm kiếm và lọc bảng giá"
   },
 
   // Settings
