@@ -17,7 +17,7 @@ import {
   Input,
   message,
   Modal,
-  notification,
+  Popover,
   Row,
   Select,
   Space,
@@ -25,12 +25,11 @@ import {
   Tooltip,
   Tree,
   Typography,
-  Popover,
 } from "antd";
 import styles from "./styles.module.scss";
 
-import React, { useEffect, useRef, useState } from "react";
 import usePermissions from "@/hooks/usePermissions";
+import React, { useEffect, useRef, useState } from "react";
 
 const { Text } = Typography;
 const { confirm } = Modal;
@@ -170,14 +169,8 @@ const CategoryListPage: React.FC = () => {
         const parents = allCategories.filter((cat: Category) => !cat.ParentID);
         setParentCategories(parents);
       }
-    } catch (error) {
-      notification.error({
-        message: "Lỗi",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Không thể tải danh sách danh mục.",
-      });
+    } catch {
+      // Error toast is handled globally by axios interceptor
     } finally {
       setLoading(false);
     }
@@ -234,10 +227,8 @@ const CategoryListPage: React.FC = () => {
           await categoryService.deleteCategory(id);
           message.success("Xóa danh mục thành công");
           await fetchCategories();
-        } catch (error) {
-          message.error(
-            error instanceof Error ? error.message : "Lỗi khi xóa danh mục"
-          );
+        } catch {
+          // Error toast is handled globally by axios interceptor
         }
       },
     });
@@ -281,10 +272,8 @@ const CategoryListPage: React.FC = () => {
 
       // Refresh dữ liệu
       await fetchCategories();
-    } catch (error) {
-      message.error(
-        error instanceof Error ? error.message : "Lỗi khi lưu danh mục"
-      );
+    } catch {
+      // Error toast is handled globally by axios interceptor
     }
   };
 
@@ -498,10 +487,8 @@ const CategoryListPage: React.FC = () => {
 
       // Refresh data
       await fetchCategories();
-    } catch (error) {
-      message.error(
-        error instanceof Error ? error.message : "Lỗi khi cập nhật thứ tự"
-      );
+    } catch {
+      // Error toast is handled globally by axios interceptor
     }
   };
 
