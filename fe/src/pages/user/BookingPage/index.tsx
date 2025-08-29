@@ -1,5 +1,5 @@
 import React from "react";
-import useScrollToTop from "@/hooks/useScrollToTop";
+
 import {
   message,
   DatePicker,
@@ -38,7 +38,6 @@ import styles from "./styles.module.scss";
 
 const BookingPage = () => {
   // Use scroll to top hook
-  useScrollToTop();
 
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);

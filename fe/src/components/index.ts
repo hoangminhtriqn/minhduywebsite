@@ -5,7 +5,6 @@ export { default as MainLayout } from './layout/MainLayout';
 // Common Components
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as CustomPagination } from './CustomPagination';
-export { default as ScrollToTop } from './ScrollToTop';
 export { default as FaviconManager } from './FaviconManager';
 
 // Route Components

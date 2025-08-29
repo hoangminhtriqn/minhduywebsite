@@ -1,5 +1,10 @@
 import React from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { ConfigProvider, App as AntdApp } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { Provider } from "react-redux";
@@ -11,7 +16,6 @@ import { SettingsProvider } from "@/contexts/SettingsContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "@/components/admin/AdminLayout";
 import MainLayout from "@/components/layout/MainLayout";
-import ScrollToTop from "@/components/ScrollToTop";
 import FaviconManager from "@/components/FaviconManager";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -229,6 +233,18 @@ const adminRoutes = [
 ];
 
 const App: React.FC = () => {
+  // Route Change Handler Component - must be inside Router context
+  const RouteChangeHandler: React.FC = () => {
+    const location = useLocation();
+
+    React.useEffect(() => {
+      // Scroll to top when route changes
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [location.pathname]);
+
+    return null;
+  };
+
   return (
     <Provider store={store}>
       <ThemeProvider>
@@ -251,7 +267,7 @@ const App: React.FC = () => {
                     }}
                   >
                     <FaviconManager />
-                    <ScrollToTop />
+                    <RouteChangeHandler />
                     <Routes>
                       {/* Public Routes */}
                       {publicRoutes.map((route) => (
