@@ -200,7 +200,7 @@ const UserListPage: React.FC = () => {
         maybeValidation &&
         Object.prototype.hasOwnProperty.call(maybeValidation, "errorFields")
       ) {
-        message.warning("Vui lòng điền đầy đủ thông tin hợp lệ");
+        // Let AntD display field-level validation errors without a global toast
         return;
       }
 

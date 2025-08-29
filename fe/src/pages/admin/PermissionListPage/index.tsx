@@ -220,14 +220,8 @@ const PermissionListPage: React.FC = () => {
         setIsAddModalVisible(false);
         fetchEmployees();
       } else {
-        throw new Error("Failed to create employee");
+        throw new Error(result.message || "Failed to create employee");
       }
-    } catch (error) {
-      console.error("Error adding employee:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể thêm nhân viên",
-      });
     } finally {
       setSubmitLoading(false);
     }
@@ -250,14 +244,8 @@ const PermissionListPage: React.FC = () => {
         setIsEditModalVisible(false);
         fetchEmployees();
       } else {
-        throw new Error("Failed to update employee");
+        throw new Error(result.message || "Failed to update employee");
       }
-    } catch (error) {
-      console.error("Error updating employee:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể cập nhật nhân viên",
-      });
     } finally {
       setSubmitLoading(false);
     }

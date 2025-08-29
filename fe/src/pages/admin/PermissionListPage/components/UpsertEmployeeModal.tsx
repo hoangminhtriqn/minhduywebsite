@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal, message } from "antd";
 import {
   Employee as EmployeeType,
   CreateEmployeeData,
@@ -17,7 +17,9 @@ interface UpsertEmployeeModalProps {
   visible: boolean;
   employee?: EmployeeType | null; // undefined = add mode, EmployeeType = edit mode
   onCancel: () => void;
-  onSubmit: (values: CreateEmployeeData | UpdateEmployeeData) => Promise<void>;
+  onSubmit: (
+    values: CreateEmployeeData | UpdateEmployeeData
+  ) => Promise<void | { success?: boolean; message?: string }>;
   loading?: boolean;
 }
 
@@ -44,9 +46,26 @@ const UpsertEmployeeModal: React.FC<UpsertEmployeeModalProps> = ({
   const handleSubmit = async (
     values: CreateEmployeeData | UpdateEmployeeData
   ) => {
-    await onSubmit(values);
-    if (!isEditMode) {
-      form.resetFields();
+    try {
+      const result = await onSubmit(values);
+      if (result && typeof result === "object" && result.success === false) {
+        message.error(result.message || "Không thể cập nhật nhân viên");
+        return;
+      }
+      if (!isEditMode) {
+        form.resetFields();
+      }
+    } catch (error: unknown) {
+      const axiosLike = error as {
+        response?: { data?: { message?: string } };
+        data?: { message?: string };
+        message?: string;
+      };
+      const backendMessage =
+        axiosLike?.response?.data?.message ||
+        axiosLike?.data?.message ||
+        axiosLike?.message;
+      message.error(backendMessage || "Không thể cập nhật nhân viên");
     }
   };
 
