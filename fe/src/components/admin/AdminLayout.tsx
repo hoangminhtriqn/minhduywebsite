@@ -212,16 +212,14 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return hasAnyPermission(requiredPermissions);
   });
 
-  // Determine if current admin path is accessible; if not, redirect to first allowed
+  // Determine if current admin path is accessible; if not, redirect appropriately
   useEffect(() => {
     const path = location.pathname;
     // Only apply for admin area
-    if (
-      !path.startsWith(
-        ROUTERS.ADMIN.DASHBOARD.split("/")[1] ? "/admin" : "/admin"
-      )
-    )
-      return;
+    const isAdminArea = path.startsWith(
+      ROUTERS.ADMIN.DASHBOARD.split("/")[1] ? "/admin" : "/admin"
+    );
+    if (!isAdminArea) return;
 
     // Admin can access everything
     if (isAdmin) return;
@@ -240,12 +238,16 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     }
 
     if (!allowed) {
-      // redirect to first permitted admin page or home
+      // If currently at /admin (dashboard root), keep layout without redirect
+      if (path === ROUTERS.ADMIN.DASHBOARD) {
+        return;
+      }
+      // Otherwise redirect to first permitted admin page, or fallback to /admin
       const firstAllowed = menuItems[0]?.key;
       if (firstAllowed) {
         navigate(firstAllowed, { replace: true });
       } else {
-        navigate(ROUTERS.USER.HOME, { replace: true });
+        navigate(ROUTERS.ADMIN.DASHBOARD, { replace: true });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -361,7 +363,36 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
           </div>
         </Header>
-        <Content className={styles.adminContent}>{children}</Content>
+        <Content className={styles.adminContent}>
+          {(() => {
+            const path = location.pathname;
+            const isAdminArea = path.startsWith(
+              ROUTERS.ADMIN.DASHBOARD.split("/")[1] ? "/admin" : "/admin"
+            );
+            if (!isAdminArea) return children;
+            if (isAdmin) return children;
+
+            const adminKeys = Object.keys(MENU_PERMISSIONS);
+            const matchingKeys = adminKeys.filter((key) =>
+              path.startsWith(key)
+            );
+            const matchedKey = matchingKeys.length
+              ? matchingKeys.reduce((a, b) => (a.length > b.length ? a : b))
+              : undefined;
+
+            let allowed = false;
+            if (matchedKey) {
+              const required = MENU_PERMISSIONS[matchedKey];
+              allowed = hasAnyPermission(required);
+            }
+
+            // If user is at /admin without required permission, show empty content
+            if (path === ROUTERS.ADMIN.DASHBOARD && !allowed) {
+              return null;
+            }
+            return children;
+          })()}
+        </Content>
         <Footer className={styles.adminFooter}>
           <div className={styles.footerContent}>
             © {new Date().getFullYear()} - Sản phẩm thuộc về Minh Duy - Đà Nẵng
