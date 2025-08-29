@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import ThemeController from "@/components/ThemeController";
 import ZaloContact from "@/components/ZaloContact";
 import FacebookMessage from "@/components/FacebookMessage";
+import ScrollToTop from "@/components/ScrollToTop";
 
 import React from "react";
 
@@ -33,7 +34,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Header />
       <main style={mainContentStyle}>{children}</main>
       <Footer />
-
+      <ScrollToTop />
       <FacebookMessage />
       <ZaloContact />
       <ThemeController />
