@@ -303,7 +303,7 @@ const AuditLogPageInner: React.FC = () => {
       await auditLogService.deleteManyWithOptions(selectedRowKeys as string[], {
         restore: true,
       });
-      message.success("Đã khôi phục các booking liên quan và xóa log");
+      message.success("Đã khôi phục các đặt lịch liên quan và xóa lịch sử");
       setSelectedRowKeys([]);
       fetchLogs();
     } catch {
@@ -317,7 +317,7 @@ const AuditLogPageInner: React.FC = () => {
       await auditLogService.deleteManyWithOptions(selectedRowKeys as string[], {
         purge: true,
       });
-      message.success("Đã xóa vĩnh viễn các booking liên quan và xóa log");
+      message.success("Đã xóa vĩnh viễn các đặt lịch liên quan và xóa lịch sử");
       setSelectedRowKeys([]);
       fetchLogs();
     } catch {
@@ -351,7 +351,7 @@ const AuditLogPageInner: React.FC = () => {
               Đánh dấu đã duyệt
             </Button>
             <Popconfirm
-              title="Bạn có chắc muốn xóa các log đã chọn?"
+              title="Bạn có chắc muốn xóa các lịch sử đã chọn?"
               okText="Xóa"
               cancelText="Hủy"
               okType="danger"
@@ -364,12 +364,12 @@ const AuditLogPageInner: React.FC = () => {
                 size="middle"
                 disabled={selectedRowKeys.length === 0}
               >
-                Xóa log đã chọn
+                Xóa lịch sử
               </Button>
             </Popconfirm>
             {canRestoreOrPurge && (
               <Popconfirm
-                title="Khôi phục các booking liên quan và xóa log?"
+                title="Khôi phục các đặt lịch liên quan và xóa lịch sử?"
                 okText="Khôi phục"
                 cancelText="Hủy"
                 onConfirm={handleRestoreBookingsFromLogs}
@@ -386,7 +386,7 @@ const AuditLogPageInner: React.FC = () => {
             )}
             {canRestoreOrPurge && (
               <Popconfirm
-                title="Xóa vĩnh viễn các booking liên quan và xóa log?"
+                title="Xóa vĩnh viễn các đặt lịch liên quan và xóa lịch sử?"
                 okText="Xóa vĩnh viễn"
                 cancelText="Hủy"
                 okType="danger"

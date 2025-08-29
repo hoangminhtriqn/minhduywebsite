@@ -113,13 +113,13 @@ const UserListPage: React.FC = () => {
         pageSize: response.data.pagination.limit,
         total: response.data.pagination.total,
       });
-    } catch (error) {
+    } catch {
       message.error("Lỗi khi tải danh sách người dùng");
-      console.error("Error fetching users:", error);
     }
     setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchUsers();
   }, [pagination.current, pagination.pageSize, searchTerm, selectedRole]);
@@ -157,9 +157,8 @@ const UserListPage: React.FC = () => {
       await updateUserStatus(userId, newStatus);
       message.success("Cập nhật trạng thái người dùng thành công");
       fetchUsers();
-    } catch (error) {
+    } catch {
       message.error("Lỗi khi cập nhật trạng thái người dùng");
-      console.error("Error updating user status:", error);
     }
   };
 
@@ -194,9 +193,25 @@ const UserListPage: React.FC = () => {
       form.resetFields();
       setEditingUser(null);
       fetchUsers();
-    } catch (error) {
-      message.error("Lỗi khi cập nhật thông tin người dùng");
-      console.error("Error updating user:", error);
+    } catch (error: unknown) {
+      // Nếu lỗi đến từ validateFields (thiếu hoặc sai dữ liệu), hiển thị cảnh báo rõ ràng
+      const maybeValidation = error as { errorFields?: unknown };
+      if (
+        maybeValidation &&
+        Object.prototype.hasOwnProperty.call(maybeValidation, "errorFields")
+      ) {
+        message.warning("Vui lòng điền đầy đủ thông tin hợp lệ");
+        return;
+      }
+
+      const backendMessage: string | undefined = (
+        error as { response?: { data?: { message?: string } } }
+      )?.response?.data?.message;
+      if (backendMessage) {
+        message.error(backendMessage);
+      } else {
+        message.error("Lỗi khi cập nhật thông tin người dùng");
+      }
     }
   };
 

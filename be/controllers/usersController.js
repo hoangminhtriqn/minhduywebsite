@@ -289,6 +289,44 @@ const updateUser = async (req, res) => {
       return errorResponse(res, "User not found", HTTP_STATUS.NOT_FOUND);
     }
 
+    // Pre-check duplicate username or email (exclude current user)
+    const duplicateConditions = [];
+    if (updateData.UserName) {
+      duplicateConditions.push({ UserName: updateData.UserName });
+    }
+    if (updateData.Email) {
+      duplicateConditions.push({ Email: updateData.Email });
+    }
+    if (duplicateConditions.length > 0) {
+      const existing = await User.findOne({
+        $and: [
+          { _id: { $ne: req.params.userId } },
+          { $or: duplicateConditions },
+        ],
+      });
+      if (existing) {
+        if (updateData.UserName && existing.UserName === updateData.UserName) {
+          return errorResponse(
+            res,
+            "Tên đăng nhập đã tồn tại",
+            HTTP_STATUS.BAD_REQUEST
+          );
+        }
+        if (updateData.Email && existing.Email === updateData.Email) {
+          return errorResponse(
+            res,
+            "Email đã tồn tại",
+            HTTP_STATUS.BAD_REQUEST
+          );
+        }
+        return errorResponse(
+          res,
+          "Dữ liệu đã tồn tại",
+          HTTP_STATUS.BAD_REQUEST
+        );
+      }
+    }
+
     // Update the user data
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
@@ -356,7 +394,7 @@ const updateUser = async (req, res) => {
 
     successResponse(res, updatedUser);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return errorResponse(res, error.message, HTTP_STATUS.BAD_REQUEST, error);
   }
 };
 
