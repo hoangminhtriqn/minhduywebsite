@@ -14,6 +14,7 @@ import {
   Table,
   Tag,
   Popconfirm, // Thêm Popconfirm
+  Checkbox,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import type { TablePaginationConfig } from "antd/es/table";
@@ -22,8 +23,14 @@ import {
   updateUser,
   updateUserStatus,
 } from "@/api/services/admin/user";
+import { resetUserPassword } from "@/api/services/admin/user";
 import { useAuth } from "@/contexts/AuthContext";
-import { getUsernameRules, getEmailRules } from "@/utils/validation";
+import {
+  getUsernameRules,
+  getEmailRules,
+  getPasswordRules,
+  makeConfirmPasswordRule,
+} from "@/utils/validation";
 const { Option } = Select;
 
 // Enum cho User Roles
@@ -81,6 +88,8 @@ const UserListPage: React.FC = () => {
     undefined
   );
 
+  const [resetPasswordEnabled, setResetPasswordEnabled] = useState(false);
+
   const fetchUsers = async (
     page: number = pagination.current,
     limit: number = pagination.pageSize,
@@ -133,6 +142,7 @@ const UserListPage: React.FC = () => {
       Email: user.Email,
       Role: user.Role,
     });
+    setResetPasswordEnabled(false);
     setIsModalVisible(true);
   };
 
@@ -155,7 +165,24 @@ const UserListPage: React.FC = () => {
     try {
       const values = await form.validateFields();
       if (editingUser) {
-        await updateUser(editingUser._id, values);
+        // If admin toggled reset password, perform password reset first
+        if (
+          resetPasswordEnabled &&
+          authUser?.Role === UserRole.ADMIN &&
+          editingUser.Role !== UserRole.ADMIN &&
+          editingUser._id !== currentUserId
+        ) {
+          await resetUserPassword(editingUser._id, {
+            newPassword: values.newPassword,
+            confirmPassword: values.confirmPassword,
+          });
+        }
+
+        // Then update other fields (excluding password fields)
+        const rest = { ...(values as Record<string, unknown>) };
+        delete (rest as Record<string, unknown>).newPassword;
+        delete (rest as Record<string, unknown>).confirmPassword;
+        await updateUser(editingUser._id, rest);
         message.success("Cập nhật thông tin người dùng thành công");
       }
       setIsModalVisible(false);
@@ -167,6 +194,8 @@ const UserListPage: React.FC = () => {
       console.error("Error updating user:", error);
     }
   };
+
+  // Reset password handled within the edit modal
 
   const columns = [
     {
@@ -329,6 +358,42 @@ const UserListPage: React.FC = () => {
         }}
       >
         <Form form={form} layout="vertical">
+          {authUser?.Role === UserRole.ADMIN &&
+            editingUser?._id !== currentUserId &&
+            editingUser?.Role !== UserRole.ADMIN && (
+              <Form.Item>
+                <Checkbox
+                  checked={resetPasswordEnabled}
+                  onChange={(e) => setResetPasswordEnabled(e.target.checked)}
+                >
+                  Cấp lại mật khẩu cho người dùng này
+                </Checkbox>
+              </Form.Item>
+            )}
+          {resetPasswordEnabled && (
+            <>
+              <Form.Item
+                name="newPassword"
+                label="Mật khẩu mới"
+                rules={getPasswordRules()}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name="confirmPassword"
+                label="Xác nhận mật khẩu mới"
+                dependencies={["newPassword"]}
+                rules={[
+                  { required: true, message: "Vui lòng xác nhận mật khẩu mới" },
+                  ({ getFieldValue }) => ({
+                    ...makeConfirmPasswordRule(getFieldValue),
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+            </>
+          )}
           <Form.Item
             name="UserName"
             label="Tên đăng nhập"
@@ -342,7 +407,19 @@ const UserListPage: React.FC = () => {
           <Form.Item
             name="Role"
             label="Vai trò"
-            rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}
+            rules={[
+              { required: true, message: "Vui lòng chọn vai trò" },
+              {
+                validator: (_: unknown, value: string) => {
+                  if (value === UserRole.ADMIN) {
+                    return Promise.reject(
+                      new Error("Không thể đổi sang Quản trị viên")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
           >
             <Select
               placeholder="Chọn vai trò"
@@ -351,9 +428,9 @@ const UserListPage: React.FC = () => {
                 editingUser?.Role === UserRole.ADMIN
               }
             >
-              {Object.entries(ROLE_CONFIG).map(([role, config]) => (
+              {[UserRole.USER, UserRole.EMPLOYEE].map((role) => (
                 <Option key={role} value={role}>
-                  {config.label}
+                  {ROLE_CONFIG[role as UserRole].label}
                 </Option>
               ))}
             </Select>

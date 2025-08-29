@@ -53,6 +53,17 @@ export const getPasswordRules = (options?: {
     });
   }
 
+  // Match backend weak password check exactly
+  rules.push({
+    validator: (_, value) => {
+      if (!value) return Promise.resolve();
+      const weakPasswords = ['123456', 'password', '123123', 'admin', 'qwerty', '111111', '123456789'];
+      return weakPasswords.includes(String(value).toLowerCase())
+        ? Promise.reject(new Error('Mật khẩu quá yếu, vui lòng chọn mật khẩu khác'))
+        : Promise.resolve();
+    },
+  });
+
   return rules;
 };
 

@@ -19,7 +19,7 @@ import ThemeController from "@/components/ThemeController";
 import { useAuth } from "@/contexts/AuthContext";
 import { ROUTERS } from "@/utils/constant";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import styles from "./AdminLayout.module.css"; // Import CSS module
+import styles from "./AdminLayout.module.scss"; // Import CSS module
 import {
   DashboardPermissions,
   UserPermissions,

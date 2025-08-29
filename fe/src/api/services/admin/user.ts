@@ -31,3 +31,8 @@ export const updateUser = (id: string, data: Partial<User>) =>
 
 export const updateUserStatus = (id: string, status: string) =>
   api.put(`${API_ENDPOINTS.ADMIN_USERS}/${id}`, { Status: status }); 
+
+export const resetUserPassword = (
+  id: string,
+  payload: { newPassword: string; confirmPassword: string }
+) => api.put(`${API_ENDPOINTS.ADMIN_USERS}/${id}/reset-password`, payload);

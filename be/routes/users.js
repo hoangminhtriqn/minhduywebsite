@@ -394,6 +394,7 @@ const {
   updateUser,
   deleteUser,
   changePassword,
+  adminResetPassword,
 } = require("../controllers/usersController");
 const {
   protect,
@@ -422,5 +423,13 @@ router
   .get(protect, getUserById)
   .put(protect, updateUser)
   .delete(protect, authorizeAdminOnly, deleteUser);
+
+// Admin reset user's password
+router.put(
+  "/:userId/reset-password",
+  protect,
+  authorizeAdminOnly,
+  adminResetPassword
+);
 
 module.exports = router;

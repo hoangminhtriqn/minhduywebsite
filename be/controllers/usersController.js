@@ -291,73 +291,128 @@ const deleteUser = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { currentPassword, newPassword, confirmPassword, username } = req.body;
+    const { currentPassword, newPassword, confirmPassword, username } =
+      req.body;
 
     // Validate input
     if (!newPassword || !confirmPassword) {
-      return errorResponse(res, "Mật khẩu mới và xác nhận mật khẩu là bắt buộc", HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(
+        res,
+        "Mật khẩu mới và xác nhận mật khẩu là bắt buộc",
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     if (newPassword !== confirmPassword) {
-      return errorResponse(res, "Mật khẩu mới và xác nhận mật khẩu không khớp", HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(
+        res,
+        "Mật khẩu mới và xác nhận mật khẩu không khớp",
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     if (newPassword.length < 6) {
-      return errorResponse(res, "Mật khẩu mới phải có ít nhất 6 ký tự", HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(
+        res,
+        "Mật khẩu mới phải có ít nhất 6 ký tự",
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     // Additional password strength validation
     if (newPassword.length > 128) {
-      return errorResponse(res, "Mật khẩu mới không được quá 128 ký tự", HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(
+        res,
+        "Mật khẩu mới không được quá 128 ký tự",
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     // Check for common weak passwords
-    const weakPasswords = ['123456', 'password', '123123', 'admin', 'qwerty', '111111', '123456789'];
+    const weakPasswords = [
+      "123456",
+      "password",
+      "123123",
+      "admin",
+      "qwerty",
+      "111111",
+      "123456789",
+    ];
     if (weakPasswords.includes(newPassword.toLowerCase())) {
-      return errorResponse(res, "Mật khẩu quá yếu, vui lòng chọn mật khẩu khác", HTTP_STATUS.BAD_REQUEST);
+      return errorResponse(
+        res,
+        "Mật khẩu quá yếu, vui lòng chọn mật khẩu khác",
+        HTTP_STATUS.BAD_REQUEST
+      );
     }
 
     // Get user
     const user = await User.findById(userId);
     if (!user) {
-      return errorResponse(res, "Không tìm thấy người dùng", HTTP_STATUS.NOT_FOUND);
+      return errorResponse(
+        res,
+        "Không tìm thấy người dùng",
+        HTTP_STATUS.NOT_FOUND
+      );
     }
 
     // Check if user is Google user (no current password required)
-    const isGoogleUser = user.LoginProvider === 'google';
-    
+    const isGoogleUser = user.LoginProvider === "google";
+
     // For non-Google users, verify current password
     if (!isGoogleUser) {
       if (!currentPassword) {
-        return errorResponse(res, "Mật khẩu hiện tại là bắt buộc", HTTP_STATUS.BAD_REQUEST);
+        return errorResponse(
+          res,
+          "Mật khẩu hiện tại là bắt buộc",
+          HTTP_STATUS.BAD_REQUEST
+        );
       }
 
-      const isCurrentPasswordValid = await user.comparePassword(currentPassword);
+      const isCurrentPasswordValid = await user.comparePassword(
+        currentPassword
+      );
       if (!isCurrentPasswordValid) {
-        return errorResponse(res, "Mật khẩu hiện tại không đúng", HTTP_STATUS.BAD_REQUEST);
+        return errorResponse(
+          res,
+          "Mật khẩu hiện tại không đúng",
+          HTTP_STATUS.BAD_REQUEST
+        );
       }
 
       // Check if new password is same as current password
       const isSamePassword = await user.comparePassword(newPassword);
       if (isSamePassword) {
-        return errorResponse(res, "Mật khẩu mới không được trùng với mật khẩu hiện tại", HTTP_STATUS.BAD_REQUEST);
+        return errorResponse(
+          res,
+          "Mật khẩu mới không được trùng với mật khẩu hiện tại",
+          HTTP_STATUS.BAD_REQUEST
+        );
       }
     }
 
     // Handle username for Google users who don't have one
     if (username && !user.UserName) {
       // Check if username already exists
-      const existingUser = await User.findOne({ 
+      const existingUser = await User.findOne({
         UserName: username,
-        _id: { $ne: userId }
+        _id: { $ne: userId },
       });
-      
+
       if (existingUser) {
-        return errorResponse(res, "Tên đăng nhập đã tồn tại", HTTP_STATUS.BAD_REQUEST);
+        return errorResponse(
+          res,
+          "Tên đăng nhập đã tồn tại",
+          HTTP_STATUS.BAD_REQUEST
+        );
       }
 
       if (username.length < 3) {
-        return errorResponse(res, "Tên đăng nhập phải có ít nhất 3 ký tự", HTTP_STATUS.BAD_REQUEST);
+        return errorResponse(
+          res,
+          "Tên đăng nhập phải có ít nhất 3 ký tự",
+          HTTP_STATUS.BAD_REQUEST
+        );
       }
 
       user.UserName = username;
@@ -365,7 +420,7 @@ const changePassword = async (req, res) => {
 
     // Update password
     user.Password = newPassword; // Will be hashed by pre-save middleware
-    
+
     // For Google users, also update LoginProvider to allow both login methods
     if (isGoogleUser) {
       // Keep Google OAuth but also allow username/password login
@@ -374,17 +429,100 @@ const changePassword = async (req, res) => {
 
     await user.save();
 
-    successResponse(res, 
-      { 
+    successResponse(
+      res,
+      {
         message: "Thay đổi mật khẩu thành công",
-        hasUsername: !!user.UserName 
-      }, 
+        hasUsername: !!user.UserName,
+      },
       "Thay đổi mật khẩu thành công"
     );
-
   } catch (error) {
     console.error("Change password error:", error);
-    errorResponse(res, "Lỗi server khi thay đổi mật khẩu", HTTP_STATUS.INTERNAL_SERVER_ERROR, error);
+    errorResponse(
+      res,
+      "Lỗi server khi thay đổi mật khẩu",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
+  }
+};
+
+// Admin: reset another user's password (no current password required)
+const adminResetPassword = async (req, res) => {
+  try {
+    const targetUserId = req.params.userId;
+    const { newPassword, confirmPassword } = req.body;
+
+    if (!newPassword || !confirmPassword) {
+      return errorResponse(
+        res,
+        "Mật khẩu mới và xác nhận mật khẩu là bắt buộc",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+    if (newPassword !== confirmPassword) {
+      return errorResponse(
+        res,
+        "Mật khẩu mới và xác nhận mật khẩu không khớp",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+    if (newPassword.length < 6) {
+      return errorResponse(
+        res,
+        "Mật khẩu mới phải có ít nhất 6 ký tự",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+    if (newPassword.length > 128) {
+      return errorResponse(
+        res,
+        "Mật khẩu mới không được quá 128 ký tự",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+    const weakPasswords = [
+      "123456",
+      "password",
+      "123123",
+      "admin",
+      "qwerty",
+      "111111",
+      "123456789",
+    ];
+    if (weakPasswords.includes(newPassword.toLowerCase())) {
+      return errorResponse(
+        res,
+        "Mật khẩu quá yếu, vui lòng chọn mật khẩu khác",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    const user = await User.findById(targetUserId);
+    if (!user) {
+      return errorResponse(
+        res,
+        "Không tìm thấy người dùng",
+        HTTP_STATUS.NOT_FOUND
+      );
+    }
+
+    user.Password = newPassword;
+    await user.save();
+
+    return successResponse(
+      res,
+      { message: "Cấp lại mật khẩu thành công" },
+      "Cấp lại mật khẩu thành công"
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      "Lỗi server khi cấp lại mật khẩu",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error
+    );
   }
 };
 
@@ -398,4 +536,5 @@ module.exports = {
   deleteUser,
   refreshToken,
   changePassword,
+  adminResetPassword,
 };
