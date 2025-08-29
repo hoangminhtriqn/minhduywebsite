@@ -17,6 +17,7 @@ import {
 import type { TablePaginationConfig } from "antd/es/table";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
+import usePermissions from "@/hooks/usePermissions";
 
 import {
   Booking as ApiBooking,
@@ -87,6 +88,10 @@ const BookingListPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(
     undefined
   );
+  const { hasPermission } = usePermissions();
+  const canUpdateStatus = hasPermission("bookings.status.update");
+  const canDeleteBooking = hasPermission("bookings.delete");
+  const canManageServiceTypes = hasPermission("bookings.service_types.manage");
 
   const fetchBookings = async (
     page: number = pagination.current,
@@ -236,31 +241,48 @@ const BookingListPage: React.FC = () => {
       title: "Trạng thái",
       dataIndex: "Status",
       key: "Status",
-      render: (status: string, record: ApiBooking) => (
-        <Select
-          value={status}
-          style={{ width: 140 }}
-          onChange={(value) => handleStatusChange(record._id, value)}
-          size="small"
-        >
-          {BOOKING_STATUS_OPTIONS.map((option) => {
-            const statusConfig =
-              BOOKING_STATUS_CONFIG[option.value as BookingStatus];
+      render: (status: string, record: ApiBooking) =>
+        canUpdateStatus ? (
+          <Select
+            value={status}
+            style={{ width: 140 }}
+            onChange={(value) => handleStatusChange(record._id, value)}
+            size="small"
+          >
+            {BOOKING_STATUS_OPTIONS.map((option) => {
+              const statusConfig =
+                BOOKING_STATUS_CONFIG[option.value as BookingStatus];
+              return (
+                <Option key={option.value} value={option.value}>
+                  <span
+                    style={{
+                      color: statusConfig.color,
+                      fontWeight: "500",
+                    }}
+                  >
+                    {option.label}
+                  </span>
+                </Option>
+              );
+            })}
+          </Select>
+        ) : (
+          (() => {
+            const statusConfig = getStatusConfig(status);
             return (
-              <Option key={option.value} value={option.value}>
-                <span
-                  style={{
-                    color: statusConfig.color,
-                    fontWeight: "500",
-                  }}
-                >
-                  {option.label}
-                </span>
-              </Option>
+              <Tag
+                style={{
+                  color: statusConfig.color,
+                  backgroundColor: statusConfig.bgColor,
+                  borderColor: statusConfig.borderColor,
+                  border: "1px solid",
+                }}
+              >
+                {statusConfig.text}
+              </Tag>
             );
-          })}
-        </Select>
-      ),
+          })()
+        ),
     },
     {
       title: "Ngày tạo",
@@ -281,17 +303,19 @@ const BookingListPage: React.FC = () => {
           >
             Xem
           </Button>
-          <Popconfirm
-            title="Xóa booking này?"
-            onConfirm={() => handleDelete(record._id)}
-            okText="Xóa"
-            cancelText="Không"
-            okType="danger"
-          >
-            <Button danger icon={<DeleteOutlined />} size="small">
-              Xóa
-            </Button>
-          </Popconfirm>
+          {canDeleteBooking && (
+            <Popconfirm
+              title="Xóa booking này?"
+              onConfirm={() => handleDelete(record._id)}
+              okText="Xóa"
+              cancelText="Không"
+              okType="danger"
+            >
+              <Button danger icon={<DeleteOutlined />} size="small">
+                Xóa
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -323,13 +347,15 @@ const BookingListPage: React.FC = () => {
               </Option>
             ))}
           </Select>
-          <Button
-            type="primary"
-            icon={<SettingOutlined />}
-            onClick={() => setServiceTypeModalVisible(true)}
-          >
-            Quản lý loại dịch vụ
-          </Button>
+          {canManageServiceTypes && (
+            <Button
+              type="primary"
+              icon={<SettingOutlined />}
+              onClick={() => setServiceTypeModalVisible(true)}
+            >
+              Quản lý loại dịch vụ
+            </Button>
+          )}
         </Space>
       </div>
 

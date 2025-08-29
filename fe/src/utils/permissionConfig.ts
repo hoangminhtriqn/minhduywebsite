@@ -277,19 +277,19 @@ export const PERMISSION_LABELS: PermissionConfig = {
     description: "Quyền xem danh sách quyền hạn"
   },
   [PermissionManagementPermissions.CREATE]: { 
-    label: "Tạo Quyền Hạn", 
+    label: "Tạo Nhân Viên", 
     group: PermissionGroups.PERMISSIONS,
-    description: "Quyền tạo quyền hạn mới"
+    description: "Quyền tạo nhân viên mới"
   },
   [PermissionManagementPermissions.EDIT]: {
-    label: "Chỉnh Sửa Quyền Hạn",
+    label: "Chỉnh sửa nhân viên",
     group: PermissionGroups.PERMISSIONS,
-    description: "Quyền chỉnh sửa quyền hạn"
+    description: "Quyền chỉnh sửa thông tin nhân viên"
   },
   [PermissionManagementPermissions.DELETE]: { 
-    label: "Xóa Quyền Hạn", 
+    label: "Xóa nhân viên", 
     group: PermissionGroups.PERMISSIONS,
-    description: "Quyền xóa quyền hạn"
+    description: "Quyền xóa nhân viên khỏi hệ thống"
   },
   [PermissionManagementPermissions.ASSIGN]: { 
     label: "Gán Quyền Hạn", 

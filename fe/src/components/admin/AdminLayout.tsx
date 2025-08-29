@@ -212,6 +212,45 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return hasAnyPermission(requiredPermissions);
   });
 
+  // Determine if current admin path is accessible; if not, redirect to first allowed
+  useEffect(() => {
+    const path = location.pathname;
+    // Only apply for admin area
+    if (
+      !path.startsWith(
+        ROUTERS.ADMIN.DASHBOARD.split("/")[1] ? "/admin" : "/admin"
+      )
+    )
+      return;
+
+    // Admin can access everything
+    if (isAdmin) return;
+
+    // Find the best matching admin route key for current path
+    const adminKeys = Object.keys(MENU_PERMISSIONS);
+    const matchingKeys = adminKeys.filter((key) => path.startsWith(key));
+    const matchedKey = matchingKeys.length
+      ? matchingKeys.reduce((a, b) => (a.length > b.length ? a : b))
+      : undefined;
+
+    let allowed = false;
+    if (matchedKey) {
+      const required = MENU_PERMISSIONS[matchedKey];
+      allowed = hasAnyPermission(required);
+    }
+
+    if (!allowed) {
+      // redirect to first permitted admin page or home
+      const firstAllowed = menuItems[0]?.key;
+      if (firstAllowed) {
+        navigate(firstAllowed, { replace: true });
+      } else {
+        navigate(ROUTERS.USER.HOME, { replace: true });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, isAdmin, hasAnyPermission]);
+
   return (
     <Layout className={styles.adminLayout}>
       {(!isMobileState || (isMobileState && !collapsed)) && (
@@ -240,7 +279,10 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <div
             className={styles.adminLogo}
             style={{ alignItems: "center", gap: 18 }}
-            onClick={() => navigate(ROUTERS.USER.HOME)}
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(ROUTERS.USER.HOME, "_blank");
+            }}
           >
             <img src="/images/logo.png" alt="Logo" className={styles.logoImg} />
             {!collapsed && <span className={styles.logoText}>Minh Duy</span>}

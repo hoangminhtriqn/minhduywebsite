@@ -21,6 +21,8 @@ import {
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import usePermissions from "@/hooks/usePermissions";
+import { PermissionManagementPermissions } from "@/types/enum";
 // import { useNavigate } from "react-router-dom";
 // import { ROUTERS } from "@/utils/constant";
 import {
@@ -42,6 +44,7 @@ const PermissionListPage: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const { user: authUser } = useAuth();
   const currentUserId = authUser?._id || localStorage.getItem("userId");
+  const { isAdmin, canViewPermissions, hasPermission } = usePermissions();
   // TODO: Implement search functionality
   const [pagination, setPagination] = useState({
     current: 1,
@@ -74,10 +77,12 @@ const PermissionListPage: React.FC = () => {
         setGroupedPermissions(result.data.groupedPermissions);
       }
     } catch (error) {
+      // Một số backend có thể giới hạn endpoint này cho admin
+      // Chỉ hiển thị cảnh báo nhẹ, không chặn trang danh sách
       console.error("Error fetching available permissions:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể tải danh sách quyền hạn",
+      notification.warning({
+        message: "Cảnh báo",
+        description: "Không thể tải danh sách quyền hạn khả dụng.",
       });
     }
   }, []);
@@ -98,10 +103,12 @@ const PermissionListPage: React.FC = () => {
             key: item._id,
           }))
         );
-        setPagination((prev) => ({
-          ...prev,
-          total: result.data.total,
-        }));
+        setPagination((prev) => {
+          if (prev.total !== result.data.total) {
+            return { ...prev, total: result.data.total };
+          }
+          return prev;
+        });
       } else {
         throw new Error("Failed to fetch employees");
       }
@@ -116,10 +123,19 @@ const PermissionListPage: React.FC = () => {
     }
   }, [pagination.current, pagination.pageSize, searchText]);
 
+  // Precompute stable booleans to avoid effect loops due to changing function identities
+  const canViewPage = isAdmin || canViewPermissions();
+  const canAssignPerms =
+    isAdmin || hasPermission(PermissionManagementPermissions.ASSIGN);
+
   useEffect(() => {
-    fetchAvailablePermissions();
-    fetchEmployees();
-  }, [fetchAvailablePermissions, fetchEmployees]);
+    if (canViewPage) {
+      fetchEmployees();
+    }
+    if (canAssignPerms) {
+      fetchAvailablePermissions();
+    }
+  }, [canViewPage, canAssignPerms, fetchEmployees, fetchAvailablePermissions]);
 
   const handleDeleteEmployee = async (employeeId: string) => {
     if (employeeId === currentUserId) {
@@ -363,38 +379,47 @@ const PermissionListPage: React.FC = () => {
         <Space size="small">
           {record._id !== currentUserId && (
             <>
-              <Tooltip title="Chỉnh sửa thông tin">
-                <Button
-                  type="primary"
-                  icon={<EditOutlined />}
-                  size="small"
-                  onClick={() => handleEditEmployee(record)}
-                >
-                  Sửa
-                </Button>
-              </Tooltip>
-              <Tooltip title="Cấp quyền">
-                <Button
-                  type="default"
-                  icon={<SettingOutlined />}
-                  size="small"
-                  onClick={() => handleManagePermissions(record)}
-                >
-                  Phân quyền
-                </Button>
-              </Tooltip>
-              <Tooltip title="Xóa nhân viên">
-                <Popconfirm
-                  title="Bạn có chắc chắn muốn xóa nhân viên này?"
-                  onConfirm={() => handleDeleteEmployee(record._id)}
-                  okText="Có"
-                  cancelText="Không"
-                >
-                  <Button danger icon={<DeleteOutlined />} size="small">
-                    Xóa
+              {(isAdmin ||
+                hasPermission(PermissionManagementPermissions.EDIT)) && (
+                <Tooltip title="Chỉnh sửa thông tin">
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    size="small"
+                    onClick={() => handleEditEmployee(record)}
+                  >
+                    Sửa
                   </Button>
-                </Popconfirm>
-              </Tooltip>
+                </Tooltip>
+              )}
+              {(isAdmin ||
+                hasPermission(PermissionManagementPermissions.ASSIGN)) && (
+                <Tooltip title="Cấp quyền">
+                  <Button
+                    type="default"
+                    icon={<SettingOutlined />}
+                    size="small"
+                    onClick={() => handleManagePermissions(record)}
+                  >
+                    Phân quyền
+                  </Button>
+                </Tooltip>
+              )}
+              {(isAdmin ||
+                hasPermission(PermissionManagementPermissions.DELETE)) && (
+                <Tooltip title="Xóa nhân viên">
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn xóa nhân viên này?"
+                    onConfirm={() => handleDeleteEmployee(record._id)}
+                    okText="Có"
+                    cancelText="Không"
+                  >
+                    <Button danger icon={<DeleteOutlined />} size="small">
+                      Xóa
+                    </Button>
+                  </Popconfirm>
+                </Tooltip>
+              )}
             </>
           )}
         </Space>
@@ -409,13 +434,15 @@ const PermissionListPage: React.FC = () => {
       <Card
         title="Quản lý nhân viên và phân quyền"
         extra={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAddEmployee}
-          >
-            Thêm nhân viên
-          </Button>
+          isAdmin || hasPermission(PermissionManagementPermissions.CREATE) ? (
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleAddEmployee}
+            >
+              Thêm nhân viên
+            </Button>
+          ) : null
         }
       >
         <div className="mb-4">
@@ -431,12 +458,18 @@ const PermissionListPage: React.FC = () => {
         </div>
 
         <Spin spinning={loading}>
-          <Table
-            columns={columns}
-            dataSource={employees}
-            pagination={false}
-            scroll={{ x: "max-content" }}
-          />
+          {isAdmin || canViewPermissions() ? (
+            <Table
+              columns={columns}
+              dataSource={employees}
+              pagination={false}
+              scroll={{ x: "max-content" }}
+            />
+          ) : (
+            <div style={{ padding: 24 }}>
+              <Tag color="red">Bạn không có quyền truy cập trang này</Tag>
+            </div>
+          )}
         </Spin>
 
         <div className="mt-4">

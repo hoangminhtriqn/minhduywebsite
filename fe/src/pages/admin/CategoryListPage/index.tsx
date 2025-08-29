@@ -30,6 +30,7 @@ import {
 import styles from "./styles.module.scss";
 
 import React, { useEffect, useRef, useState } from "react";
+import usePermissions from "@/hooks/usePermissions";
 
 const { Text } = Typography;
 const { confirm } = Modal;
@@ -131,6 +132,14 @@ const CategoryListPage: React.FC = () => {
     undefined
   );
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  // Permissions
+  const {
+    hasPermission,
+    canCreateCategories,
+    canEditCategories,
+    canDeleteCategories,
+  } = usePermissions();
+  const canReorderCategories = hasPermission("categories.reorder");
 
   const fetchCategories = async () => {
     try {
@@ -329,29 +338,33 @@ const CategoryListPage: React.FC = () => {
               )}
             </Space>
             <Space size="small">
-              <Tooltip title="Chỉnh sửa">
-                <Button
-                  type="text"
-                  icon={<EditOutlined />}
-                  size="large"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEdit(parent);
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title="Xóa">
-                <Button
-                  type="text"
-                  danger
-                  icon={<DeleteOutlined />}
-                  size="large"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    await handleDelete(parent._id);
-                  }}
-                />
-              </Tooltip>
+              {canEditCategories() && (
+                <Tooltip title="Chỉnh sửa">
+                  <Button
+                    type="text"
+                    icon={<EditOutlined />}
+                    size="large"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(parent);
+                    }}
+                  />
+                </Tooltip>
+              )}
+              {canDeleteCategories() && (
+                <Tooltip title="Xóa">
+                  <Button
+                    type="text"
+                    danger
+                    icon={<DeleteOutlined />}
+                    size="large"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      await handleDelete(parent._id);
+                    }}
+                  />
+                </Tooltip>
+              )}
             </Space>
           </div>
         ),
@@ -379,29 +392,33 @@ const CategoryListPage: React.FC = () => {
                 )}
               </Space>
               <Space size="small">
-                <Tooltip title="Chỉnh sửa">
-                  <Button
-                    type="text"
-                    icon={<EditOutlined />}
-                    size="large"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(child);
-                    }}
-                  />
-                </Tooltip>
-                <Tooltip title="Xóa">
-                  <Button
-                    type="text"
-                    danger
-                    icon={<DeleteOutlined />}
-                    size="large"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      await handleDelete(child._id);
-                    }}
-                  />
-                </Tooltip>
+                {canEditCategories() && (
+                  <Tooltip title="Chỉnh sửa">
+                    <Button
+                      type="text"
+                      icon={<EditOutlined />}
+                      size="large"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(child);
+                      }}
+                    />
+                  </Tooltip>
+                )}
+                {canDeleteCategories() && (
+                  <Tooltip title="Xóa">
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      size="large"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        await handleDelete(child._id);
+                      }}
+                    />
+                  </Tooltip>
+                )}
               </Space>
             </div>
           ),
@@ -535,11 +552,16 @@ const CategoryListPage: React.FC = () => {
                 treeData={buildTreeData()}
                 titleRender={(node) => node.title}
                 style={{ fontSize: "16px" }}
-                draggable={{
-                  icon: false,
-                  nodeDraggable: (node) => (node as CategoryTreeNode).isParent,
-                }}
-                onDrop={handleDrop}
+                draggable={
+                  canReorderCategories
+                    ? {
+                        icon: false,
+                        nodeDraggable: (node) =>
+                          (node as CategoryTreeNode).isParent,
+                      }
+                    : false
+                }
+                onDrop={canReorderCategories ? handleDrop : undefined}
                 switcherIcon={(props: { expanded?: boolean }) => {
                   const { expanded } = props;
                   return expanded ? (
@@ -557,216 +579,227 @@ const CategoryListPage: React.FC = () => {
 
         {/* Form Panel - Right Side */}
         <Col span={8}>
-          <Card
-            title={
-              <Space>
-                <span style={{ fontSize: "18px", fontWeight: "bold" }}>
-                  {editingCategory ? "Chỉnh sửa danh mục" : "Thêm danh mục mới"}
-                </span>
-              </Space>
-            }
-            style={{
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-              height: "calc(100vh - 200px)",
-            }}
-            styles={{
-              body: {
-                padding: "16px",
-                height: "calc(100% - 57px)",
-                overflow: "auto",
-              },
-            }}
-          >
-            <Form form={form} layout="vertical" scrollToFirstError>
-              <Form.Item
-                name="Name"
-                label="Tên danh mục"
-                rules={[
-                  { required: true, message: "Vui lòng nhập tên danh mục" },
-                ]}
-              >
-                <Input placeholder="Nhập tên danh mục" size="large" />
-              </Form.Item>
-
-              <Form.Item label="Icon">
-                <div className={styles.emojiField} ref={emojiPickerRef}>
-                  <Input
-                    value={selectedEmoji}
-                    placeholder="Chọn emoji hoặc paste emoji từ bên ngoài"
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    onPaste={(e) => {
-                      const pastedText = e.clipboardData.getData("text");
-                      if (pastedText && pastedText.length <= 2) {
-                        setSelectedEmoji(pastedText);
-                        e.preventDefault();
-                      }
-                    }}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value.length <= 2) {
-                        setSelectedEmoji(value);
-                      }
-                    }}
-                    className={styles.emojiInput}
-                    disabled={false}
-                    suffix={
-                      <Button
-                        type="text"
-                        size="small"
-                        disabled={false}
-                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                        className={styles.emojiSuffixBtn}
-                      >
-                        {showEmojiPicker ? "✕" : "😊"}
-                      </Button>
-                    }
-                  />
-                  {showEmojiPicker && (
-                    <div className={styles.emojiPicker}>
-                      <div className={styles.emojiGrid}>
-                        {EMOJI_LIST.map((emoji, index) => (
-                          <Button
-                            key={index}
-                            type="text"
-                            size="small"
-                            className={styles.emojiBtn}
-                            onClick={() => {
-                              setSelectedEmoji(emoji);
-                              setShowEmojiPicker(false);
-                            }}
-                          >
-                            {emoji}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <Popover
-                  trigger="click"
-                  placement="right"
-                  content={
-                    <div className={styles.moreLinksContent}>
-                      <ul className={styles.moreLinksList}>
-                        <li className={styles.moreLinkItem}>
-                          <a
-                            href="https://getemoji.com/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            getemoji.com
-                          </a>
-                        </li>
-                        <li className={styles.moreLinkItem}>
-                          <a
-                            href="https://emojicopy.com/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            emojicopy.com
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  }
-                >
-                  <span className={styles.moreLinksTrigger}>
-                    Xem thêm <InfoCircleOutlined />
+          {((editingCategory && canEditCategories()) ||
+            (!editingCategory && canCreateCategories())) && (
+            <Card
+              title={
+                <Space>
+                  <span style={{ fontSize: "18px", fontWeight: "bold" }}>
+                    {editingCategory
+                      ? "Chỉnh sửa danh mục"
+                      : "Thêm danh mục mới"}
                   </span>
-                </Popover>
-              </Form.Item>
-
-              <Form.Item name="Description" label="Mô tả">
-                <Input.TextArea rows={4} placeholder="Nhập mô tả danh mục" />
-              </Form.Item>
-
-              <Form.Item name="ParentID" label="Danh mục cha">
-                <Select
-                  placeholder="Chọn danh mục cha (để trống nếu là danh mục gốc)"
-                  allowClear
-                  showSearch
-                  optionFilterProp="children"
-                  onChange={handleParentChange}
-                  size="large"
-                >
-                  {parentCategories.map((category) => (
-                    <Select.Option key={category._id} value={category._id}>
-                      <Space>
-                        <span>{category.Icon || "📁"}</span>
-                        <span>{category.Name}</span>
-                      </Space>
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-
-              {editingCategory ? (
+                </Space>
+              }
+              style={{
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                height: "calc(100vh - 200px)",
+              }}
+              styles={{
+                body: {
+                  padding: "16px",
+                  height: "calc(100% - 57px)",
+                  overflow: "auto",
+                },
+              }}
+            >
+              <Form form={form} layout="vertical" scrollToFirstError>
                 <Form.Item
-                  name="Status"
-                  label="Trạng thái"
-                  initialValue="active"
+                  name="Name"
+                  label="Tên danh mục"
+                  rules={[
+                    { required: true, message: "Vui lòng nhập tên danh mục" },
+                  ]}
                 >
-                  <Select size="large" optionLabelProp="label">
-                    <Select.Option value="active" label="Hoạt động">
-                      <Space>
-                        <EyeOutlined style={{ color: "#52c41a" }} />
-                        <span>Hoạt động</span>
-                      </Space>
-                    </Select.Option>
-                    <Select.Option value="inactive" label="Không hoạt động">
-                      <Space>
-                        <EyeInvisibleOutlined style={{ color: "#ff4d4f" }} />
-                        <span>Không hoạt động</span>
-                      </Space>
-                    </Select.Option>
+                  <Input placeholder="Nhập tên danh mục" size="large" />
+                </Form.Item>
+
+                <Form.Item label="Icon">
+                  <div className={styles.emojiField} ref={emojiPickerRef}>
+                    <Input
+                      value={selectedEmoji}
+                      placeholder="Chọn emoji hoặc paste emoji từ bên ngoài"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      onPaste={(e) => {
+                        const pastedText = e.clipboardData.getData("text");
+                        if (pastedText && pastedText.length <= 2) {
+                          setSelectedEmoji(pastedText);
+                          e.preventDefault();
+                        }
+                      }}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value.length <= 2) {
+                          setSelectedEmoji(value);
+                        }
+                      }}
+                      className={styles.emojiInput}
+                      disabled={false}
+                      suffix={
+                        <Button
+                          type="text"
+                          size="small"
+                          disabled={false}
+                          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                          className={styles.emojiSuffixBtn}
+                        >
+                          {showEmojiPicker ? "✕" : "😊"}
+                        </Button>
+                      }
+                    />
+                    {showEmojiPicker && (
+                      <div className={styles.emojiPicker}>
+                        <div className={styles.emojiGrid}>
+                          {EMOJI_LIST.map((emoji, index) => (
+                            <Button
+                              key={index}
+                              type="text"
+                              size="small"
+                              className={styles.emojiBtn}
+                              onClick={() => {
+                                setSelectedEmoji(emoji);
+                                setShowEmojiPicker(false);
+                              }}
+                            >
+                              {emoji}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <Popover
+                    trigger="click"
+                    placement="right"
+                    content={
+                      <div className={styles.moreLinksContent}>
+                        <ul className={styles.moreLinksList}>
+                          <li className={styles.moreLinkItem}>
+                            <a
+                              href="https://getemoji.com/"
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              getemoji.com
+                            </a>
+                          </li>
+                          <li className={styles.moreLinkItem}>
+                            <a
+                              href="https://emojicopy.com/"
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              emojicopy.com
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    }
+                  >
+                    <span className={styles.moreLinksTrigger}>
+                      Xem thêm <InfoCircleOutlined />
+                    </span>
+                  </Popover>
+                </Form.Item>
+
+                <Form.Item name="Description" label="Mô tả">
+                  <Input.TextArea rows={4} placeholder="Nhập mô tả danh mục" />
+                </Form.Item>
+
+                <Form.Item name="ParentID" label="Danh mục cha">
+                  <Select
+                    placeholder="Chọn danh mục cha (để trống nếu là danh mục gốc)"
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    onChange={handleParentChange}
+                    size="large"
+                  >
+                    {parentCategories.map((category) => (
+                      <Select.Option key={category._id} value={category._id}>
+                        <Space>
+                          <span>{category.Icon || "📁"}</span>
+                          <span>{category.Name}</span>
+                        </Space>
+                      </Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
-              ) : (
-                <>
-                  <Form.Item name="Status" initialValue="active" hidden>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item label="Trạng thái">
-                    <Tag
-                      color="#f6ffed"
-                      style={{ color: "#52c41a", borderColor: "#b7eb8f" }}
-                    >
-                      <Space>
-                        <EyeOutlined style={{ color: "#52c41a" }} />
-                        <span>Hoạt động</span>
-                      </Space>
-                    </Tag>
-                  </Form.Item>
-                </>
-              )}
 
-              <div style={{ marginTop: "24px" }}>
-                <div style={{ display: "flex", gap: "12px", width: "100%" }}>
-                  <Button
-                    type="primary"
-                    size="large"
-                    onClick={handleModalOk}
-                    style={{ flex: 1 }}
+                {editingCategory ? (
+                  <Form.Item
+                    name="Status"
+                    label="Trạng thái"
+                    initialValue="active"
                   >
-                    {editingCategory ? "Cập nhật" : "Thêm mới"}
-                  </Button>
-                  <Button
-                    size="large"
-                    onClick={() => {
-                      setEditingCategory(null);
-                      setSelectedEmoji(undefined);
-                      setShowEmojiPicker(false);
-                      form.resetFields();
-                      form.setFieldsValue({ ParentID: null, Status: "active" });
-                    }}
-                    style={{ flex: 1 }}
-                  >
-                    Hủy
-                  </Button>
+                    <Select size="large" optionLabelProp="label">
+                      <Select.Option value="active" label="Hoạt động">
+                        <Space>
+                          <EyeOutlined style={{ color: "#52c41a" }} />
+                          <span>Hoạt động</span>
+                        </Space>
+                      </Select.Option>
+                      <Select.Option value="inactive" label="Không hoạt động">
+                        <Space>
+                          <EyeInvisibleOutlined style={{ color: "#ff4d4f" }} />
+                          <span>Không hoạt động</span>
+                        </Space>
+                      </Select.Option>
+                    </Select>
+                  </Form.Item>
+                ) : (
+                  <>
+                    <Form.Item name="Status" initialValue="active" hidden>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item label="Trạng thái">
+                      <Tag
+                        color="#f6ffed"
+                        style={{ color: "#52c41a", borderColor: "#b7eb8f" }}
+                      >
+                        <Space>
+                          <EyeOutlined style={{ color: "#52c41a" }} />
+                          <span>Hoạt động</span>
+                        </Space>
+                      </Tag>
+                    </Form.Item>
+                  </>
+                )}
+
+                <div style={{ marginTop: "24px" }}>
+                  <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+                    {((editingCategory && canEditCategories()) ||
+                      (!editingCategory && canCreateCategories())) && (
+                      <Button
+                        type="primary"
+                        size="large"
+                        onClick={handleModalOk}
+                        style={{ flex: 1 }}
+                      >
+                        {editingCategory ? "Cập nhật" : "Thêm mới"}
+                      </Button>
+                    )}
+                    <Button
+                      size="large"
+                      onClick={() => {
+                        setEditingCategory(null);
+                        setSelectedEmoji(undefined);
+                        setShowEmojiPicker(false);
+                        form.resetFields();
+                        form.setFieldsValue({
+                          ParentID: null,
+                          Status: "active",
+                        });
+                      }}
+                      style={{ flex: 1 }}
+                    >
+                      Hủy
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Form>
-          </Card>
+              </Form>
+            </Card>
+          )}
         </Col>
       </Row>
     </div>

@@ -31,6 +31,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
+import usePermissions from "@/hooks/usePermissions";
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -55,6 +56,8 @@ const PricingListPage: React.FC = () => {
   const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false);
 
   const navigate = useNavigate();
+  const { canCreatePricing, canEditPricing, canDeletePricing } =
+    usePermissions();
 
   const fetchPricing = useCallback(async () => {
     setLoading(true);
@@ -417,32 +420,36 @@ const PricingListPage: React.FC = () => {
               Xem
             </Button>
           </Tooltip>
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              size="small"
-              onClick={() =>
-                navigate(
-                  ROUTERS.ADMIN.PRICE_LIST_EDIT.replace(":id", record._id)
-                )
-              }
-            >
-              Sửa
-            </Button>
-          </Tooltip>
-          <Tooltip title="Xóa">
-            <Popconfirm
-              title="Bạn có chắc chắn muốn xóa?"
-              onConfirm={() => handleDeletePricing(record._id)}
-              okText="Có"
-              cancelText="Không"
-            >
-              <Button danger icon={<DeleteOutlined />} size="small">
-                Xóa
+          {canEditPricing() && (
+            <Tooltip title="Chỉnh sửa">
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                size="small"
+                onClick={() =>
+                  navigate(
+                    ROUTERS.ADMIN.PRICE_LIST_EDIT.replace(":id", record._id)
+                  )
+                }
+              >
+                Sửa
               </Button>
-            </Popconfirm>
-          </Tooltip>
+            </Tooltip>
+          )}
+          {canDeletePricing() && (
+            <Tooltip title="Xóa">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn xóa?"
+                onConfirm={() => handleDeletePricing(record._id)}
+                okText="Có"
+                cancelText="Không"
+              >
+                <Button danger icon={<DeleteOutlined />} size="small">
+                  Xóa
+                </Button>
+              </Popconfirm>
+            </Tooltip>
+          )}
         </Space>
       ),
     },
@@ -455,13 +462,15 @@ const PricingListPage: React.FC = () => {
       <Card
         title="Quản lý Bảng giá"
         extra={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => navigate(ROUTERS.ADMIN.PRICE_LIST_ADD)}
-          >
-            Thêm bảng giá
-          </Button>
+          canCreatePricing() && (
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => navigate(ROUTERS.ADMIN.PRICE_LIST_ADD)}
+            >
+              Thêm bảng giá
+            </Button>
+          )
         }
       >
         <div className="mb-4">

@@ -30,6 +30,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
 import { NewsStatus } from "@/types/enum";
+import usePermissions from "@/hooks/usePermissions";
 
 const { confirm } = Modal;
 
@@ -45,6 +46,8 @@ const NewsListPage: React.FC = () => {
     pageSize: 10,
     total: 0,
   });
+
+  const { canCreateNews, canEditNews, canDeleteNews } = usePermissions();
 
   const fetchNews = async () => {
     setLoading(true);
@@ -194,26 +197,30 @@ const NewsListPage: React.FC = () => {
               Xem
             </Button>
           </Tooltip>
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              size="small"
-              onClick={() => navigate(`/admin/news/edit/${record._id}`)}
-            >
-              Sửa
-            </Button>
-          </Tooltip>
-          <Tooltip title="Xóa">
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              size="small"
-              onClick={() => showDeleteConfirm(record)}
-            >
-              Xóa
-            </Button>
-          </Tooltip>
+          {canEditNews() && (
+            <Tooltip title="Chỉnh sửa">
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                size="small"
+                onClick={() => navigate(`/admin/news/edit/${record._id}`)}
+              >
+                Sửa
+              </Button>
+            </Tooltip>
+          )}
+          {canDeleteNews() && (
+            <Tooltip title="Xóa">
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                size="small"
+                onClick={() => showDeleteConfirm(record)}
+              >
+                Xóa
+              </Button>
+            </Tooltip>
+          )}
         </Space>
       ),
     },
@@ -238,14 +245,16 @@ const NewsListPage: React.FC = () => {
               />
             </Col>
             <Col>
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                size="large"
-                onClick={() => navigate("/admin/news/add")}
-              >
-                Thêm tin tức mới
-              </Button>
+              {canCreateNews() && (
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  size="large"
+                  onClick={() => navigate("/admin/news/add")}
+                >
+                  Thêm tin tức mới
+                </Button>
+              )}
             </Col>
           </Row>
         </div>

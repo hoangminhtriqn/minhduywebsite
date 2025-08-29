@@ -1,12 +1,13 @@
-import { servicesApi } from '@/api/services/admin/service';
-import Breadcrumb from '@/components/admin/Breadcrumb';
-import CustomPagination from '@/components/CustomPagination';
-import { Service } from '@/types';
-import { ROUTERS } from '@/utils/constant';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, message, Popconfirm, Space, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { servicesApi } from "@/api/services/admin/service";
+import Breadcrumb from "@/components/admin/Breadcrumb";
+import CustomPagination from "@/components/CustomPagination";
+import { Service } from "@/types";
+import { ROUTERS } from "@/utils/constant";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, message, Popconfirm, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import usePermissions from "@/hooks/usePermissions";
 
 const ServiceListPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -17,18 +18,20 @@ const ServiceListPage: React.FC = () => {
     total: 0,
   });
   const navigate = useNavigate();
+  const { canCreateServices, canEditServices, canDeleteServices } =
+    usePermissions();
 
   const fetchServices = async () => {
     setLoading(true);
     try {
       const fetchedServices = await servicesApi.getAllServices();
       setServices(fetchedServices);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         total: fetchedServices.length,
       }));
     } catch {
-      message.error('Không thể tải danh sách dịch vụ.');
+      message.error("Không thể tải danh sách dịch vụ.");
     } finally {
       setLoading(false);
     }
@@ -57,59 +60,65 @@ const ServiceListPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       await servicesApi.deleteService(id);
-      message.success('Xóa dịch vụ thành công!');
+      message.success("Xóa dịch vụ thành công!");
       fetchServices(); // Refresh the list
-        } catch {
-      message.error('Xóa dịch vụ thất bại.');
+    } catch {
+      message.error("Xóa dịch vụ thất bại.");
     }
   };
 
   const columns = [
     {
-      title: 'Icon',
-      dataIndex: 'icon',
-      key: 'icon',
-      render: (icon: string) => <img src={icon} alt="icon" style={{ width: '50px', height: '50px' }} />,
+      title: "Icon",
+      dataIndex: "icon",
+      key: "icon",
+      render: (icon: string) => (
+        <img src={icon} alt="icon" style={{ width: "50px", height: "50px" }} />
+      ),
     },
     {
-      title: 'Tên dịch vụ',
-      dataIndex: 'title',
-      key: 'title',
+      title: "Tên dịch vụ",
+      dataIndex: "title",
+      key: "title",
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
-      key: 'description',
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: 'Thao tác',
-      key: 'actions',
+      title: "Thao tác",
+      key: "actions",
       width: 150,
-      align: 'center' as const,
+      align: "center" as const,
       render: (_: unknown, record: Service) => (
         <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            size="small"
-            onClick={() => navigate(`${ROUTERS.ADMIN.SERVICES_EDIT.replace(':id', record._id)}`)}
-          >
-            Sửa
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn xóa?"
-            onConfirm={() => handleDelete(record._id)}
-            okText="Có"
-            cancelText="Không"
-          >
+          {canEditServices() && (
             <Button
-              danger
-              icon={<DeleteOutlined />}
+              type="primary"
+              icon={<EditOutlined />}
               size="small"
+              onClick={() =>
+                navigate(
+                  `${ROUTERS.ADMIN.SERVICES_EDIT.replace(":id", record._id)}`
+                )
+              }
             >
-              Xóa
+              Sửa
             </Button>
-          </Popconfirm>
+          )}
+          {canDeleteServices() && (
+            <Popconfirm
+              title="Bạn có chắc chắn muốn xóa?"
+              onConfirm={() => handleDelete(record._id)}
+              okText="Có"
+              cancelText="Không"
+            >
+              <Button danger icon={<DeleteOutlined />} size="small">
+                Xóa
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -119,8 +128,12 @@ const ServiceListPage: React.FC = () => {
     <div>
       <Breadcrumb
         title="Danh sách dịch vụ"
-        showAddButton={true}
-        onAddClick={() => navigate('/admin/services/add')}
+        showAddButton={canCreateServices()}
+        onAddClick={
+          canCreateServices()
+            ? () => navigate("/admin/services/add")
+            : undefined
+        }
       />
       <Table
         columns={columns}
@@ -130,7 +143,7 @@ const ServiceListPage: React.FC = () => {
         pagination={false}
         scroll={{ x: "max-content" }}
       />
-      
+
       <div style={{ marginTop: 16, textAlign: "center" }}>
         <CustomPagination
           current={pagination.current}

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import apiClient from "../api/axios";
 import { toast } from "react-toastify";
 import { ROUTERS } from "../utils/constant";
-import { UserRole, LoginProvider } from "@/types/enum";
+import { UserRole, LoginProvider, AllPermissions } from "@/types/enum";
 import { getAllPermissions } from "@/utils/permissionConfig";
 import { expandImpliedPermissions } from "@/utils/permissionHelpers";
 
@@ -22,6 +22,10 @@ interface User {
   updatedAt: string;
 }
 
+type PermissionValue =
+  | (typeof AllPermissions)[keyof typeof AllPermissions]
+  | string;
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -40,9 +44,9 @@ interface AuthContextType {
   isAdmin: boolean;
   isEmployee: boolean;
   isUser: boolean;
-  hasPermission: (permission: string) => boolean;
-  hasAnyPermission: (permissions: string[]) => boolean;
-  hasAllPermissions: (permissions: string[]) => boolean;
+  hasPermission: (permission: PermissionValue) => boolean;
+  hasAnyPermission: (permissions: PermissionValue[]) => boolean;
+  hasAllPermissions: (permissions: PermissionValue[]) => boolean;
   canAccessAdminPanel: boolean;
 }
 
@@ -250,32 +254,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Permission helper functions
-  const hasPermission = (permission: string): boolean => {
+  const hasPermission = (permission: PermissionValue): boolean => {
     if (!user) return false;
     if (user.Role === UserRole.ADMIN) return true;
     if (user.Role === UserRole.EMPLOYEE) {
-      return permissions.includes(permission);
+      return permissions.includes(permission as string);
     }
     return false;
   };
 
-  const hasAnyPermission = (requiredPermissions: string[]): boolean => {
+  const hasAnyPermission = (
+    requiredPermissions: PermissionValue[]
+  ): boolean => {
     if (!user) return false;
     if (user.Role === UserRole.ADMIN) return true;
     if (user.Role === UserRole.EMPLOYEE) {
       return requiredPermissions.some((permission) =>
-        permissions.includes(permission)
+        permissions.includes(permission as string)
       );
     }
     return false;
   };
 
-  const hasAllPermissions = (requiredPermissions: string[]): boolean => {
+  const hasAllPermissions = (
+    requiredPermissions: PermissionValue[]
+  ): boolean => {
     if (!user) return false;
     if (user.Role === UserRole.ADMIN) return true;
     if (user.Role === UserRole.EMPLOYEE) {
       return requiredPermissions.every((permission) =>
-        permissions.includes(permission)
+        permissions.includes(permission as string)
       );
     }
     return false;

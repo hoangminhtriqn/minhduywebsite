@@ -1,6 +1,5 @@
-
 import { pricingService } from "@/api/services/admin/pricing";
-import { colorOptions } from "@/utils/constant";
+import { colorOptions, ROUTERS } from "@/utils/constant";
 import {
   Button,
   Card,
@@ -37,7 +36,7 @@ interface PricingFormData {
   features: string[];
   documents: Array<{
     name: string;
-    type: 'pdf' | 'word' | 'excel';
+    type: "pdf" | "word" | "excel";
     size: string;
     url: string;
   }>;
@@ -51,7 +50,6 @@ interface PricingFormProps {
   onSubmit?: (data: PricingFormData) => Promise<void>;
 }
 
-
 const PricingForm: React.FC<PricingFormProps> = ({
   mode,
   pricingId,
@@ -62,27 +60,30 @@ const PricingForm: React.FC<PricingFormProps> = ({
   const isEditing = mode === "edit";
   const [saving, setSaving] = useState(false);
 
-  const fetchPricingData = useCallback(async (pricingId: string) => {
-    try {
-      const pricingData = await pricingService.getPricingById(pricingId);
-      
-      const formData = {
-        title: pricingData.title,
-        description: pricingData.description,
-        features: pricingData.features || [],
-        documents: pricingData.documents || [],
-        color: pricingData.color,
-        status: pricingData.status,
-      };
+  const fetchPricingData = useCallback(
+    async (pricingId: string) => {
+      try {
+        const pricingData = await pricingService.getPricingById(pricingId);
 
-      form.setFieldsValue(formData);
-    } catch {
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể tải dữ liệu bảng giá.",
-      });
-    }
-  }, [form]);
+        const formData = {
+          title: pricingData.title,
+          description: pricingData.description,
+          features: pricingData.features || [],
+          documents: pricingData.documents || [],
+          color: pricingData.color,
+          status: pricingData.status,
+        };
+
+        form.setFieldsValue(formData);
+      } catch {
+        notification.error({
+          message: "Lỗi",
+          description: "Không thể tải dữ liệu bảng giá.",
+        });
+      }
+    },
+    [form]
+  );
 
   useEffect(() => {
     if (isEditing && pricingId) {
@@ -100,19 +101,24 @@ const PricingForm: React.FC<PricingFormProps> = ({
 
     try {
       if (isEditing && pricingId) {
-        await pricingService.updatePricing(pricingId, values as Parameters<typeof pricingService.updatePricing>[1]);
+        await pricingService.updatePricing(
+          pricingId,
+          values as Parameters<typeof pricingService.updatePricing>[1]
+        );
         notification.success({
           message: "Thành công",
           description: "Cập nhật bảng giá thành công.",
         });
       } else {
-        await pricingService.createPricing(values as Parameters<typeof pricingService.createPricing>[0]);
+        await pricingService.createPricing(
+          values as Parameters<typeof pricingService.createPricing>[0]
+        );
         notification.success({
-          message: "Thành công",  
+          message: "Thành công",
           description: "Thêm bảng giá mới thành công.",
         });
       }
-      navigate("/admin/pricing");
+      navigate(ROUTERS.ADMIN.PRICE_LIST);
     } catch (error) {
       const errorMessage =
         (
@@ -156,9 +162,7 @@ const PricingForm: React.FC<PricingFormProps> = ({
           <Form.Item
             name="title"
             label="Tiêu đề"
-            rules={[
-              { required: true, message: "Vui lòng nhập tiêu đề!" },
-            ]}
+            rules={[{ required: true, message: "Vui lòng nhập tiêu đề!" }]}
           >
             <Input placeholder="Nhập tiêu đề bảng giá" size="large" />
           </Form.Item>
@@ -168,9 +172,7 @@ const PricingForm: React.FC<PricingFormProps> = ({
               <Form.Item
                 name="color"
                 label="Màu sắc"
-                rules={[
-                  { required: true, message: "Vui lòng chọn màu sắc!" },
-                ]}
+                rules={[{ required: true, message: "Vui lòng chọn màu sắc!" }]}
               >
                 <Select placeholder="Chọn màu sắc" size="large">
                   {colorOptions.map((color) => (
@@ -200,14 +202,9 @@ const PricingForm: React.FC<PricingFormProps> = ({
           <Form.Item
             name="description"
             label="Mô tả"
-            rules={[
-              { required: true, message: "Vui lòng nhập mô tả!" },
-            ]}
+            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
           >
-            <TextArea
-              rows={4}
-              placeholder="Mô tả chi tiết về bảng giá..."
-            />
+            <TextArea rows={4} placeholder="Mô tả chi tiết về bảng giá..." />
           </Form.Item>
 
           <Title level={4}>
@@ -370,12 +367,12 @@ const PricingForm: React.FC<PricingFormProps> = ({
         <div style={{ marginTop: 24, textAlign: "right" }}>
           <Space size="large">
             <Button
-              onClick={() => navigate("/admin/pricing")}
+              onClick={() => navigate(ROUTERS.ADMIN.PRICE_LIST)}
               size="large"
             >
               Hủy
             </Button>
-            
+
             <Popconfirm
               title="Xác nhận lưu bảng giá?"
               description="Bạn có chắc chắn muốn lưu bảng giá này?"
@@ -385,10 +382,10 @@ const PricingForm: React.FC<PricingFormProps> = ({
             >
               <Button
                 type="primary"
-                htmlType="submit"
                 loading={saving}
                 icon={<SaveOutlined />}
                 size="large"
+                onClick={(e) => e.preventDefault()}
               >
                 {isEditing ? "Cập nhật bảng giá" : "Thêm bảng giá"}
               </Button>
@@ -400,4 +397,4 @@ const PricingForm: React.FC<PricingFormProps> = ({
   );
 };
 
-export default PricingForm; 
+export default PricingForm;

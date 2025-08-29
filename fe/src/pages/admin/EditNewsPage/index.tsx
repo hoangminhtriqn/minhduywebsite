@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Card } from "antd";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import NewsForm from "@/components/admin/NewsForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { NewsPermissions } from "@/types/enum";
 
 const AdminEditNewsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,15 +20,20 @@ const AdminEditNewsPage: React.FC = () => {
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: "24px" }}>
-        <Breadcrumb title="Chỉnh sửa tin tức" />
-      </div>
+    <ProtectedRoute
+      requiredPermissions={[NewsPermissions.EDIT]}
+      requireEmployee={true}
+    >
+      <div>
+        <div style={{ marginBottom: "24px" }}>
+          <Breadcrumb title="Chỉnh sửa tin tức" />
+        </div>
 
-      <Card>
-        <NewsForm mode="edit" newsId={id} />
-      </Card>
-    </div>
+        <Card>
+          <NewsForm mode="edit" newsId={id} />
+        </Card>
+      </div>
+    </ProtectedRoute>
   );
 };
 

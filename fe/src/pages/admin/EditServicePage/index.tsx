@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Card } from "antd";
 import Breadcrumb from "@/components/admin/Breadcrumb";
 import ServiceForm from "@/components/admin/ServiceForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { ServicePermissions } from "@/types/enum";
 
 const EditServicePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,15 +20,20 @@ const EditServicePage: React.FC = () => {
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: "24px" }}>
-        <Breadcrumb title="Chỉnh sửa dịch vụ" />
-      </div>
+    <ProtectedRoute
+      requiredPermissions={[ServicePermissions.EDIT]}
+      requireEmployee={true}
+    >
+      <div>
+        <div style={{ marginBottom: "24px" }}>
+          <Breadcrumb title="Chỉnh sửa dịch vụ" />
+        </div>
 
-      <Card>
-        <ServiceForm mode="edit" serviceId={id} />
-      </Card>
-    </div>
+        <Card>
+          <ServiceForm mode="edit" serviceId={id} />
+        </Card>
+      </div>
+    </ProtectedRoute>
   );
 };
 
