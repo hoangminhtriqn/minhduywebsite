@@ -52,16 +52,6 @@ Add all required environment variables in Render dashboard:
 - Existing data will be cleared and recreated
 - Useful for development and testing environments
 
-### Manual Migration Commands
-
-```bash
-# Normal migration (skips if data exists)
-yarn migrate
-
-# Force migration (clears and recreates all data)
-yarn migrate:force
-```
-
 ## Troubleshooting
 
 ### MongoDB Connection Issues

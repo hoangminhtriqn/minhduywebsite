@@ -13,4 +13,4 @@ RUN yarn install --frozen-lockfile
 EXPOSE 3000
 
 # Start command with migration
-CMD ["sh", "-c", "yarn migrate:force && yarn start"] 
+CMD ["sh", "-c", "yarn start"] 
