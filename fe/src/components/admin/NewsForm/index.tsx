@@ -101,7 +101,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
         const formData = {
           Title: newsData.Title,
           Content: newsData.Content || "",
-          Image: newsData.ImageUrl || "",
           Status: newsData.Status || "active",
         };
 
@@ -151,7 +150,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
       const uploadedFile = await uploadFileToCloudinary(file);
       uploadedFile.file = file; // Store the original file
       setImageFile(uploadedFile);
-      form.setFieldsValue({ Image: uploadedFile.url });
       notification.success({
         message: "Thành công",
         description: "Upload ảnh thành công!",
@@ -170,7 +168,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
   // Remove image
   const removeImage = () => {
     setImageFile(null);
-    form.setFieldsValue({ Image: "" });
   };
 
   // Preview image
@@ -189,13 +186,13 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
       formData.append("Content", values.Content);
       formData.append("Status", values.Status || "active");
 
-      // Add image file if exists
-      if (imageFile && imageFile.file) {
-        // If we have the actual file, append it
-        formData.append("ImageUrl", imageFile.file);
-      } else if (imageFile && imageFile.url) {
-        // If we only have URL (existing image), append the URL
+      // Add image URL if exists - use imageFile state only
+      if (imageFile && imageFile.url) {
+        // Always use the URL from imageFile state
+        console.log("Using imageFile.url:", imageFile.url);
         formData.append("ImageUrl", imageFile.url);
+      } else {
+        console.log("No image URL found. imageFile:", imageFile);
       }
 
       if (isEditing && newsId) {
@@ -264,7 +261,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
             </Title>
 
             <Form.Item
-              name="Image"
               label="Hình ảnh đại diện"
               rules={[
                 {
