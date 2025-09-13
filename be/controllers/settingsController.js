@@ -72,6 +72,7 @@ const getPublicSettings = async (req, res) => {
       email: settings.email,
       workingHours: settings.workingHours,
       logo: settings.logo,
+      serviceOverviewImage: settings.serviceOverviewImage,
       facebook: settings.facebook,
       youtube: settings.youtube,
       tiktok: settings.tiktok,
@@ -241,6 +242,128 @@ const deleteSlide = async (req, res) => {
   }
 };
 
+// Upload service overview image
+const uploadServiceOverviewImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return errorResponse(
+        res,
+        "Không có file được upload",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    // Kiểm tra file size
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (req.file.size > maxSize) {
+      return errorResponse(
+        res,
+        `File quá lớn. Kích thước tối đa: 5MB`,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    // Kiểm tra file format
+    const allowedFormats = ["jpg", "jpeg", "png", "gif", "webp"];
+    const fileFormat = req.file.originalname?.split(".").pop()?.toLowerCase();
+    if (!allowedFormats.includes(fileFormat)) {
+      return errorResponse(
+        res,
+        `Định dạng file không hợp lệ. Chỉ chấp nhận: ${allowedFormats.join(
+          ", "
+        )}`,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    const imageUrl = req.file.path || req.file.url;
+
+    // Cập nhật serviceOverviewImage trong settings
+    let settings = await Setting.findOne();
+    if (!settings) {
+      settings = new Setting();
+    }
+
+    settings.serviceOverviewImage = imageUrl;
+    await settings.save();
+
+    successResponse(
+      res,
+      { imageUrl },
+      "Upload ảnh service overview thành công",
+      HTTP_STATUS.CREATED
+    );
+  } catch (error) {
+    errorResponse(
+      res,
+      "Lỗi khi upload ảnh service overview",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error.message
+    );
+  }
+};
+
+// Upload logo
+const uploadLogo = async (req, res) => {
+  try {
+    if (!req.file) {
+      return errorResponse(
+        res,
+        "Không có file được upload",
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    // Kiểm tra file size
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (req.file.size > maxSize) {
+      return errorResponse(
+        res,
+        `File quá lớn. Kích thước tối đa: 5MB`,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    // Kiểm tra file format
+    const allowedFormats = ["jpg", "jpeg", "png", "gif", "webp"];
+    const fileFormat = req.file.originalname?.split(".").pop()?.toLowerCase();
+    if (!allowedFormats.includes(fileFormat)) {
+      return errorResponse(
+        res,
+        `Định dạng file không hợp lệ. Chỉ chấp nhận: ${allowedFormats.join(
+          ", "
+        )}`,
+        HTTP_STATUS.BAD_REQUEST
+      );
+    }
+
+    const imageUrl = req.file.path || req.file.url;
+
+    // Cập nhật logo trong settings
+    let settings = await Setting.findOne();
+    if (!settings) {
+      settings = new Setting();
+    }
+
+    settings.logo = imageUrl;
+    await settings.save();
+
+    successResponse(
+      res,
+      { imageUrl },
+      "Upload logo thành công",
+      HTTP_STATUS.CREATED
+    );
+  } catch (error) {
+    errorResponse(
+      res,
+      "Lỗi khi upload logo",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error.message
+    );
+  }
+};
+
 module.exports = {
   getSettings,
   updateSettings,
@@ -253,4 +376,6 @@ module.exports = {
   createSlide,
   updateSlide,
   deleteSlide,
+  uploadServiceOverviewImage,
+  uploadLogo,
 };

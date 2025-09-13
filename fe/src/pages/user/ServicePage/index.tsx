@@ -19,7 +19,7 @@ interface Service {
 
 const ServicePage: React.FC = () => {
   const navigate = useNavigate();
-  const { locations } = useSettings();
+  const { locations, settings } = useSettings();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +54,7 @@ const ServicePage: React.FC = () => {
         <div className={styles["service-overview__row"]}>
           <div className={styles["service-overview__col"]}>
             <img
-              src="/images/service_overview.jpg"
+              src={settings?.serviceOverviewImage}
               alt="Minh Duy Service"
               className={styles["service-overview__image"]}
             />

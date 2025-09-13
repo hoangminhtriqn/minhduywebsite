@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
+import { useSettings } from "@/contexts/SettingsContext";
 import { ROUTERS } from "@/utils/constant";
 import styles from "./styles.module.scss"; // Import SCSS module
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
@@ -10,6 +11,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   // Get login function and loading state from AuthContext
   const { login, googleLogin, loading } = useAuth();
+  const { settings } = useSettings();
 
   const [formData, setFormData] = useState({
     UserNameOrEmail: "",
@@ -66,7 +68,7 @@ const LoginPage: React.FC = () => {
         {/* Logo Section */}
         <div className={styles.login__logo}>
           <img
-            src="/images/logo.png"
+            src={settings?.logo}
             alt="Minh Duy Logo"
             className={styles["login__logo-image"]}
           />
@@ -161,7 +163,9 @@ const LoginPage: React.FC = () => {
         </form>
 
         {/* Google Login Button */}
-        <div className={`${styles["login__form-group"]} ${styles["login__google-group"]}`}>
+        <div
+          className={`${styles["login__form-group"]} ${styles["login__google-group"]}`}
+        >
           <button
             type="button"
             className={styles.login__google_button}
@@ -169,7 +173,12 @@ const LoginPage: React.FC = () => {
             disabled={loading}
             aria-label="Đăng nhập bằng Google"
           >
-            <svg className={styles["login__google-icon"]} viewBox="0 0 24 24" width="20" height="20">
+            <svg
+              className={styles["login__google-icon"]}
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+            >
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

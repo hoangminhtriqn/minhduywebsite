@@ -1,4 +1,5 @@
 import React from "react";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface SEOStructuredDataProps {
   type: "organization" | "carDealer" | "breadcrumb" | "product";
@@ -15,6 +16,9 @@ const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({
   type,
   data,
 }) => {
+  const { settings } = useSettings();
+  const logoUrl = settings?.logo;
+
   const getStructuredData = () => {
     switch (type) {
       case "organization":
@@ -23,7 +27,7 @@ const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({
           "@type": "Organization",
           name: "Minh Duy Đà Nẵng",
           url: "https://minduywebsite.com",
-          logo: "https://minduywebsite.com/images/logo.png",
+          logo: logoUrl,
           description:
             "Chuyên thi công, lắp đặt, xử lý các sự cố kỹ thuật: máy vi tính, máy in, camera, máy chiếu, máy photocopy, máy dùng cho văn phòng, máy chấm công, pccc, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời. mạng internet, cáp quang, chống sét, tổng đài điện thoại, server trạm tổng, trung tâm điều khiển server, công nghệ ứng dụng tổng hợp ",
           address: {
@@ -55,7 +59,7 @@ const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({
           description:
             "Chuyên thi công, lắp đặt, xử lý các sự cố kỹ thuật: máy vi tính, máy in, camera, máy chiếu, máy photocopy, máy dùng cho văn phòng, máy chấm công, pccc, báo động, nhà thông minh, điện thông minh, năng lượng mặt trời. mạng internet, cáp quang, chống sét, tổng đài điện thoại, server trạm tổng, trung tâm điều khiển server, công nghệ ứng dụng tổng hợp ",
           url: "https://minduywebsite.com",
-          logo: "https://minduywebsite.com/images/logo.png",
+          logo: logoUrl,
           image: "https://minduywebsite.com/images/minhduy-showroom.jpg",
           address: {
             "@type": "PostalAddress",

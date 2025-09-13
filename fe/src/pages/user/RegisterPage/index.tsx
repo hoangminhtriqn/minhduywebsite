@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
 import { authService } from "@/api/services/user/auth";
 import { toast } from "react-toastify";
+import { useSettings } from "@/contexts/SettingsContext";
 import styles from "./styles.module.scss";
 import { RegisterData } from "@/api/types";
 import { ROUTERS } from "@/utils/constant";
@@ -35,6 +36,7 @@ interface ApiError {
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { settings } = useSettings();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     UserName: "",
@@ -175,7 +177,7 @@ const RegisterPage: React.FC = () => {
         {/* Logo Section */}
         <div className={styles.register__logo}>
           <img
-            src="/images/logo.png"
+            src={settings?.logo}
             alt="Minh Duy Logo"
             className={styles["register__logo-image"]}
           />

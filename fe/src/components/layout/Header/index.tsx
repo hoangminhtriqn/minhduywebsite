@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import {
   MenuOutlined,
   CloseOutlined,
@@ -38,6 +39,7 @@ const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const { theme } = useTheme();
   const { favoritesCount } = useFavorites();
+  const { settings } = useSettings();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isSticky, setIsSticky] = useState(false);
@@ -549,7 +551,7 @@ const Header: React.FC = () => {
         <div style={containerStyle}>
           <div style={rowStyle}>
             <Link to={ROUTERS.USER.HOME} onClick={closeMobileMenu}>
-              <img src="/images/logo.png" alt="Logo" style={logoStyle} />
+              <img src={settings?.logo} alt="Logo" style={logoStyle} />
             </Link>
 
             <nav style={navStyle}>

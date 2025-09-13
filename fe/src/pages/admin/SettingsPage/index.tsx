@@ -12,9 +12,11 @@ import {
   createSlide,
   updateSlide,
   deleteSlide,
+  uploadServiceOverviewImage,
+  uploadLogo,
 } from "@/api/services/admin/settings";
 import Breadcrumb from "@/components/admin/Breadcrumb";
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -24,6 +26,8 @@ import {
   Tabs,
   Space,
   Popconfirm,
+  Upload,
+  Image,
 } from "antd";
 import { getEmailRules, getPhoneRules } from "@/utils/validation";
 import React, { useEffect, useState, useCallback } from "react";
@@ -54,6 +58,8 @@ const SettingsPage: React.FC = () => {
     editingIndex: number | null;
     values: Partial<Slide>;
   }>({ open: false, editingIndex: null, values: {} });
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
 
   const fetchSettings = useCallback(async () => {
     try {
@@ -248,6 +254,38 @@ const SettingsPage: React.FC = () => {
     }));
   };
 
+  // Upload service overview image
+  const handleServiceOverviewImageUpload = async (file: File) => {
+    try {
+      setUploadingImage(true);
+      await uploadServiceOverviewImage(file);
+      message.success("Upload ảnh service overview thành công");
+      await fetchSettings(); // Refresh settings để lấy ảnh mới
+      return false; // Prevent default upload behavior
+    } catch {
+      message.error("Lỗi khi upload ảnh service overview");
+      return false;
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  // Upload logo
+  const handleLogoUpload = async (file: File) => {
+    try {
+      setUploadingLogo(true);
+      await uploadLogo(file);
+      message.success("Upload logo thành công");
+      await fetchSettings(); // Refresh settings để lấy logo mới
+      return false; // Prevent default upload behavior
+    } catch {
+      message.error("Lỗi khi upload logo");
+      return false;
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
   // Khi chuyển tab, nếu là tab 'locations' thì fetchLocations, nếu là 'slides' thì fetchSlides
   const handleTabChange = (key: string) => {
     if (key === "locations") {
@@ -338,6 +376,83 @@ const SettingsPage: React.FC = () => {
               >
                 <Input.TextArea placeholder="Nhập mô tả công ty" rows={3} />
               </Form.Item>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                  marginTop: "16px",
+                }}
+              >
+                <Card title="Logo công ty">
+                  <div style={{ marginBottom: 16 }}>
+                    <p>Logo này sẽ hiển thị trên header của website.</p>
+                    {settings?.logo && (
+                      <div style={{ marginBottom: 16 }}>
+                        <Image
+                          src={settings.logo}
+                          alt="Logo công ty"
+                          style={{
+                            maxWidth: "200px",
+                            maxHeight: "100px",
+                            objectFit: "contain",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </div>
+                    )}
+                    <Upload
+                      beforeUpload={handleLogoUpload}
+                      showUploadList={false}
+                      accept="image/*"
+                    >
+                      <Button
+                        icon={<UploadOutlined />}
+                        loading={uploadingLogo}
+                        type="primary"
+                      >
+                        {settings?.logo ? "Thay đổi logo" : "Upload logo"}
+                      </Button>
+                    </Upload>
+                  </div>
+                </Card>
+
+                <Card title="Hình ảnh dịch vụ">
+                  <div style={{ marginBottom: 16 }}>
+                    <p>Ảnh này sẽ hiển thị trên trang dịch vụ của website.</p>
+                    {settings?.serviceOverviewImage && (
+                      <div style={{ marginBottom: 16 }}>
+                        <Image
+                          src={settings.serviceOverviewImage}
+                          alt="Dịch vụ tổng quan"
+                          style={{
+                            maxWidth: "200px",
+                            maxHeight: "100px",
+                            objectFit: "cover",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </div>
+                    )}
+                    <Upload
+                      beforeUpload={handleServiceOverviewImageUpload}
+                      showUploadList={false}
+                      accept="image/*"
+                    >
+                      <Button
+                        icon={<UploadOutlined />}
+                        loading={uploadingImage}
+                        type="primary"
+                      >
+                        {settings?.serviceOverviewImage
+                          ? "Thay đổi ảnh"
+                          : "Upload ảnh"}
+                      </Button>
+                    </Upload>
+                  </div>
+                </Card>
+              </div>
 
               <div
                 style={{

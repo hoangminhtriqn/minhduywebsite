@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import { getBookings } from "@/api/services/admin/bookings";
 import ThemeController from "@/components/ThemeController";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import {
   BookingPermissions,
   CategoryPermissions,
@@ -64,6 +65,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const { user, logout, hasAnyPermission, isAdmin } = useAuth();
+  const { settings } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileState, setIsMobileState] = useState(isMobile());
@@ -304,7 +306,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               window.open(ROUTERS.USER.HOME, "_blank");
             }}
           >
-            <img src="/images/logo.png" alt="Logo" className={styles.logoImg} />
+            <img src={settings?.logo} alt="Logo" className={styles.logoImg} />
             {!collapsed && <span className={styles.logoText}>Minh Duy</span>}
           </div>
           <Menu
