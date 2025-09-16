@@ -53,7 +53,9 @@ const SettingsPage: React.FC = () => {
     open: boolean;
     editingIndex: number | null;
     values: Partial<Slide>;
-  }>({ open: false, editingIndex: null, values: {} });
+    errors?: { src?: string; alt?: string };
+  }>({ open: false, editingIndex: null, values: {}, errors: {} });
+  const [slideModalKey, setSlideModalKey] = useState<number>(0);
 
   const fetchSettings = useCallback(async () => {
     try {
@@ -197,7 +199,9 @@ const SettingsPage: React.FC = () => {
         order: slides.length + 1,
         isActive: true,
       },
+      errors: {},
     });
+    setSlideModalKey(Date.now());
   };
 
   const handleDeleteSlide = async (index: number) => {
@@ -216,6 +220,17 @@ const SettingsPage: React.FC = () => {
 
   const handleSlideModalOk = async () => {
     const { editingIndex, values } = slideModal;
+    const nextErrors: { src?: string; alt?: string } = {};
+    if (!values.src || (typeof values.src === "string" && values.src.trim() === "")) {
+      nextErrors.src = "Vui lòng chọn hình ảnh slide";
+    }
+    if (!values.alt || (typeof values.alt === "string" && values.alt.trim() === "")) {
+      nextErrors.alt = "Vui lòng nhập mô tả ảnh (Alt text)";
+    }
+    if (nextErrors.src || nextErrors.alt) {
+      setSlideModal((prev) => ({ ...prev, errors: nextErrors }));
+      return;
+    }
     setLoading(true);
     try {
       if (editingIndex !== null && slides[editingIndex]._id) {
@@ -226,7 +241,8 @@ const SettingsPage: React.FC = () => {
         message.success("Thêm slide thành công");
       }
       await fetchSlides();
-      setSlideModal({ open: false, editingIndex: null, values: {} });
+      setSlideModal({ open: false, editingIndex: null, values: {}, errors: {} });
+      setSlideModalKey(Date.now());
     } catch {
       message.error("Lỗi khi lưu slide");
     } finally {
@@ -242,10 +258,16 @@ const SettingsPage: React.FC = () => {
     field: keyof Slide,
     value: string | number | boolean
   ) => {
-    setSlideModal((prev) => ({
-      ...prev,
-      values: { ...prev.values, [field]: value },
-    }));
+    setSlideModal((prev) => {
+      const nextErrors = { ...(prev.errors || {}) } as { src?: string; alt?: string };
+      if (field === "src") delete nextErrors.src;
+      if (field === "alt") delete nextErrors.alt;
+      return {
+        ...prev,
+        values: { ...prev.values, [field]: value },
+        errors: nextErrors,
+      };
+    });
   };
 
   // Khi chuyển tab, nếu là tab 'locations' thì fetchLocations, nếu là 'slides' thì fetchSlides
@@ -600,9 +622,11 @@ const SettingsPage: React.FC = () => {
               )}
             </div>
             <SlideModal
+              key={slideModalKey}
               open={slideModal.open}
               editingIndex={slideModal.editingIndex}
               values={slideModal.values}
+              errors={slideModal.errors || {}}
               onOk={handleSlideModalOk}
               onCancel={handleSlideModalCancel}
               onFieldChange={handleSlideFieldChange}

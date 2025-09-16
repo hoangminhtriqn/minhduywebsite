@@ -4,23 +4,25 @@ import React from "react";
 import ImageUpload from "./ImageUpload";
 import styles from "./styles.module.scss";
 
-interface SlideModalProps {
+export interface SlideModalProps {
   open: boolean;
   editingIndex: number | null;
   values: Partial<Slide>;
+  errors?: { src?: string; alt?: string };
   onOk: () => void;
   onCancel: () => void;
   onFieldChange: (field: keyof Slide, value: string | number | boolean) => void;
 }
 
-const SlideModal: React.FC<SlideModalProps> = ({
+function SlideModal({
   open,
   editingIndex,
   values,
+  errors,
   onOk,
   onCancel,
   onFieldChange,
-}) => {
+}: SlideModalProps) {
   return (
     <Modal
       title={
@@ -35,7 +37,12 @@ const SlideModal: React.FC<SlideModalProps> = ({
       cancelText="Hủy"
     >
       <Form layout="vertical" className={styles.modalForm}>
-        <Form.Item label="Hình ảnh slide" required>
+        <Form.Item
+          label="Hình ảnh slide"
+          required
+          validateStatus={errors?.src ? "error" : undefined}
+          help={errors?.src}
+        >
           <ImageUpload
             value={values.src}
             onChange={(url) => onFieldChange("src", url)}
@@ -43,7 +50,13 @@ const SlideModal: React.FC<SlideModalProps> = ({
           />
         </Form.Item>
         <div style={{ display: "flex", gap: "16px", alignItems: "end" }}>
-          <Form.Item label="Mô tả ảnh (Alt text)" required style={{ flex: 1 }}>
+          <Form.Item
+            label="Mô tả ảnh (Alt text)"
+            required
+            style={{ flex: 1 }}
+            validateStatus={errors?.alt ? "error" : undefined}
+            help={errors?.alt}
+          >
             <Input
               value={values.alt}
               onChange={(e) =>
@@ -74,6 +87,6 @@ const SlideModal: React.FC<SlideModalProps> = ({
       </Form>
     </Modal>
   );
-};
+}
 
 export default SlideModal;
