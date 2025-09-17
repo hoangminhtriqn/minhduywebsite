@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getNewsEventById, NewsEvent } from "@/api/services/user/newsEvents";
+import { getNewsEventById, incrementNewsEventViewCount, NewsEvent } from "@/api/services/user/newsEvents";
 import PageBanner from "@/components/PageBanner";
 import styles from "./styles.module.scss";
 
@@ -16,8 +16,17 @@ const NewsDetailPage: React.FC = () => {
       setError(null);
       try {
         if (id) {
+          // Fetch news data
           const data = await getNewsEventById(id);
           setNews(data);
+          
+          // Increment view count
+          try {
+            await incrementNewsEventViewCount(id);
+          } catch (viewError) {
+            // Don't show error for view count increment failure
+            console.warn("Failed to increment view count:", viewError);
+          }
         } else {
           setError("Không tìm thấy tin tức.");
         }
@@ -60,12 +69,27 @@ const NewsDetailPage: React.FC = () => {
 
   return (
     <>
-      <PageBanner title={"Nội dung tin tức"} />
+      <PageBanner title={news.Title} />
       <div className={styles.newsDetailPage}>
         <div className={styles.newsDetailContent}>
+          {/* News Image */}
+          {news.ImageUrl && (
+            <div className={styles.newsImageContainer}>
+              <img 
+                src={news.ImageUrl} 
+                alt={news.Title}
+                className={styles.newsImage}
+              />
+            </div>
+          )}
+          
+          {/* News Meta */}
           <div className={styles.newsMeta}>
-            Ngày đăng: {formatDate(news.PublishDate || news.createdAt)}
+            <span>Ngày đăng: {formatDate(news.PublishDate || news.createdAt)}</span>
+            <span>Lượt xem: {news.viewCount || 0}</span>
           </div>
+          
+          {/* News Content */}
           <div
             className={styles.newsContent}
             dangerouslySetInnerHTML={{ __html: news.Content }}

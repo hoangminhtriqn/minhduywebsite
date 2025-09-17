@@ -83,9 +83,12 @@ const PopularNews: React.FC = () => {
               </div>
               <div className={styles.newsContent}>
                 <h3 className={styles.newsTitle}>{newsItem.Title}</h3>
-                <p className={styles.newsExcerpt}>
-                  {newsItem.Content?.substring(0, 150)}...
-                </p>
+                <div 
+                  className={styles.newsExcerpt}
+                  dangerouslySetInnerHTML={{
+                    __html: newsItem.Content || ""
+                  }}
+                />
                 <div className={styles.newsMeta}>
                   <span className={styles.newsDate}>
                     {newsItem.PublishDate

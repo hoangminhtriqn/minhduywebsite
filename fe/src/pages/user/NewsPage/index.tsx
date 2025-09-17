@@ -53,12 +53,7 @@ const NewsPage: React.FC = () => {
     }
   };
 
-  const truncateContent = (content: string, maxLength: number = 150) => {
-    // Remove HTML tags for truncation
-    const plainText = content.replace(/<[^>]*>/g, "");
-    if (plainText.length <= maxLength) return plainText;
-    return plainText.substring(0, maxLength) + "...";
-  };
+  // Remove truncateContent function since we'll use CSS line-clamp instead
 
   if (loading) {
     return (
@@ -113,6 +108,7 @@ const NewsPage: React.FC = () => {
                   <p className="news-item__meta">
                     Ngày đăng:{" "}
                     {formatDate(newsEvent.PublishDate || newsEvent.createdAt)} |
+                    Lượt xem: {newsEvent.viewCount || 0} |
                     Trạng thái:{" "}
                     {newsEvent.Status === "published"
                       ? "Đã xuất bản"
@@ -126,9 +122,12 @@ const NewsPage: React.FC = () => {
                               ? "Đã lưu trữ"
                               : "Bản nháp"}
                   </p>
-                  <p className="news-item__summary">
-                    {truncateContent(newsEvent.Content)}
-                  </p>
+                  <div 
+                    className="news-item__summary"
+                    dangerouslySetInnerHTML={{
+                      __html: newsEvent.Content || ""
+                    }}
+                  />
                   <button
                     className="news-item__btn-more"
                     onClick={() =>

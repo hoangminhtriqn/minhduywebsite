@@ -70,4 +70,10 @@ export const updateNewsEvent = async (id: string, newsEventData: Partial<NewsEve
 // Delete news event (Admin only)
 export const deleteNewsEvent = async (id: string): Promise<void> => {
   await api.delete(`${API_ENDPOINTS.NEWS_EVENTS}/${id}`);
+};
+
+// Increment view count for a news event
+export const incrementNewsEventViewCount = async (id: string): Promise<NewsEvent> => {
+  const response = await api.post(`${API_ENDPOINTS.NEWS_EVENTS}/${id}/view`);
+  return response.data.data;
 }; 
