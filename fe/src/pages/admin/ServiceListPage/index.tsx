@@ -4,7 +4,7 @@ import CustomPagination from "@/components/CustomPagination";
 import { Service } from "@/types";
 import { ROUTERS } from "@/utils/constant";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, message, Popconfirm, Space, Table } from "antd";
+import { Button, message, Popconfirm, Space, Table, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usePermissions from "@/hooks/usePermissions";
@@ -85,6 +85,22 @@ const ServiceListPage: React.FC = () => {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",
+      width: 500,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (description: string) => (
+        <Tooltip placement="topLeft" title={description}>
+          <div style={{ 
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '500px'
+          }}>
+            {description}
+          </div>
+        </Tooltip>
+      ),
     },
     {
       title: "Thao tác",
