@@ -7,6 +7,7 @@ export interface PublicSettings {
   email: string;
   workingHours: string;
   logo: string;
+  serviceOverviewImage: string;
   facebook: string;
   youtube: string;
   tiktok: string;

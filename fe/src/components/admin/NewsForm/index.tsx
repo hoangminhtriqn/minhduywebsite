@@ -101,15 +101,13 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
         const formData = {
           Title: newsData.Title,
           Content: newsData.Content || "",
-          Image: newsData.ImageUrl || "",
           Status: newsData.Status || "active",
         };
 
         // Điền dữ liệu vào form
         form.setFieldsValue(formData);
         setFormData(formData);
-      } catch (error) {
-        console.error("Error fetching news data:", error);
+      } catch {
         notification.error({
           message: "Lỗi",
           description: "Không thể tải dữ liệu tin tức.",
@@ -138,8 +136,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
         url: result.url,
         public_id: result.public_id,
       };
-    } catch (error) {
-      console.error("Error uploading file:", error);
+    } catch {
       throw new Error("Upload failed");
     }
   };
@@ -151,13 +148,11 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
       const uploadedFile = await uploadFileToCloudinary(file);
       uploadedFile.file = file; // Store the original file
       setImageFile(uploadedFile);
-      form.setFieldsValue({ Image: uploadedFile.url });
       notification.success({
         message: "Thành công",
         description: "Upload ảnh thành công!",
       });
-    } catch (error) {
-      console.error("Image upload error:", error);
+    } catch {
       notification.error({
         message: "Lỗi",
         description: "Upload ảnh thất bại!",
@@ -170,7 +165,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
   // Remove image
   const removeImage = () => {
     setImageFile(null);
-    form.setFieldsValue({ Image: "" });
   };
 
   // Preview image
@@ -189,12 +183,9 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
       formData.append("Content", values.Content);
       formData.append("Status", values.Status || "active");
 
-      // Add image file if exists
-      if (imageFile && imageFile.file) {
-        // If we have the actual file, append it
-        formData.append("ImageUrl", imageFile.file);
-      } else if (imageFile && imageFile.url) {
-        // If we only have URL (existing image), append the URL
+      // Add image URL if exists - use imageFile state only
+      if (imageFile && imageFile.url) {
+        // Always use the URL from imageFile state
         formData.append("ImageUrl", imageFile.url);
       }
 
@@ -213,7 +204,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
       }
       navigate("/admin/news");
     } catch (error: unknown) {
-      console.error("Error submitting news form:", error);
       const apiError = error as ApiError;
       notification.error({
         message: "Lỗi",
@@ -264,7 +254,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ mode, newsId }) => {
             </Title>
 
             <Form.Item
-              name="Image"
               label="Hình ảnh đại diện"
               rules={[
                 {

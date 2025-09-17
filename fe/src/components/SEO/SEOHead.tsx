@@ -1,5 +1,6 @@
 import React from "react";
 import SEOStructuredData from "../SEOStructuredData";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface SEOHeadProps {
   title: string;
@@ -25,10 +26,12 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   description,
   keywords,
   canonical,
-  ogImage = "/images/logo.png",
+  ogImage,
   ogType = "website",
   structuredData = [],
 }) => {
+  const { settings } = useSettings();
+  const defaultOgImage = settings?.logo;
   return (
     <>
       {/* Primary Meta Tags */}
@@ -52,7 +55,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImage} />
+      <meta property="og:image" content={ogImage || defaultOgImage} />
       <meta property="og:site_name" content="Minh Duy Đà Nẵng" />
       <meta property="og:locale" content="vi_VN" />
 
@@ -64,7 +67,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       />
       <meta property="twitter:title" content={title} />
       <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={ogImage} />
+      <meta property="twitter:image" content={ogImage || defaultOgImage} />
 
       {/* Additional SEO Meta Tags */}
       <meta name="geo.region" content="VN-60" />

@@ -1,3 +1,5 @@
+import { useSettings } from "@/contexts/SettingsContext";
+
 // Page keys enum to avoid hardcoding strings
 export enum PageKeys {
   HOME = 'home',
@@ -27,6 +29,19 @@ export interface SEOConfig {
     data: Record<string, any>;
   }[];
 }
+
+// Function to get logo from settings
+export const getLogoFromSettings = (): string => {
+  // This will be called from components that have access to settings context
+  return "/images/logo.png"; // Default fallback
+};
+
+// Hook to get SEO config with logo from settings
+export const useSEOConfig = (pageKey: PageKeys, dynamicData?: Record<string, string>) => {
+  const { settings } = useSettings();
+  const logoUrl = settings?.logo;
+  return getSEOConfig(pageKey, dynamicData, logoUrl);
+};
 
 export const seoConfigs: Record<PageKeys, SEOConfig> = {
   // Homepage SEO
@@ -177,7 +192,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Đăng nhập vào tài khoản Minh Duy để quản lý thông tin cá nhân, đơn hàng và dịch vụ kỹ thuật.",
     keywords: "đăng nhập, tài khoản Minh Duy, quản lý đơn hàng, Công Ty TNHH MTV Công Nghệ Ứng Dụng",
     canonical: "https://minduywebsite.com/login",
-    ogImage: "/images/logo.png",
+    ogImage: getLogoFromSettings(),
     structuredData: []
   },
 
@@ -187,7 +202,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Đăng ký tài khoản tại Minh Duy để nhận thông tin khuyến mãi, tư vấn kỹ thuật và quản lý dịch vụ công nghệ.",
     keywords: "đăng ký, tài khoản Minh Duy, thông tin khuyến mãi, Công Ty TNHH MTV Công Nghệ Ứng Dụng",
     canonical: "https://minduywebsite.com/register",
-    ogImage: "/images/logo.png",
+    ogImage: getLogoFromSettings(),
     structuredData: []
   },
 
@@ -197,7 +212,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Quản lý thông tin cá nhân, đơn hàng, lịch sử dịch vụ kỹ thuật tại Minh Duy.",
     keywords: "tài khoản cá nhân, quản lý đơn hàng, lịch sử dịch vụ, Minh Duy, Công Ty TNHH MTV Công Nghệ Ứng Dụng",
     canonical: "https://minduywebsite.com/profile",
-    ogImage: "/images/logo.png",
+    ogImage: getLogoFromSettings(),
     structuredData: [
       {
         type: 'breadcrumb',
@@ -215,7 +230,7 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
     description: "Danh sách sản phẩm yêu thích của bạn tại Minh Duy. Lưu trữ và so sánh các sản phẩm công nghệ.",
     keywords: "sản phẩm yêu thích, danh sách yêu thích, so sánh sản phẩm, Minh Duy, Công Ty TNHH MTV Công Nghệ Ứng Dụng",
     canonical: "https://minduywebsite.com/favorites",
-    ogImage: "/images/logo.png",
+    ogImage: getLogoFromSettings(),
     structuredData: [
       {
         type: 'breadcrumb',
@@ -229,14 +244,17 @@ export const seoConfigs: Record<PageKeys, SEOConfig> = {
 };
 
 // Helper function to get SEO config for a specific page
-export const getSEOConfig = (pageKey: PageKeys, dynamicData?: Record<string, string>): SEOConfig => {
+export const getSEOConfig = (pageKey: PageKeys, dynamicData?: Record<string, string>, logoUrl?: string): SEOConfig => {
   const config = seoConfigs[pageKey];
   if (!config) {
     return seoConfigs[PageKeys.HOME]; // Fallback to home config
   }
 
+  // Override ogImage with logo from settings if provided
+  const configWithLogo = logoUrl ? { ...config, ogImage: logoUrl } : config;
+
   if (!dynamicData) {
-    return config;
+    return configWithLogo;
   }
 
   // Replace dynamic placeholders with actual data
@@ -249,12 +267,12 @@ export const getSEOConfig = (pageKey: PageKeys, dynamicData?: Record<string, str
   };
 
   return {
-    ...config,
-    title: replacePlaceholders(config.title),
-    description: replacePlaceholders(config.description),
-    keywords: replacePlaceholders(config.keywords),
-    canonical: replacePlaceholders(config.canonical || ''),
-    structuredData: config.structuredData?.map(data => ({
+    ...configWithLogo,
+    title: replacePlaceholders(configWithLogo.title),
+    description: replacePlaceholders(configWithLogo.description),
+    keywords: replacePlaceholders(configWithLogo.keywords),
+    canonical: replacePlaceholders(configWithLogo.canonical || ''),
+    structuredData: configWithLogo.structuredData?.map(data => ({
       ...data,
       data: {
         ...data.data,

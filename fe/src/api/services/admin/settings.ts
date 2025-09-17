@@ -26,6 +26,7 @@ export interface Settings {
   email: string;
   workingHours: string;
   logo: string;
+  serviceOverviewImage: string;
   facebook: string;
   youtube: string;
   tiktok: string;
@@ -115,4 +116,40 @@ export const updateSlide = async (id: string, data: Partial<Slide>): Promise<Sli
 export const deleteSlide = async (id: string): Promise<Slide> => {
   const res = await api.delete(`${API_ENDPOINTS.SETTINGS_SLIDES}/${id}`);
   return res.data.data;
+};
+
+// Upload service overview image
+export const uploadServiceOverviewImage = async (file: File): Promise<{ imageUrl: string }> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await api.post(`${API_ENDPOINTS.SETTINGS}/upload-service-overview`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Error uploading service overview image:', error);
+    throw error;
+  }
+};
+
+// Upload logo
+export const uploadLogo = async (file: File): Promise<{ imageUrl: string }> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await api.post(`${API_ENDPOINTS.SETTINGS}/upload-logo`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Error uploading logo:', error);
+    throw error;
+  }
 }; 

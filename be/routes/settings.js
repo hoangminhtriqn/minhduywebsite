@@ -12,6 +12,8 @@ const {
   createSlide,
   updateSlide,
   deleteSlide,
+  uploadServiceOverviewImage,
+  uploadLogo,
 } = require("../controllers/settingsController");
 const { auth, adminAuth } = require("../middleware/auth");
 const {
@@ -19,6 +21,7 @@ const {
   requireAdminPanelAccess,
 } = require("../middleware/permissionMiddleware");
 const { USER_ROLES } = require("../models/User");
+const { uploadWithErrorHandling } = require("../config/cloudinary");
 
 // Public route để lấy settings cho frontend
 router.get("/public", getPublicSettings);
@@ -26,6 +29,20 @@ router.get("/public", getPublicSettings);
 // Admin routes (cần authentication và permissions)
 router.get("/", auth, requirePermissions("settings.view"), getSettings);
 router.put("/", auth, requirePermissions("settings.update"), updateSettings);
+router.post(
+  "/upload-service-overview",
+  auth,
+  requirePermissions("settings.update"),
+  uploadWithErrorHandling,
+  uploadServiceOverviewImage
+);
+router.post(
+  "/upload-logo",
+  auth,
+  requirePermissions("settings.update"),
+  uploadWithErrorHandling,
+  uploadLogo
+);
 
 // Địa chỉ (locations) - quản trị
 router.get(

@@ -23,6 +23,10 @@ const settingSchema = new mongoose.Schema(
       type: String,
       default: "/images/logo.png",
     },
+    serviceOverviewImage: {
+      type: String,
+      default: "/images/service_overview.jpg",
+    },
 
     // Mạng xã hội
     facebook: {
