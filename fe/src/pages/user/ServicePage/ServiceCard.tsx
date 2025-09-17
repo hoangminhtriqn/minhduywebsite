@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 
 interface ServiceCardProps {
@@ -14,6 +14,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   description,
   isFeatured = false,
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <div
       className={`${styles["service-card"]} ${isFeatured ? styles.featured : ""}`}
@@ -22,7 +24,20 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <div className={styles["service-card__icon"]}>
           <img src={icon} alt={title} />
         </div>
-        <h3 className={styles["service-card__title"]}>{title}</h3>
+        <div 
+          className={styles["service-card__title-container"]}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <h3 className={styles["service-card__title"]}>
+            {title}
+          </h3>
+          {showTooltip && (
+            <div className={styles["service-card__tooltip"]}>
+              {title}
+            </div>
+          )}
+        </div>
       </div>
       <p className={styles["service-card__description"]}>{description}</p>
     </div>
