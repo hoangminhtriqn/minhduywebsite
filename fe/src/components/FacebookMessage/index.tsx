@@ -40,7 +40,7 @@ const FacebookMessage: React.FC<FacebookMessageProps> = ({
         className={className}
         style={{
           position: "fixed",
-          bottom: "140px", // Đặt phía trên ZaloContact
+          bottom: "230px", // trên ZaloContact
           right: "20px",
           zIndex: 1000,
           width: "50px",

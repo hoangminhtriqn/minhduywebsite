@@ -70,9 +70,9 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
           className={className}
           style={{
             position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            zIndex: 1000,
+            right: "20px", // canh phải cùng cột
+            bottom: "20px", // xuống dưới cùng cột
+            zIndex: 900, // thấp hơn các nút liên hệ
             width: "50px",
             height: "50px",
             fontSize: "18px",

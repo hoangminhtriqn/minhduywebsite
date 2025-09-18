@@ -37,7 +37,7 @@ const ZaloContact: React.FC<ZaloContactProps> = ({
         className={className}
         style={{
           position: "fixed",
-          bottom: "80px", // Đặt ở giữa
+          bottom: "160px", // ngay trên PhoneContact
           right: "20px",
           zIndex: 1000,
           width: "50px",

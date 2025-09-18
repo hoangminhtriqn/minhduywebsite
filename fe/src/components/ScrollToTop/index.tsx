@@ -51,7 +51,7 @@ const ScrollToTop: React.FC<ScrollToTopProps> = ({
         className={className}
         style={{
           position: "fixed",
-          bottom: "200px", // Đặt lên đầu (cao nhất)
+          bottom: "300px", // cao nhất trong cột
           right: "20px",
           zIndex: 1000,
           width: "50px",
