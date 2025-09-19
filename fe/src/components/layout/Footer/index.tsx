@@ -343,9 +343,15 @@ const Footer: React.FC = () => {
               />
               <div>
                 <span className={styles.contactLabel}>Giờ làm việc:</span>
-                <span className={styles.contactValue}>
-                  {settings?.workingHours || "8:00 - 18:00 (Thứ 2 - Thứ 7)"}
+            {(() => {
+              const raw = settings?.workingHours || "";
+              const normalized = raw.replaceAll("\\n", "\n");
+              return (
+                <span className={styles.contactValue} style={{ whiteSpace: "pre-line" }}>
+                  {normalized}
                 </span>
+              );
+            })()}
               </div>
             </div>
           </div>
