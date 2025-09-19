@@ -167,7 +167,7 @@ const ThemeWrapper: React.FC<ThemeWrapperProps> = ({
           element.remove();
         }
       };
-    } catch (error) {
+    } catch {
       // Silent fail
     }
   }, [theme, wrapperId]);

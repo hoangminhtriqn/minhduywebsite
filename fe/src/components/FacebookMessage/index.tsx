@@ -42,7 +42,7 @@ const FacebookMessage: React.FC<FacebookMessageProps> = ({
           position: "fixed",
           bottom: "230px", // trên ZaloContact
           right: "20px",
-          zIndex: 1000,
+          zIndex: 1000, // cùng z-index với các nút khác
           width: "50px",
           height: "50px",
           cursor: "pointer",

@@ -72,7 +72,7 @@ const ThemeController: React.FC<ThemeControllerProps> = ({ className }) => {
             position: "fixed",
             right: "20px", // canh phải cùng cột
             bottom: "20px", // xuống dưới cùng cột
-            zIndex: 900, // thấp hơn các nút liên hệ
+            zIndex: 1000, // cùng z-index với các nút khác
             width: "50px",
             height: "50px",
             fontSize: "18px",
