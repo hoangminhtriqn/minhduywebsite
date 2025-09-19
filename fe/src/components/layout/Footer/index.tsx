@@ -292,9 +292,27 @@ const Footer: React.FC = () => {
               <PhoneOutlined className={styles.footerIcon} style={iconStyle} />
               <div>
                 <span className={styles.contactLabel}>Hotline:</span>
-                <span className={styles.contactValue}>
-                  {settings?.phone || "1800 8123"}
-                </span>
+                {(() => {
+                  // Hiển thị tất cả số, số chính đứng đầu; cùng một style
+                  const phones = (settings?.phones && settings.phones.length > 0)
+                    ? settings.phones
+                    : (settings?.phone ? [settings.phone] : []);
+                  if (phones.length === 0) return null;
+                  let idx = typeof settings?.primaryPhoneIndex === 'number' ? (settings.primaryPhoneIndex as number) : -1;
+                  if (idx < 0 || idx >= phones.length) {
+                    if (settings?.phone) {
+                      const found = phones.indexOf(settings.phone);
+                      if (found >= 0) idx = found;
+                    }
+                  }
+                  const safeIdx = Math.max(0, Math.min(idx >= 0 ? idx : 0, phones.length - 1));
+                  const ordered = [phones[safeIdx], ...phones.filter((_, i) => i !== safeIdx)];
+                  return ordered.map((p, i) => (
+                    <div key={`${p}-${i}`} className={styles.contactValue} style={{ display: "block", width: "100%" }}>
+                      {p}
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
             <div className={styles.footerContactItem} style={contactItemStyle}>

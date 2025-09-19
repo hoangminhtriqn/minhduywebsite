@@ -62,13 +62,25 @@ const SettingsPage: React.FC = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [slideModalKey, setSlideModalKey] = useState(0);
+  const submittingRef = React.useRef(false);
+  const initializingRef = React.useRef(false);
+  // const watchedPhones = Form.useWatch('phones', form) as string[] | undefined;
 
   const fetchSettings = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getSettings();
       setSettings(data);
-      form.setFieldsValue(data);
+      // Chuẩn hóa phones và primaryPhoneIndex cho form
+      const phones = Array.isArray(data.phones) ? data.phones : [];
+      const primaryPhoneIndex = (typeof data.primaryPhoneIndex === 'number'
+        && data.primaryPhoneIndex >= 0
+        && data.primaryPhoneIndex < phones.length)
+        ? data.primaryPhoneIndex
+        : 0;
+      initializingRef.current = true;
+      form.setFieldsValue({ ...data, phones, primaryPhoneIndex: String(primaryPhoneIndex) });
+      initializingRef.current = false;
     } catch {
       message.error("Lỗi khi tải cài đặt");
     } finally {
@@ -79,6 +91,8 @@ const SettingsPage: React.FC = () => {
   useEffect(() => {
     fetchSettings();
   }, [fetchSettings]);
+
+  // (Removed) Auto-correct effect for primaryPhoneIndex to avoid overriding selected value
 
   const fetchLocations = async () => {
     try {
@@ -94,14 +108,32 @@ const SettingsPage: React.FC = () => {
 
   const handleSubmit = async (values: Partial<Settings>) => {
     try {
+      if (submittingRef.current || loading) return;
+      submittingRef.current = true;
       setLoading(true);
-      await updateSettings(values);
+      // Chuẩn hóa dữ liệu phones gửi lên backend
+      const phones = Array.isArray(values.phones)
+        ? values.phones.map((p) => (typeof p === 'string' ? p.trim() : '')).filter((p) => p)
+        : [];
+      const pickedIndex = Number(form.getFieldValue('primaryPhoneIndex') as number | string | undefined);
+      const primaryPhoneIndex = !Number.isNaN(pickedIndex) && pickedIndex >= 0 && pickedIndex < phones.length
+        ? pickedIndex
+        : 0;
+      const base: Record<string, unknown> = { ...(values as Record<string, unknown>) };
+      // Legacy fields removed project-wide; no need to strip here
+      const payload: Partial<Settings> = {
+        ...(base as Partial<Settings>),
+        phones,
+        primaryPhoneIndex,
+      };
+      await updateSettings(payload);
       message.success("Cập nhật cài đặt thành công");
       await fetchSettings();
     } catch {
       message.error("Lỗi khi cập nhật cài đặt");
     } finally {
       setLoading(false);
+      submittingRef.current = false;
     }
   };
 
@@ -338,8 +370,7 @@ const SettingsPage: React.FC = () => {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "16px",
+                  gridTemplateColumns: "1fr",
                 }}
               >
                 <Form.Item
@@ -355,13 +386,51 @@ const SettingsPage: React.FC = () => {
                   <Input placeholder="Nhập tên công ty" />
                 </Form.Item>
 
-                <Form.Item
-                  label="Số điện thoại"
-                  name="phone"
-                  rules={getPhoneRules()}
-                >
-                  <Input placeholder="Nhập số điện thoại" />
-                </Form.Item>
+                <div />
+              </div>
+
+              <div style={{ marginTop: 16 }}>
+                <div style={{ marginBottom: 8 }}>Số điện thoại</div>
+                <Form.List name="phones">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field, index) => (
+                        <div key={field.key} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                          <Form.Item
+                            {...field}
+                            style={{ flex: 1, marginBottom: 0 }}
+                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }, ...getPhoneRules()]}
+                          >
+                            <Input placeholder={`Số điện thoại ${index + 1}`} />
+                          </Form.Item>
+                          <Button
+                            onClick={() => form.setFieldsValue({ primaryPhoneIndex: String(index) })}
+                            type={String(form.getFieldValue('primaryPhoneIndex') ?? '0') === String(index) ? 'primary' : 'default'}
+                          >
+                            Đặt làm chính
+                          </Button>
+                          <Button
+                            danger
+                            onClick={() => {
+                              const current = Number(form.getFieldValue('primaryPhoneIndex') ?? 0);
+                              if (current === index) {
+                                form.setFieldsValue({ primaryPhoneIndex: '0' });
+                              } else if (current > index) {
+                                form.setFieldsValue({ primaryPhoneIndex: String(current - 1) });
+                              }
+                              remove(field.name);
+                            }}
+                          >
+                            Xóa
+                          </Button>
+                        </div>
+                      ))}
+                      <Button type="dashed" onClick={() => add('')} style={{ width: '100%', marginBottom: 12 }}>
+                        Thêm số điện thoại
+                      </Button>
+                    </>
+                  )}
+                </Form.List>
               </div>
 
               <div

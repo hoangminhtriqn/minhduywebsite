@@ -22,7 +22,11 @@ export interface Slide {
 
 export interface Settings {
   companyName: string;
-  phone: string;
+  // New flexible structure
+  phones?: string[];
+  primaryPhoneIndex?: number;
+  // Legacy fallback (read-only on FE)
+  phone?: string;
   email: string;
   workingHours: string;
   logo: string;

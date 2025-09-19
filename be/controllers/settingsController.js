@@ -18,7 +18,30 @@ const getSettings = async (req, res) => {
       await settings.save();
     }
 
-    successResponse(res, settings);
+    // Trả về dữ liệu đã lọc bỏ các trường legacy
+    const filtered = {
+      _id: settings._id,
+      companyName: settings.companyName,
+      email: settings.email,
+      workingHours: settings.workingHours,
+      logo: settings.logo,
+      serviceOverviewImage: settings.serviceOverviewImage,
+      facebook: settings.facebook,
+      youtube: settings.youtube,
+      tiktok: settings.tiktok,
+      zaloUrl: settings.zaloUrl,
+      facebookMessengerUrl: settings.facebookMessengerUrl,
+      description: settings.description,
+      keywords: settings.keywords,
+      createdAt: settings.createdAt,
+      updatedAt: settings.updatedAt,
+      __v: settings.__v,
+      phones: settings.phones || [],
+      primaryPhoneIndex: Number.isFinite(Number(settings.primaryPhoneIndex))
+        ? Number(settings.primaryPhoneIndex)
+        : 0,
+    };
+    successResponse(res, filtered);
   } catch (error) {
     errorResponse(
       res,
@@ -32,7 +55,31 @@ const getSettings = async (req, res) => {
 // Cập nhật settings
 const updateSettings = async (req, res) => {
   try {
-    const updateData = req.body;
+    const updateData = { ...req.body };
+
+    // Chuẩn hóa dữ liệu phones và primaryPhoneIndex nếu có
+    if (updateData.phones !== undefined) {
+      const rawPhones = Array.isArray(updateData.phones) ? updateData.phones : [];
+      const phones = rawPhones
+        .map((p) => (typeof p === 'string' ? p.trim() : ''))
+        .filter((p) => !!p);
+      updateData.phones = phones;
+
+      const rawIdx = Number(updateData.primaryPhoneIndex);
+      let primaryPhoneIndex = Number.isFinite(rawIdx) ? rawIdx : 0;
+      if (phones.length === 0) {
+        primaryPhoneIndex = 0;
+      } else if (primaryPhoneIndex < 0 || primaryPhoneIndex >= phones.length) {
+        primaryPhoneIndex = 0;
+      }
+      updateData.primaryPhoneIndex = primaryPhoneIndex;
+
+      // Legacy fields removed – no sync
+    } else if (updateData.primaryPhoneIndex !== undefined) {
+      // Nếu chỉ cập nhật index
+      const rawIdx = Number(updateData.primaryPhoneIndex);
+      updateData.primaryPhoneIndex = Number.isFinite(rawIdx) ? rawIdx : 0;
+    }
 
     let settings = await Setting.findOne();
 
@@ -43,7 +90,29 @@ const updateSettings = async (req, res) => {
     }
 
     await settings.save();
-    successResponse(res, settings, "Cập nhật cài đặt thành công");
+    const filtered = {
+      _id: settings._id,
+      companyName: settings.companyName,
+      email: settings.email,
+      workingHours: settings.workingHours,
+      logo: settings.logo,
+      serviceOverviewImage: settings.serviceOverviewImage,
+      facebook: settings.facebook,
+      youtube: settings.youtube,
+      tiktok: settings.tiktok,
+      zaloUrl: settings.zaloUrl,
+      facebookMessengerUrl: settings.facebookMessengerUrl,
+      description: settings.description,
+      keywords: settings.keywords,
+      createdAt: settings.createdAt,
+      updatedAt: settings.updatedAt,
+      __v: settings.__v,
+      phones: settings.phones || [],
+      primaryPhoneIndex: Number.isFinite(Number(settings.primaryPhoneIndex))
+        ? Number(settings.primaryPhoneIndex)
+        : 0,
+    };
+    successResponse(res, filtered, "Cập nhật cài đặt thành công");
   } catch (error) {
     errorResponse(
       res,
@@ -66,9 +135,20 @@ const getPublicSettings = async (req, res) => {
     const locations = await Location.find();
     const slides = await Slide.find({ isActive: true }).sort({ order: 1 });
     // Chỉ trả về thông tin cần thiết cho frontend
+    const phones = Array.isArray(settings.phones) ? settings.phones : [];
+    let primaryPhoneIndex = 0;
+    const coercedIdx = Number(settings.primaryPhoneIndex);
+    if (Number.isFinite(coercedIdx)
+      && coercedIdx >= 0
+      && coercedIdx < phones.length) {
+      primaryPhoneIndex = coercedIdx;
+    }
+
     const publicSettings = {
       companyName: settings.companyName,
-      phone: settings.phone,
+      // Trường mới linh hoạt
+      phones,
+      primaryPhoneIndex,
       email: settings.email,
       workingHours: settings.workingHours,
       logo: settings.logo,

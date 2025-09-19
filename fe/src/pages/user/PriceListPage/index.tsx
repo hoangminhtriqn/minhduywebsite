@@ -1,7 +1,7 @@
 import PageBanner from "@/components/PageBanner";
 import { PaginationWrapper, usePagination } from "@/components/pagination";
 
-import { Input, notification, Spin } from "antd";
+import { Input, Spin } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getAllPricing, Pricing } from "@/api/services/user/pricing";
 import PricingCard from "@/components/PricingCard";
@@ -19,19 +19,7 @@ const PriceListPage: React.FC = () => {
 
   // Get document icon
 
-  // Handle document download
-  const handleDownload = (document: {
-    name: string;
-    type: string;
-    size: string;
-    url: string;
-  }) => {
-    notification.success({
-      message: "Tải tài liệu",
-      description: `Đang tải ${document.name}...`,
-    });
-    // Here you would implement actual download logic
-  };
+  // No handlers needed; links open directly in PricingCard
 
   // Fetch pricing data from API
   const { current, pageSize } = pagination;
@@ -54,10 +42,7 @@ const PriceListPage: React.FC = () => {
         setPricingData([]);
       }
     } catch {
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể tải dữ liệu báo giá. Vui lòng thử lại sau.",
-      });
+      // silently fail; UI shows empty list
       setPricingData([]);
     } finally {
       setLoading(false);
@@ -123,7 +108,6 @@ const PriceListPage: React.FC = () => {
                       key={card._id}
                       pricing={card}
                       variant="user"
-                      onDownload={handleDownload}
                     />
                   ))}
               </div>

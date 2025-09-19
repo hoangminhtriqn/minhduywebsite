@@ -7,9 +7,16 @@ const settingSchema = new mongoose.Schema(
       type: String,
       default: "Minh Duy Technology",
     },
-    phone: {
-      type: String,
-      default: "0123456789",
+    // (Legacy fields removed) – use phones + primaryPhoneIndex only
+    // Cấu trúc mới linh hoạt
+    phones: {
+      type: [String],
+      default: [],
+    },
+    primaryPhoneIndex: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
     email: {
       type: String,

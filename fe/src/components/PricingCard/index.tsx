@@ -11,16 +11,7 @@ interface PricingCardProps {
 
 const PricingCard: React.FC<PricingCardProps> = ({
   pricing,
-  onDownload
 }) => {
-  const handleDownload = (document: { name: string; type: string; size: string; url: string }) => {
-    if (onDownload) {
-      onDownload(document);
-    } else {
-      // Default download behavior
-      window.open(document.url, '_blank');
-    }
-  };
 
   const getColorClass = (color: string) => {
     const colorMap: { [key: string]: string } = {
@@ -66,10 +57,12 @@ const PricingCard: React.FC<PricingCardProps> = ({
         <div className={styles['pricing-card__documents']}>
           <div className={styles['pricing-card__documents-list']}>
             {pricing.documents.map((doc, index) => (
-              <button
+              <a
                 key={index}
                 className={styles['pricing-card__document']}
-                onClick={() => handleDownload(doc)}
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 title={doc.name}
               >
                 <div className={styles['pricing-card__document-info']}>
@@ -86,7 +79,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
                    {doc.type === 'excel' && <FileExcelOutlined />}
                    {doc.type !== 'pdf' && doc.type !== 'word' && doc.type !== 'excel' && <FileOutlined />}
                  </span>
-              </button>
+              </a>
             ))}
           </div>
         </div>
