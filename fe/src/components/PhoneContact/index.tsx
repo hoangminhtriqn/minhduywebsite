@@ -24,7 +24,6 @@ const PhoneContact: React.FC<PhoneContactProps> = ({
   // Icon điện thoại chuyên nghiệp với màu theme
   const PhoneIcon = () => {
     // Tạo màu nhạt hơn từ theme primary
-    const lightPrimary = theme.colors.palette.primary + '80'; // Thêm alpha 50%
     
     return (
       <svg

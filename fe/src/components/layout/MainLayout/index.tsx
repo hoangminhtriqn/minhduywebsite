@@ -5,6 +5,7 @@ import ZaloContact from "@/components/ZaloContact";
 import FacebookMessage from "@/components/FacebookMessage";
 import PhoneContact from "@/components/PhoneContact";
 import ScrollToTop from "@/components/ScrollToTop";
+import FloatingButtonsToggle from "@/components/FloatingButtonsToggle";
 
 import React from "react";
 
@@ -35,11 +36,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Header />
       <main style={mainContentStyle}>{children}</main>
       <Footer />
-      <ScrollToTop />
-      <FacebookMessage />
-      <ZaloContact />
-      <PhoneContact />
-      <ThemeController />
+      <FloatingButtonsToggle>
+        <ScrollToTop />
+        <FacebookMessage />
+        <ZaloContact />
+        <PhoneContact />
+        <ThemeController />
+      </FloatingButtonsToggle>
     </div>
   );
 };
